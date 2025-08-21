@@ -1,0 +1,288 @@
+'use client';
+
+import React from 'react';
+import EnterpriseThemeToggle from '../../EnterpriseThemeToggle';
+import { RealTimeMetrics } from '../../analytics';
+import { DashboardWidget, PerformanceMetrics } from '../../dashboard';
+
+interface ExecutiveDashboardProps {
+  selectedTimeframe: string;
+  onTimeframeChange: (timeframe: string) => void;
+}
+
+// Mock data for executive dashboard
+const executiveMetrics = [
+  {
+    id: 'hiring-budget',
+    label: 'Hiring Budget Utilization',
+    value: 67,
+    previousValue: 58,
+    target: 85,
+    unit: 'percentage' as const,
+    trend: 'up' as const,
+    trendValue: 15.5,
+    description: 'Percentage of annual hiring budget utilized',
+    status: 'good' as const,
+  },
+  {
+    id: 'strategic-hires',
+    label: 'Strategic Hires Completed',
+    value: 12,
+    previousValue: 8,
+    target: 20,
+    unit: 'number' as const,
+    trend: 'up' as const,
+    trendValue: 50.0,
+    description: 'Executive and senior leadership positions filled',
+    status: 'warning' as const,
+  },
+];
+
+export default function ExecutiveDashboard({ selectedTimeframe, onTimeframeChange }: ExecutiveDashboardProps) {
+  return (
+    <div className="space-y-6 max-w-full overflow-hidden">
+      {/* Header */}
+      <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+        <div>
+          <h1 className="text-2xl font-bold text-gray-900">Executive Dashboard</h1>
+          <p className="text-gray-500 mt-1">
+            Strategic oversight of organizational hiring and high-level approvals
+          </p>
+        </div>
+        
+        <div className="flex items-center gap-2">
+          <EnterpriseThemeToggle variant="compact" />
+          <select
+            value={selectedTimeframe}
+            onChange={(e) => onTimeframeChange(e.target.value)}
+            className="border border-gray-300 rounded-lg px-3 py-2 text-sm"
+          >
+            <option value="7days">Last 7 days</option>
+            <option value="30days">Last 30 days</option>
+            <option value="90days">Last 3 months</option>
+          </select>
+        </div>
+      </div>
+
+      {/* Real-Time Executive Metrics */}
+      <div className="w-full overflow-hidden">
+        <RealTimeMetrics updateInterval={5000} />
+      </div>
+
+      {/* Executive Grid Layout */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 max-w-full">
+        {/* Main Executive Content */}
+        <div className="lg:col-span-2 space-y-6 min-w-0">
+          {/* Executive Performance Metrics */}
+          <div className="w-full overflow-hidden">
+            <PerformanceMetrics
+              metrics={executiveMetrics}
+              title="Strategic Hiring Indicators"
+              subtitle="Track organizational hiring strategy and budget utilization"
+              timeframe={selectedTimeframe}
+            />
+          </div>
+
+          {/* Strategic Overview */}
+          <div className="grid grid-cols-1 xl:grid-cols-2 gap-6 max-w-full">
+            <div className="min-w-0 overflow-hidden">
+              <DashboardWidget
+                id="department-overview"
+                title="Department Hiring Status"
+                subtitle="Staffing levels across organization"
+                refreshable={true}
+                size="medium"
+              >
+                <div className="space-y-4">
+                  {[
+                    { department: 'Engineering', target: 50, current: 45, budget: '$2.1M', utilization: 78 },
+                    { department: 'Sales', target: 25, current: 22, budget: '$980K', utilization: 65 },
+                    { department: 'Marketing', target: 15, current: 12, budget: '$540K', utilization: 55 },
+                    { department: 'Operations', target: 20, current: 18, budget: '$720K', utilization: 82 },
+                  ].map((dept) => (
+                    <div key={dept.department} className="p-3 bg-gray-50 rounded-lg">
+                      <div className="flex items-center justify-between mb-2">
+                        <span className="font-medium text-gray-900">{dept.department}</span>
+                        <span className="text-sm text-gray-600">{dept.budget}</span>
+                      </div>
+                      <div className="flex items-center justify-between text-sm mb-1">
+                        <span className="text-gray-600">{dept.current}/{dept.target} staff</span>
+                        <span className={`font-medium ${dept.utilization > 75 ? 'text-green-600' : dept.utilization > 50 ? 'text-yellow-600' : 'text-red-600'}`}>
+                          {dept.utilization}% budget used
+                        </span>
+                      </div>
+                      <div className="w-full bg-gray-200 rounded-full h-2">
+                        <div 
+                          className={`h-2 rounded-full ${dept.utilization > 75 ? 'bg-green-600' : dept.utilization > 50 ? 'bg-yellow-600' : 'bg-red-600'}`}
+                          style={{ width: `${(dept.current / dept.target) * 100}%` }}
+                        ></div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </DashboardWidget>
+            </div>
+
+            <div className="min-w-0 overflow-hidden">
+              <DashboardWidget
+                id="high-value-positions"
+                title="Executive Hiring Pipeline"
+                subtitle="Senior leadership and strategic roles"
+                refreshable={true}
+                size="medium"
+              >
+                <div className="space-y-4">
+                  {[
+                    { 
+                      position: 'Chief Technology Officer', 
+                      department: 'Engineering', 
+                      salary: '$280K - $350K',
+                      stage: 'Final Interviews',
+                      priority: 'Critical',
+                      candidates: 2,
+                      statusColor: 'bg-purple-100 text-purple-800',
+                      priorityColor: 'bg-red-100 text-red-800'
+                    },
+                    { 
+                      position: 'VP of Sales', 
+                      department: 'Sales', 
+                      salary: '$220K - $280K',
+                      stage: 'Sourcing',
+                      priority: 'High',
+                      candidates: 0,
+                      statusColor: 'bg-blue-100 text-blue-800',
+                      priorityColor: 'bg-orange-100 text-orange-800'
+                    },
+                    { 
+                      position: 'Director of Marketing', 
+                      department: 'Marketing', 
+                      salary: '$180K - $220K',
+                      stage: 'Interviews',
+                      priority: 'Medium',
+                      candidates: 3,
+                      statusColor: 'bg-yellow-100 text-yellow-800',
+                      priorityColor: 'bg-yellow-100 text-yellow-800'
+                    },
+                  ].map((position) => (
+                    <div key={position.position} className="p-3 bg-gray-50 rounded-lg">
+                      <div className="flex items-start justify-between mb-2">
+                        <div className="flex-1 min-w-0">
+                          <h4 className="font-medium text-gray-900 truncate">{position.position}</h4>
+                          <p className="text-sm text-gray-600">{position.department}</p>
+                          <p className="text-sm text-gray-500">{position.salary}</p>
+                        </div>
+                        <div className="flex flex-col items-end gap-1">
+                          <span className={`px-2 py-1 rounded-full text-xs font-medium ${position.priorityColor}`}>
+                            {position.priority}
+                          </span>
+                          <span className="text-xs text-gray-500">{position.candidates} candidates</span>
+                        </div>
+                      </div>
+                      <span className={`px-2 py-1 rounded-full text-xs font-medium ${position.statusColor}`}>
+                        {position.stage}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              </DashboardWidget>
+            </div>
+          </div>
+        </div>
+
+        {/* Executive Sidebar */}
+        <div className="space-y-6 min-w-0">
+          {/* Pending Approvals */}
+          <div className="w-full overflow-hidden">
+            <DashboardWidget
+              id="pending-approvals"
+              title="Pending Approvals"
+              subtitle="Items requiring executive decision"
+              refreshable={true}
+              size="small"
+            >
+              <div className="space-y-3 max-h-60 overflow-y-auto">
+                {[
+                  {
+                    id: '1',
+                    type: 'offer',
+                    message: 'Senior Director offer $285K - Tech Lead',
+                    time: '2 hours ago',
+                    urgent: true,
+                    color: 'text-red-600',
+                  },
+                  {
+                    id: '2',
+                    type: 'budget',
+                    message: 'Additional hiring budget request - Sales',
+                    time: '5 hours ago',
+                    urgent: false,
+                    color: 'text-orange-600',
+                  },
+                  {
+                    id: '3',
+                    type: 'position',
+                    message: 'New VP Marketing position approval',
+                    time: '1 day ago',
+                    urgent: false,
+                    color: 'text-blue-600',
+                  },
+                  {
+                    id: '4',
+                    type: 'contract',
+                    message: 'Executive search firm contract renewal',
+                    time: '2 days ago',
+                    urgent: false,
+                    color: 'text-purple-600',
+                  },
+                ].map((approval) => (
+                  <div key={approval.id} className="flex items-start gap-3 p-3 hover:bg-gray-50 rounded-lg border-l-2 border-transparent hover:border-gray-300">
+                    <div className={`w-2 h-2 rounded-full mt-2 flex-shrink-0 ${approval.color.replace('text-', 'bg-')}`}></div>
+                    <div className="flex-1 min-w-0">
+                      <p className={`text-sm ${approval.urgent ? 'font-semibold' : 'font-normal'} text-gray-900 truncate`}>
+                        {approval.message}
+                      </p>
+                      <p className="text-xs text-gray-500 mt-1">{approval.time}</p>
+                      {approval.urgent && (
+                        <span className="text-xs bg-red-100 text-red-800 px-2 py-1 rounded-full mt-1 inline-block">
+                          Urgent
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </DashboardWidget>
+          </div>
+
+          {/* Executive Actions */}
+          <div className="w-full overflow-hidden">
+            <DashboardWidget
+              id="executive-actions"
+              title="Executive Tools"
+              subtitle="Strategic hiring management"
+              size="small"
+            >
+              <div className="grid grid-cols-1 gap-2">
+                {[
+                  { label: 'Approval Center', color: 'bg-red-600', icon: '✓' },
+                  { label: 'Budget Planning', color: 'bg-blue-600', icon: '💰' },
+                  { label: 'Strategic Reports', color: 'bg-purple-600', icon: '📊' },
+                  { label: 'Leadership Pipeline', color: 'bg-green-600', icon: '👥' },
+                  { label: 'Board Reports', color: 'bg-orange-600', icon: '📋' },
+                ].map((action) => (
+                  <button
+                    key={action.label}
+                    className={`${action.color} text-white p-3 rounded-lg hover:opacity-90 transition-opacity text-sm font-medium text-center w-full flex items-center justify-center gap-2`}
+                  >
+                    <span>{action.icon}</span>
+                    {action.label}
+                  </button>
+                ))}
+              </div>
+            </DashboardWidget>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
