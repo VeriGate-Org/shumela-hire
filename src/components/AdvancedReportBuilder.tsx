@@ -143,7 +143,7 @@ const AdvancedReportBuilder: React.FC<AdvancedReportBuilderProps> = ({
           <select
             value={config.reportType}
             onChange={(e) => setConfig({ ...config, reportType: e.target.value })}
-            className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-violet-500/40"
           >
             <option value="">Select Report Type</option>
             {Object.entries(reportTypes).map(([key, reportType]) => (
@@ -157,7 +157,7 @@ const AdvancedReportBuilder: React.FC<AdvancedReportBuilderProps> = ({
           <select
             value={config.format}
             onChange={(e) => setConfig({ ...config, format: e.target.value as any })}
-            className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-violet-500/40"
           >
             <option value="csv">CSV</option>
             <option value="excel">Excel (Coming Soon)</option>
@@ -175,7 +175,7 @@ const AdvancedReportBuilder: React.FC<AdvancedReportBuilderProps> = ({
               onClick={() => handleDatePresetChange(preset.value)}
               className={`px-3 py-1 text-sm rounded border ${
                 config.dateRange.preset === preset.value
-                  ? 'bg-blue-500 text-white border-blue-500'
+                  ? 'bg-violet-500 text-white border-violet-500'
                   : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'
               }`}
             >
@@ -194,7 +194,7 @@ const AdvancedReportBuilder: React.FC<AdvancedReportBuilderProps> = ({
                 ...config,
                 dateRange: { ...config.dateRange, startDate: e.target.value, preset: 'custom' }
               })}
-              className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-violet-500/40"
             />
           </div>
           <div>
@@ -206,7 +206,7 @@ const AdvancedReportBuilder: React.FC<AdvancedReportBuilderProps> = ({
                 ...config,
                 dateRange: { ...config.dateRange, endDate: e.target.value, preset: 'custom' }
               })}
-              className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-violet-500/40"
             />
           </div>
         </div>
@@ -226,7 +226,7 @@ const AdvancedReportBuilder: React.FC<AdvancedReportBuilderProps> = ({
                   type="checkbox"
                   checked={config.fields.includes(field)}
                   onChange={() => toggleField(field)}
-                  className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                  className="rounded border-gray-300 text-violet-600 focus:ring-violet-500/40"
                 />
                 <span className="text-sm text-gray-700 capitalize">
                   {field.replace(/_/g, ' ')}
@@ -238,18 +238,18 @@ const AdvancedReportBuilder: React.FC<AdvancedReportBuilderProps> = ({
       </div>
 
       {config.fields.length > 0 && (
-        <div className="bg-blue-50 p-3 rounded-md">
-          <div className="text-sm font-medium text-blue-900 mb-2">Selected Fields ({config.fields.length}):</div>
+        <div className="bg-violet-50 p-3 rounded-md">
+          <div className="text-sm font-medium text-violet-900 mb-2">Selected Fields ({config.fields.length}):</div>
           <div className="flex flex-wrap gap-2">
             {config.fields.map((field) => (
               <span
                 key={field}
-                className="inline-flex items-center px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded-full"
+                className="inline-flex items-center px-2 py-1 bg-violet-100 text-violet-800 text-xs rounded-full"
               >
                 {field.replace(/_/g, ' ')}
                 <button
                   onClick={() => toggleField(field)}
-                  className="ml-1 text-blue-600 hover:text-blue-800"
+                  className="ml-1 text-violet-600 hover:text-violet-800"
                 >
                   ×
                 </button>
@@ -274,7 +274,7 @@ const AdvancedReportBuilder: React.FC<AdvancedReportBuilderProps> = ({
                     type="checkbox"
                     checked={config.filters.status?.includes(status) || false}
                     onChange={() => toggleFilterValue('status', status)}
-                    className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                    className="rounded border-gray-300 text-violet-600 focus:ring-violet-500/40"
                   />
                   <span className="text-sm text-gray-700 capitalize">
                     {status.replace(/_/g, ' ').toLowerCase()}
@@ -293,7 +293,7 @@ const AdvancedReportBuilder: React.FC<AdvancedReportBuilderProps> = ({
                     type="checkbox"
                     checked={config.filters.sources?.includes(source) || false}
                     onChange={() => toggleFilterValue('sources', source)}
-                    className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                    className="rounded border-gray-300 text-violet-600 focus:ring-violet-500/40"
                   />
                   <span className="text-sm text-gray-700">{source}</span>
                 </label>
@@ -322,7 +322,7 @@ const AdvancedReportBuilder: React.FC<AdvancedReportBuilderProps> = ({
                       }
                     }
                   })}
-                  className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-violet-500/40"
                 />
               </div>
               <div>
@@ -342,7 +342,7 @@ const AdvancedReportBuilder: React.FC<AdvancedReportBuilderProps> = ({
                       }
                     }
                   })}
-                  className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-violet-500/40"
                 />
               </div>
             </div>
@@ -363,7 +363,7 @@ const AdvancedReportBuilder: React.FC<AdvancedReportBuilderProps> = ({
               ...config,
               groupBy: e.target.value ? [e.target.value] : undefined
             })}
-            className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-violet-500/40"
           >
             <option value="">No Grouping</option>
             <option value="status">Status</option>
@@ -385,7 +385,7 @@ const AdvancedReportBuilder: React.FC<AdvancedReportBuilderProps> = ({
                   direction: config.sortBy?.direction || 'desc'
                 } : undefined
               })}
-              className="flex-1 border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="flex-1 border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-violet-500/40"
             >
               <option value="">Default Order</option>
               <option value="submitted_date">Date</option>
@@ -402,7 +402,7 @@ const AdvancedReportBuilder: React.FC<AdvancedReportBuilderProps> = ({
                 } : undefined
               })}
               disabled={!config.sortBy?.field}
-              className="border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:bg-gray-100"
+              className="border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-violet-500/40 disabled:bg-gray-100"
             >
               <option value="desc">Descending</option>
               <option value="asc">Ascending</option>
@@ -419,7 +419,7 @@ const AdvancedReportBuilder: React.FC<AdvancedReportBuilderProps> = ({
               type="checkbox"
               checked={config.includeCharts || false}
               onChange={(e) => setConfig({ ...config, includeCharts: e.target.checked })}
-              className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+              className="rounded border-gray-300 text-violet-600 focus:ring-violet-500/40"
             />
             <span className="text-sm text-gray-700">Include Charts and Visualizations</span>
           </label>
@@ -428,7 +428,7 @@ const AdvancedReportBuilder: React.FC<AdvancedReportBuilderProps> = ({
               type="checkbox"
               checked={config.includeAnalytics || false}
               onChange={(e) => setConfig({ ...config, includeAnalytics: e.target.checked })}
-              className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+              className="rounded border-gray-300 text-violet-600 focus:ring-violet-500/40"
             />
             <span className="text-sm text-gray-700">Include Summary Analytics</span>
           </label>
@@ -452,7 +452,7 @@ const AdvancedReportBuilder: React.FC<AdvancedReportBuilderProps> = ({
       <button
         onClick={() => onGenerateReport(config)}
         disabled={!config.reportType || !config.dateRange.startDate || !config.dateRange.endDate || config.fields.length === 0 || isGenerating}
-        className="w-full bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 disabled:bg-gray-400 transition-colors"
+        className="w-full bg-violet-600 text-white px-4 py-2 rounded hover:bg-violet-700 disabled:bg-gray-400 transition-colors"
       >
         {isGenerating ? 'Generating Advanced Report...' : 'Generate Advanced Report'}
       </button>
@@ -477,7 +477,7 @@ const AdvancedReportBuilder: React.FC<AdvancedReportBuilderProps> = ({
               onClick={() => setActiveSection(section.id)}
               className={`py-2 px-1 border-b-2 font-medium text-sm transition-colors ${
                 activeSection === section.id
-                  ? 'border-blue-500 text-blue-600'
+                  ? 'border-violet-500 text-violet-600'
                   : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
               }`}
             >

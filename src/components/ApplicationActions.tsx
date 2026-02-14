@@ -63,7 +63,7 @@ function WithdrawModal({ isOpen, onClose, onConfirm, isSubmitting }: WithdrawMod
               value={reason}
               onChange={(e) => setReason(e.target.value)}
               placeholder="Please provide a reason for withdrawing your application..."
-              className="w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-violet-500/40 focus:border-transparent"
               rows={3}
               maxLength={500}
               required

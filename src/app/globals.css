@@ -27,7 +27,7 @@
   /* Brand Radius */
   --radius: 0.375rem;
   --radius-control: 6px;
-  --radius-card: 10px;
+  --radius-card: 8px;
 
   /* Stripe Dual-Layer Shadows */
   --shadow-sm: 0 2px 5px rgba(50, 50, 93, 0.09), 0 1px 3px rgba(0, 0, 0, 0.07);
@@ -97,7 +97,7 @@
     color: var(--foreground);
     font-family: var(--font-manrope), 'Manrope', system-ui, sans-serif;
     font-feature-settings: "rlig" 1, "calt" 1;
-    line-height: 1.7;
+    line-height: 1.5;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
@@ -114,7 +114,7 @@
   .label, .overline {
     font-weight: 700;
     text-transform: uppercase;
-    letter-spacing: 0.12em;
+    letter-spacing: 0.05em;
     font-size: 0.75rem;
   }
 
@@ -169,24 +169,22 @@
   .btn-primary {
     background-color: var(--primary);
     color: var(--primary-foreground);
-    border: none;
+    border: 1px solid color-mix(in srgb, var(--primary) 85%, black);
     border-radius: var(--radius-control);
-    padding: 0.625rem 1.25rem;
-    font-weight: 700;
+    padding: 0.5rem 1rem;
+    font-weight: 600;
     font-size: 0.875rem;
     line-height: 1.25rem;
     transition: all var(--motion-duration-show) var(--motion-easing);
-    box-shadow: var(--shadow-sm);
   }
 
   .btn-primary:hover {
-    filter: brightness(1.1);
-    box-shadow: var(--shadow-md);
+    box-shadow: var(--shadow-sm);
+    border-color: color-mix(in srgb, var(--primary) 75%, black);
   }
 
   .btn-primary:active {
-    filter: brightness(0.95);
-    box-shadow: var(--shadow-sm);
+    box-shadow: none;
   }
 
   .btn-secondary {
@@ -194,8 +192,8 @@
     color: var(--secondary-foreground);
     border: 1px solid var(--border);
     border-radius: var(--radius-control);
-    padding: 0.625rem 1.25rem;
-    font-weight: 700;
+    padding: 0.5rem 1rem;
+    font-weight: 600;
     font-size: 0.875rem;
     line-height: 1.25rem;
     transition: all var(--motion-duration-show) var(--motion-easing);
@@ -209,10 +207,10 @@
   .btn-outline {
     background: transparent;
     color: var(--primary);
-    border: 2px solid var(--primary);
+    border: 1px solid var(--primary);
     border-radius: var(--radius-control);
-    padding: 0.625rem 1.25rem;
-    font-weight: 700;
+    padding: 0.5rem 1rem;
+    font-weight: 600;
     font-size: 0.875rem;
     line-height: 1.25rem;
     transition: all var(--motion-duration-show) var(--motion-easing);
@@ -310,7 +308,7 @@
     font-weight: 700;
     font-size: 0.75rem;
     text-transform: uppercase;
-    letter-spacing: 0.12em;
+    letter-spacing: 0.05em;
     color: var(--foreground);
     margin-bottom: 0.5rem;
     display: block;

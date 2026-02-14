@@ -341,7 +341,7 @@ export default function AuditLogsPage() {
   const getActionColor = (action: string) => {
     if (action.includes('deleted') || action.includes('rejected')) return 'text-red-600 bg-red-100';
     if (action.includes('created') || action.includes('approved')) return 'text-green-600 bg-green-100';
-    if (action.includes('updated') || action.includes('edited')) return 'text-blue-600 bg-blue-100';
+    if (action.includes('updated') || action.includes('edited')) return 'text-violet-600 bg-violet-100';
     if (action.includes('login')) return 'text-purple-600 bg-purple-100';
     if (action.includes('role') || action.includes('permission')) return 'text-yellow-600 bg-yellow-100';
     return 'text-gray-600 bg-gray-100';
@@ -398,7 +398,7 @@ export default function AuditLogsPage() {
         <ArrowDownTrayIcon className="w-4 h-4 mr-2" />
         Export
       </button>
-      <button className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700">
+      <button className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-violet-600 hover:bg-violet-700">
         <ClockIcon className="w-4 h-4 mr-2" />
         Real-time View
       </button>
@@ -409,7 +409,7 @@ export default function AuditLogsPage() {
     return (
       <PageWrapper title="Audit Logs" subtitle="Loading audit trail..." actions={actions}>
         <div className="flex items-center justify-center h-96">
-          <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-500"></div>
+          <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-violet-500"></div>
         </div>
       </PageWrapper>
     );
@@ -427,7 +427,7 @@ export default function AuditLogsPage() {
           <div className="bg-white rounded-lg shadow p-6">
             <div className="flex items-center">
               <div className="flex-shrink-0">
-                <DocumentTextIcon className="w-8 h-8 text-blue-500" />
+                <DocumentTextIcon className="w-8 h-8 text-violet-500" />
               </div>
               <div className="ml-4">
                 <p className="text-sm font-medium text-gray-500">Total Logs</p>
@@ -508,7 +508,7 @@ export default function AuditLogsPage() {
                   placeholder="Search logs..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="pl-10 pr-4 py-2 w-full border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  className="pl-10 pr-4 py-2 w-full border border-gray-300 rounded-lg focus:ring-2 focus:ring-violet-500/40 focus:border-violet-400"
                 />
               </div>
             </div>
@@ -527,7 +527,7 @@ export default function AuditLogsPage() {
                   <select
                     value={filters.dateRange}
                     onChange={(e) => setFilters(prev => ({ ...prev, dateRange: e.target.value as any }))}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-violet-500/40 focus:border-violet-400"
                   >
                     <option value="today">Today</option>
                     <option value="week">Last Week</option>
@@ -543,7 +543,7 @@ export default function AuditLogsPage() {
                   <select
                     value={filters.entityType}
                     onChange={(e) => setFilters(prev => ({ ...prev, entityType: e.target.value }))}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-violet-500/40 focus:border-violet-400"
                   >
                     <option value="all">All Types</option>
                     {uniqueEntityTypes.map(type => (
@@ -557,7 +557,7 @@ export default function AuditLogsPage() {
                   <select
                     value={filters.action}
                     onChange={(e) => setFilters(prev => ({ ...prev, action: e.target.value }))}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-violet-500/40 focus:border-violet-400"
                   >
                     <option value="all">All Actions</option>
                     {uniqueActions.map(action => (
@@ -571,7 +571,7 @@ export default function AuditLogsPage() {
                   <select
                     value={filters.userRole}
                     onChange={(e) => setFilters(prev => ({ ...prev, userRole: e.target.value }))}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-violet-500/40 focus:border-violet-400"
                   >
                     <option value="all">All Roles</option>
                     {uniqueRoles.map(role => (
@@ -589,7 +589,7 @@ export default function AuditLogsPage() {
                       type="date"
                       value={filters.customStartDate || ''}
                       onChange={(e) => setFilters(prev => ({ ...prev, customStartDate: e.target.value }))}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-violet-500/40 focus:border-violet-400"
                     />
                   </div>
                   <div>
@@ -598,7 +598,7 @@ export default function AuditLogsPage() {
                       type="date"
                       value={filters.customEndDate || ''}
                       onChange={(e) => setFilters(prev => ({ ...prev, customEndDate: e.target.value }))}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-violet-500/40 focus:border-violet-400"
                     />
                   </div>
                 </div>
@@ -642,7 +642,7 @@ export default function AuditLogsPage() {
                   const actionColor = getActionColor(log.action);
                   const severity = getSeverityLevel(log);
                   const severityColors = {
-                    info: 'bg-blue-100 text-blue-800',
+                    info: 'bg-violet-100 text-violet-800',
                     warning: 'bg-yellow-100 text-yellow-800',
                     error: 'bg-red-100 text-red-800',
                     critical: 'bg-red-600 text-white'
@@ -690,7 +690,7 @@ export default function AuditLogsPage() {
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                         <button
                           onClick={() => setSelectedLog(log)}
-                          className="text-blue-600 hover:text-blue-900"
+                          className="text-violet-600 hover:text-violet-900"
                         >
                           <EyeIcon className="w-4 h-4" />
                         </button>

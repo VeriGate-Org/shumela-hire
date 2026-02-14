@@ -162,13 +162,13 @@ const DashboardWidget: React.FC<DashboardWidgetProps> = ({
                           }}
                           className={`flex items-center justify-between w-full px-3 py-2 text-sm ${
                             size === sizeOption
-                              ? 'text-blue-600 bg-blue-50'
+                              ? 'text-violet-600 bg-violet-50'
                               : 'text-gray-700 hover:bg-gray-50'
                           }`}
                         >
                           <span className="capitalize">{sizeOption}</span>
                           {size === sizeOption && (
-                            <div className="w-2 h-2 bg-blue-600 rounded-full"></div>
+                            <div className="w-2 h-2 bg-violet-600 rounded-full"></div>
                           )}
                         </button>
                       ))}
@@ -218,7 +218,7 @@ const DashboardWidget: React.FC<DashboardWidgetProps> = ({
         <div className="p-4 flex-1 overflow-hidden">
           {loading ? (
             <div className="flex items-center justify-center h-32">
-              <div className="animate-spin rounded-full h-8 w-8 border-2 border-blue-600 border-t-transparent"></div>
+              <div className="animate-spin rounded-full h-8 w-8 border-2 border-violet-600 border-t-transparent"></div>
             </div>
           ) : error ? (
             <div className="flex items-center justify-center h-32">
@@ -230,7 +230,7 @@ const DashboardWidget: React.FC<DashboardWidgetProps> = ({
                 {refreshable && (
                   <button
                     onClick={handleRefresh}
-                    className="mt-2 text-sm text-blue-600 hover:text-blue-800"
+                    className="mt-2 text-sm text-violet-600 hover:text-violet-800"
                   >
                     Try again
                   </button>

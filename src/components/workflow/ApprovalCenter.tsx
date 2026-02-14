@@ -214,8 +214,8 @@ export default function ApprovalCenter({
       <div className="px-6 py-4 border-b border-gray-200">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="p-2 bg-blue-100 rounded-lg">
-              <DocumentTextIcon className="h-6 w-6 text-blue-600" />
+            <div className="p-2 bg-violet-100 rounded-lg">
+              <DocumentTextIcon className="h-6 w-6 text-violet-600" />
             </div>
             <div>
               <h2 className="text-lg font-semibold text-gray-900">Approval Center</h2>
@@ -266,7 +266,7 @@ export default function ApprovalCenter({
               onClick={() => setActiveTab(tab.id)}
               className={`py-4 px-1 border-b-2 font-medium text-sm flex items-center gap-2 ${
                 activeTab === tab.id
-                  ? 'border-blue-500 text-blue-600'
+                  ? 'border-violet-500 text-violet-600'
                   : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
               }`}
             >
@@ -345,7 +345,7 @@ export default function ApprovalCenter({
                                     ? 'bg-green-100 text-green-700 border-green-200'
                                     : 'bg-red-100 text-red-700 border-red-200'
                                   : approver.id === currentUserId
-                                    ? 'bg-blue-100 text-blue-700 border-blue-200'
+                                    ? 'bg-violet-100 text-violet-700 border-violet-200'
                                     : 'bg-gray-100 text-gray-700 border-gray-200'
                               }`}
                             >
@@ -416,7 +416,7 @@ export default function ApprovalCenter({
                   <div className="flex flex-col gap-2 ml-4">
                     <button
                       onClick={() => onViewDetails(request)}
-                      className="p-2 text-gray-400 hover:text-blue-600 rounded border border-gray-200 hover:border-blue-200"
+                      className="p-2 text-gray-400 hover:text-violet-600 rounded border border-gray-200 hover:border-violet-200"
                       title="View Details"
                     >
                       <EyeIcon className="h-4 w-4" />
@@ -467,7 +467,7 @@ export default function ApprovalCenter({
               value={comment}
               onChange={(e) => setComment(e.target.value)}
               placeholder={actionType === 'approve' ? 'Optional comment...' : 'Reason for rejection...'}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-violet-500/40 focus:border-violet-400"
               rows={3}
               required={actionType === 'reject'}
             />

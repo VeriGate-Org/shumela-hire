@@ -26,7 +26,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @DataJpaTest
 @ActiveProfiles("test")
-@ContextConfiguration(classes = com.arthmatic.talentgate.ERecruitmentBackendApplication.class)
+@ContextConfiguration(classes = com.arthmatic.talentgate.TalentGateApplication.class)
 class ApplicationRepositoryTest {
 
     @Autowired

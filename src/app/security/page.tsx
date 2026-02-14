@@ -77,7 +77,7 @@ export default function SecurityCompliancePage() {
   if (!user) {
     return (
       <div className="flex justify-center items-center h-screen">
-        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-600"></div>
+        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-violet-600"></div>
       </div>
     );
   }
@@ -100,7 +100,7 @@ export default function SecurityCompliancePage() {
               onClick={() => setActiveTab('security')}
               className={`py-2 px-1 border-b-2 font-medium text-sm ${
                 activeTab === 'security'
-                  ? 'border-blue-500 text-blue-600'
+                  ? 'border-violet-500 text-violet-600'
                   : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
               }`}
             >
@@ -110,7 +110,7 @@ export default function SecurityCompliancePage() {
               onClick={() => setActiveTab('gdpr')}
               className={`py-2 px-1 border-b-2 font-medium text-sm ${
                 activeTab === 'gdpr'
-                  ? 'border-blue-500 text-blue-600'
+                  ? 'border-violet-500 text-violet-600'
                   : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
               }`}
             >
@@ -120,7 +120,7 @@ export default function SecurityCompliancePage() {
               onClick={() => setActiveTab('settings')}
               className={`py-2 px-1 border-b-2 font-medium text-sm ${
                 activeTab === 'settings'
-                  ? 'border-blue-500 text-blue-600'
+                  ? 'border-violet-500 text-violet-600'
                   : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
               }`}
             >
@@ -205,7 +205,7 @@ export default function SecurityCompliancePage() {
                       type="password"
                       value={passwordForm.currentPassword}
                       onChange={(e) => setPasswordForm({ ...passwordForm, currentPassword: e.target.value })}
-                      className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                      className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-violet-500/40 focus:border-violet-400"
                       required
                     />
                   </div>
@@ -217,7 +217,7 @@ export default function SecurityCompliancePage() {
                       type="password"
                       value={passwordForm.newPassword}
                       onChange={(e) => setPasswordForm({ ...passwordForm, newPassword: e.target.value })}
-                      className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                      className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-violet-500/40 focus:border-violet-400"
                       required
                     />
                     <p className="mt-1 text-sm text-gray-500">
@@ -232,14 +232,14 @@ export default function SecurityCompliancePage() {
                       type="password"
                       value={passwordForm.confirmPassword}
                       onChange={(e) => setPasswordForm({ ...passwordForm, confirmPassword: e.target.value })}
-                      className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                      className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-violet-500/40 focus:border-violet-400"
                       required
                     />
                   </div>
                   <div className="flex justify-end">
                     <button
                       type="submit"
-                      className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700"
+                      className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-violet-600 hover:bg-violet-700"
                     >
                       Change Password
                     </button>
@@ -317,7 +317,7 @@ export default function SecurityCompliancePage() {
                     </div>
                     <input
                       type="checkbox"
-                      className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                      className="h-4 w-4 text-violet-600 focus:ring-violet-500/40 border-gray-300 rounded"
                       defaultChecked
                     />
                   </div>
@@ -332,7 +332,7 @@ export default function SecurityCompliancePage() {
                     </div>
                     <input
                       type="checkbox"
-                      className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                      className="h-4 w-4 text-violet-600 focus:ring-violet-500/40 border-gray-300 rounded"
                     />
                   </div>
                 </div>

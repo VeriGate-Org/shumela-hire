@@ -50,7 +50,7 @@ export default function ApplicantDashboard({ selectedTimeframe, onTimeframeChang
             >
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                 {[
-                  { status: 'Applied', count: 8, color: 'bg-blue-100 text-blue-800' },
+                  { status: 'Applied', count: 8, color: 'bg-violet-100 text-violet-800' },
                   { status: 'Under Review', count: 3, color: 'bg-yellow-100 text-yellow-800' },
                   { status: 'Interview', count: 2, color: 'bg-purple-100 text-purple-800' },
                   { status: 'Offer', count: 1, color: 'bg-green-100 text-green-800' },
@@ -102,7 +102,7 @@ export default function ApplicantDashboard({ selectedTimeframe, onTimeframeChang
                     appliedDate: '1 week ago',
                     status: 'Applied',
                     location: 'New York, NY',
-                    statusColor: 'bg-blue-100 text-blue-800',
+                    statusColor: 'bg-violet-100 text-violet-800',
                   },
                   {
                     id: '4',
@@ -124,7 +124,7 @@ export default function ApplicantDashboard({ selectedTimeframe, onTimeframeChang
                       <span className={`px-3 py-1 rounded-full text-sm font-medium ${application.statusColor}`}>
                         {application.status}
                       </span>
-                      <button className="text-blue-600 hover:text-blue-800 text-sm font-medium">
+                      <button className="text-violet-600 hover:text-violet-800 text-sm font-medium">
                         View Details
                       </button>
                     </div>
@@ -193,7 +193,7 @@ export default function ApplicantDashboard({ selectedTimeframe, onTimeframeChang
                     date: 'Tomorrow',
                     time: '2:00 PM',
                     type: 'Video Call',
-                    color: 'text-blue-600',
+                    color: 'text-violet-600',
                   },
                   {
                     id: '2',
@@ -229,7 +229,7 @@ export default function ApplicantDashboard({ selectedTimeframe, onTimeframeChang
             >
               <div className="grid grid-cols-1 gap-2">
                 {[
-                  { label: 'Browse Jobs', color: 'bg-blue-600', icon: '🔍' },
+                  { label: 'Browse Jobs', color: 'bg-violet-600', icon: '🔍' },
                   { label: 'Update Profile', color: 'bg-green-600', icon: '👤' },
                   { label: 'Upload Resume', color: 'bg-purple-600', icon: '📄' },
                   { label: 'Messages', color: 'bg-orange-600', icon: '💬' },

@@ -150,7 +150,7 @@ export default function ExecutiveDashboard({ selectedTimeframe, onTimeframeChang
                       stage: 'Sourcing',
                       priority: 'High',
                       candidates: 0,
-                      statusColor: 'bg-blue-100 text-blue-800',
+                      statusColor: 'bg-violet-100 text-violet-800',
                       priorityColor: 'bg-orange-100 text-orange-800'
                     },
                     { 
@@ -224,7 +224,7 @@ export default function ExecutiveDashboard({ selectedTimeframe, onTimeframeChang
                     message: 'New VP Marketing position approval',
                     time: '1 day ago',
                     urgent: false,
-                    color: 'text-blue-600',
+                    color: 'text-violet-600',
                   },
                   {
                     id: '4',
@@ -265,7 +265,7 @@ export default function ExecutiveDashboard({ selectedTimeframe, onTimeframeChang
               <div className="grid grid-cols-1 gap-2">
                 {[
                   { label: 'Approval Center', color: 'bg-red-600', icon: '✓' },
-                  { label: 'Budget Planning', color: 'bg-blue-600', icon: '💰' },
+                  { label: 'Budget Planning', color: 'bg-violet-600', icon: '💰' },
                   { label: 'Strategic Reports', color: 'bg-purple-600', icon: '📊' },
                   { label: 'Leadership Pipeline', color: 'bg-green-600', icon: '👥' },
                   { label: 'Board Reports', color: 'bg-orange-600', icon: '📋' },

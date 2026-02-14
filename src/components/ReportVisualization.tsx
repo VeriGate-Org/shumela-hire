@@ -97,7 +97,7 @@ const ReportVisualization: React.FC = () => {
 
   const getColorClasses = (color: string) => {
     const colorMap: Record<string, string> = {
-      blue: 'bg-blue-500 text-blue-100',
+      blue: 'bg-violet-500 text-violet-100',
       green: 'bg-green-500 text-green-100',
       purple: 'bg-purple-500 text-purple-100',
       orange: 'bg-orange-500 text-orange-100',
@@ -107,7 +107,7 @@ const ReportVisualization: React.FC = () => {
   };
 
   const KPICard: React.FC<{ kpi: KPIWidget; name: string }> = ({ kpi, name }) => (
-    <div className="bg-white rounded-lg shadow-md p-6 border-l-4 border-blue-500">
+    <div className="bg-white rounded-lg shadow-md p-6 border-l-4 border-violet-500">
       <div className="flex items-center justify-between">
         <div>
           <p className="text-sm font-medium text-gray-600">{kpi.title}</p>
@@ -275,7 +275,7 @@ const ReportVisualization: React.FC = () => {
             <select
               value={selectedDateRange}
               onChange={(e) => setSelectedDateRange(e.target.value)}
-              className="border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-violet-500/40"
             >
               <option value="last-30-days">Last 30 Days</option>
               <option value="last-3-months">Last 3 Months</option>
@@ -283,7 +283,7 @@ const ReportVisualization: React.FC = () => {
             </select>
             <button
               onClick={() => exportVisualization('json')}
-              className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition-colors"
+              className="bg-violet-600 text-white px-4 py-2 rounded hover:bg-violet-700 transition-colors"
             >
               Export Data
             </button>
@@ -306,9 +306,9 @@ const ReportVisualization: React.FC = () => {
       </div>
 
       {/* Help Section */}
-      <div className="bg-blue-50 border border-blue-200 rounded-lg p-6">
-        <h3 className="text-lg font-medium text-blue-900 mb-2">📊 Visualization Guide</h3>
-        <div className="text-sm text-blue-800 space-y-1">
+      <div className="bg-violet-50 border border-violet-200 rounded-lg p-6">
+        <h3 className="text-lg font-medium text-violet-900 mb-2">📊 Visualization Guide</h3>
+        <div className="text-sm text-violet-800 space-y-1">
           <p>• <strong>KPI Widgets:</strong> Key performance indicators with progress bars and trend indicators</p>
           <p>• <strong>Charts:</strong> Visual representations of recruitment data including status distribution, timeline trends, and performance metrics</p>
           <p>• <strong>Date Range:</strong> Adjust the time period to see different trends and patterns</p>

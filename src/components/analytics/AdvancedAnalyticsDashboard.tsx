@@ -134,7 +134,7 @@ export const AdvancedAnalyticsDashboard: React.FC<AdvancedAnalyticsDashboardProp
                 onClick={() => setSelectedTimeRange(range.key)}
                 className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
                   selectedTimeRange === range.key
-                    ? 'bg-blue-100 text-blue-700'
+                    ? 'bg-violet-100 text-violet-700'
                     : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
                 }`}
               >
@@ -157,7 +157,7 @@ export const AdvancedAnalyticsDashboard: React.FC<AdvancedAnalyticsDashboardProp
               onClick={() => setSelectedView(key as any)}
               className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
                 selectedView === key
-                  ? 'bg-blue-600 text-white'
+                  ? 'bg-violet-600 text-white'
                   : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
               }`}
             >
@@ -175,7 +175,7 @@ export const AdvancedAnalyticsDashboard: React.FC<AdvancedAnalyticsDashboardProp
             title: 'Total Applications',
             value: summaryStats.totalApplications.toLocaleString(),
             icon: DocumentChartBarIcon,
-            color: 'text-blue-600 bg-blue-100',
+            color: 'text-violet-600 bg-violet-100',
             change: '+12.5%',
             changeType: 'positive' as const,
           },

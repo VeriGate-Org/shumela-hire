@@ -302,7 +302,7 @@ export default function InterviewScheduler({ interviewId, onSuccess, onCancel }:
     return (
       <div className="flex items-center justify-center p-8">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500 mx-auto mb-4"></div>
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-violet-500 mx-auto mb-4"></div>
           <p className="text-gray-600">Loading interview...</p>
         </div>
       </div>
@@ -431,7 +431,7 @@ export default function InterviewScheduler({ interviewId, onSuccess, onCancel }:
               />
               {errors.scheduledAt && <p className="text-red-500 text-sm mt-1">{errors.scheduledAt}</p>}
               {checkingAvailability && (
-                <p className="text-blue-500 text-sm mt-1">Checking availability...</p>
+                <p className="text-violet-500 text-sm mt-1">Checking availability...</p>
               )}
             </div>
 
@@ -464,7 +464,7 @@ export default function InterviewScheduler({ interviewId, onSuccess, onCancel }:
                     key={index}
                     type="button"
                     onClick={() => handleSuggestedTimeSelect(time)}
-                    className="px-3 py-1 bg-blue-100 text-blue-800 rounded-md hover:bg-blue-200 text-sm"
+                    className="px-3 py-1 bg-violet-100 text-violet-800 rounded-md hover:bg-violet-200 text-sm"
                   >
                     {new Date(time).toLocaleString()}
                   </button>
@@ -583,7 +583,7 @@ export default function InterviewScheduler({ interviewId, onSuccess, onCancel }:
           <button
             type="submit"
             disabled={loading}
-            className="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="px-6 py-2 bg-violet-600 text-white rounded-md hover:bg-violet-700 disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {loading ? (
               <span className="flex items-center">

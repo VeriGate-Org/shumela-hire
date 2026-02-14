@@ -148,7 +148,7 @@ const JobsPortalPage: React.FC = () => {
                 placeholder="Search jobs by title, company, or keywords..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-violet-500/40 focus:border-violet-400"
               />
             </div>
 
@@ -161,7 +161,7 @@ const JobsPortalPage: React.FC = () => {
                 <FunnelIcon className="w-4 h-4 mr-2" />
                 Filters
                 {(locationFilter || departmentFilter || employmentTypeFilter) && (
-                  <span className="ml-2 px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded-full">
+                  <span className="ml-2 px-2 py-1 bg-violet-100 text-violet-800 text-xs rounded-full">
                     Active
                   </span>
                 )}
@@ -185,7 +185,7 @@ const JobsPortalPage: React.FC = () => {
                       placeholder="Enter location..."
                       value={locationFilter}
                       onChange={(e) => setLocationFilter(e.target.value)}
-                      className="w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                      className="w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-violet-500/40 focus:border-violet-400"
                     />
                   </div>
 
@@ -198,7 +198,7 @@ const JobsPortalPage: React.FC = () => {
                       placeholder="Enter department..."
                       value={departmentFilter}
                       onChange={(e) => setDepartmentFilter(e.target.value)}
-                      className="w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                      className="w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-violet-500/40 focus:border-violet-400"
                     />
                   </div>
 
@@ -209,7 +209,7 @@ const JobsPortalPage: React.FC = () => {
                     <select
                       value={employmentTypeFilter}
                       onChange={(e) => setEmploymentTypeFilter(e.target.value)}
-                      className="w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                      className="w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-violet-500/40 focus:border-violet-400"
                     >
                       <option value="">All Types</option>
                       <option value="Full-time">Full-time</option>
@@ -230,7 +230,7 @@ const JobsPortalPage: React.FC = () => {
                         setDepartmentFilter('');
                         setEmploymentTypeFilter('');
                       }}
-                      className="text-sm text-blue-600 hover:text-blue-800"
+                      className="text-sm text-violet-600 hover:text-violet-800"
                     >
                       Clear all filters
                     </button>
@@ -262,7 +262,7 @@ const JobsPortalPage: React.FC = () => {
                   setDepartmentFilter('');
                   setEmploymentTypeFilter('');
                 }}
-                className="text-blue-600 hover:text-blue-800"
+                className="text-violet-600 hover:text-violet-800"
               >
                 Clear filters to see all jobs
               </button>
@@ -281,9 +281,9 @@ const JobsPortalPage: React.FC = () => {
                         <div className="flex items-center space-x-3 mb-2">
                           <Link 
                             href={`/jobs/${job.slug}`}
-                            className="hover:text-blue-600 transition-colors"
+                            className="hover:text-violet-600 transition-colors"
                           >
-                            <h2 className="text-xl font-semibold text-gray-900 hover:text-blue-600">
+                            <h2 className="text-xl font-semibold text-gray-900 hover:text-violet-600">
                               {job.title}
                             </h2>
                           </Link>
@@ -346,7 +346,7 @@ const JobsPortalPage: React.FC = () => {
 
                       <div className="ml-6">
                         <Link href={`/jobs/${job.slug}`}>
-                          <button className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg font-medium transition-colors">
+                          <button className="bg-violet-600 hover:bg-violet-700 text-white px-6 py-2 rounded-lg font-medium transition-colors">
                             Apply Now
                           </button>
                         </Link>
@@ -363,7 +363,7 @@ const JobsPortalPage: React.FC = () => {
         <div className="mt-12 text-center text-gray-500">
           <p>Don&apos;t see a perfect match? Send us your resume and we&apos;ll keep you in mind for future opportunities.</p>
           <p className="mt-2">
-            <a href="mailto:careers@company.com" className="text-blue-600 hover:text-blue-800">
+            <a href="mailto:careers@company.com" className="text-violet-600 hover:text-violet-800">
               careers@company.com
             </a>
           </p>

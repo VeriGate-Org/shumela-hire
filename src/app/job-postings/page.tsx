@@ -134,7 +134,7 @@ export default function JobPostingsPage() {
                 <EnterpriseThemeToggle variant="compact" />
                 <button
                   onClick={() => setView('create')}
-                  className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"
+                  className="px-4 py-2 bg-violet-500 text-white rounded-md hover:bg-violet-600"
                 >
                   Create Job Posting
                 </button>
@@ -153,7 +153,7 @@ export default function JobPostingsPage() {
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
                     placeholder="Search by title or department..."
-                    className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-violet-500/40 focus:border-violet-400"
                   />
                 </div>
                 <div>
@@ -163,7 +163,7 @@ export default function JobPostingsPage() {
                   <select
                     value={statusFilter}
                     onChange={(e) => setStatusFilter(e.target.value)}
-                    className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-violet-500/40 focus:border-violet-400"
                   >
                     <option value="ALL">All Statuses</option>
                     {getStatusOptions().map(status => (
@@ -177,7 +177,7 @@ export default function JobPostingsPage() {
             {/* Job Postings List */}
             {loading ? (
               <div className="flex items-center justify-center p-8">
-                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
+                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-violet-500"></div>
               </div>
             ) : (
               <div className="space-y-4">
@@ -208,7 +208,7 @@ export default function JobPostingsPage() {
                         
                         <button
                           onClick={() => setView('create')}
-                          className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"
+                          className="px-4 py-2 bg-violet-500 text-white rounded-md hover:bg-violet-600"
                         >
                           Try Demo Job Posting Form
                         </button>
@@ -271,7 +271,7 @@ export default function JobPostingsPage() {
                                   setSelectedJobPosting(jobPosting);
                                   setView('edit');
                                 }}
-                                className="text-blue-600 hover:text-blue-800 text-sm font-medium"
+                                className="text-violet-600 hover:text-violet-800 text-sm font-medium"
                               >
                                 Edit
                               </button>
@@ -302,7 +302,7 @@ export default function JobPostingsPage() {
             <div className="mb-4">
               <button
                 onClick={() => setView('list')}
-                className="text-blue-500 hover:text-blue-700 font-medium"
+                className="text-violet-500 hover:text-violet-700 font-medium"
               >
                 ← Back to Job Postings
               </button>
@@ -320,7 +320,7 @@ export default function JobPostingsPage() {
             <div className="mb-4">
               <button
                 onClick={() => setView('list')}
-                className="text-blue-500 hover:text-blue-700 font-medium"
+                className="text-violet-500 hover:text-violet-700 font-medium"
               >
                 ← Back to Job Postings
               </button>
@@ -339,7 +339,7 @@ export default function JobPostingsPage() {
             <div className="mb-4">
               <button
                 onClick={() => setView('list')}
-                className="text-blue-500 hover:text-blue-700 font-medium"
+                className="text-violet-500 hover:text-violet-700 font-medium"
               >
                 ← Back to Job Postings
               </button>

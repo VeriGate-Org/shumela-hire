@@ -183,7 +183,7 @@ export default function NotificationsPanel({
     switch (type.toUpperCase()) {
       case 'APPLICATION_SUBMITTED':
       case 'APPLICATION_APPROVED':
-        return 'text-blue-600';
+        return 'text-violet-600';
       case 'INTERVIEW_SCHEDULED':
         return 'text-purple-600';
       case 'OFFER_EXTENDED':
@@ -201,7 +201,7 @@ export default function NotificationsPanel({
   if (loading) {
     return (
       <div className="flex justify-center items-center py-8">
-        <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-blue-600"></div>
+        <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-violet-600"></div>
       </div>
     );
   }
@@ -225,8 +225,8 @@ export default function NotificationsPanel({
           </h3>
           {unreadCount > 0 && (
             <div className="flex items-center gap-2">
-              <div className="w-2 h-2 bg-blue-600 rounded-full animate-pulse"></div>
-              <span className="text-sm font-medium text-blue-600">
+              <div className="w-2 h-2 bg-violet-600 rounded-full animate-pulse"></div>
+              <span className="text-sm font-medium text-violet-600">
                 {unreadCount} unread
               </span>
             </div>
@@ -241,7 +241,7 @@ export default function NotificationsPanel({
             className={`p-4 border rounded-lg cursor-pointer transition-all duration-200 ${
               notification.isRead 
                 ? 'bg-white border-gray-200 hover:bg-gray-50' 
-                : 'bg-blue-50 border-blue-200 hover:bg-blue-100 shadow-sm'
+                : 'bg-violet-50 border-violet-200 hover:bg-violet-100 shadow-sm'
             }`}
             onClick={() => !notification.isRead && handleMarkAsRead(notification.id)}
           >
@@ -263,7 +263,7 @@ export default function NotificationsPanel({
                       {getTimeAgo(notification.createdAt)}
                     </span>
                     {!notification.isRead && (
-                      <div className="w-2 h-2 bg-blue-600 rounded-full"></div>
+                      <div className="w-2 h-2 bg-violet-600 rounded-full"></div>
                     )}
                   </div>
                 </div>
@@ -302,7 +302,7 @@ export default function NotificationsPanel({
 
       {notifications.length >= limit && (
         <div className="mt-4 text-center">
-          <button className="text-sm text-blue-600 hover:text-blue-700 font-medium">
+          <button className="text-sm text-violet-600 hover:text-violet-700 font-medium">
             View all notifications →
           </button>
         </div>

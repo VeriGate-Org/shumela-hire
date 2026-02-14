@@ -251,13 +251,13 @@ export default function OfferManagement() {
           </div>
         </div>
         
-        <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+        <div className="bg-violet-50 border border-violet-200 rounded-lg p-4">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium text-blue-800">Active Negotiations</p>
-              <p className="text-2xl font-bold text-blue-900">{dashboardCounts.activeNegotiations}</p>
+              <p className="text-sm font-medium text-violet-800">Active Negotiations</p>
+              <p className="text-2xl font-bold text-violet-900">{dashboardCounts.activeNegotiations}</p>
             </div>
-            <div className="text-blue-500">🤝</div>
+            <div className="text-violet-500">🤝</div>
           </div>
         </div>
         
@@ -352,7 +352,7 @@ export default function OfferManagement() {
           </button>
           <button
             onClick={() => {setCurrentPage(0); loadOffers();}}
-            className="px-4 py-2 text-sm bg-blue-600 text-white rounded-md hover:bg-blue-700"
+            className="px-4 py-2 text-sm bg-violet-600 text-white rounded-md hover:bg-violet-700"
           >
             Apply Filters
           </button>
@@ -368,7 +368,7 @@ export default function OfferManagement() {
         <div className="overflow-x-auto">
           {loading ? (
             <div className="p-8 text-center">
-              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500 mx-auto"></div>
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-violet-500 mx-auto"></div>
             </div>
           ) : offers.length === 0 ? (
             <div className="p-8 text-center text-gray-500">
@@ -491,7 +491,7 @@ export default function OfferManagement() {
                         {canPerformAction(offer, 'send') && (
                           <button
                             onClick={() => handleOfferAction(offer, 'send')}
-                            className="text-blue-600 hover:text-blue-900"
+                            className="text-violet-600 hover:text-violet-900"
                           >
                             Send
                           </button>
@@ -621,7 +621,7 @@ export default function OfferManagement() {
               </button>
               <button
                 onClick={executeAction}
-                className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+                className="px-4 py-2 bg-violet-600 text-white rounded-md hover:bg-violet-700"
               >
                 Confirm {actionType.charAt(0).toUpperCase() + actionType.slice(1)}
               </button>

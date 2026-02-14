@@ -137,8 +137,8 @@ export default function InternalApplicationPage() {
             <p className="text-gray-600 mb-6">
               Your internal application for <strong>{decodeURIComponent(jobTitle)}</strong> has been submitted successfully.
             </p>
-            <div className="bg-blue-50 border border-blue-200 rounded-md p-4 mb-6">
-              <p className="text-sm text-blue-800">
+            <div className="bg-violet-50 border border-violet-200 rounded-md p-4 mb-6">
+              <p className="text-sm text-violet-800">
                 <strong>What happens next?</strong>
                 <br />
                 • Your application will be prioritized as an internal candidate
@@ -150,7 +150,7 @@ export default function InternalApplicationPage() {
             </div>
             <div className="space-y-3">
               <Link href="/internal/jobs">
-                <button className="w-full bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition-colors">
+                <button className="w-full bg-violet-600 text-white px-4 py-2 rounded-md hover:bg-violet-700 transition-colors">
                   Browse More Internal Jobs
                 </button>
               </Link>
@@ -174,7 +174,7 @@ export default function InternalApplicationPage() {
           <div className="py-6">
             <div className="flex items-center justify-between">
               <Link href="/internal/jobs">
-                <button className="inline-flex items-center text-blue-600 hover:text-blue-800 transition-colors">
+                <button className="inline-flex items-center text-violet-600 hover:text-violet-800 transition-colors">
                   <ArrowLeftIcon className="w-4 h-4 mr-2" />
                   Back to Job Board
                 </button>
@@ -201,26 +201,26 @@ export default function InternalApplicationPage() {
           </div>
 
           {/* Internal Application Benefits */}
-          <div className="px-8 py-6 bg-blue-50 border-b border-gray-200">
-            <h2 className="text-lg font-semibold text-blue-900 mb-3">Internal Application Advantages</h2>
+          <div className="px-8 py-6 bg-violet-50 border-b border-gray-200">
+            <h2 className="text-lg font-semibold text-violet-900 mb-3">Internal Application Advantages</h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div className="flex items-center">
-                <div className="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center mr-3">
+                <div className="w-8 h-8 bg-violet-600 rounded-full flex items-center justify-center mr-3">
                   <UserIcon className="w-4 h-4 text-white" />
                 </div>
-                <span className="text-sm text-blue-800">Priority Review</span>
+                <span className="text-sm text-violet-800">Priority Review</span>
               </div>
               <div className="flex items-center">
                 <div className="w-8 h-8 bg-green-600 rounded-full flex items-center justify-center mr-3">
                   <BuildingOfficeIcon className="w-4 h-4 text-white" />
                 </div>
-                <span className="text-sm text-blue-800">Known Performance</span>
+                <span className="text-sm text-violet-800">Known Performance</span>
               </div>
               <div className="flex items-center">
                 <div className="w-8 h-8 bg-purple-600 rounded-full flex items-center justify-center mr-3">
                   <DocumentTextIcon className="w-4 h-4 text-white" />
                 </div>
-                <span className="text-sm text-blue-800">Faster Process</span>
+                <span className="text-sm text-violet-800">Faster Process</span>
               </div>
             </div>
           </div>
@@ -254,7 +254,7 @@ export default function InternalApplicationPage() {
                       required
                       value={formData.applicantName}
                       onChange={(e) => handleInputChange('applicantName', e.target.value)}
-                      className="w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                      className="w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-violet-500/40 focus:border-violet-400"
                       placeholder="Your full name"
                     />
                   </div>
@@ -268,7 +268,7 @@ export default function InternalApplicationPage() {
                       required
                       value={formData.applicantEmail}
                       onChange={(e) => handleInputChange('applicantEmail', e.target.value)}
-                      className="w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                      className="w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-violet-500/40 focus:border-violet-400"
                       placeholder="your.email@company.com"
                     />
                   </div>
@@ -282,7 +282,7 @@ export default function InternalApplicationPage() {
                       required
                       value={formData.employeeId}
                       onChange={(e) => handleInputChange('employeeId', e.target.value)}
-                      className="w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                      className="w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-violet-500/40 focus:border-violet-400"
                       placeholder="EMP123456"
                     />
                   </div>
@@ -296,7 +296,7 @@ export default function InternalApplicationPage() {
                       required
                       value={formData.department}
                       onChange={(e) => handleInputChange('department', e.target.value)}
-                      className="w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                      className="w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-violet-500/40 focus:border-violet-400"
                       placeholder="Current department"
                     />
                   </div>
@@ -316,7 +316,7 @@ export default function InternalApplicationPage() {
                       required
                       value={formData.currentPosition}
                       onChange={(e) => handleInputChange('currentPosition', e.target.value)}
-                      className="w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                      className="w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-violet-500/40 focus:border-violet-400"
                       placeholder="Your current job title"
                     />
                   </div>
@@ -329,7 +329,7 @@ export default function InternalApplicationPage() {
                       type="date"
                       value={formData.availabilityDate}
                       onChange={(e) => handleInputChange('availabilityDate', e.target.value)}
-                      className="w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                      className="w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-violet-500/40 focus:border-violet-400"
                     />
                   </div>
                 </div>
@@ -348,7 +348,7 @@ export default function InternalApplicationPage() {
                       type="url"
                       value={formData.resumeUrl}
                       onChange={(e) => handleInputChange('resumeUrl', e.target.value)}
-                      className="w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                      className="w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-violet-500/40 focus:border-violet-400"
                       placeholder="https://... (link to your updated resume)"
                     />
                     <p className="text-xs text-gray-500 mt-1">
@@ -365,7 +365,7 @@ export default function InternalApplicationPage() {
                       required
                       value={formData.reasonForApplication}
                       onChange={(e) => handleInputChange('reasonForApplication', e.target.value)}
-                      className="w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                      className="w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-violet-500/40 focus:border-violet-400"
                       placeholder="Why are you interested in this position? What motivates you to make this internal move?"
                     />
                   </div>
@@ -378,7 +378,7 @@ export default function InternalApplicationPage() {
                       rows={6}
                       value={formData.coverLetter}
                       onChange={(e) => handleInputChange('coverLetter', e.target.value)}
-                      className="w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                      className="w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-violet-500/40 focus:border-violet-400"
                       placeholder="Describe how your current experience and skills make you a great fit for this role..."
                     />
                   </div>
@@ -391,7 +391,7 @@ export default function InternalApplicationPage() {
                       rows={3}
                       value={formData.additionalComments}
                       onChange={(e) => handleInputChange('additionalComments', e.target.value)}
-                      className="w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                      className="w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-violet-500/40 focus:border-violet-400"
                       placeholder="Any additional information you'd like to share..."
                     />
                   </div>
@@ -408,7 +408,7 @@ export default function InternalApplicationPage() {
                   <button
                     type="submit"
                     disabled={loading || !formData.applicantName || !formData.applicantEmail || !formData.employeeId || !formData.reasonForApplication}
-                    className="inline-flex items-center px-6 py-3 bg-blue-600 text-white font-medium rounded-md hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                    className="inline-flex items-center px-6 py-3 bg-violet-600 text-white font-medium rounded-md hover:bg-violet-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                   >
                     {loading ? (
                       <>

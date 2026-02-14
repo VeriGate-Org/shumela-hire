@@ -295,7 +295,7 @@ export default function ApplicationManagementConsole() {
 
   const getStatusColor = (status: string) => {
     const colors = {
-      APPLIED: 'bg-blue-100 text-blue-800',
+      APPLIED: 'bg-violet-100 text-violet-800',
       UNDER_REVIEW: 'bg-yellow-100 text-yellow-800',
       INTERVIEWED: 'bg-purple-100 text-purple-800',
       OFFERED: 'bg-green-100 text-green-800',
@@ -340,12 +340,12 @@ export default function ApplicationManagementConsole() {
 
         {/* Statistics Cards */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-          <div className="bg-blue-50 p-4 rounded-lg">
+          <div className="bg-violet-50 p-4 rounded-lg">
             <div className="flex items-center">
-              <Users className="w-8 h-8 text-blue-600 mr-3" />
+              <Users className="w-8 h-8 text-violet-600 mr-3" />
               <div>
-                <p className="text-sm font-medium text-blue-600">Total Applications</p>
-                <p className="text-2xl font-bold text-blue-900">{statistics.totalApplications}</p>
+                <p className="text-sm font-medium text-violet-600">Total Applications</p>
+                <p className="text-2xl font-bold text-violet-900">{statistics.totalApplications}</p>
               </div>
             </div>
           </div>
@@ -387,12 +387,12 @@ export default function ApplicationManagementConsole() {
               placeholder="Search by candidate name, email, or job title..."
               value={filters.searchTerm}
               onChange={(e) => setFilters(prev => ({ ...prev, searchTerm: e.target.value }))}
-              className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-violet-500/40 focus:border-transparent"
             />
           </div>
           <button
             onClick={handleSearch}
-            className="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="px-6 py-2 bg-violet-600 text-white rounded-md hover:bg-violet-700 focus:outline-none focus:ring-2 focus:ring-violet-500/40"
           >
             Search
           </button>
@@ -411,7 +411,7 @@ export default function ApplicationManagementConsole() {
                 multiple
                 value={filters.statuses}
                 onChange={(e) => handleFilterChange('statuses', Array.from(e.target.selectedOptions, option => option.value))}
-                className="w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-blue-500"
+                className="w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-violet-500/40"
               >
                 {statusOptions.map(status => (
                   <option key={status} value={status}>{status.replace('_', ' ')}</option>
@@ -426,7 +426,7 @@ export default function ApplicationManagementConsole() {
                 multiple
                 value={filters.departments}
                 onChange={(e) => handleFilterChange('departments', Array.from(e.target.selectedOptions, option => option.value))}
-                className="w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-blue-500"
+                className="w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-violet-500/40"
               >
                 {departmentOptions.map(dept => (
                   <option key={dept} value={dept}>{dept}</option>
@@ -445,7 +445,7 @@ export default function ApplicationManagementConsole() {
                   placeholder="Min"
                   value={filters.minRating || ''}
                   onChange={(e) => handleFilterChange('minRating', parseInt(e.target.value) || 0)}
-                  className="flex-1 border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-blue-500"
+                  className="flex-1 border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-violet-500/40"
                 />
                 <input
                   type="number"
@@ -454,7 +454,7 @@ export default function ApplicationManagementConsole() {
                   placeholder="Max"
                   value={filters.maxRating || ''}
                   onChange={(e) => handleFilterChange('maxRating', parseInt(e.target.value) || 5)}
-                  className="flex-1 border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-blue-500"
+                  className="flex-1 border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-violet-500/40"
                 />
               </div>
             </div>
@@ -466,7 +466,7 @@ export default function ApplicationManagementConsole() {
                 type="datetime-local"
                 value={filters.dateFrom}
                 onChange={(e) => handleFilterChange('dateFrom', e.target.value)}
-                className="w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-blue-500"
+                className="w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-violet-500/40"
               />
             </div>
 
@@ -476,7 +476,7 @@ export default function ApplicationManagementConsole() {
                 type="datetime-local"
                 value={filters.dateTo}
                 onChange={(e) => handleFilterChange('dateTo', e.target.value)}
-                className="w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-blue-500"
+                className="w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-violet-500/40"
               />
             </div>
 
@@ -487,7 +487,7 @@ export default function ApplicationManagementConsole() {
                 <select
                   value={filters.sortBy}
                   onChange={(e) => handleFilterChange('sortBy', e.target.value)}
-                  className="flex-1 border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-blue-500"
+                  className="flex-1 border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-violet-500/40"
                 >
                   <option value="submittedAt">Submit Date</option>
                   <option value="lastUpdated">Last Updated</option>
@@ -497,7 +497,7 @@ export default function ApplicationManagementConsole() {
                 <select
                   value={filters.sortDirection}
                   onChange={(e) => handleFilterChange('sortDirection', e.target.value)}
-                  className="border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-blue-500"
+                  className="border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-violet-500/40"
                 >
                   <option value="desc">Desc</option>
                   <option value="asc">Asc</option>
@@ -509,7 +509,7 @@ export default function ApplicationManagementConsole() {
           <div className="mt-4 flex space-x-3">
             <button
               onClick={handleSearch}
-              className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+              className="px-4 py-2 bg-violet-600 text-white rounded-md hover:bg-violet-700"
             >
               Apply Filters
             </button>
@@ -638,7 +638,7 @@ export default function ApplicationManagementConsole() {
                     type="checkbox"
                     checked={selectedApplications.length === applications.length && applications.length > 0}
                     onChange={handleSelectAll}
-                    className="rounded border-gray-300 text-blue-600 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
+                    className="rounded border-gray-300 text-violet-600 shadow-sm focus:border-violet-300 focus:ring focus:ring-violet-200 focus:ring-opacity-50"
                   />
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
@@ -685,7 +685,7 @@ export default function ApplicationManagementConsole() {
                         type="checkbox"
                         checked={selectedApplications.includes(application.id)}
                         onChange={() => handleSelectApplication(application.id)}
-                        className="rounded border-gray-300 text-blue-600 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
+                        className="rounded border-gray-300 text-violet-600 shadow-sm focus:border-violet-300 focus:ring focus:ring-violet-200 focus:ring-opacity-50"
                       />
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
@@ -724,7 +724,7 @@ export default function ApplicationManagementConsole() {
                       {formatDate(application.submittedAt)}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                      <button className="text-blue-600 hover:text-blue-900 mr-3">
+                      <button className="text-violet-600 hover:text-violet-900 mr-3">
                         View
                       </button>
                       <button className="text-green-600 hover:text-green-900 mr-3">

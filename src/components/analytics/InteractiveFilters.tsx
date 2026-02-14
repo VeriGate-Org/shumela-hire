@@ -68,7 +68,7 @@ const InteractiveFilters: React.FC<InteractiveFiltersProps> = ({
               placeholder={filter.placeholder || `Search ${filter.label.toLowerCase()}...`}
               value={value}
               onChange={(e) => updateFilter(filter.id, e.target.value)}
-              className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-violet-500/40 focus:border-transparent"
             />
           </div>
         );
@@ -79,7 +79,7 @@ const InteractiveFilters: React.FC<InteractiveFiltersProps> = ({
             <select
               value={value}
               onChange={(e) => updateFilter(filter.id, e.target.value)}
-              className="w-full appearance-none bg-white border border-gray-300 rounded-lg px-3 py-2 pr-8 text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="w-full appearance-none bg-white border border-gray-300 rounded-lg px-3 py-2 pr-8 text-sm focus:ring-2 focus:ring-violet-500/40 focus:border-transparent"
             >
               <option value="">{filter.placeholder || `Select ${filter.label}`}</option>
               {filter.options?.map((option) => (
@@ -113,7 +113,7 @@ const InteractiveFilters: React.FC<InteractiveFiltersProps> = ({
                 type="date"
                 value={value?.start || ''}
                 onChange={(e) => updateFilter(filter.id, { ...value, start: e.target.value })}
-                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-violet-500/40 focus:border-transparent"
               />
             </div>
             <div className="relative">
@@ -122,7 +122,7 @@ const InteractiveFilters: React.FC<InteractiveFiltersProps> = ({
                 type="date"
                 value={value?.end || ''}
                 onChange={(e) => updateFilter(filter.id, { ...value, end: e.target.value })}
-                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-violet-500/40 focus:border-transparent"
               />
             </div>
           </div>
@@ -160,7 +160,7 @@ const InteractiveFilters: React.FC<InteractiveFiltersProps> = ({
           <FunnelIcon className="w-5 h-5 text-gray-500" />
           <h3 className="font-medium text-gray-900">Filters</h3>
           {hasActiveFilters && (
-            <span className="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded-full">
+            <span className="bg-violet-100 text-violet-800 text-xs px-2 py-1 rounded-full">
               {values.length} active
             </span>
           )}
@@ -225,13 +225,13 @@ const InteractiveFilters: React.FC<InteractiveFiltersProps> = ({
               return (
                 <span
                   key={filterValue.id}
-                  className="inline-flex items-center gap-1 bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded-full"
+                  className="inline-flex items-center gap-1 bg-violet-100 text-violet-800 text-xs px-2 py-1 rounded-full"
                 >
                   <span className="font-medium">{filter.label}:</span>
                   <span>{displayValue}</span>
                   <button
                     onClick={() => updateFilter(filterValue.id, null)}
-                    className="ml-1 hover:bg-blue-200 rounded-full p-0.5"
+                    className="ml-1 hover:bg-violet-200 rounded-full p-0.5"
                   >
                     <XMarkIcon className="w-3 h-3" />
                   </button>
@@ -277,7 +277,7 @@ const MultiSelectDropdown: React.FC<MultiSelectDropdownProps> = ({
       <button
         type="button"
         onClick={() => setIsOpen(!isOpen)}
-        className="w-full bg-white border border-gray-300 rounded-lg px-3 py-2 text-left text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent flex justify-between items-center"
+        className="w-full bg-white border border-gray-300 rounded-lg px-3 py-2 text-left text-sm focus:ring-2 focus:ring-violet-500/40 focus:border-transparent flex justify-between items-center"
       >
         <span className={values.length === 0 ? 'text-gray-500' : 'text-gray-900'}>
           {displayText}
@@ -296,7 +296,7 @@ const MultiSelectDropdown: React.FC<MultiSelectDropdownProps> = ({
                 type="checkbox"
                 checked={values.includes(option.value)}
                 onChange={() => toggleOption(option.value)}
-                className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                className="rounded border-gray-300 text-violet-600 focus:ring-violet-500/40"
               />
               <span className="text-sm text-gray-900">{option.label}</span>
             </label>

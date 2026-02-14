@@ -87,7 +87,7 @@ export function VirtualScroll<T>({
           ))}
           {isLoading && (
             <div className="flex justify-center items-center py-4">
-              <div className="animate-spin w-6 h-6 border-2 border-blue-600 border-t-transparent rounded-full"></div>
+              <div className="animate-spin w-6 h-6 border-2 border-violet-600 border-t-transparent rounded-full"></div>
               <span className="ml-2 text-gray-600">Loading more...</span>
             </div>
           )}
@@ -273,7 +273,7 @@ export function OptimizedList<T>({
       ))}
       {isLoading && (
         <div className="flex justify-center items-center py-4">
-          <div className="animate-spin w-6 h-6 border-2 border-blue-600 border-t-transparent rounded-full"></div>
+          <div className="animate-spin w-6 h-6 border-2 border-violet-600 border-t-transparent rounded-full"></div>
           <span className="ml-2 text-gray-600">Loading more...</span>
         </div>
       )}

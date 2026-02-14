@@ -42,7 +42,7 @@ export default function OfflinePage() {
         {/* Retry button */}
         <button
           onClick={handleRetry}
-          className="w-full bg-blue-600 text-white py-3 px-4 rounded-lg font-medium hover:bg-blue-700 transition-colors mb-6"
+          className="w-full bg-violet-600 text-white py-3 px-4 rounded-lg font-medium hover:bg-violet-700 transition-colors mb-6"
         >
           Try Again
         </button>

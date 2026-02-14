@@ -218,7 +218,7 @@ export default function JobPostingForm({ jobPostingId, onSuccess, onCancel }: Jo
     return (
       <div className="flex items-center justify-center p-8">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500 mx-auto mb-4"></div>
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-violet-500 mx-auto mb-4"></div>
           <p className="text-gray-600">Loading job posting...</p>
         </div>
       </div>
@@ -247,7 +247,7 @@ export default function JobPostingForm({ jobPostingId, onSuccess, onCancel }: Jo
                 onClick={() => setActiveTab(tab.id)}
                 className={`py-2 px-1 border-b-2 font-medium text-sm flex items-center space-x-2 ${
                   activeTab === tab.id
-                    ? 'border-blue-500 text-blue-600'
+                    ? 'border-violet-500 text-violet-600'
                     : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
                 }`}
               >
@@ -650,7 +650,7 @@ export default function JobPostingForm({ jobPostingId, onSuccess, onCancel }: Jo
           <button
             type="submit"
             disabled={loading}
-            className="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="px-6 py-2 bg-violet-600 text-white rounded-md hover:bg-violet-700 disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {loading ? (
               <span className="flex items-center">

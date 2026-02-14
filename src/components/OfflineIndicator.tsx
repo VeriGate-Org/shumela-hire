@@ -27,7 +27,7 @@ export const OfflineIndicator: React.FC = () => {
           {offlineActions.length > 0 && (
             <span className={`text-xs px-2 py-1 rounded-full ${
               isOnline 
-                ? 'bg-blue-100 text-blue-800' 
+                ? 'bg-violet-100 text-violet-800' 
                 : 'bg-orange-100 text-orange-800'
             }`}>
               {offlineActions.length} pending

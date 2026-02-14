@@ -120,7 +120,7 @@ const RequisitionList: React.FC<RequisitionListProps> = ({
   if (loading) {
     return (
       <div className="flex justify-center items-center py-8">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-violet-600"></div>
         <span className="ml-2">Loading requisitions...</span>
       </div>
     );
@@ -161,9 +161,9 @@ const RequisitionList: React.FC<RequisitionListProps> = ({
                 <div>
                   <Link 
                     href={`/requisitions/${requisition.id}`}
-                    className="hover:text-blue-600 transition-colors"
+                    className="hover:text-violet-600 transition-colors"
                   >
-                    <h3 className="text-lg font-semibold text-gray-900 hover:text-blue-600">
+                    <h3 className="text-lg font-semibold text-gray-900 hover:text-violet-600">
                       {requisition.jobTitle}
                     </h3>
                   </Link>
@@ -178,7 +178,7 @@ const RequisitionList: React.FC<RequisitionListProps> = ({
                   <WorkflowStatusBadge status={requisition.status} showProgress />
                   <Link 
                     href={`/requisitions/${requisition.id}`}
-                    className="text-xs text-blue-600 hover:text-blue-800 transition-colors"
+                    className="text-xs text-violet-600 hover:text-violet-800 transition-colors"
                   >
                     View Details →
                   </Link>

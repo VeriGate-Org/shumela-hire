@@ -61,7 +61,7 @@ const UserProfile: React.FC<UserProfileProps> = ({ user }) => {
       {/* Profile Button */}
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center space-x-3 text-left p-2 rounded-lg hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors"
+        className="flex items-center space-x-3 text-left p-2 rounded-lg hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-violet-500/40 focus:ring-offset-2 transition-colors"
       >
         {/* Avatar */}
         <div className="flex-shrink-0">
@@ -72,7 +72,7 @@ const UserProfile: React.FC<UserProfileProps> = ({ user }) => {
               className="h-8 w-8 rounded-full object-cover"
             />
           ) : (
-            <div className="h-8 w-8 bg-blue-500 rounded-full flex items-center justify-center text-white text-sm font-medium">
+            <div className="h-8 w-8 bg-violet-500 rounded-full flex items-center justify-center text-white text-sm font-medium">
               {getInitials(currentUser.name)}
             </div>
           )}
@@ -117,7 +117,7 @@ const UserProfile: React.FC<UserProfileProps> = ({ user }) => {
                     className="h-10 w-10 rounded-full object-cover"
                   />
                 ) : (
-                  <div className="h-10 w-10 bg-blue-500 rounded-full flex items-center justify-center text-white font-medium">
+                  <div className="h-10 w-10 bg-violet-500 rounded-full flex items-center justify-center text-white font-medium">
                     {getInitials(currentUser.name)}
                   </div>
                 )}

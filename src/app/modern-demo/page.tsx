@@ -99,10 +99,10 @@ export default function ModernDashboardDemo() {
 
   const actions = (
     <div className="flex space-x-3">
-      <button className="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+      <button className="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-violet-500/40">
         Export Data
       </button>
-      <button className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+      <button className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-violet-600 hover:bg-violet-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-violet-500/40">
         Create Position
       </button>
     </div>
@@ -122,8 +122,8 @@ export default function ModernDashboardDemo() {
             <div key={stat.name} className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 hover:shadow-md transition-shadow">
               <div className="flex items-center">
                 <div className="flex-shrink-0">
-                  <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
-                    <Icon className="w-5 h-5 text-blue-600" />
+                  <div className="w-8 h-8 bg-violet-100 rounded-lg flex items-center justify-center">
+                    <Icon className="w-5 h-5 text-violet-600" />
                   </div>
                 </div>
                 <div className="ml-5 w-0 flex-1">
@@ -196,8 +196,8 @@ export default function ModernDashboardDemo() {
               <div className="space-y-4">
                 {upcomingInterviews.map((interview) => (
                   <div key={interview.id} className="flex items-center space-x-3 p-3 rounded-lg hover:bg-gray-50 transition-colors">
-                    <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
-                      <span className="text-sm font-medium text-blue-600">{interview.avatar}</span>
+                    <div className="w-10 h-10 bg-violet-100 rounded-full flex items-center justify-center">
+                      <span className="text-sm font-medium text-violet-600">{interview.avatar}</span>
                     </div>
                     <div className="flex-1 min-w-0">
                       <p className="text-sm font-medium text-gray-900 truncate">{interview.candidate}</p>

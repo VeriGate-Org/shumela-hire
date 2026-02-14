@@ -189,7 +189,7 @@ export default function ApplicationStatusTracker({
                 <div className="flex-shrink-0">
                   <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium ${
                     isStepCompleted(index) ? 'bg-green-500 text-white' :
-                    isStepCurrent(index) ? 'bg-blue-500 text-white' :
+                    isStepCurrent(index) ? 'bg-violet-500 text-white' :
                     'bg-gray-200 text-gray-600'
                   }`}>
                     {isStepCompleted(index) ? '✓' : index + 1}
@@ -203,7 +203,7 @@ export default function ApplicationStatusTracker({
                       {step.label}
                     </p>
                     {isStepCurrent(index) && (
-                      <span className="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded">
+                      <span className="text-xs bg-violet-100 text-violet-800 px-2 py-1 rounded">
                         Current
                       </span>
                     )}
@@ -245,7 +245,7 @@ export default function ApplicationStatusTracker({
                 onChange={(e) => setWithdrawalReason(e.target.value)}
                 placeholder="Please provide a reason for withdrawing your application..."
                 rows={3}
-                className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-violet-500/40 focus:border-violet-400"
               />
             </div>
             <div className="flex justify-end space-x-3">

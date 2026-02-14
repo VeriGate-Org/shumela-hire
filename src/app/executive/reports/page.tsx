@@ -521,7 +521,7 @@ export default function ExecutiveReportsPage() {
     switch (type) {
       case 'critical': return <ExclamationTriangleIconSolid className="w-5 h-5 text-red-500" />;
       case 'warning': return <ExclamationCircleIcon className="w-5 h-5 text-yellow-500" />;
-      case 'info': return <InformationCircleIcon className="w-5 h-5 text-blue-500" />;
+      case 'info': return <InformationCircleIcon className="w-5 h-5 text-violet-500" />;
       default: return <InformationCircleIcon className="w-5 h-5 text-gray-500" />;
     }
   };
@@ -530,7 +530,7 @@ export default function ExecutiveReportsPage() {
     switch (type) {
       case 'critical': return 'bg-red-50 border-red-200 text-red-800';
       case 'warning': return 'bg-yellow-50 border-yellow-200 text-yellow-800';
-      case 'info': return 'bg-blue-50 border-blue-200 text-blue-800';
+      case 'info': return 'bg-violet-50 border-violet-200 text-violet-800';
       default: return 'bg-gray-50 border-gray-200 text-gray-800';
     }
   };
@@ -575,14 +575,14 @@ export default function ExecutiveReportsPage() {
               placeholder="Search reports..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="pl-10 pr-4 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              className="pl-10 pr-4 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-violet-500/40 focus:border-violet-400"
             />
           </div>
           
           <select
             value={filterCategory}
             onChange={(e) => setFilterCategory(e.target.value)}
-            className="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            className="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-violet-500/40 focus:border-violet-400"
           >
             <option value="all">All Categories</option>
             <option value="executive">Executive</option>
@@ -597,7 +597,7 @@ export default function ExecutiveReportsPage() {
       <select
         value={selectedPeriod}
         onChange={(e) => setSelectedPeriod(e.target.value as any)}
-        className="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+        className="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-violet-500/40 focus:border-violet-400"
       >
         <option value="week">This Week</option>
         <option value="month">This Month</option>
@@ -605,7 +605,7 @@ export default function ExecutiveReportsPage() {
         <option value="year">This Year</option>
       </select>
       
-      <button className="flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 text-sm font-medium">
+      <button className="flex items-center px-4 py-2 bg-violet-600 text-white rounded-lg hover:bg-violet-700 text-sm font-medium">
         <PlusIcon className="w-4 h-4 mr-2" />
         New Report
       </button>
@@ -616,7 +616,7 @@ export default function ExecutiveReportsPage() {
     return (
       <PageWrapper title="Executive Reports" subtitle="Loading executive analytics..." actions={actions}>
         <div className="flex items-center justify-center h-96">
-          <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-500"></div>
+          <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-violet-500"></div>
         </div>
       </PageWrapper>
     );
@@ -643,7 +643,7 @@ export default function ExecutiveReportsPage() {
                 onClick={() => setActiveView(item.id as any)}
                 className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
                   activeView === item.id
-                    ? 'bg-blue-100 text-blue-700'
+                    ? 'bg-violet-100 text-violet-700'
                     : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
                 }`}
               >
@@ -661,7 +661,7 @@ export default function ExecutiveReportsPage() {
             <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
               <div className="bg-white rounded-lg shadow p-6">
                 <div className="flex items-center">
-                  <UsersIcon className="w-8 h-8 text-blue-500" />
+                  <UsersIcon className="w-8 h-8 text-violet-500" />
                   <div className="ml-4">
                     <p className="text-sm font-medium text-gray-500">Total Hires</p>
                     <p className="text-2xl font-semibold text-gray-900">{executiveMetrics.totalHires}</p>
@@ -783,7 +783,7 @@ export default function ExecutiveReportsPage() {
           <div className="space-y-6">
             <div className="grid grid-cols-1 gap-6">
               {filteredReports.map((report) => (
-                <div key={report.id} className="bg-white rounded-lg shadow border-l-4 border-l-blue-500">
+                <div key={report.id} className="bg-white rounded-lg shadow border-l-4 border-l-violet-500">
                   <div className="p-6">
                     <div className="flex items-start justify-between mb-4">
                       <div className="flex items-start space-x-3">
@@ -810,7 +810,7 @@ export default function ExecutiveReportsPage() {
                           {report.status.toUpperCase()}
                         </span>
                         {report.automated && (
-                          <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                          <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-violet-100 text-violet-800">
                             AUTOMATED
                           </span>
                         )}
@@ -861,7 +861,7 @@ export default function ExecutiveReportsPage() {
                         
                         <button
                           onClick={() => handleReportGeneration(report.id)}
-                          className="flex items-center px-3 py-1 border border-blue-300 text-sm font-medium rounded-md text-blue-700 bg-blue-50 hover:bg-blue-100"
+                          className="flex items-center px-3 py-1 border border-violet-300 text-sm font-medium rounded-md text-violet-700 bg-violet-50 hover:bg-violet-100"
                         >
                           <PlayIcon className="w-4 h-4 mr-1" />
                           Generate
@@ -982,7 +982,7 @@ export default function ExecutiveReportsPage() {
                     <h2 className="text-2xl font-bold text-gray-900">{selectedReport.name}</h2>
                     <p className="text-gray-600 mt-2">{selectedReport.description}</p>
                     <div className="flex items-center space-x-4 mt-3">
-                      <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                      <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-violet-100 text-violet-800">
                         {selectedReport.category.toUpperCase()}
                       </span>
                       <span className="text-sm text-gray-500">
@@ -1019,7 +1019,7 @@ export default function ExecutiveReportsPage() {
                       <h3 className="text-lg font-semibold text-gray-900 mb-3">Critical Metrics</h3>
                       <div className="flex flex-wrap gap-2">
                         {selectedReport.criticalMetrics.map((metric, index) => (
-                          <span key={index} className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-blue-100 text-blue-800">
+                          <span key={index} className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-violet-100 text-violet-800">
                             {metric}
                           </span>
                         ))}
@@ -1082,7 +1082,7 @@ export default function ExecutiveReportsPage() {
                       Configure
                     </button>
                     
-                    <button className="flex items-center px-4 py-2 border border-blue-300 text-sm font-medium rounded-lg text-blue-700 bg-blue-50 hover:bg-blue-100">
+                    <button className="flex items-center px-4 py-2 border border-violet-300 text-sm font-medium rounded-lg text-violet-700 bg-violet-50 hover:bg-violet-100">
                       <ShareIcon className="w-4 h-4 mr-2" />
                       Share
                     </button>
@@ -1092,7 +1092,7 @@ export default function ExecutiveReportsPage() {
                         handleReportGeneration(selectedReport.id);
                         setSelectedReport(null);
                       }}
-                      className="flex items-center px-6 py-2 border border-transparent text-sm font-medium rounded-lg text-white bg-blue-600 hover:bg-blue-700"
+                      className="flex items-center px-6 py-2 border border-transparent text-sm font-medium rounded-lg text-white bg-violet-600 hover:bg-violet-700"
                     >
                       <PlayIcon className="w-4 h-4 mr-2" />
                       Generate Report

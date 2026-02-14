@@ -199,10 +199,10 @@ const DashboardNavigation: React.FC = () => {
             href={item.href}
             className={`flex-1 flex items-center px-3 py-2 rounded-md text-sm font-medium transition-colors ${
               active
-                ? 'bg-blue-100 text-blue-900 border-r-2 border-blue-600'
+                ? 'bg-violet-50/80 text-violet-700 border-l-[3px] border-l-violet-600'
                 : childActive
-                ? 'bg-blue-50 text-blue-700'
-                : 'text-gray-700 hover:bg-gray-100 hover:text-gray-900'
+                ? 'bg-violet-50/50 text-violet-600'
+                : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
             } ${level > 0 ? 'ml-6 pl-6 border-l border-gray-200' : ''}`}
           >
             <span className="mr-3 text-lg">{item.icon}</span>
@@ -225,7 +225,7 @@ const DashboardNavigation: React.FC = () => {
             <button
               onClick={() => toggleExpanded(item.id)}
               className={`p-1 rounded hover:bg-gray-200 transition-colors ${
-                showExpanded ? 'text-blue-600' : 'text-gray-400'
+                showExpanded ? 'text-violet-500' : 'text-gray-400'
               }`}
             >
               <span className={`transition-transform ${showExpanded ? 'rotate-90' : ''}`}>
@@ -273,16 +273,15 @@ const DashboardNavigation: React.FC = () => {
         fixed top-0 left-0 h-full bg-white border-r border-gray-200 z-40 transition-transform
         md:translate-x-0 md:static md:z-auto
         ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'}
-        w-80 overflow-y-auto
+        w-60 overflow-y-auto
       `}>
         <div className="p-6 border-b border-gray-200">
           <div className="flex items-center">
-            <div className="w-10 h-10 bg-violet-600 rounded-lg flex items-center justify-center">
-              <span className="text-white font-bold text-lg">TG</span>
+            <div className="w-7 h-7 bg-violet-600 rounded-md flex items-center justify-center">
+              <span className="text-white font-bold text-xs">TG</span>
             </div>
-            <div className="ml-3">
-              <h1 className="text-lg font-bold text-gray-900">TalentGate</h1>
-              <p className="text-sm text-gray-500">Dashboard v1.0</p>
+            <div className="ml-2.5">
+              <h1 className="text-sm font-bold text-gray-900 tracking-tight">TalentGate</h1>
             </div>
           </div>
         </div>

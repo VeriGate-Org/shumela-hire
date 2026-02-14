@@ -137,7 +137,7 @@ const RecruiterDashboard: React.FC = () => {
   const getStatusBadgeColor = (status: string) => {
     switch (status.toLowerCase()) {
       case 'hired': return 'bg-green-100 text-green-800';
-      case 'interview_scheduled': return 'bg-blue-100 text-blue-800';
+      case 'interview_scheduled': return 'bg-violet-100 text-violet-800';
       case 'screening': return 'bg-yellow-100 text-yellow-800';
       case 'rejected': return 'bg-red-100 text-red-800';
       case 'withdrawn': return 'bg-gray-100 text-gray-800';
@@ -148,7 +148,7 @@ const RecruiterDashboard: React.FC = () => {
   if (loading) {
     return (
       <div className="flex justify-center items-center min-h-screen">
-        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-600"></div>
+        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-violet-600"></div>
       </div>
     );
   }
@@ -161,7 +161,7 @@ const RecruiterDashboard: React.FC = () => {
           <p className="text-gray-600 mb-4">{error}</p>
           <button 
             onClick={fetchDashboardData}
-            className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+            className="bg-violet-600 text-white px-4 py-2 rounded hover:bg-violet-700"
           >
             Try Again
           </button>
@@ -215,8 +215,8 @@ const RecruiterDashboard: React.FC = () => {
                 <p className="text-2xl font-bold text-gray-900">{metrics.totalApplications}</p>
                 <p className="text-xs text-gray-500">{metrics.newApplicants} new applicants</p>
               </div>
-              <div className="p-3 bg-blue-100 rounded-full">
-                <svg className="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <div className="p-3 bg-violet-100 rounded-full">
+                <svg className="w-6 h-6 text-violet-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
                 </svg>
               </div>
@@ -290,7 +290,7 @@ const RecruiterDashboard: React.FC = () => {
                       </div>
                       <div className="w-full bg-gray-200 rounded-full h-2">
                         <div 
-                          className="bg-blue-600 h-2 rounded-full transition-all duration-300" 
+                          className="bg-violet-600 h-2 rounded-full transition-all duration-300" 
                           style={{ width: `${percentage}%` }}
                         ></div>
                       </div>

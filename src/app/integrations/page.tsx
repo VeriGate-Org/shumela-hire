@@ -256,7 +256,7 @@ export default function IntegrationsPage() {
         <PlusIcon className="w-4 h-4 mr-2" />
         Add Integration
       </button>
-      <button className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700">
+      <button className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-violet-600 hover:bg-violet-700">
         <ArrowPathIcon className="w-4 h-4 mr-2" />
         Sync All
       </button>
@@ -275,7 +275,7 @@ export default function IntegrationsPage() {
           <div className="bg-white rounded-lg shadow p-6">
             <div className="flex items-center">
               <div className="flex-shrink-0">
-                <LinkIcon className="w-8 h-8 text-blue-500" />
+                <LinkIcon className="w-8 h-8 text-violet-500" />
               </div>
               <div className="ml-4">
                 <p className="text-sm font-medium text-gray-500">Total Integrations</p>
@@ -330,7 +330,7 @@ export default function IntegrationsPage() {
                 placeholder="Search integrations..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-violet-500/40 focus:border-violet-400"
               />
             </div>
             <div className="flex gap-2 overflow-x-auto">
@@ -340,7 +340,7 @@ export default function IntegrationsPage() {
                   onClick={() => setSelectedCategory(category.name)}
                   className={`px-4 py-2 rounded-lg whitespace-nowrap text-sm font-medium transition-colors ${
                     selectedCategory === category.name
-                      ? 'bg-blue-100 text-blue-800 border border-blue-200'
+                      ? 'bg-violet-100 text-violet-800 border border-violet-200'
                       : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                   }`}
                 >
@@ -434,7 +434,7 @@ export default function IntegrationsPage() {
                     {integration.status === 'connected' && (
                       <button 
                         onClick={() => handleRefreshIntegration(integration.id)}
-                        className="px-3 py-2 bg-blue-100 text-blue-700 rounded-lg text-sm hover:bg-blue-200"
+                        className="px-3 py-2 bg-violet-100 text-violet-700 rounded-lg text-sm hover:bg-violet-200"
                       >
                         <ArrowPathIcon className="w-4 h-4" />
                       </button>

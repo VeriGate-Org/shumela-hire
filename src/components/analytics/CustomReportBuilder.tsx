@@ -297,7 +297,7 @@ const CustomReportBuilder: React.FC<CustomReportBuilderProps> = ({
             </button>
             <button
               onClick={() => onSave?.(reportConfig)}
-              className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 flex items-center gap-2"
+              className="px-4 py-2 bg-violet-600 text-white rounded-lg hover:bg-violet-700 flex items-center gap-2"
             >
               <DocumentArrowDownIcon className="w-4 h-4" />
               Save Report
@@ -319,7 +319,7 @@ const CustomReportBuilder: React.FC<CustomReportBuilderProps> = ({
               onClick={() => setActiveTab(tab.id as any)}
               className={`flex items-center gap-2 px-4 py-3 border-b-2 text-sm font-medium transition-colors ${
                 activeTab === tab.id
-                  ? 'border-blue-500 text-blue-600'
+                  ? 'border-violet-500 text-violet-600'
                   : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
               }`}
             >
@@ -387,7 +387,7 @@ const CustomReportBuilder: React.FC<CustomReportBuilderProps> = ({
                     {reportConfig.dimensions.map(dimId => {
                       const field = availableFields.find(f => f.id === dimId);
                       return (
-                        <div key={dimId} className="flex items-center justify-between bg-blue-100 text-blue-800 px-3 py-2 rounded mb-2">
+                        <div key={dimId} className="flex items-center justify-between bg-violet-100 text-violet-800 px-3 py-2 rounded mb-2">
                           <span className="text-sm">{field?.label}</span>
                           <button onClick={() => removeField('dimensions', dimId)}>
                             <TrashIcon className="w-4 h-4" />
@@ -441,7 +441,7 @@ const CustomReportBuilder: React.FC<CustomReportBuilderProps> = ({
                       onClick={() => setReportConfig(prev => ({ ...prev, visualization: viz.id as any }))}
                       className={`flex items-center gap-2 px-3 py-2 rounded-lg text-sm ${
                         reportConfig.visualization === viz.id
-                          ? 'bg-blue-100 text-blue-700'
+                          ? 'bg-violet-100 text-violet-700'
                           : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
                       }`}
                     >
@@ -458,7 +458,7 @@ const CustomReportBuilder: React.FC<CustomReportBuilderProps> = ({
                   <h4 className="font-medium text-gray-900">Filters</h4>
                   <button
                     onClick={addFilter}
-                    className="flex items-center gap-1 px-3 py-1 text-sm text-blue-600 hover:bg-blue-50 rounded"
+                    className="flex items-center gap-1 px-3 py-1 text-sm text-violet-600 hover:bg-violet-50 rounded"
                   >
                     <PlusIcon className="w-4 h-4" />
                     Add Filter

@@ -110,7 +110,7 @@ export default function CustomReportsPage() {
           </div>
           <button
             onClick={() => setShowBuilder(true)}
-            className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+            className="flex items-center gap-2 px-4 py-2 bg-violet-600 text-white rounded-lg hover:bg-violet-700"
           >
             <PlusIcon className="w-4 h-4" />
             Create New Report
@@ -125,7 +125,7 @@ export default function CustomReportsPage() {
                 <p className="text-sm font-medium text-gray-600">Total Reports</p>
                 <p className="text-2xl font-bold text-gray-900">{savedReports.length}</p>
               </div>
-              <DocumentChartBarIcon className="w-8 h-8 text-blue-600" />
+              <DocumentChartBarIcon className="w-8 h-8 text-violet-600" />
             </div>
           </div>
           
@@ -200,7 +200,7 @@ export default function CustomReportsPage() {
                   <div>
                     <h4 className="font-medium text-gray-900">{template.name}</h4>
                     <p className="text-sm text-gray-500 mt-1">{template.description}</p>
-                    <button className="text-blue-600 text-sm font-medium mt-2 hover:text-blue-700">
+                    <button className="text-violet-600 text-sm font-medium mt-2 hover:text-violet-700">
                       Use Template →
                     </button>
                   </div>
@@ -245,7 +245,7 @@ export default function CustomReportsPage() {
                   </div>
                   
                   <div className="flex items-center gap-2 ml-4">
-                    <button className="p-2 text-gray-400 hover:text-blue-600 rounded-lg hover:bg-blue-50">
+                    <button className="p-2 text-gray-400 hover:text-violet-600 rounded-lg hover:bg-violet-50">
                       <EyeIcon className="w-4 h-4" />
                     </button>
                     <button className="p-2 text-gray-400 hover:text-orange-600 rounded-lg hover:bg-orange-50">
@@ -272,7 +272,7 @@ export default function CustomReportsPage() {
               </p>
               <button
                 onClick={() => setShowBuilder(true)}
-                className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+                className="px-4 py-2 bg-violet-600 text-white rounded-lg hover:bg-violet-700"
               >
                 Create Your First Report
               </button>

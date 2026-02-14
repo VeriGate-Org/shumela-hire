@@ -133,7 +133,7 @@ const SecurityDashboard: React.FC = () => {
               <SecurityStat
                 title="Total Users"
                 value={securityReport.accountSecurity.totalUsers}
-                color="text-blue-600"
+                color="text-violet-600"
               />
               <SecurityStat
                 title="Enabled Users"
@@ -189,7 +189,7 @@ const SecurityDashboard: React.FC = () => {
           <div className="mt-4 flex flex-wrap gap-4">
             <button
               onClick={loadSecurityReport}
-              className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700"
+              className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-violet-600 hover:bg-violet-700"
             >
               Refresh Report
             </button>

@@ -219,7 +219,7 @@ export default function InterviewCalendar({ interviews, onInterviewSelect, onInt
   const getInterviewStatusColor = (interview: Interview) => {
     switch (interview.status) {
       case 'SCHEDULED':
-        return 'bg-blue-100 text-blue-800 border-blue-200';
+        return 'bg-violet-100 text-violet-800 border-violet-200';
       case 'RESCHEDULED':
         return 'bg-yellow-100 text-yellow-800 border-yellow-200';
       case 'IN_PROGRESS':
@@ -276,7 +276,7 @@ export default function InterviewCalendar({ interviews, onInterviewSelect, onInt
               </button>
               <button
                 onClick={() => setCurrentDate(new Date())}
-                className="px-3 py-1 text-sm text-blue-600 hover:text-blue-800"
+                className="px-3 py-1 text-sm text-violet-600 hover:text-violet-800"
               >
                 Today
               </button>
@@ -295,7 +295,7 @@ export default function InterviewCalendar({ interviews, onInterviewSelect, onInt
                 onClick={() => setView('month')}
                 className={`px-3 py-2 text-sm font-medium rounded-l-md border ${
                   view === 'month'
-                    ? 'bg-blue-50 text-blue-700 border-blue-200'
+                    ? 'bg-violet-50 text-violet-700 border-violet-200'
                     : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'
                 }`}
               >
@@ -305,7 +305,7 @@ export default function InterviewCalendar({ interviews, onInterviewSelect, onInt
                 onClick={() => setView('week')}
                 className={`px-3 py-2 text-sm font-medium border-t border-b ${
                   view === 'week'
-                    ? 'bg-blue-50 text-blue-700 border-blue-200'
+                    ? 'bg-violet-50 text-violet-700 border-violet-200'
                     : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'
                 }`}
               >
@@ -315,7 +315,7 @@ export default function InterviewCalendar({ interviews, onInterviewSelect, onInt
                 onClick={() => setView('day')}
                 className={`px-3 py-2 text-sm font-medium rounded-r-md border ${
                   view === 'day'
-                    ? 'bg-blue-50 text-blue-700 border-blue-200'
+                    ? 'bg-violet-50 text-violet-700 border-violet-200'
                     : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'
                 }`}
               >
@@ -350,11 +350,11 @@ export default function InterviewCalendar({ interviews, onInterviewSelect, onInt
                     key={index}
                     className={`min-h-[100px] p-2 border rounded-md ${
                       isCurrentMonth(date) ? 'bg-white' : 'bg-gray-50'
-                    } ${isToday(date) ? 'bg-blue-50 border-blue-200' : 'border-gray-200'}`}
+                    } ${isToday(date) ? 'bg-violet-50 border-violet-200' : 'border-gray-200'}`}
                   >
                     <div className={`text-sm font-medium mb-1 ${
                       isCurrentMonth(date) ? 'text-gray-900' : 'text-gray-400'
-                    } ${isToday(date) ? 'text-blue-600' : ''}`}>
+                    } ${isToday(date) ? 'text-violet-600' : ''}`}>
                       {date.getDate()}
                     </div>
                     
@@ -396,7 +396,7 @@ export default function InterviewCalendar({ interviews, onInterviewSelect, onInt
               {/* Day headers */}
               {getWeekDays().map(date => (
                 <div key={date.toString()} className={`p-2 text-center border-b ${
-                  isToday(date) ? 'bg-blue-50 text-blue-600 font-medium' : 'text-gray-700'
+                  isToday(date) ? 'bg-violet-50 text-violet-600 font-medium' : 'text-gray-700'
                 }`}>
                   <div className="text-sm">{WEEKDAYS[date.getDay()]}</div>
                   <div className="text-lg">{date.getDate()}</div>
@@ -513,7 +513,7 @@ export default function InterviewCalendar({ interviews, onInterviewSelect, onInt
                 <p><strong>Duration:</strong> {selectedInterview.durationMinutes} minutes</p>
                 {selectedInterview.location && <p><strong>Location:</strong> {selectedInterview.location}</p>}
                 {selectedInterview.meetingLink && (
-                  <p><strong>Meeting:</strong> <a href={selectedInterview.meetingLink} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">Join Meeting</a></p>
+                  <p><strong>Meeting:</strong> <a href={selectedInterview.meetingLink} target="_blank" rel="noopener noreferrer" className="text-violet-600 hover:underline">Join Meeting</a></p>
                 )}
               </div>
             </div>
@@ -538,7 +538,7 @@ export default function InterviewCalendar({ interviews, onInterviewSelect, onInt
               {selectedInterview.canBeCompleted && (
                 <button
                   onClick={() => handleInterviewAction('complete', selectedInterview.id, { completedBy: 1 })}
-                  className="px-3 py-2 bg-blue-600 text-white text-sm rounded hover:bg-blue-700"
+                  className="px-3 py-2 bg-violet-600 text-white text-sm rounded hover:bg-violet-700"
                 >
                   Complete
                 </button>

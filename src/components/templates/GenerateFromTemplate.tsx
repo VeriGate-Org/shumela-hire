@@ -201,7 +201,7 @@ const GenerateFromTemplate: React.FC<GenerateFromTemplateProps> = ({
           </button>
           <button
             onClick={handleComplete}
-            className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+            className="px-4 py-2 bg-violet-600 text-white rounded-md hover:bg-violet-700"
           >
             View Draft
           </button>
@@ -252,14 +252,14 @@ const GenerateFromTemplate: React.FC<GenerateFromTemplateProps> = ({
           ].map(({ key, label, icon: Icon }, index) => (
             <div key={key} className="flex items-center">
               <div className={`flex items-center justify-center w-8 h-8 rounded-full border-2 ${
-                step === key ? 'bg-blue-600 border-blue-600 text-white' :
+                step === key ? 'bg-violet-600 border-violet-600 text-white' :
                 ['customize', 'preview'].includes(step) && index < (['select', 'customize', 'preview'].indexOf(step)) ? 'bg-green-500 border-green-500 text-white' :
                 'border-gray-300 text-gray-400'
               }`}>
                 <Icon className="w-4 h-4" />
               </div>
               <span className={`ml-2 text-sm font-medium ${
-                step === key ? 'text-blue-600' : 'text-gray-500'
+                step === key ? 'text-violet-600' : 'text-gray-500'
               }`}>
                 {label}
               </span>
@@ -289,7 +289,7 @@ const GenerateFromTemplate: React.FC<GenerateFromTemplateProps> = ({
                     onClick={() => setSelectedTemplate(template)}
                     className={`p-4 border-2 rounded-lg cursor-pointer transition-colors ${
                       selectedTemplate?.id === template.id
-                        ? 'border-blue-500 bg-blue-50'
+                        ? 'border-violet-500 bg-violet-50'
                         : 'border-gray-200 hover:border-gray-300'
                     }`}
                   >
@@ -320,7 +320,7 @@ const GenerateFromTemplate: React.FC<GenerateFromTemplateProps> = ({
                   onClick={() => setSelectedRequisition(null)}
                   className={`p-4 border-2 rounded-lg cursor-pointer transition-colors ${
                     !selectedRequisition
-                      ? 'border-blue-500 bg-blue-50'
+                      ? 'border-violet-500 bg-violet-50'
                       : 'border-gray-200 hover:border-gray-300'
                   }`}
                 >
@@ -334,7 +334,7 @@ const GenerateFromTemplate: React.FC<GenerateFromTemplateProps> = ({
                     onClick={() => setSelectedRequisition(requisition)}
                     className={`p-4 border-2 rounded-lg cursor-pointer transition-colors ${
                       selectedRequisition?.id === requisition.id
-                        ? 'border-blue-500 bg-blue-50'
+                        ? 'border-violet-500 bg-violet-50'
                         : 'border-gray-200 hover:border-gray-300'
                     }`}
                   >
@@ -356,7 +356,7 @@ const GenerateFromTemplate: React.FC<GenerateFromTemplateProps> = ({
               <button
                 onClick={() => setStep('customize')}
                 disabled={!selectedTemplate}
-                className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="px-4 py-2 bg-violet-600 text-white rounded-md hover:bg-violet-700 disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 Next: Customize Data
               </button>
@@ -403,7 +403,7 @@ const GenerateFromTemplate: React.FC<GenerateFromTemplateProps> = ({
                   type="text"
                   value={customData.companyName || ''}
                   onChange={(e) => setCustomData(prev => ({ ...prev, companyName: e.target.value }))}
-                  className="w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  className="w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-violet-500/40 focus:border-violet-400"
                   placeholder="Your Company Name"
                 />
               </div>
@@ -416,7 +416,7 @@ const GenerateFromTemplate: React.FC<GenerateFromTemplateProps> = ({
                   type="text"
                   value={customData.applicationDeadline || ''}
                   onChange={(e) => setCustomData(prev => ({ ...prev, applicationDeadline: e.target.value }))}
-                  className="w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  className="w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-violet-500/40 focus:border-violet-400"
                   placeholder="March 31, 2024"
                 />
               </div>
@@ -431,7 +431,7 @@ const GenerateFromTemplate: React.FC<GenerateFromTemplateProps> = ({
                       type="text"
                       value={customData.jobTitle || ''}
                       onChange={(e) => setCustomData(prev => ({ ...prev, jobTitle: e.target.value }))}
-                      className="w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                      className="w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-violet-500/40 focus:border-violet-400"
                       placeholder="e.g., Senior Software Engineer"
                     />
                   </div>
@@ -444,7 +444,7 @@ const GenerateFromTemplate: React.FC<GenerateFromTemplateProps> = ({
                       type="text"
                       value={customData.department || ''}
                       onChange={(e) => setCustomData(prev => ({ ...prev, department: e.target.value }))}
-                      className="w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                      className="w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-violet-500/40 focus:border-violet-400"
                       placeholder="e.g., Engineering"
                     />
                   </div>
@@ -457,7 +457,7 @@ const GenerateFromTemplate: React.FC<GenerateFromTemplateProps> = ({
                       type="text"
                       value={customData.location || ''}
                       onChange={(e) => setCustomData(prev => ({ ...prev, location: e.target.value }))}
-                      className="w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                      className="w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-violet-500/40 focus:border-violet-400"
                       placeholder="e.g., San Francisco, CA"
                     />
                   </div>
@@ -470,7 +470,7 @@ const GenerateFromTemplate: React.FC<GenerateFromTemplateProps> = ({
                       type="text"
                       value={customData.salaryRange || ''}
                       onChange={(e) => setCustomData(prev => ({ ...prev, salaryRange: e.target.value }))}
-                      className="w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                      className="w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-violet-500/40 focus:border-violet-400"
                       placeholder="e.g., R2,000,000 - R3,000,000"
                     />
                   </div>
@@ -488,7 +488,7 @@ const GenerateFromTemplate: React.FC<GenerateFromTemplateProps> = ({
               <button
                 onClick={handleGenerate}
                 disabled={loading}
-                className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:opacity-50 flex items-center"
+                className="px-4 py-2 bg-violet-600 text-white rounded-md hover:bg-violet-700 disabled:opacity-50 flex items-center"
               >
                 {loading ? (
                   <>
@@ -534,7 +534,7 @@ const GenerateFromTemplate: React.FC<GenerateFromTemplateProps> = ({
                 </button>
                 <button
                   onClick={handleComplete}
-                  className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+                  className="px-4 py-2 bg-violet-600 text-white rounded-md hover:bg-violet-700"
                 >
                   Use This Job Ad
                 </button>

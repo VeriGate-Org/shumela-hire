@@ -110,7 +110,7 @@ const CandidatePipeline: React.FC<CandidatePipelineProps> = ({
   const getStatusIcon = (status: Candidate['status']) => {
     switch (status) {
       case 'new':
-        return <UserIcon className="w-4 h-4 text-blue-600" />;
+        return <UserIcon className="w-4 h-4 text-violet-600" />;
       case 'in_review':
         return <ClockIcon className="w-4 h-4 text-yellow-600" />;
       case 'interview_scheduled':
@@ -191,7 +191,7 @@ const CandidatePipeline: React.FC<CandidatePipelineProps> = ({
               <div
                 key={stage.id}
                 className={`flex-shrink-0 w-72 bg-gray-50 rounded-lg p-4 flex flex-col ${
-                  dragOverStage === stage.id ? 'ring-2 ring-blue-500 bg-blue-50' : ''
+                  dragOverStage === stage.id ? 'ring-2 ring-violet-500 bg-violet-50' : ''
                 }`}
                 onDragOver={(e) => handleDragOver(e, stage.id)}
                 onDragLeave={handleDragLeave}
@@ -275,7 +275,7 @@ const CandidatePipeline: React.FC<CandidatePipelineProps> = ({
                             {candidate.tags.slice(0, 3).map((tag) => (
                               <span
                                 key={tag}
-                                className="px-2 py-1 bg-blue-100 text-blue-700 text-xs rounded"
+                                className="px-2 py-1 bg-violet-100 text-violet-700 text-xs rounded"
                               >
                                 {tag}
                               </span>

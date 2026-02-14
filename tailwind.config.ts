@@ -52,7 +52,7 @@ const config: Config = {
       },
       borderRadius: {
         control: '6px',
-        card: '10px',
+        card: '8px',
       },
       boxShadow: {
         sm: '0 2px 5px rgba(50, 50, 93, 0.09), 0 1px 3px rgba(0, 0, 0, 0.07)',

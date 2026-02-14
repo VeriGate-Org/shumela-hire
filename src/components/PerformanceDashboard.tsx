@@ -107,7 +107,7 @@ export default function PerformanceDashboard() {
           <button
             onClick={handleWarmUpCache}
             disabled={cacheWarming}
-            className="bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white px-4 py-2 rounded-lg transition-colors flex items-center"
+            className="bg-violet-600 hover:bg-violet-700 disabled:bg-violet-400 text-white px-4 py-2 rounded-lg transition-colors flex items-center"
           >
             {cacheWarming && <LoadingSpinner size="sm" color="white" />}
             <span className={cacheWarming ? 'ml-2' : ''}>Warm Cache</span>
@@ -142,8 +142,8 @@ export default function PerformanceDashboard() {
                 )}
               </div>
             </div>
-            <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
-              <span className="text-blue-600 text-xl">⚡</span>
+            <div className="w-12 h-12 bg-violet-100 rounded-lg flex items-center justify-center">
+              <span className="text-violet-600 text-xl">⚡</span>
             </div>
           </div>
         </div>
@@ -277,11 +277,11 @@ export default function PerformanceDashboard() {
       )}
 
       {/* Performance Tips */}
-      <div className="bg-blue-50 rounded-lg p-6">
+      <div className="bg-violet-50 rounded-lg p-6">
         <h2 className="text-lg font-semibold text-gray-900 mb-4">Performance Tips</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="flex items-start space-x-3">
-            <div className="flex-shrink-0 w-6 h-6 bg-blue-600 rounded-full flex items-center justify-center">
+            <div className="flex-shrink-0 w-6 h-6 bg-violet-600 rounded-full flex items-center justify-center">
               <span className="text-white text-sm">✓</span>
             </div>
             <div>
@@ -292,7 +292,7 @@ export default function PerformanceDashboard() {
             </div>
           </div>
           <div className="flex items-start space-x-3">
-            <div className="flex-shrink-0 w-6 h-6 bg-blue-600 rounded-full flex items-center justify-center">
+            <div className="flex-shrink-0 w-6 h-6 bg-violet-600 rounded-full flex items-center justify-center">
               <span className="text-white text-sm">✓</span>
             </div>
             <div>
@@ -303,7 +303,7 @@ export default function PerformanceDashboard() {
             </div>
           </div>
           <div className="flex items-start space-x-3">
-            <div className="flex-shrink-0 w-6 h-6 bg-blue-600 rounded-full flex items-center justify-center">
+            <div className="flex-shrink-0 w-6 h-6 bg-violet-600 rounded-full flex items-center justify-center">
               <span className="text-white text-sm">✓</span>
             </div>
             <div>
@@ -314,7 +314,7 @@ export default function PerformanceDashboard() {
             </div>
           </div>
           <div className="flex items-start space-x-3">
-            <div className="flex-shrink-0 w-6 h-6 bg-blue-600 rounded-full flex items-center justify-center">
+            <div className="flex-shrink-0 w-6 h-6 bg-violet-600 rounded-full flex items-center justify-center">
               <span className="text-white text-sm">✓</span>
             </div>
             <div>

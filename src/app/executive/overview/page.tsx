@@ -616,7 +616,7 @@ export default function OrganizationalOverviewPage() {
     switch (type) {
       case 'critical': return 'bg-red-50 border-red-200 text-red-800';
       case 'warning': return 'bg-yellow-50 border-yellow-200 text-yellow-800';
-      case 'info': return 'bg-blue-50 border-blue-200 text-blue-800';
+      case 'info': return 'bg-violet-50 border-violet-200 text-violet-800';
       case 'opportunity': return 'bg-green-50 border-green-200 text-green-800';
       default: return 'bg-gray-50 border-gray-200 text-gray-800';
     }
@@ -626,7 +626,7 @@ export default function OrganizationalOverviewPage() {
     switch (type) {
       case 'critical': return <ExclamationTriangleIconSolid className="w-5 h-5 text-red-500" />;
       case 'warning': return <ExclamationTriangleIcon className="w-5 h-5 text-yellow-500" />;
-      case 'info': return <InformationCircleIcon className="w-5 h-5 text-blue-500" />;
+      case 'info': return <InformationCircleIcon className="w-5 h-5 text-violet-500" />;
       case 'opportunity': return <LightBulbIcon className="w-5 h-5 text-green-500" />;
       default: return <InformationCircleIcon className="w-5 h-5 text-gray-500" />;
     }
@@ -635,7 +635,7 @@ export default function OrganizationalOverviewPage() {
   const getMilestoneStatusColor = (status: string) => {
     switch (status) {
       case 'completed': return 'bg-green-100 text-green-800 border-green-300';
-      case 'in_progress': return 'bg-blue-100 text-blue-800 border-blue-300';
+      case 'in_progress': return 'bg-violet-100 text-violet-800 border-violet-300';
       case 'planned': return 'bg-gray-100 text-gray-800 border-gray-300';
       default: return 'bg-gray-100 text-gray-800 border-gray-300';
     }
@@ -643,7 +643,7 @@ export default function OrganizationalOverviewPage() {
 
   const getLocationIcon = (type: string) => {
     switch (type) {
-      case 'headquarters': return <BuildingOfficeIconSolid className="w-6 h-6 text-blue-500" />;
+      case 'headquarters': return <BuildingOfficeIconSolid className="w-6 h-6 text-violet-500" />;
       case 'office': return <BuildingOffice2Icon className="w-6 h-6 text-green-500" />;
       case 'coworking': return <ComputerDesktopIcon className="w-6 h-6 text-purple-500" />;
       case 'remote_hub': return <HomeIcon className="w-6 h-6 text-orange-500" />;
@@ -667,7 +667,7 @@ export default function OrganizationalOverviewPage() {
             placeholder="Search departments..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="pl-10 pr-4 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            className="pl-10 pr-4 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-violet-500/40 focus:border-violet-400"
           />
         </div>
       )}
@@ -675,14 +675,14 @@ export default function OrganizationalOverviewPage() {
       <select
         value={selectedPeriod}
         onChange={(e) => setSelectedPeriod(e.target.value as any)}
-        className="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+        className="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-violet-500/40 focus:border-violet-400"
       >
         <option value="month">This Month</option>
         <option value="quarter">This Quarter</option>
         <option value="year">This Year</option>
       </select>
       
-      <button className="flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 text-sm font-medium">
+      <button className="flex items-center px-4 py-2 bg-violet-600 text-white rounded-lg hover:bg-violet-700 text-sm font-medium">
         <PlusIcon className="w-4 h-4 mr-2" />
         Export Report
       </button>
@@ -693,7 +693,7 @@ export default function OrganizationalOverviewPage() {
     return (
       <PageWrapper title="Organizational Overview" subtitle="Loading organizational data..." actions={actions}>
         <div className="flex items-center justify-center h-96">
-          <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-500"></div>
+          <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-violet-500"></div>
         </div>
       </PageWrapper>
     );
@@ -720,7 +720,7 @@ export default function OrganizationalOverviewPage() {
                 onClick={() => setActiveView(item.id as any)}
                 className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
                   activeView === item.id
-                    ? 'bg-blue-100 text-blue-700'
+                    ? 'bg-violet-100 text-violet-700'
                     : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
                 }`}
               >
@@ -738,7 +738,7 @@ export default function OrganizationalOverviewPage() {
             <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
               <div className="bg-white rounded-lg shadow p-6">
                 <div className="flex items-center">
-                  <UserGroupIconSolid className="w-8 h-8 text-blue-500" />
+                  <UserGroupIconSolid className="w-8 h-8 text-violet-500" />
                   <div className="ml-4">
                     <p className="text-sm font-medium text-gray-500">Total Workforce</p>
                     <p className="text-2xl font-semibold text-gray-900">
@@ -860,7 +860,7 @@ export default function OrganizationalOverviewPage() {
           <div className="space-y-6">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
               {filteredDepartments.map((dept) => (
-                <div key={dept.id} className="bg-white rounded-lg shadow border-l-4 border-l-blue-500">
+                <div key={dept.id} className="bg-white rounded-lg shadow border-l-4 border-l-violet-500">
                   <div className="p-6">
                     <div className="flex items-start justify-between mb-4">
                       <div>
@@ -873,7 +873,7 @@ export default function OrganizationalOverviewPage() {
                       </div>
                       <button
                         onClick={() => setSelectedDepartment(dept)}
-                        className="flex items-center px-3 py-1 text-xs font-medium text-blue-600 bg-blue-50 rounded-full hover:bg-blue-100"
+                        className="flex items-center px-3 py-1 text-xs font-medium text-violet-600 bg-violet-50 rounded-full hover:bg-violet-100"
                       >
                         <EyeIcon className="w-3 h-3 mr-1" />
                         Details
@@ -915,7 +915,7 @@ export default function OrganizationalOverviewPage() {
                           <ArrowDownIcon className="w-4 h-4 mr-1" />
                           {dept.recentChanges.departures} departures
                         </span>
-                        <span className="flex items-center text-blue-600">
+                        <span className="flex items-center text-violet-600">
                           <ArrowUpIcon className="w-4 h-4 mr-1" />
                           {dept.recentChanges.promotions} promotions
                         </span>
@@ -989,7 +989,7 @@ export default function OrganizationalOverviewPage() {
                       <p className="text-sm text-gray-500 mb-2">Departments</p>
                       <div className="flex flex-wrap gap-1">
                         {location.departments.map((dept, index) => (
-                          <span key={index} className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                          <span key={index} className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-violet-100 text-violet-800">
                             {dept}
                           </span>
                         ))}
@@ -1044,7 +1044,7 @@ export default function OrganizationalOverviewPage() {
                     <span className="text-sm font-medium">{orgMetrics?.diversityScore}%</span>
                   </div>
                   <div className="w-full bg-gray-200 rounded-full h-2">
-                    <div className="bg-blue-500 h-2 rounded-full" style={{ width: `${orgMetrics?.diversityScore}%` }}></div>
+                    <div className="bg-violet-500 h-2 rounded-full" style={{ width: `${orgMetrics?.diversityScore}%` }}></div>
                   </div>
                   
                   <div className="flex justify-between items-center">
@@ -1087,7 +1087,7 @@ export default function OrganizationalOverviewPage() {
                   <div className="pt-2 border-t border-gray-200">
                     <div className="flex items-center justify-between">
                       <span className="text-sm font-medium text-gray-900">Projected 2025 Headcount</span>
-                      <span className="text-lg font-semibold text-blue-600">
+                      <span className="text-lg font-semibold text-violet-600">
                         {Math.round((orgMetrics?.totalEmployees || 0) * (1 + (orgMetrics?.yearlyGrowthRate || 0) / 100)).toLocaleString()}
                       </span>
                     </div>
@@ -1191,7 +1191,7 @@ export default function OrganizationalOverviewPage() {
                               <MapPinIcon className="w-4 h-4 text-gray-400 mr-2" />
                               <span className="text-sm font-medium text-gray-900">{loc.city}</span>
                               <span className={`ml-2 px-2 py-1 text-xs rounded-full ${
-                                loc.type === 'office' ? 'bg-blue-100 text-blue-800' :
+                                loc.type === 'office' ? 'bg-violet-100 text-violet-800' :
                                 loc.type === 'hybrid' ? 'bg-purple-100 text-purple-800' :
                                 'bg-green-100 text-green-800'
                               }`}>
@@ -1227,7 +1227,7 @@ export default function OrganizationalOverviewPage() {
                             <div className="flex items-center space-x-4 mt-1 text-xs text-gray-500">
                               <span>Date: {new Date(milestone.date).toLocaleDateString()}</span>
                               <span className={`px-2 py-1 rounded-full ${
-                                milestone.type === 'hiring' ? 'bg-blue-100 text-blue-800' :
+                                milestone.type === 'hiring' ? 'bg-violet-100 text-violet-800' :
                                 milestone.type === 'project' ? 'bg-green-100 text-green-800' :
                                 'bg-purple-100 text-purple-800'
                               }`}>
@@ -1268,7 +1268,7 @@ export default function OrganizationalOverviewPage() {
                 <div className="flex justify-end mt-6 pt-6 border-t">
                   <button
                     onClick={() => setSelectedDepartment(null)}
-                    className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+                    className="px-6 py-2 bg-violet-600 text-white rounded-lg hover:bg-violet-700"
                   >
                     Close
                   </button>

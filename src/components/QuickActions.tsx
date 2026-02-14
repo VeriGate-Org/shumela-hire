@@ -20,7 +20,7 @@ const QuickActions: React.FC = () => {
       description: 'Create and publish a job posting',
       href: '/jobs/new',
       icon: '📝',
-      color: 'bg-blue-50 hover:bg-blue-100 border-blue-200'
+      color: 'bg-violet-50 hover:bg-violet-100 border-violet-200'
     },
     {
       id: 'schedule-interview',
@@ -118,7 +118,7 @@ const QuickActions: React.FC = () => {
           <h2 className="text-lg font-semibold text-gray-900">Quick Actions</h2>
           <Link
             href="/actions"
-            className="text-sm text-blue-600 hover:text-blue-800 font-medium"
+            className="text-sm text-violet-600 hover:text-violet-800 font-medium"
           >
             View all →
           </Link>
@@ -172,7 +172,7 @@ const QuickActions: React.FC = () => {
           <h2 className="text-lg font-semibold text-gray-900">Recently Accessed</h2>
           <Link
             href="/recent"
-            className="text-sm text-blue-600 hover:text-blue-800 font-medium"
+            className="text-sm text-violet-600 hover:text-violet-800 font-medium"
           >
             View all →
           </Link>

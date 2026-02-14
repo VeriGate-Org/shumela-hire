@@ -93,7 +93,7 @@ export default function AdminDashboard({ selectedTimeframe, onTimeframeChange }:
               size="large"
             >
               <div className="w-full h-64 overflow-hidden">
-                <div className="bg-gradient-to-r from-green-50 to-blue-50 p-6 rounded-lg h-full flex items-center justify-center">
+                <div className="bg-gradient-to-r from-gray-50 to-violet-50 p-6 rounded-lg h-full flex items-center justify-center">
                   <p className="text-gray-600">System Health Chart Component</p>
                 </div>
               </div>
@@ -128,7 +128,7 @@ export default function AdminDashboard({ selectedTimeframe, onTimeframeChange }:
                     message: 'New user registration: jane.smith@company.com',
                     time: '12 minutes ago',
                     severity: 'medium',
-                    color: 'text-blue-600',
+                    color: 'text-violet-600',
                   },
                   {
                     id: '3',
@@ -169,7 +169,7 @@ export default function AdminDashboard({ selectedTimeframe, onTimeframeChange }:
             >
               <div className="grid grid-cols-1 gap-2">
                 {[
-                  { label: 'User Management', color: 'bg-blue-600', icon: '👥' },
+                  { label: 'User Management', color: 'bg-violet-600', icon: '👥' },
                   { label: 'System Settings', color: 'bg-purple-600', icon: '⚙️' },
                   { label: 'Backup Database', color: 'bg-green-600', icon: '💾' },
                   { label: 'Audit Logs', color: 'bg-orange-600', icon: '📋' },

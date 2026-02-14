@@ -292,7 +292,7 @@ export default function CandidateProfilePage() {
     switch (status) {
       case 'hired': return <CheckCircleIcon className="w-5 h-5 text-green-500" />;
       case 'offer_extended': return <StarIcon className="w-5 h-5 text-yellow-500" />;
-      case 'interview_scheduled': return <CalendarIcon className="w-5 h-5 text-blue-500" />;
+      case 'interview_scheduled': return <CalendarIcon className="w-5 h-5 text-violet-500" />;
       case 'interview_completed': return <EyeIcon className="w-5 h-5 text-purple-500" />;
       case 'reviewing': return <ClockIcon className="w-5 h-5 text-orange-500" />;
       case 'rejected': return <XCircleIcon className="w-5 h-5 text-red-500" />;
@@ -304,7 +304,7 @@ export default function CandidateProfilePage() {
     switch (status) {
       case 'hired': return 'bg-green-100 text-green-800';
       case 'offer_extended': return 'bg-yellow-100 text-yellow-800';
-      case 'interview_scheduled': return 'bg-blue-100 text-blue-800';
+      case 'interview_scheduled': return 'bg-violet-100 text-violet-800';
       case 'interview_completed': return 'bg-purple-100 text-purple-800';
       case 'reviewing': return 'bg-orange-100 text-orange-800';
       case 'rejected': return 'bg-red-100 text-red-800';
@@ -316,7 +316,7 @@ export default function CandidateProfilePage() {
   const getSkillLevelColor = (level: string) => {
     switch (level) {
       case 'expert': return 'bg-green-100 text-green-800 border-green-300';
-      case 'advanced': return 'bg-blue-100 text-blue-800 border-blue-300';
+      case 'advanced': return 'bg-violet-100 text-violet-800 border-violet-300';
       case 'intermediate': return 'bg-yellow-100 text-yellow-800 border-yellow-300';
       case 'beginner': return 'bg-gray-100 text-gray-800 border-gray-300';
       default: return 'bg-gray-100 text-gray-800 border-gray-300';
@@ -338,7 +338,7 @@ export default function CandidateProfilePage() {
         className={`inline-flex items-center px-4 py-2 border text-sm font-medium rounded-md shadow-sm ${
           isEditing 
             ? 'border-gray-300 text-gray-700 bg-white hover:bg-gray-50' 
-            : 'border-transparent text-white bg-blue-600 hover:bg-blue-700'
+            : 'border-transparent text-white bg-violet-600 hover:bg-violet-700'
         }`}
       >
         <PencilIcon className="w-4 h-4 mr-2" />
@@ -351,7 +351,7 @@ export default function CandidateProfilePage() {
     return (
       <PageWrapper title="My Profile" subtitle="Loading your profile..." actions={actions}>
         <div className="flex items-center justify-center h-96">
-          <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-500"></div>
+          <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-violet-500"></div>
         </div>
       </PageWrapper>
     );
@@ -368,7 +368,7 @@ export default function CandidateProfilePage() {
         <div className="bg-white rounded-lg shadow p-6">
           <div className="flex items-start space-x-6">
             <div className="relative">
-              <div className="w-24 h-24 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center">
+              <div className="w-24 h-24 bg-gradient-to-br from-violet-500 to-violet-700 rounded-full flex items-center justify-center">
                 {profile?.profileImage ? (
                   <img 
                     src={profile.profileImage} 
@@ -380,7 +380,7 @@ export default function CandidateProfilePage() {
                 )}
               </div>
               {isEditing && (
-                <button className="absolute -bottom-2 -right-2 p-2 bg-blue-600 text-white rounded-full shadow-sm hover:bg-blue-700">
+                <button className="absolute -bottom-2 -right-2 p-2 bg-violet-600 text-white rounded-full shadow-sm hover:bg-violet-700">
                   <CameraIcon className="w-4 h-4" />
                 </button>
               )}
@@ -392,7 +392,7 @@ export default function CandidateProfilePage() {
                   <h1 className="text-2xl font-bold text-gray-900">
                     {profile?.firstName} {profile?.lastName}
                   </h1>
-                  <p className="text-lg text-blue-600 font-medium mt-1">
+                  <p className="text-lg text-violet-600 font-medium mt-1">
                     {profile?.headline}
                   </p>
                   
@@ -450,7 +450,7 @@ export default function CandidateProfilePage() {
                   onClick={() => setActiveTab(tab.id as any)}
                   className={`py-4 px-1 border-b-2 font-medium text-sm flex items-center space-x-2 ${
                     activeTab === tab.id
-                      ? 'border-blue-500 text-blue-600'
+                      ? 'border-violet-500 text-violet-600'
                       : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
                   }`}
                 >
@@ -528,7 +528,7 @@ export default function CandidateProfilePage() {
                         <label className="block text-sm font-medium text-gray-700">Preferred Job Types</label>
                         <div className="flex flex-wrap gap-2 mt-1">
                           {profile?.preferredJobTypes.map((type, index) => (
-                            <span key={index} className="px-2 py-1 bg-blue-100 text-blue-800 text-sm rounded-full">
+                            <span key={index} className="px-2 py-1 bg-violet-100 text-violet-800 text-sm rounded-full">
                               {type}
                             </span>
                           ))}
@@ -546,7 +546,7 @@ export default function CandidateProfilePage() {
                 <div className="flex items-center justify-between">
                   <h3 className="text-lg font-semibold text-gray-900">Work Experience</h3>
                   {isEditing && (
-                    <button className="inline-flex items-center px-3 py-2 border border-transparent text-sm font-medium rounded-md text-blue-600 hover:bg-blue-50">
+                    <button className="inline-flex items-center px-3 py-2 border border-transparent text-sm font-medium rounded-md text-violet-600 hover:bg-violet-50">
                       <PlusIcon className="w-4 h-4 mr-2" />
                       Add Experience
                     </button>
@@ -564,7 +564,7 @@ export default function CandidateProfilePage() {
                             </div>
                             <div className="flex-1">
                               <h4 className="text-lg font-semibold text-gray-900">{exp.position}</h4>
-                              <p className="text-blue-600 font-medium">{exp.company}</p>
+                              <p className="text-violet-600 font-medium">{exp.company}</p>
                               <div className="flex items-center space-x-4 mt-2 text-sm text-gray-600">
                                 <span>
                                   {new Date(exp.startDate).toLocaleDateString()} - {
@@ -596,7 +596,7 @@ export default function CandidateProfilePage() {
                         
                         {isEditing && (
                           <div className="flex space-x-2">
-                            <button className="p-2 text-gray-400 hover:text-blue-600">
+                            <button className="p-2 text-gray-400 hover:text-violet-600">
                               <PencilIcon className="w-4 h-4" />
                             </button>
                             <button className="p-2 text-gray-400 hover:text-red-600">
@@ -617,7 +617,7 @@ export default function CandidateProfilePage() {
                 <div className="flex items-center justify-between">
                   <h3 className="text-lg font-semibold text-gray-900">Education</h3>
                   {isEditing && (
-                    <button className="inline-flex items-center px-3 py-2 border border-transparent text-sm font-medium rounded-md text-blue-600 hover:bg-blue-50">
+                    <button className="inline-flex items-center px-3 py-2 border border-transparent text-sm font-medium rounded-md text-violet-600 hover:bg-violet-50">
                       <PlusIcon className="w-4 h-4 mr-2" />
                       Add Education
                     </button>
@@ -635,7 +635,7 @@ export default function CandidateProfilePage() {
                             </div>
                             <div className="flex-1">
                               <h4 className="text-lg font-semibold text-gray-900">{edu.degree} in {edu.field}</h4>
-                              <p className="text-blue-600 font-medium">{edu.institution}</p>
+                              <p className="text-violet-600 font-medium">{edu.institution}</p>
                               <div className="flex items-center space-x-4 mt-2 text-sm text-gray-600">
                                 <span>
                                   {edu.startYear} - {edu.isCurrent ? 'Present' : edu.endYear}
@@ -668,7 +668,7 @@ export default function CandidateProfilePage() {
                         
                         {isEditing && (
                           <div className="flex space-x-2">
-                            <button className="p-2 text-gray-400 hover:text-blue-600">
+                            <button className="p-2 text-gray-400 hover:text-violet-600">
                               <PencilIcon className="w-4 h-4" />
                             </button>
                             <button className="p-2 text-gray-400 hover:text-red-600">
@@ -689,7 +689,7 @@ export default function CandidateProfilePage() {
                 <div className="flex items-center justify-between">
                   <h3 className="text-lg font-semibold text-gray-900">Skills & Expertise</h3>
                   {isEditing && (
-                    <button className="inline-flex items-center px-3 py-2 border border-transparent text-sm font-medium rounded-md text-blue-600 hover:bg-blue-50">
+                    <button className="inline-flex items-center px-3 py-2 border border-transparent text-sm font-medium rounded-md text-violet-600 hover:bg-violet-50">
                       <PlusIcon className="w-4 h-4 mr-2" />
                       Add Skill
                     </button>
@@ -734,7 +734,7 @@ export default function CandidateProfilePage() {
                 <div className="flex items-center justify-between">
                   <h3 className="text-lg font-semibold text-gray-900">Documents & Portfolio</h3>
                   {isEditing && (
-                    <button className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700">
+                    <button className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-violet-600 hover:bg-violet-700">
                       <ArrowUpTrayIcon className="w-4 h-4 mr-2" />
                       Upload Document
                     </button>
@@ -746,8 +746,8 @@ export default function CandidateProfilePage() {
                     <div key={doc.id} className="border border-gray-200 rounded-lg p-4 hover:border-gray-300 transition-colors">
                       <div className="flex items-start justify-between">
                         <div className="flex items-start space-x-3">
-                          <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
-                            <DocumentTextIcon className="w-5 h-5 text-blue-600" />
+                          <div className="w-10 h-10 bg-violet-100 rounded-lg flex items-center justify-center">
+                            <DocumentTextIcon className="w-5 h-5 text-violet-600" />
                           </div>
                           <div className="flex-1 min-w-0">
                             <p className="text-sm font-medium text-gray-900 truncate">{doc.name}</p>
@@ -759,7 +759,7 @@ export default function CandidateProfilePage() {
                         </div>
                         
                         <div className="flex space-x-1">
-                          <button className="p-1 text-gray-400 hover:text-blue-600">
+                          <button className="p-1 text-gray-400 hover:text-violet-600">
                             <EyeIcon className="w-4 h-4" />
                           </button>
                           {isEditing && (
@@ -796,7 +796,7 @@ export default function CandidateProfilePage() {
                             </div>
                             <div>
                               <h4 className="text-lg font-semibold text-gray-900">{app.jobTitle}</h4>
-                              <p className="text-blue-600 font-medium">{app.company}</p>
+                              <p className="text-violet-600 font-medium">{app.company}</p>
                               <p className="text-sm text-gray-600 mt-1">
                                 Applied on {new Date(app.appliedDate).toLocaleDateString()}
                               </p>
@@ -810,7 +810,7 @@ export default function CandidateProfilePage() {
                             </span>
                             <span className="text-sm text-gray-600">Current Stage: {app.currentStage}</span>
                             {app.interviewDate && (
-                              <span className="text-sm text-blue-600">
+                              <span className="text-sm text-violet-600">
                                 Interview: {new Date(app.interviewDate).toLocaleDateString()}
                               </span>
                             )}
@@ -824,7 +824,7 @@ export default function CandidateProfilePage() {
                         </div>
                         
                         <div className="flex space-x-2">
-                          <button className="p-2 text-gray-400 hover:text-blue-600">
+                          <button className="p-2 text-gray-400 hover:text-violet-600">
                             <EyeIcon className="w-5 h-5" />
                           </button>
                           <button className="p-2 text-gray-400 hover:text-gray-600">

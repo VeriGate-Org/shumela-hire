@@ -108,7 +108,7 @@ export default function PipelineFunnel({ funnelData, stages, onStageClick }: Pip
               </div>
               
               {/* Stage percentage indicator */}
-              <div className="absolute -top-2 -right-2 bg-blue-500 text-white text-xs rounded-full w-8 h-8 flex items-center justify-center font-medium">
+              <div className="absolute -top-2 -right-2 bg-violet-500 text-white text-xs rounded-full w-8 h-8 flex items-center justify-center font-medium">
                 {((stage.count / (funnelStages[0]?.count || 1)) * 100).toFixed(0)}%
               </div>
             </div>
@@ -169,10 +169,10 @@ export default function PipelineFunnel({ funnelData, stages, onStageClick }: Pip
       <div className="mt-6 pt-6 border-t border-gray-200">
         <h4 className="text-md font-medium text-gray-900 mb-4">Pipeline Metrics</h4>
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4 text-sm">
-          <div className="bg-blue-50 rounded-lg p-3">
-            <p className="font-medium text-blue-900">Total Funnel</p>
-            <p className="text-lg font-bold text-blue-600">{funnelStages[0]?.count || 0}</p>
-            <p className="text-xs text-blue-700">applications started</p>
+          <div className="bg-violet-50 rounded-lg p-3">
+            <p className="font-medium text-violet-900">Total Funnel</p>
+            <p className="text-lg font-bold text-violet-600">{funnelStages[0]?.count || 0}</p>
+            <p className="text-xs text-violet-700">applications started</p>
           </div>
           
           <div className="bg-green-50 rounded-lg p-3">

@@ -141,16 +141,16 @@ const MobileNavigation: React.FC<MobileNavigationProps> = ({ isOpen, onClose }) 
       />
 
       {/* Slide-out menu */}
-      <div className={`fixed top-0 left-0 h-full w-80 bg-white shadow-2xl z-50 transform transition-transform duration-300 ease-in-out md:hidden ${
+      <div className={`fixed top-0 left-0 h-full w-72 bg-white shadow-lg z-50 transform transition-transform duration-300 ease-in-out md:hidden ${
         isOpen ? 'translate-x-0' : '-translate-x-full'
       }`}>
         {/* Header */}
         <div className="flex items-center justify-between p-4 border-b border-gray-200">
           <div className="flex items-center space-x-3">
-            <div className="w-8 h-8 bg-violet-600 rounded-lg flex items-center justify-center">
-              <span className="text-white font-bold text-sm">TG</span>
+            <div className="w-7 h-7 bg-violet-600 rounded-md flex items-center justify-center">
+              <span className="text-white font-bold text-xs">TG</span>
             </div>
-            <h2 className="text-lg font-bold text-gray-900">TalentGate</h2>
+            <h2 className="text-sm font-bold text-gray-900 tracking-tight">TalentGate</h2>
           </div>
           <button
             onClick={onClose}
@@ -171,7 +171,7 @@ const MobileNavigation: React.FC<MobileNavigationProps> = ({ isOpen, onClose }) 
                     href={item.href}
                     className={`flex-1 flex items-center space-x-3 px-3 py-2 rounded-lg transition-colors ${
                       isParentActive(item)
-                        ? 'bg-blue-50 text-blue-700 border-r-2 border-r-blue-500'
+                        ? 'bg-violet-50/80 text-violet-700 border-l-[3px] border-l-violet-600'
                         : 'text-gray-700 hover:bg-gray-100'
                     }`}
                   >
@@ -206,7 +206,7 @@ const MobileNavigation: React.FC<MobileNavigationProps> = ({ isOpen, onClose }) 
                         href={child.href}
                         className={`flex items-center space-x-3 px-3 py-2 rounded-lg text-sm transition-colors ${
                           isActive(child.href)
-                            ? 'bg-blue-50 text-blue-700'
+                            ? 'bg-violet-50/60 text-violet-700'
                             : 'text-gray-600 hover:bg-gray-50'
                         }`}
                       >

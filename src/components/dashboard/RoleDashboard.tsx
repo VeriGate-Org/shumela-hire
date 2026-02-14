@@ -90,9 +90,9 @@ const RoleDashboard: React.FC<RoleDashboardProps> = ({
       <div className="bg-white rounded-lg border border-gray-200 p-6">
         <h3 className="text-lg font-semibold text-gray-900 mb-4">{role} Overview</h3>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-          <div className="bg-blue-50 p-4 rounded-lg">
-            <h4 className="font-medium text-blue-900">Total Items</h4>
-            <p className="text-2xl font-bold text-blue-600 mt-1">{roleData.stats.total.toLocaleString()}</p>
+          <div className="bg-violet-50 p-4 rounded-lg">
+            <h4 className="font-medium text-violet-900">Total Items</h4>
+            <p className="text-2xl font-bold text-violet-600 mt-1">{roleData.stats.total.toLocaleString()}</p>
           </div>
           <div className="bg-green-50 p-4 rounded-lg">
             <h4 className="font-medium text-green-900">Active</h4>
@@ -123,8 +123,8 @@ const RoleDashboard: React.FC<RoleDashboardProps> = ({
           </div>
           <h4 className="text-lg font-semibold text-gray-900 mb-2">{role} Features</h4>
           <p className="mb-4">Advanced role-specific dashboard components are being loaded.</p>
-          <div className="inline-flex items-center text-sm text-blue-600 bg-blue-50 px-3 py-1 rounded-full">
-            <span className="animate-pulse w-2 h-2 bg-blue-500 rounded-full mr-2"></span>
+          <div className="inline-flex items-center text-sm text-violet-600 bg-violet-50 px-3 py-1 rounded-full">
+            <span className="animate-pulse w-2 h-2 bg-violet-500 rounded-full mr-2"></span>
             Dashboard fully operational
           </div>
         </div>
@@ -140,7 +140,7 @@ const RoleDashboard: React.FC<RoleDashboardProps> = ({
                 <h4 className="font-medium mb-1">User Management</h4>
                 <p className="text-sm opacity-90">Manage system users and permissions</p>
               </button>
-              <button className="bg-blue-600 text-white p-4 rounded-lg hover:bg-blue-700 transition-colors text-left">
+              <button className="bg-violet-600 text-white p-4 rounded-lg hover:bg-violet-700 transition-colors text-left">
                 <h4 className="font-medium mb-1">System Settings</h4>
                 <p className="text-sm opacity-90">Configure system parameters</p>
               </button>
@@ -152,7 +152,7 @@ const RoleDashboard: React.FC<RoleDashboardProps> = ({
           )}
           {role === 'HR' && (
             <>
-              <button className="bg-blue-600 text-white p-4 rounded-lg hover:bg-blue-700 transition-colors text-left">
+              <button className="bg-violet-600 text-white p-4 rounded-lg hover:bg-violet-700 transition-colors text-left">
                 <h4 className="font-medium mb-1">Employee Records</h4>
                 <p className="text-sm opacity-90">Manage employee data</p>
               </button>
@@ -176,7 +176,7 @@ const RoleDashboard: React.FC<RoleDashboardProps> = ({
                 <h4 className="font-medium mb-1">Interview Schedule</h4>
                 <p className="text-sm opacity-90">View and manage interviews</p>
               </button>
-              <button className="bg-blue-600 text-white p-4 rounded-lg hover:bg-blue-700 transition-colors text-left">
+              <button className="bg-violet-600 text-white p-4 rounded-lg hover:bg-violet-700 transition-colors text-left">
                 <h4 className="font-medium mb-1">Candidate Pipeline</h4>
                 <p className="text-sm opacity-90">Track candidate progress</p>
               </button>

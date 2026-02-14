@@ -130,7 +130,7 @@ export default function ReportViewer({
               onClick={() => setViewMode('chart')}
               className={`px-3 py-1.5 text-sm font-medium rounded-lg ${
                 viewMode === 'chart'
-                  ? 'bg-blue-100 text-blue-700'
+                  ? 'bg-violet-100 text-violet-700'
                   : 'text-gray-600 hover:bg-gray-100'
               }`}
             >
@@ -141,7 +141,7 @@ export default function ReportViewer({
               onClick={() => setViewMode('table')}
               className={`px-3 py-1.5 text-sm font-medium rounded-lg ${
                 viewMode === 'table'
-                  ? 'bg-blue-100 text-blue-700'
+                  ? 'bg-violet-100 text-violet-700'
                   : 'text-gray-600 hover:bg-gray-100'
               }`}
             >
@@ -217,7 +217,7 @@ export default function ReportViewer({
                     onClick={() => setCurrentPage(pageNum)}
                     className={`px-3 py-2 text-sm font-medium rounded-lg ${
                       currentPage === pageNum
-                        ? 'bg-blue-600 text-white'
+                        ? 'bg-violet-600 text-white'
                         : 'text-gray-700 bg-white border border-gray-300 hover:bg-gray-50'
                     }`}
                   >
@@ -344,7 +344,7 @@ export default function ReportViewer({
             
             <button
               onClick={onEdit}
-              className="px-3 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700"
+              className="px-3 py-2 text-sm font-medium text-white bg-violet-600 rounded-lg hover:bg-violet-700"
             >
               <Cog6ToothIcon className="h-4 w-4 inline mr-1" />
               Edit

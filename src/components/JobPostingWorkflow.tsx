@@ -178,12 +178,12 @@ export default function JobPostingWorkflow({ jobPosting, onStatusChange, current
 
       {/* Analytics */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-        <div className="bg-blue-50 rounded-lg p-4">
+        <div className="bg-violet-50 rounded-lg p-4">
           <div className="flex items-center">
             <span className="text-2xl mr-3">👁️</span>
             <div>
-              <p className="text-sm font-medium text-blue-900">Views</p>
-              <p className="text-lg font-bold text-blue-600">{jobPosting.viewsCount}</p>
+              <p className="text-sm font-medium text-violet-900">Views</p>
+              <p className="text-lg font-bold text-violet-600">{jobPosting.viewsCount}</p>
             </div>
           </div>
         </div>
@@ -234,7 +234,7 @@ export default function JobPostingWorkflow({ jobPosting, onStatusChange, current
                 <div className="flex-shrink-0">
                   <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium ${
                     isStepCompleted(index) ? 'bg-green-500 text-white' :
-                    isStepCurrent(index) ? 'bg-blue-500 text-white' :
+                    isStepCurrent(index) ? 'bg-violet-500 text-white' :
                     'bg-gray-200 text-gray-600'
                   }`}>
                     {isStepCompleted(index) ? '✓' : step.icon}
@@ -248,7 +248,7 @@ export default function JobPostingWorkflow({ jobPosting, onStatusChange, current
                       {step.label}
                     </p>
                     {isStepCurrent(index) && (
-                      <span className="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded">
+                      <span className="text-xs bg-violet-100 text-violet-800 px-2 py-1 rounded">
                         Current
                       </span>
                     )}
@@ -267,7 +267,7 @@ export default function JobPostingWorkflow({ jobPosting, onStatusChange, current
           <button
             onClick={() => handleWorkflowAction('submit-for-approval')}
             disabled={loading === 'submit-for-approval'}
-            className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 disabled:opacity-50"
+            className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-violet-600 hover:bg-violet-700 disabled:opacity-50"
           >
             {loading === 'submit-for-approval' ? 'Submitting...' : 'Submit for Approval'}
           </button>

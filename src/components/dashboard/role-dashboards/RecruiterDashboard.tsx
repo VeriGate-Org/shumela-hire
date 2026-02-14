@@ -161,7 +161,7 @@ export default function RecruiterDashboard({ selectedTimeframe, onTimeframeChang
                     type: 'outreach',
                     message: 'Contacted 5 developers on LinkedIn',
                     time: '30 minutes ago',
-                    color: 'text-blue-600',
+                    color: 'text-violet-600',
                   },
                   {
                     id: '2',
@@ -207,7 +207,7 @@ export default function RecruiterDashboard({ selectedTimeframe, onTimeframeChang
             >
               <div className="space-y-3">
                 {[
-                  { source: 'LinkedIn', candidates: 45, quality: 8.2, color: 'bg-blue-500' },
+                  { source: 'LinkedIn', candidates: 45, quality: 8.2, color: 'bg-violet-500' },
                   { source: 'Referrals', candidates: 23, quality: 9.1, color: 'bg-green-500' },
                   { source: 'Job Boards', candidates: 34, quality: 6.8, color: 'bg-purple-500' },
                   { source: 'GitHub', candidates: 18, quality: 8.7, color: 'bg-gray-600' },
@@ -236,7 +236,7 @@ export default function RecruiterDashboard({ selectedTimeframe, onTimeframeChang
             >
               <div className="grid grid-cols-1 gap-2">
                 {[
-                  { label: 'Search Candidates', color: 'bg-blue-600', icon: '🔍' },
+                  { label: 'Search Candidates', color: 'bg-violet-600', icon: '🔍' },
                   { label: 'Send Outreach', color: 'bg-green-600', icon: '📧' },
                   { label: 'Schedule Screen', color: 'bg-purple-600', icon: '📞' },
                   { label: 'Update Pipeline', color: 'bg-orange-600', icon: '📊' },

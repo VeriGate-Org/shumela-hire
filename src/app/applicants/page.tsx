@@ -58,7 +58,7 @@ export default function ApplicantsPage() {
       <EnterpriseThemeToggle variant="compact" />
       <button
         onClick={handleCreateNew}
-        className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"
+        className="px-4 py-2 bg-violet-500 text-white rounded-md hover:bg-violet-600"
       >
         Create New Applicant
       </button>
@@ -66,7 +66,7 @@ export default function ApplicantsPage() {
   ) : (
     <button
       onClick={handleBackToList}
-      className="text-blue-500 hover:text-blue-700 font-medium"
+      className="text-violet-500 hover:text-violet-700 font-medium"
     >
       ← Back to Applicants
     </button>
@@ -106,7 +106,7 @@ export default function ApplicantsPage() {
                   <div className="space-y-2">
                     <button
                       onClick={handleCreateNew}
-                      className="block w-full text-left px-3 py-2 bg-blue-50 text-blue-700 rounded border hover:bg-blue-100"
+                      className="block w-full text-left px-3 py-2 bg-violet-50 text-violet-700 rounded border hover:bg-violet-100"
                     >
                       Create New Applicant Profile
                     </button>

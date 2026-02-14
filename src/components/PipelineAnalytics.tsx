@@ -94,7 +94,7 @@ export default function PipelineAnalytics({ analytics, onRefresh }: PipelineAnal
         {onRefresh && (
           <button
             onClick={onRefresh}
-            className="px-4 py-2 text-sm text-blue-600 hover:text-blue-800 font-medium"
+            className="px-4 py-2 text-sm text-violet-600 hover:text-violet-800 font-medium"
           >
             🔄 Refresh Data
           </button>
@@ -103,13 +103,13 @@ export default function PipelineAnalytics({ analytics, onRefresh }: PipelineAnal
 
       {/* Key Metrics Cards */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <div className="bg-blue-50 rounded-lg p-4 border border-blue-200">
+        <div className="bg-violet-50 rounded-lg p-4 border border-violet-200">
           <div className="flex items-center">
             <span className="text-2xl mr-3">📊</span>
             <div>
-              <p className="text-sm font-medium text-blue-900">Total Pipeline</p>
-              <p className="text-xl font-bold text-blue-600">{getTotalApplications()}</p>
-              <p className="text-xs text-blue-700">applications processed</p>
+              <p className="text-sm font-medium text-violet-900">Total Pipeline</p>
+              <p className="text-xl font-bold text-violet-600">{getTotalApplications()}</p>
+              <p className="text-xs text-violet-700">applications processed</p>
             </div>
           </div>
         </div>
@@ -157,7 +157,7 @@ export default function PipelineAnalytics({ analytics, onRefresh }: PipelineAnal
               onClick={() => setActiveTab(tab.id as any)}
               className={`py-2 px-1 border-b-2 font-medium text-sm flex items-center space-x-2 ${
                 activeTab === tab.id
-                  ? 'border-blue-500 text-blue-600'
+                  ? 'border-violet-500 text-violet-600'
                   : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
               }`}
             >
@@ -330,7 +330,7 @@ export default function PipelineAnalytics({ analytics, onRefresh }: PipelineAnal
                       <p className="text-sm text-gray-600">Transitions</p>
                     </div>
                     <div className="text-right">
-                      <p className="text-lg font-bold text-blue-600">{count}</p>
+                      <p className="text-lg font-bold text-violet-600">{count}</p>
                     </div>
                   </div>
                 ))}
@@ -341,9 +341,9 @@ export default function PipelineAnalytics({ analytics, onRefresh }: PipelineAnal
       </div>
 
       {/* Recommendations */}
-      <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-        <h4 className="font-medium text-blue-900 mb-2">💡 Recommendations</h4>
-        <ul className="text-sm text-blue-800 space-y-1">
+      <div className="bg-violet-50 border border-violet-200 rounded-lg p-4">
+        <h4 className="font-medium text-violet-900 mb-2">💡 Recommendations</h4>
+        <ul className="text-sm text-violet-800 space-y-1">
           {performance.worst.rate < 50 && (
             <li>• Review the {performance.worst.stage} stage process to improve success rates</li>
           )}

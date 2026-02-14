@@ -186,7 +186,7 @@ const PerformanceMetrics: React.FC<PerformanceMetricsProps> = ({
               onClick={() => setShowBenchmarks(!showBenchmarks)}
               className={`px-3 py-1 text-sm rounded-lg transition-colors ${
                 showBenchmarks 
-                  ? 'bg-blue-100 text-blue-700' 
+                  ? 'bg-violet-100 text-violet-700' 
                   : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
               }`}
             >
@@ -261,14 +261,14 @@ const PerformanceMetrics: React.FC<PerformanceMetricsProps> = ({
 
                     {/* Benchmark Comparison */}
                     {showBenchmarks && metric.benchmark && (
-                      <div className="mt-3 p-2 bg-blue-50 rounded">
+                      <div className="mt-3 p-2 bg-violet-50 rounded">
                         <div className="flex items-center justify-between text-sm">
-                          <span className="text-blue-700">Industry Benchmark</span>
-                          <span className="font-medium text-blue-900">
+                          <span className="text-violet-700">Industry Benchmark</span>
+                          <span className="font-medium text-violet-900">
                             {formatValue(metric.benchmark, metric.unit)}
                           </span>
                         </div>
-                        <div className="text-xs text-blue-600 mt-1">
+                        <div className="text-xs text-violet-600 mt-1">
                           You are {((metric.value / metric.benchmark) * 100 - 100).toFixed(1)}% 
                           {metric.value > metric.benchmark ? ' above' : ' below'} benchmark
                         </div>

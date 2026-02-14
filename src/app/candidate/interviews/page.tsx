@@ -303,7 +303,7 @@ export default function InterviewSchedulePage() {
   const getStatusColor = (status: string) => {
     switch (status) {
       case 'confirmed': return 'bg-green-100 text-green-800 border-green-300';
-      case 'scheduled': return 'bg-blue-100 text-blue-800 border-blue-300';
+      case 'scheduled': return 'bg-violet-100 text-violet-800 border-violet-300';
       case 'completed': return 'bg-gray-100 text-gray-800 border-gray-300';
       case 'cancelled': return 'bg-red-100 text-red-800 border-red-300';
       case 'rescheduled': return 'bg-yellow-100 text-yellow-800 border-yellow-300';
@@ -326,7 +326,7 @@ export default function InterviewSchedulePage() {
 
   const getInterviewTypeColor = (type: string) => {
     switch (type) {
-      case 'phone': return 'bg-blue-100 text-blue-800';
+      case 'phone': return 'bg-violet-100 text-violet-800';
       case 'video': return 'bg-purple-100 text-purple-800';
       case 'in_person': return 'bg-green-100 text-green-800';
       case 'technical': return 'bg-orange-100 text-orange-800';
@@ -378,7 +378,7 @@ export default function InterviewSchedulePage() {
           onClick={() => setViewMode('list')}
           className={`px-3 py-2 text-sm font-medium rounded-l-lg ${
             viewMode === 'list'
-              ? 'bg-blue-600 text-white'
+              ? 'bg-violet-600 text-white'
               : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
           }`}
         >
@@ -388,7 +388,7 @@ export default function InterviewSchedulePage() {
           onClick={() => setViewMode('calendar')}
           className={`px-3 py-2 text-sm font-medium rounded-r-lg ${
             viewMode === 'calendar'
-              ? 'bg-blue-600 text-white'
+              ? 'bg-violet-600 text-white'
               : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
           }`}
         >
@@ -399,7 +399,7 @@ export default function InterviewSchedulePage() {
       <select
         value={filterStatus}
         onChange={(e) => setFilterStatus(e.target.value as any)}
-        className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+        className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-violet-500/40 focus:border-violet-400"
       >
         <option value="all">All Interviews</option>
         <option value="upcoming">Upcoming</option>
@@ -413,7 +413,7 @@ export default function InterviewSchedulePage() {
     return (
       <PageWrapper title="Interview Schedule" subtitle="Loading your interviews..." actions={actions}>
         <div className="flex items-center justify-center h-96">
-          <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-500"></div>
+          <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-violet-500"></div>
         </div>
       </PageWrapper>
     );
@@ -430,7 +430,7 @@ export default function InterviewSchedulePage() {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
           <div className="bg-white rounded-lg shadow p-6">
             <div className="flex items-center">
-              <CalendarIcon className="w-8 h-8 text-blue-500" />
+              <CalendarIcon className="w-8 h-8 text-violet-500" />
               <div className="ml-4">
                 <p className="text-sm font-medium text-gray-500">Total Interviews</p>
                 <p className="text-2xl font-semibold text-gray-900">{interviews.length}</p>
@@ -482,12 +482,12 @@ export default function InterviewSchedulePage() {
               const timeUntil = upcoming ? getTimeUntilInterview(interview) : null;
 
               return (
-                <div key={interview.id} className="bg-white rounded-lg shadow border-l-4 border-l-blue-500 overflow-hidden">
+                <div key={interview.id} className="bg-white rounded-lg shadow border-l-4 border-l-violet-500 overflow-hidden">
                   <div className="p-6">
                     <div className="flex items-start justify-between">
                       <div className="flex-1">
                         <div className="flex items-start space-x-4">
-                          <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
+                          <div className="w-16 h-16 bg-gradient-to-br from-violet-500 to-violet-700 rounded-lg flex items-center justify-center">
                             <BriefcaseIcon className="w-8 h-8 text-white" />
                           </div>
                           
@@ -510,7 +510,7 @@ export default function InterviewSchedulePage() {
                               )}
                             </div>
                             
-                            <p className="text-lg text-blue-600 font-medium">{interview.company}</p>
+                            <p className="text-lg text-violet-600 font-medium">{interview.company}</p>
                             <div className="flex items-center space-x-4 mt-2 text-sm text-gray-600">
                               <span className="flex items-center">
                                 <CalendarIcon className="w-4 h-4 mr-1" />
@@ -546,7 +546,7 @@ export default function InterviewSchedulePage() {
                               <div className="text-sm space-y-1">
                                 <div className="flex items-center">
                                   <VideoCameraIcon className="w-4 h-4 mr-2 text-gray-400" />
-                                  <a href={interview.meetingLink} className="text-blue-600 hover:text-blue-800">
+                                  <a href={interview.meetingLink} className="text-violet-600 hover:text-violet-800">
                                     Join Video Call
                                   </a>
                                 </div>
@@ -565,8 +565,8 @@ export default function InterviewSchedulePage() {
                         </div>
 
                         {interview.notes && (
-                          <div className="mt-4 p-3 bg-blue-50 rounded-lg">
-                            <p className="text-sm text-blue-800">{interview.notes}</p>
+                          <div className="mt-4 p-3 bg-violet-50 rounded-lg">
+                            <p className="text-sm text-violet-800">{interview.notes}</p>
                           </div>
                         )}
 
@@ -595,7 +595,7 @@ export default function InterviewSchedulePage() {
                         {upcoming && interview.meetingLink && (
                           <a
                             href={interview.meetingLink}
-                            className="inline-flex items-center px-3 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 text-center"
+                            className="inline-flex items-center px-3 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-violet-600 hover:bg-violet-700 text-center"
                           >
                             <VideoCameraIcon className="w-4 h-4 mr-2" />
                             Join Call
@@ -625,7 +625,7 @@ export default function InterviewSchedulePage() {
                 type="date"
                 value={selectedDate}
                 onChange={(e) => setSelectedDate(e.target.value)}
-                className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-violet-500/40 focus:border-violet-400"
               />
             </div>
             
@@ -685,7 +685,7 @@ export default function InterviewSchedulePage() {
                 <div className="flex items-start justify-between mb-6">
                   <div>
                     <h2 className="text-2xl font-bold text-gray-900">{selectedInterview.jobTitle}</h2>
-                    <p className="text-lg text-blue-600 font-medium mt-1">{selectedInterview.company}</p>
+                    <p className="text-lg text-violet-600 font-medium mt-1">{selectedInterview.company}</p>
                     <p className="text-sm text-gray-600 mt-1">
                       Round {selectedInterview.round} of {selectedInterview.totalRounds} • {selectedInterview.interviewType}
                     </p>
@@ -720,7 +720,7 @@ export default function InterviewSchedulePage() {
                         {selectedInterview.meetingLink && (
                           <div className="flex items-center">
                             <VideoCameraIcon className="w-5 h-5 text-gray-600 mr-3" />
-                            <a href={selectedInterview.meetingLink} className="text-blue-600 hover:text-blue-800">
+                            <a href={selectedInterview.meetingLink} className="text-violet-600 hover:text-violet-800">
                               Join Video Call
                             </a>
                           </div>
@@ -752,7 +752,7 @@ export default function InterviewSchedulePage() {
                         {selectedInterview.preparationMaterials.map((material, index) => (
                           <div key={index} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
                             <div className="flex items-center space-x-3">
-                              <DocumentTextIcon className="w-5 h-5 text-blue-500" />
+                              <DocumentTextIcon className="w-5 h-5 text-violet-500" />
                               <div>
                                 <p className="text-sm font-medium text-gray-900">{material.name}</p>
                                 {material.description && (
@@ -760,7 +760,7 @@ export default function InterviewSchedulePage() {
                                 )}
                               </div>
                             </div>
-                            <a href={material.url} className="text-blue-600 hover:text-blue-800">
+                            <a href={material.url} className="text-violet-600 hover:text-violet-800">
                               <ArrowRightIcon className="w-4 h-4" />
                             </a>
                           </div>
@@ -790,9 +790,9 @@ export default function InterviewSchedulePage() {
                 </div>
 
                 {selectedInterview.notes && (
-                  <div className="mt-6 p-4 bg-blue-50 rounded-lg">
-                    <h4 className="font-medium text-blue-900 mb-2">Interview Notes</h4>
-                    <p className="text-blue-800 text-sm">{selectedInterview.notes}</p>
+                  <div className="mt-6 p-4 bg-violet-50 rounded-lg">
+                    <h4 className="font-medium text-violet-900 mb-2">Interview Notes</h4>
+                    <p className="text-violet-800 text-sm">{selectedInterview.notes}</p>
                   </div>
                 )}
 
@@ -819,7 +819,7 @@ export default function InterviewSchedulePage() {
                   {selectedInterview.meetingLink && isUpcoming(selectedInterview) && (
                     <a
                       href={selectedInterview.meetingLink}
-                      className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+                      className="px-4 py-2 bg-violet-600 text-white rounded-lg hover:bg-violet-700"
                     >
                       Join Interview
                     </a>

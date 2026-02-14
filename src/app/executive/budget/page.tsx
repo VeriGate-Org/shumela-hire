@@ -496,7 +496,7 @@ export default function BudgetApprovalsPage() {
     switch (status) {
       case 'on_track': case 'approved': return 'bg-green-100 text-green-800 border-green-300';
       case 'over_budget': case 'rejected': return 'bg-red-100 text-red-800 border-red-300';
-      case 'under_utilized': return 'bg-blue-100 text-blue-800 border-blue-300';
+      case 'under_utilized': return 'bg-violet-100 text-violet-800 border-violet-300';
       case 'needs_attention': case 'needs_info': return 'bg-yellow-100 text-yellow-800 border-yellow-300';
       case 'pending': return 'bg-orange-100 text-orange-800 border-orange-300';
       default: return 'bg-gray-100 text-gray-800 border-gray-300';
@@ -546,14 +546,14 @@ export default function BudgetApprovalsPage() {
               placeholder="Search requests..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="pl-10 pr-4 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              className="pl-10 pr-4 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-violet-500/40 focus:border-violet-400"
             />
           </div>
           
           <select
             value={filterStatus}
             onChange={(e) => setFilterStatus(e.target.value)}
-            className="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            className="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-violet-500/40 focus:border-violet-400"
           >
             <option value="all">All Status</option>
             <option value="pending">Pending</option>
@@ -564,7 +564,7 @@ export default function BudgetApprovalsPage() {
         </>
       )}
       
-      <button className="flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 text-sm font-medium">
+      <button className="flex items-center px-4 py-2 bg-violet-600 text-white rounded-lg hover:bg-violet-700 text-sm font-medium">
         <PlusIcon className="w-4 h-4 mr-2" />
         New Request
       </button>
@@ -575,7 +575,7 @@ export default function BudgetApprovalsPage() {
     return (
       <PageWrapper title="Budget & Approvals" subtitle="Loading financial data..." actions={actions}>
         <div className="flex items-center justify-center h-96">
-          <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-500"></div>
+          <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-violet-500"></div>
         </div>
       </PageWrapper>
     );
@@ -602,7 +602,7 @@ export default function BudgetApprovalsPage() {
                 onClick={() => setActiveView(item.id as any)}
                 className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
                   activeView === item.id
-                    ? 'bg-blue-100 text-blue-700'
+                    ? 'bg-violet-100 text-violet-700'
                     : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
                 }`}
               >
@@ -620,7 +620,7 @@ export default function BudgetApprovalsPage() {
             <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
               <div className="bg-white rounded-lg shadow p-6">
                 <div className="flex items-center">
-                  <CurrencyDollarIconSolid className="w-8 h-8 text-blue-500" />
+                  <CurrencyDollarIconSolid className="w-8 h-8 text-violet-500" />
                   <div className="ml-4">
                     <p className="text-sm font-medium text-gray-500">Total Budget</p>
                     <p className="text-2xl font-semibold text-gray-900">
@@ -700,7 +700,7 @@ export default function BudgetApprovalsPage() {
                               className={`h-2 rounded-full ${
                                 item.status === 'over_budget' ? 'bg-red-500' :
                                 item.status === 'on_track' ? 'bg-green-500' :
-                                item.status === 'under_utilized' ? 'bg-blue-500' : 'bg-yellow-500'
+                                item.status === 'under_utilized' ? 'bg-violet-500' : 'bg-yellow-500'
                               }`}
                               style={{ width: `${Math.min((item.spentAmount / item.allocatedBudget) * 100, 100)}%` }}
                             ></div>
@@ -739,7 +739,7 @@ export default function BudgetApprovalsPage() {
                       </div>
                       <button
                         onClick={() => setSelectedRequest(request)}
-                        className="flex items-center px-3 py-1 text-xs font-medium text-blue-600 bg-blue-50 rounded-full hover:bg-blue-100"
+                        className="flex items-center px-3 py-1 text-xs font-medium text-violet-600 bg-violet-50 rounded-full hover:bg-violet-100"
                       >
                         <EyeIcon className="w-3 h-3 mr-1" />
                         Review
@@ -757,7 +757,7 @@ export default function BudgetApprovalsPage() {
           <div className="space-y-6">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
               {budgetItems.map((item) => (
-                <div key={item.id} className="bg-white rounded-lg shadow border-l-4 border-l-blue-500">
+                <div key={item.id} className="bg-white rounded-lg shadow border-l-4 border-l-violet-500">
                   <div className="p-6">
                     <div className="flex items-start justify-between mb-4">
                       <div className="flex items-center space-x-3">
@@ -803,7 +803,7 @@ export default function BudgetApprovalsPage() {
                           className={`h-2 rounded-full ${
                             item.status === 'over_budget' ? 'bg-red-500' :
                             item.status === 'on_track' ? 'bg-green-500' :
-                            item.status === 'under_utilized' ? 'bg-blue-500' : 'bg-yellow-500'
+                            item.status === 'under_utilized' ? 'bg-violet-500' : 'bg-yellow-500'
                           }`}
                           style={{ width: `${Math.min((item.spentAmount / item.allocatedBudget) * 100, 100)}%` }}
                         ></div>
@@ -922,7 +922,7 @@ export default function BudgetApprovalsPage() {
                     <p className="text-sm font-medium text-gray-500">Cost Per Hire</p>
                     <p className="text-2xl font-semibold text-gray-900">{formatCurrency(analytics.costPerHire)}</p>
                   </div>
-                  <UserIcon className="w-8 h-8 text-blue-500" />
+                  <UserIcon className="w-8 h-8 text-violet-500" />
                 </div>
               </div>
 
@@ -1054,7 +1054,7 @@ export default function BudgetApprovalsPage() {
                       <div className="space-y-2">
                         {selectedRequest.supportingDocuments.map((doc, index) => (
                           <div key={index} className="flex items-center p-2 bg-gray-50 rounded-lg">
-                            <DocumentTextIcon className="w-5 h-5 text-blue-500 mr-3" />
+                            <DocumentTextIcon className="w-5 h-5 text-violet-500 mr-3" />
                             <span className="text-sm text-gray-900">{doc}</span>
                           </div>
                         ))}
@@ -1078,7 +1078,7 @@ export default function BudgetApprovalsPage() {
                       <div className="mt-4">
                         <textarea
                           placeholder="Add a comment..."
-                          className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                          className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-violet-500/40 focus:border-violet-400"
                           rows={3}
                           onKeyPress={(e) => {
                             if (e.key === 'Enter' && e.ctrlKey) {

@@ -47,7 +47,7 @@ const TRANSITION_TYPES = {
   REGRESSION: { icon: '⬅️', color: 'text-yellow-600', bg: 'bg-yellow-50' },
   REJECTION: { icon: '❌', color: 'text-red-600', bg: 'bg-red-50' },
   WITHDRAWAL: { icon: '↩️', color: 'text-gray-600', bg: 'bg-gray-50' },
-  REACTIVATION: { icon: '🔄', color: 'text-blue-600', bg: 'bg-blue-50' },
+  REACTIVATION: { icon: '🔄', color: 'text-violet-600', bg: 'bg-violet-50' },
   HOLD: { icon: '⏸️', color: 'text-orange-600', bg: 'bg-orange-50' },
   SKIP: { icon: '⏭️', color: 'text-purple-600', bg: 'bg-purple-50' },
   RESTART: { icon: '🔄', color: 'text-indigo-600', bg: 'bg-indigo-50' }
@@ -168,18 +168,18 @@ export default function ApplicationTimeline({ application, onClose, onStageTrans
         </div>
 
         {/* Current Status */}
-        <div className="px-6 py-4 bg-blue-50 border-b border-gray-200">
+        <div className="px-6 py-4 bg-violet-50 border-b border-gray-200">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium text-blue-900">Current Stage</p>
-              <p className="text-lg font-bold text-blue-600">{application.pipelineStageDisplayName}</p>
-              <p className="text-sm text-blue-700">
+              <p className="text-sm font-medium text-violet-900">Current Stage</p>
+              <p className="text-lg font-bold text-violet-600">{application.pipelineStageDisplayName}</p>
+              <p className="text-sm text-violet-700">
                 Entered on {new Date(application.pipelineStageEnteredAt).toLocaleDateString()}
               </p>
             </div>
             <button
               onClick={() => setShowTransitionForm(true)}
-              className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+              className="px-4 py-2 bg-violet-600 text-white rounded-md hover:bg-violet-700"
             >
               Move Stage
             </button>
@@ -190,7 +190,7 @@ export default function ApplicationTimeline({ application, onClose, onStageTrans
         <div className="flex-1 overflow-y-auto p-6">
           {loading ? (
             <div className="flex items-center justify-center p-8">
-              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-violet-500"></div>
             </div>
           ) : (
             <div className="space-y-6">
@@ -272,7 +272,7 @@ export default function ApplicationTimeline({ application, onClose, onStageTrans
                                 )}
                                 
                                 {transition.triggeredByInterviewId && (
-                                  <span className="inline-flex items-center px-2 py-1 bg-blue-100 text-blue-800 rounded-full">
+                                  <span className="inline-flex items-center px-2 py-1 bg-violet-100 text-violet-800 rounded-full">
                                     📅 Interview Triggered
                                   </span>
                                 )}
@@ -312,7 +312,7 @@ export default function ApplicationTimeline({ application, onClose, onStageTrans
                 <select
                   value={selectedStage}
                   onChange={(e) => setSelectedStage(e.target.value)}
-                  className="w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  className="w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-violet-500/40 focus:border-violet-400"
                 >
                   <option value="">Select a stage...</option>
                   {AVAILABLE_STAGES
@@ -333,7 +333,7 @@ export default function ApplicationTimeline({ application, onClose, onStageTrans
                   value={transitionReason}
                   onChange={(e) => setTransitionReason(e.target.value)}
                   rows={3}
-                  className="w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  className="w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-violet-500/40 focus:border-violet-400"
                   placeholder="Explain why this transition is being made..."
                 />
               </div>
@@ -348,7 +348,7 @@ export default function ApplicationTimeline({ application, onClose, onStageTrans
                 <button
                   onClick={handleStageTransition}
                   disabled={!selectedStage || !transitionReason.trim()}
-                  className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="px-4 py-2 bg-violet-600 text-white rounded-md hover:bg-violet-700 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   Move Stage
                 </button>

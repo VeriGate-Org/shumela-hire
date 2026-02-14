@@ -193,7 +193,7 @@ export default function AnalyticsDashboard() {
   const getStatusColor = (status: string): string => {
     switch (status) {
       case 'EXCEEDING': return 'bg-green-100 text-green-800 border-green-200';
-      case 'ON_TARGET': return 'bg-blue-100 text-blue-800 border-blue-200';
+      case 'ON_TARGET': return 'bg-violet-100 text-violet-800 border-violet-200';
       case 'BELOW_TARGET': return 'bg-red-100 text-red-800 border-red-200';
       default: return 'bg-gray-100 text-gray-800 border-gray-200';
     }
@@ -243,7 +243,7 @@ export default function AnalyticsDashboard() {
             return (
               <div key={index} className="flex-1 flex flex-col items-center">
                 <div
-                  className="w-full bg-blue-500 rounded-t transition-all duration-300 hover:bg-blue-600"
+                  className="w-full bg-violet-500 rounded-t transition-all duration-300 hover:bg-violet-600"
                   style={{ height: `${Math.max(height, 5)}%` }}
                   title={`${point.date}: ${formatNumber(point.value)}`}
                 />
@@ -298,7 +298,7 @@ export default function AnalyticsDashboard() {
             
             <button
               onClick={() => setShowReportModal(true)}
-              className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 text-sm"
+              className="px-4 py-2 bg-violet-600 text-white rounded-md hover:bg-violet-700 text-sm"
             >
               Generate Report
             </button>
@@ -342,7 +342,7 @@ export default function AnalyticsDashboard() {
                 onClick={() => setSelectedCategory(category.value)}
                 className={`py-4 px-1 border-b-2 font-medium text-sm ${
                   selectedCategory === category.value
-                    ? 'border-blue-500 text-blue-600'
+                    ? 'border-violet-500 text-violet-600'
                     : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
                 }`}
               >
@@ -357,7 +357,7 @@ export default function AnalyticsDashboard() {
         <div className="p-6">
           {loading ? (
             <div className="flex items-center justify-center h-64">
-              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-violet-500"></div>
             </div>
           ) : (
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -440,7 +440,7 @@ export default function AnalyticsDashboard() {
               <button
                 onClick={generateReport}
                 disabled={!selectedReportType || loading}
-                className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:opacity-50"
+                className="px-4 py-2 bg-violet-600 text-white rounded-md hover:bg-violet-700 disabled:opacity-50"
               >
                 {loading ? 'Generating...' : 'Generate'}
               </button>

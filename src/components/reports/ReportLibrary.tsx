@@ -201,7 +201,7 @@ export default function ReportLibrary({
                 placeholder="Search reports..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-64 pl-4 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                className="w-64 pl-4 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-violet-500/40 focus:border-violet-400"
               />
             </div>
             
@@ -213,7 +213,7 @@ export default function ReportLibrary({
                 setSortBy(field as any);
                 setSortOrder(order as any);
               }}
-              className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-violet-500/40 focus:border-violet-400"
             >
               <option value="updated-desc">Recently Updated</option>
               <option value="created-desc">Recently Created</option>
@@ -237,7 +237,7 @@ export default function ReportLibrary({
                   onClick={() => setSelectedCategory(category.id)}
                   className={`w-full flex items-center justify-between px-3 py-2 text-sm rounded-lg ${
                     selectedCategory === category.id
-                      ? 'bg-blue-100 text-blue-700'
+                      ? 'bg-violet-100 text-violet-700'
                       : 'text-gray-600 hover:bg-gray-100'
                   }`}
                 >
@@ -296,7 +296,7 @@ export default function ReportLibrary({
                             <ClockIcon className="h-4 w-4 text-green-500" title="Scheduled" />
                           )}
                           {report.isShared && (
-                            <ShareIcon className="h-4 w-4 text-blue-500" title="Shared" />
+                            <ShareIcon className="h-4 w-4 text-violet-500" title="Shared" />
                           )}
                         </div>
                       </div>
@@ -346,7 +346,7 @@ export default function ReportLibrary({
                           </button>
                           <button
                             onClick={() => onEdit(report)}
-                            className="p-1.5 text-gray-400 hover:text-blue-600 rounded"
+                            className="p-1.5 text-gray-400 hover:text-violet-600 rounded"
                             title="Edit"
                           >
                             <PencilIcon className="h-4 w-4" />
@@ -376,7 +376,7 @@ export default function ReportLibrary({
                         
                         <button
                           onClick={() => onRun(report)}
-                          className="px-3 py-1.5 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700"
+                          className="px-3 py-1.5 text-sm font-medium text-white bg-violet-600 rounded-lg hover:bg-violet-700"
                         >
                           <PlayIcon className="h-3 w-3 inline mr-1" />
                           Run

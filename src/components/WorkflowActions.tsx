@@ -69,7 +69,7 @@ const WorkflowActions: React.FC<WorkflowActionsProps> = ({
             key={action}
             onClick={() => handleAction(action)}
             disabled={disabled || isLoading}
-            className={`${baseClasses} bg-blue-600 hover:bg-blue-700 text-white`}
+            className={`${baseClasses} bg-violet-600 hover:bg-violet-700 text-white`}
           >
             {isLoading ? 'Submitting...' : 'Submit for Approval'}
           </button>
@@ -127,7 +127,7 @@ const WorkflowActions: React.FC<WorkflowActionsProps> = ({
               value={comment}
               onChange={(e) => setComment(e.target.value)}
               placeholder={pendingAction === WorkflowAction.REJECT ? 'Please provide a reason for rejection...' : 'Optional comment...'}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-violet-500/40 focus:border-violet-400"
               rows={4}
               required={pendingAction === WorkflowAction.REJECT}
             />
@@ -154,7 +154,7 @@ const WorkflowActions: React.FC<WorkflowActionsProps> = ({
                 className={`px-4 py-2 rounded-md font-medium transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed ${
                   pendingAction === WorkflowAction.REJECT 
                     ? 'bg-red-600 hover:bg-red-700 text-white'
-                    : 'bg-blue-600 hover:bg-blue-700 text-white'
+                    : 'bg-violet-600 hover:bg-violet-700 text-white'
                 }`}
               >
                 {isLoading ? 'Processing...' : (pendingAction === WorkflowAction.REJECT ? 'Reject' : 'Submit')}

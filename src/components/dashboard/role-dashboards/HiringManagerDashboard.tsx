@@ -44,7 +44,7 @@ const mockPipelineStages = [
   {
     id: 'applied',
     name: 'Applied',
-    color: 'bg-blue-100',
+    color: 'bg-violet-100',
     candidates: [
       { 
         id: '1', 
@@ -287,7 +287,7 @@ export default function HiringManagerDashboard({ selectedTimeframe, onTimeframeC
                     position: 'Product Manager',
                     time: '10:00 AM',
                     type: 'Technical',
-                    color: 'text-blue-600',
+                    color: 'text-violet-600',
                   },
                   {
                     id: '2',
@@ -329,7 +329,7 @@ export default function HiringManagerDashboard({ selectedTimeframe, onTimeframeC
             >
               <div className="grid grid-cols-1 gap-2">
                 {[
-                  { label: 'Post New Job', color: 'bg-blue-600', icon: '📝' },
+                  { label: 'Post New Job', color: 'bg-violet-600', icon: '📝' },
                   { label: 'Review Applications', color: 'bg-purple-600', icon: '📋' },
                   { label: 'Schedule Interview', color: 'bg-green-600', icon: '📅' },
                   { label: 'Send Offer', color: 'bg-orange-600', icon: '💰' },

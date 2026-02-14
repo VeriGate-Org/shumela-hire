@@ -60,7 +60,7 @@ export const HighRatedApplication: Story = {
       rating: 5.0,
       status: 'interview_scheduled',
       statusDisplayName: 'Interview Scheduled',
-      statusCssClass: 'bg-blue-100 text-blue-800',
+      statusCssClass: 'bg-violet-100 text-violet-800',
     },
     showWithdrawOption: true,
   },

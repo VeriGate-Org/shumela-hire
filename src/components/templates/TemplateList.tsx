@@ -149,7 +149,7 @@ const TemplateList: React.FC<TemplateListProps> = ({
   const getTemplateTypeColor = (employmentType: string) => {
     const colors: Record<string, string> = {
       'Full-time': 'bg-green-100 text-green-800',
-      'Part-time': 'bg-blue-100 text-blue-800',
+      'Part-time': 'bg-violet-100 text-violet-800',
       'Contract': 'bg-purple-100 text-purple-800',
       'Internship': 'bg-orange-100 text-orange-800',
       'Remote': 'bg-gray-100 text-gray-800'
@@ -175,7 +175,7 @@ const TemplateList: React.FC<TemplateListProps> = ({
         </div>
         <button
           onClick={onCreateNew}
-          className="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
+          className="inline-flex items-center px-4 py-2 bg-violet-600 text-white rounded-md hover:bg-violet-700 transition-colors"
         >
           <PlusIcon className="w-5 h-5 mr-2" />
           New Template
@@ -194,7 +194,7 @@ const TemplateList: React.FC<TemplateListProps> = ({
                 placeholder="Search templates..."
                 value={filters.search || ''}
                 onChange={(e) => handleSearch(e.target.value)}
-                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-violet-500/40 focus:border-violet-400"
               />
             </div>
 
@@ -219,7 +219,7 @@ const TemplateList: React.FC<TemplateListProps> = ({
                   <select
                     value={filters.employmentType || ''}
                     onChange={(e) => handleFilterChange('employmentType', e.target.value)}
-                    className="w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    className="w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-violet-500/40 focus:border-violet-400"
                   >
                     <option value="">All Types</option>
                     <option value="Full-time">Full-time</option>
@@ -238,7 +238,7 @@ const TemplateList: React.FC<TemplateListProps> = ({
                     placeholder="Filter by location..."
                     value={filters.location || ''}
                     onChange={(e) => handleFilterChange('location', e.target.value)}
-                    className="w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    className="w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-violet-500/40 focus:border-violet-400"
                   />
                 </div>
 
@@ -248,7 +248,7 @@ const TemplateList: React.FC<TemplateListProps> = ({
                       type="checkbox"
                       checked={filters.showArchived || false}
                       onChange={(e) => handleFilterChange('showArchived', e.target.checked)}
-                      className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                      className="rounded border-gray-300 text-violet-600 focus:ring-violet-500/40"
                     />
                     <span className="ml-2 text-sm text-gray-700">Show archived</span>
                   </label>
@@ -260,9 +260,9 @@ const TemplateList: React.FC<TemplateListProps> = ({
 
         {/* Bulk Actions */}
         {selectedTemplates.size > 0 && (
-          <div className="p-4 bg-blue-50 border-b border-gray-200">
+          <div className="p-4 bg-violet-50 border-b border-gray-200">
             <div className="flex items-center justify-between">
-              <span className="text-sm text-blue-800">
+              <span className="text-sm text-violet-800">
                 {selectedTemplates.size} template(s) selected
               </span>
               <div className="flex space-x-2">
@@ -309,7 +309,7 @@ const TemplateList: React.FC<TemplateListProps> = ({
           <div className="text-gray-500 mb-4">No templates found</div>
           <button
             onClick={onCreateNew}
-            className="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+            className="inline-flex items-center px-4 py-2 bg-violet-600 text-white rounded-md hover:bg-violet-700"
           >
             <PlusIcon className="w-5 h-5 mr-2" />
             Create Your First Template
@@ -333,7 +333,7 @@ const TemplateList: React.FC<TemplateListProps> = ({
                         type="checkbox"
                         checked={selectedTemplates.has(template.id)}
                         onChange={() => toggleSelectTemplate(template.id)}
-                        className="mr-3 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                        className="mr-3 rounded border-gray-300 text-violet-600 focus:ring-violet-500/40"
                       />
                       <h3 className="text-lg font-semibold text-gray-900 truncate">
                         {template.name}
@@ -399,7 +399,7 @@ const TemplateList: React.FC<TemplateListProps> = ({
                     
                     <button
                       onClick={() => onEdit?.(template)}
-                      className="p-2 text-gray-400 hover:text-blue-600 transition-colors"
+                      className="p-2 text-gray-400 hover:text-violet-600 transition-colors"
                       title="Edit"
                     >
                       <PencilIcon className="w-4 h-4" />
@@ -437,7 +437,7 @@ const TemplateList: React.FC<TemplateListProps> = ({
                   {!template.isArchived && (
                     <button
                       onClick={() => onGenerate?.(template)}
-                      className="px-3 py-1 text-sm bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors"
+                      className="px-3 py-1 text-sm bg-violet-600 text-white rounded hover:bg-violet-700 transition-colors"
                     >
                       Generate Ad
                     </button>

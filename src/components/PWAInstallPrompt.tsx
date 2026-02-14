@@ -135,7 +135,7 @@ const PWAInstallPrompt: React.FC<PWAInstallPromptProps> = ({ onInstall, onDismis
         <div className="absolute bottom-0 left-0 right-0 bg-white rounded-t-2xl p-6 shadow-2xl animate-slide-up">
           <div className="flex items-start space-x-4">
             <div className="flex-shrink-0">
-              <div className="w-12 h-12 bg-blue-500 rounded-xl flex items-center justify-center">
+              <div className="w-12 h-12 bg-violet-500 rounded-xl flex items-center justify-center">
                 <span className="text-white text-xl">📱</span>
               </div>
             </div>
@@ -150,7 +150,7 @@ const PWAInstallPrompt: React.FC<PWAInstallPromptProps> = ({ onInstall, onDismis
               <div className="flex space-x-3">
                 <button
                   onClick={handleInstallClick}
-                  className="flex-1 bg-blue-600 text-white px-4 py-2 rounded-lg font-medium hover:bg-blue-700 transition-colors"
+                  className="flex-1 bg-violet-600 text-white px-4 py-2 rounded-lg font-medium hover:bg-violet-700 transition-colors"
                 >
                   Install App
                 </button>
@@ -177,7 +177,7 @@ const PWAInstallPrompt: React.FC<PWAInstallPromptProps> = ({ onInstall, onDismis
         <div className="bg-white border border-gray-200 rounded-lg shadow-lg p-4">
           <div className="flex items-start space-x-3">
             <div className="flex-shrink-0">
-              <div className="w-10 h-10 bg-blue-500 rounded-lg flex items-center justify-center">
+              <div className="w-10 h-10 bg-violet-500 rounded-lg flex items-center justify-center">
                 <span className="text-white">📱</span>
               </div>
             </div>
@@ -191,7 +191,7 @@ const PWAInstallPrompt: React.FC<PWAInstallPromptProps> = ({ onInstall, onDismis
               <div className="flex items-center space-x-2 mt-3">
                 <button
                   onClick={handleInstallClick}
-                  className="text-xs bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700 transition-colors"
+                  className="text-xs bg-violet-600 text-white px-3 py-1 rounded hover:bg-violet-700 transition-colors"
                 >
                   Install
                 </button>
@@ -280,12 +280,12 @@ export const PWAStatus: React.FC = () => {
 
       {/* Update available indicator */}
       {updateAvailable && (
-        <div className="bg-blue-100 border border-blue-300 text-blue-800 px-3 py-2 rounded-lg shadow-sm">
+        <div className="bg-violet-100 border border-violet-300 text-violet-800 px-3 py-2 rounded-lg shadow-sm">
           <div className="flex items-center justify-between space-x-3">
             <span className="text-sm font-medium">Update Available</span>
             <button
               onClick={handleUpdate}
-              className="text-xs bg-blue-600 text-white px-2 py-1 rounded hover:bg-blue-700"
+              className="text-xs bg-violet-600 text-white px-2 py-1 rounded hover:bg-violet-700"
             >
               Refresh
             </button>

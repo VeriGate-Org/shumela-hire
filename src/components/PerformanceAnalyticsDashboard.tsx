@@ -162,7 +162,7 @@ const PerformanceAnalyticsDashboard: React.FC = () => {
           <p className="text-gray-600">Failed to load performance metrics</p>
           <button
             onClick={fetchPerformanceMetrics}
-            className="mt-4 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md"
+            className="mt-4 bg-violet-600 hover:bg-violet-700 text-white px-4 py-2 rounded-md"
           >
             Retry
           </button>
@@ -265,7 +265,7 @@ const PerformanceAnalyticsDashboard: React.FC = () => {
               onClick={() => setActiveTab(tab.id)}
               className={`py-2 px-1 border-b-2 font-medium text-sm ${
                 activeTab === tab.id
-                  ? 'border-blue-500 text-blue-600'
+                  ? 'border-violet-500 text-violet-600'
                   : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
               }`}
             >
@@ -297,7 +297,7 @@ const PerformanceAnalyticsDashboard: React.FC = () => {
                     </div>
                     <div className="w-full bg-gray-200 rounded-full h-2">
                       <div
-                        className="bg-blue-600 h-2 rounded-full"
+                        className="bg-violet-600 h-2 rounded-full"
                         style={{ width: `${item.rate}%` }}
                       ></div>
                     </div>
@@ -350,7 +350,7 @@ const PerformanceAnalyticsDashboard: React.FC = () => {
                 <div className="text-sm text-gray-600">Completion Rate</div>
               </div>
               <div className="text-center">
-                <div className="text-2xl font-bold text-blue-600">
+                <div className="text-2xl font-bold text-violet-600">
                   {formatNumber(metrics.interviewPerformance.feedbackTrends.averageOverallRating, 1)}
                 </div>
                 <div className="text-sm text-gray-600">Avg Rating</div>
@@ -426,9 +426,9 @@ const PerformanceAnalyticsDashboard: React.FC = () => {
           <div className="bg-white p-6 rounded-lg shadow">
             <h3 className="text-lg font-semibold mb-4">Cost Analysis</h3>
             <div className="space-y-4">
-              <div className="flex justify-between items-center p-4 bg-blue-50 rounded">
-                <span className="font-medium text-blue-900">Total Recruitment Cost</span>
-                <span className="text-xl font-bold text-blue-900">
+              <div className="flex justify-between items-center p-4 bg-violet-50 rounded">
+                <span className="font-medium text-violet-900">Total Recruitment Cost</span>
+                <span className="text-xl font-bold text-violet-900">
                   {formatCurrency(metrics.recruitmentMetrics.costMetrics.totalCost)}
                 </span>
               </div>
@@ -517,7 +517,7 @@ const PerformanceAnalyticsDashboard: React.FC = () => {
               {metrics.hiringTrends.monthlyTrends.slice(-12).map((month, index) => (
                 <div key={index} className="flex-1 flex flex-col items-center">
                   <div
-                    className="bg-blue-600 rounded-t w-full"
+                    className="bg-violet-600 rounded-t w-full"
                     style={{ height: `${(month.hires / Math.max(...metrics.hiringTrends.monthlyTrends.map(m => m.hires))) * 200}px` }}
                   ></div>
                   <div className="text-xs text-gray-600 mt-2">
@@ -537,7 +537,7 @@ const PerformanceAnalyticsDashboard: React.FC = () => {
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
               {Object.entries(metrics.hiringTrends.departmentPatterns.byDepartment).map(([dept, count]) => (
                 <div key={dept} className="text-center p-4 border rounded">
-                  <div className="text-2xl font-bold text-blue-600">{count}</div>
+                  <div className="text-2xl font-bold text-violet-600">{count}</div>
                   <div className="text-sm text-gray-600">{dept}</div>
                 </div>
               ))}

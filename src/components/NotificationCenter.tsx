@@ -114,7 +114,7 @@ const NotificationCenter: React.FC = () => {
       case 'success': return 'border-green-200 bg-green-50';
       case 'warning': return 'border-yellow-200 bg-yellow-50';
       case 'error': return 'border-red-200 bg-red-50';
-      case 'info': return 'border-blue-200 bg-blue-50';
+      case 'info': return 'border-violet-200 bg-violet-50';
       default: return 'border-gray-200 bg-gray-50';
     }
   };
@@ -166,7 +166,7 @@ const NotificationCenter: React.FC = () => {
                 {unreadCount > 0 && (
                   <button
                     onClick={markAllAsRead}
-                    className="text-sm text-blue-600 hover:text-blue-800"
+                    className="text-sm text-violet-600 hover:text-violet-800"
                   >
                     Mark all read
                   </button>
@@ -192,7 +192,7 @@ const NotificationCenter: React.FC = () => {
                   <div
                     key={notification.id}
                     className={`relative p-4 border-b border-gray-100 hover:bg-gray-50 ${
-                      !notification.read ? 'bg-blue-50 border-l-4 border-l-blue-500' : ''
+                      !notification.read ? 'bg-violet-50 border-l-4 border-l-violet-500' : ''
                     }`}
                     onClick={() => !notification.read && markAsRead(notification.id)}
                   >
@@ -226,7 +226,7 @@ const NotificationCenter: React.FC = () => {
                             <a
                               href={notification.action.href}
                               onClick={(e) => e.stopPropagation()}
-                              className="text-xs text-blue-600 hover:text-blue-800 font-medium"
+                              className="text-xs text-violet-600 hover:text-violet-800 font-medium"
                             >
                               {notification.action.label}
                             </a>
@@ -234,7 +234,7 @@ const NotificationCenter: React.FC = () => {
                         </div>
                       </div>
                       {!notification.read && (
-                        <div className="absolute top-4 right-4 w-2 h-2 bg-blue-500 rounded-full"></div>
+                        <div className="absolute top-4 right-4 w-2 h-2 bg-violet-500 rounded-full"></div>
                       )}
                     </div>
                   </div>
@@ -246,7 +246,7 @@ const NotificationCenter: React.FC = () => {
             <div className="px-4 py-3 border-t border-gray-200 bg-gray-50">
               <a
                 href="/notifications"
-                className="text-sm text-blue-600 hover:text-blue-800 font-medium"
+                className="text-sm text-violet-600 hover:text-violet-800 font-medium"
               >
                 View all notifications →
               </a>

@@ -152,7 +152,7 @@ export default function WorkflowLibrary({
 
   const getCategoryColor = (color: string) => {
     const colors = {
-      blue: 'bg-blue-100 text-blue-700 border-blue-200',
+      blue: 'bg-violet-100 text-violet-700 border-violet-200',
       green: 'bg-green-100 text-green-700 border-green-200',
       purple: 'bg-purple-100 text-purple-700 border-purple-200',
       orange: 'bg-orange-100 text-orange-700 border-orange-200',
@@ -195,7 +195,7 @@ export default function WorkflowLibrary({
             </button>
             <button
               onClick={onCreateWorkflow}
-              className="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700"
+              className="px-4 py-2 text-sm font-medium text-white bg-violet-600 rounded-lg hover:bg-violet-700"
             >
               <PlusIcon className="h-4 w-4 inline mr-1" />
               New Workflow
@@ -238,7 +238,7 @@ export default function WorkflowLibrary({
                 placeholder="Search workflows..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-10 pr-4 py-2 w-64 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                className="pl-10 pr-4 py-2 w-64 border border-gray-300 rounded-lg focus:ring-2 focus:ring-violet-500/40 focus:border-violet-400"
               />
             </div>
 
@@ -246,7 +246,7 @@ export default function WorkflowLibrary({
             <select
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value as any)}
-              className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-violet-500/40 focus:border-violet-400"
             >
               <option value="name">Sort by Name</option>
               <option value="created">Sort by Created</option>
@@ -260,7 +260,7 @@ export default function WorkflowLibrary({
               onClick={() => setViewMode('grid')}
               className={`px-3 py-1.5 text-sm font-medium ${
                 viewMode === 'grid'
-                  ? 'bg-blue-100 text-blue-700'
+                  ? 'bg-violet-100 text-violet-700'
                   : 'text-gray-600 hover:bg-gray-50'
               }`}
             >
@@ -270,7 +270,7 @@ export default function WorkflowLibrary({
               onClick={() => setViewMode('list')}
               className={`px-3 py-1.5 text-sm font-medium ${
                 viewMode === 'list'
-                  ? 'bg-blue-100 text-blue-700'
+                  ? 'bg-violet-100 text-violet-700'
                   : 'text-gray-600 hover:bg-gray-50'
               }`}
             >
@@ -281,10 +281,10 @@ export default function WorkflowLibrary({
 
         {/* Category Info */}
         {currentCategory && (
-          <div className="mt-3 p-3 bg-blue-50 border border-blue-200 rounded-lg">
-            <h3 className="font-medium text-blue-900">{currentCategory.name}</h3>
-            <p className="text-sm text-blue-700 mt-1">{currentCategory.description}</p>
-            <p className="text-xs text-blue-600 mt-1">
+          <div className="mt-3 p-3 bg-violet-50 border border-violet-200 rounded-lg">
+            <h3 className="font-medium text-violet-900">{currentCategory.name}</h3>
+            <p className="text-sm text-violet-700 mt-1">{currentCategory.description}</p>
+            <p className="text-xs text-violet-600 mt-1">
               {currentWorkflows.length} workflow{currentWorkflows.length !== 1 ? 's' : ''} found
             </p>
           </div>
@@ -305,7 +305,7 @@ export default function WorkflowLibrary({
             </p>
             <button
               onClick={onCreateWorkflow}
-              className="px-4 py-2 text-sm font-medium text-blue-600 bg-blue-50 rounded-lg hover:bg-blue-100"
+              className="px-4 py-2 text-sm font-medium text-violet-600 bg-violet-50 rounded-lg hover:bg-violet-100"
             >
               Create Workflow
             </button>
@@ -334,7 +334,7 @@ export default function WorkflowLibrary({
                         e.stopPropagation();
                         onExportWorkflow(workflow);
                       }}
-                      className="p-1 text-gray-400 hover:text-blue-600 rounded"
+                      className="p-1 text-gray-400 hover:text-violet-600 rounded"
                       title="Export"
                     >
                       <ShareIcon className="h-4 w-4" />
@@ -476,7 +476,7 @@ export default function WorkflowLibrary({
                         e.stopPropagation();
                         onExportWorkflow(workflow);
                       }}
-                      className="px-3 py-1.5 text-xs font-medium text-blue-700 bg-blue-50 border border-blue-200 rounded hover:bg-blue-100"
+                      className="px-3 py-1.5 text-xs font-medium text-violet-700 bg-violet-50 border border-violet-200 rounded hover:bg-violet-100"
                     >
                       Export
                     </button>

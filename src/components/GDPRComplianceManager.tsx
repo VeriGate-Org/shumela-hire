@@ -121,7 +121,7 @@ const GDPRComplianceManager: React.FC = () => {
               onClick={() => setActiveTab(tab.key as any)}
               className={`py-2 px-1 border-b-2 font-medium text-sm ${
                 activeTab === tab.key
-                  ? 'border-blue-500 text-blue-600'
+                  ? 'border-violet-500 text-violet-600'
                   : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
               }`}
             >
@@ -147,9 +147,9 @@ const GDPRComplianceManager: React.FC = () => {
               </div>
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div className="bg-blue-50 p-4 rounded-lg">
-                  <h4 className="text-sm font-medium text-blue-900">Compliance Score</h4>
-                  <p className="text-2xl font-bold text-blue-600">
+                <div className="bg-violet-50 p-4 rounded-lg">
+                  <h4 className="text-sm font-medium text-violet-900">Compliance Score</h4>
+                  <p className="text-2xl font-bold text-violet-600">
                     {complianceData?.complianceScore || 0}%
                   </p>
                 </div>
@@ -254,7 +254,7 @@ const GDPRComplianceManager: React.FC = () => {
                   <p className="text-sm text-gray-600 mt-2">{item.description}</p>
                   <button
                     onClick={item.action}
-                    className="mt-3 inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700"
+                    className="mt-3 inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-white bg-violet-600 hover:bg-violet-700"
                   >
                     Submit Request
                   </button>
@@ -308,7 +308,7 @@ const GDPRComplianceManager: React.FC = () => {
                           {new Date(request.date).toLocaleDateString()}
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                          <button className="text-blue-600 hover:text-blue-900">
+                          <button className="text-violet-600 hover:text-violet-900">
                             View Details
                           </button>
                         </td>
@@ -348,7 +348,7 @@ const GDPRComplianceManager: React.FC = () => {
             Data Retention Policy
           </h3>
           <div className="space-y-4">
-            <div className="border-l-4 border-blue-500 pl-4">
+            <div className="border-l-4 border-violet-500 pl-4">
               <h4 className="font-medium text-gray-900">Account Data</h4>
               <p className="text-sm text-gray-600">
                 Retained as long as your account is active, plus 2 years after account closure.

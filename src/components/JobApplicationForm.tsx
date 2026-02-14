@@ -144,7 +144,7 @@ export default function JobApplicationForm({
     return (
       <div className="flex items-center justify-center p-8">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500 mx-auto mb-4"></div>
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-violet-500 mx-auto mb-4"></div>
           <p className="text-gray-600">Checking application eligibility...</p>
         </div>
       </div>
@@ -177,9 +177,9 @@ export default function JobApplicationForm({
     <div className="max-w-2xl mx-auto bg-white rounded-lg shadow-lg p-6">
       <div className="mb-6">
         <h2 className="text-2xl font-bold text-gray-900 mb-2">Apply for Position</h2>
-        <div className="bg-blue-50 border border-blue-200 rounded-md p-4">
-          <h3 className="font-medium text-blue-900">{jobTitle}</h3>
-          {department && <p className="text-blue-700 text-sm">{department}</p>}
+        <div className="bg-violet-50 border border-violet-200 rounded-md p-4">
+          <h3 className="font-medium text-violet-900">{jobTitle}</h3>
+          {department && <p className="text-violet-700 text-sm">{department}</p>}
         </div>
       </div>
 
@@ -220,7 +220,7 @@ export default function JobApplicationForm({
           <select
             value={applicationSource}
             onChange={(e) => setApplicationSource(e.target.value)}
-            className="w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            className="w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-violet-500/40 focus:border-violet-400"
           >
             <option value="EXTERNAL">Job Board / Website</option>
             <option value="INTERNAL">Internal Posting</option>
@@ -241,7 +241,7 @@ export default function JobApplicationForm({
             onChange={(e) => setCoverLetter(e.target.value)}
             placeholder="Please explain why you are interested in this position and how your skills and experience make you a good fit..."
             rows={8}
-            className={`w-full p-3 border rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${
+            className={`w-full p-3 border rounded-md focus:ring-2 focus:ring-violet-500/40 focus:border-violet-400 ${
               errors.coverLetter ? 'border-red-500' : 'border-gray-300'
             }`}
           />
@@ -280,7 +280,7 @@ export default function JobApplicationForm({
           <button
             type="submit"
             disabled={loading}
-            className="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="px-6 py-2 bg-violet-600 text-white rounded-md hover:bg-violet-700 disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {loading ? (
               <span className="flex items-center">

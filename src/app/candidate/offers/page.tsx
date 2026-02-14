@@ -290,7 +290,7 @@ export default function MyOffersPage() {
       case 'accepted': return 'bg-green-100 text-green-800 border-green-300';
       case 'declined': return 'bg-red-100 text-red-800 border-red-300';
       case 'expired': return 'bg-gray-100 text-gray-800 border-gray-300';
-      case 'negotiating': return 'bg-blue-100 text-blue-800 border-blue-300';
+      case 'negotiating': return 'bg-violet-100 text-violet-800 border-violet-300';
       default: return 'bg-gray-100 text-gray-800 border-gray-300';
     }
   };
@@ -335,7 +335,7 @@ export default function MyOffersPage() {
       <select
         value={filterStatus}
         onChange={(e) => setFilterStatus(e.target.value as any)}
-        className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+        className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-violet-500/40 focus:border-violet-400"
       >
         <option value="all">All Offers</option>
         <option value="pending">Pending</option>
@@ -351,7 +351,7 @@ export default function MyOffersPage() {
     return (
       <PageWrapper title="My Offers" subtitle="Loading your job offers..." actions={actions}>
         <div className="flex items-center justify-center h-96">
-          <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-500"></div>
+          <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-violet-500"></div>
         </div>
       </PageWrapper>
     );
@@ -390,7 +390,7 @@ export default function MyOffersPage() {
           
           <div className="bg-white rounded-lg shadow p-6">
             <div className="flex items-center">
-              <ChatBubbleLeftRightIcon className="w-8 h-8 text-blue-500" />
+              <ChatBubbleLeftRightIcon className="w-8 h-8 text-violet-500" />
               <div className="ml-4">
                 <p className="text-sm font-medium text-gray-500">Negotiating</p>
                 <p className="text-2xl font-semibold text-gray-900">
@@ -421,12 +421,12 @@ export default function MyOffersPage() {
             const isExpired = daysUntilExpiry <= 0;
 
             return (
-              <div key={offer.id} className="bg-white rounded-lg shadow border-l-4 border-l-blue-500 overflow-hidden">
+              <div key={offer.id} className="bg-white rounded-lg shadow border-l-4 border-l-violet-500 overflow-hidden">
                 <div className="p-6">
                   <div className="flex items-start justify-between">
                     <div className="flex-1">
                       <div className="flex items-start space-x-4">
-                        <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
+                        <div className="w-16 h-16 bg-gradient-to-br from-violet-500 to-violet-700 rounded-lg flex items-center justify-center">
                           <BriefcaseIcon className="w-8 h-8 text-white" />
                         </div>
                         
@@ -451,7 +451,7 @@ export default function MyOffersPage() {
                             )}
                           </div>
                           
-                          <p className="text-lg text-blue-600 font-medium">{offer.company}</p>
+                          <p className="text-lg text-violet-600 font-medium">{offer.company}</p>
                           <div className="flex items-center space-x-4 mt-2 text-sm text-gray-600">
                             <span className="flex items-center">
                               <MapPinIcon className="w-4 h-4 mr-1" />
@@ -481,9 +481,9 @@ export default function MyOffersPage() {
                         </div>
                         
                         {offer.bonus && (
-                          <div className="bg-blue-50 rounded-lg p-4">
+                          <div className="bg-violet-50 rounded-lg p-4">
                             <div className="flex items-center">
-                              <StarIcon className="w-5 h-5 text-blue-600" />
+                              <StarIcon className="w-5 h-5 text-violet-600" />
                               <div className="ml-3">
                                 <p className="text-sm font-medium text-gray-500">Annual Bonus</p>
                                 <p className="text-lg font-semibold text-gray-900">
@@ -541,7 +541,7 @@ export default function MyOffersPage() {
                           </button>
                           <button
                             onClick={() => setShowNegotiationModal(true)}
-                            className="inline-flex items-center px-3 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700"
+                            className="inline-flex items-center px-3 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-violet-600 hover:bg-violet-700"
                           >
                             <ChatBubbleLeftRightIcon className="w-4 h-4 mr-2" />
                             Negotiate
@@ -559,7 +559,7 @@ export default function MyOffersPage() {
                       {offer.status === 'negotiating' && (
                         <button
                           onClick={() => setShowNegotiationModal(true)}
-                          className="inline-flex items-center px-3 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700"
+                          className="inline-flex items-center px-3 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-violet-600 hover:bg-violet-700"
                         >
                           <ChatBubbleLeftRightIcon className="w-4 h-4 mr-2" />
                           Continue Negotiation
@@ -594,7 +594,7 @@ export default function MyOffersPage() {
                 <div className="flex items-start justify-between mb-6">
                   <div>
                     <h2 className="text-2xl font-bold text-gray-900">{selectedOffer.jobTitle}</h2>
-                    <p className="text-lg text-blue-600 font-medium mt-1">{selectedOffer.company}</p>
+                    <p className="text-lg text-violet-600 font-medium mt-1">{selectedOffer.company}</p>
                   </div>
                   <button
                     onClick={() => setSelectedOffer(null)}
@@ -700,10 +700,10 @@ export default function MyOffersPage() {
                         {selectedOffer.documents.map((doc, index) => (
                           <div key={index} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
                             <div className="flex items-center">
-                              <DocumentTextIcon className="w-5 h-5 text-blue-500 mr-3" />
+                              <DocumentTextIcon className="w-5 h-5 text-violet-500 mr-3" />
                               <span className="text-sm font-medium">{doc.name}</span>
                             </div>
-                            <button className="text-blue-600 hover:text-blue-800">
+                            <button className="text-violet-600 hover:text-violet-800">
                               <ArrowDownTrayIcon className="w-4 h-4" />
                             </button>
                           </div>
@@ -714,9 +714,9 @@ export default function MyOffersPage() {
                 </div>
 
                 {selectedOffer.additionalNotes && (
-                  <div className="mt-6 p-4 bg-blue-50 rounded-lg">
-                    <h4 className="font-medium text-blue-900 mb-2">Additional Notes</h4>
-                    <p className="text-blue-800 text-sm">{selectedOffer.additionalNotes}</p>
+                  <div className="mt-6 p-4 bg-violet-50 rounded-lg">
+                    <h4 className="font-medium text-violet-900 mb-2">Additional Notes</h4>
+                    <p className="text-violet-800 text-sm">{selectedOffer.additionalNotes}</p>
                   </div>
                 )}
 

@@ -138,7 +138,7 @@ export default function AnalyticsPage() {
                   Referral program showing 23.3% conversion rate (highest)
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="text-blue-500">•</span>
+                  <span className="text-violet-500">•</span>
                   Engineering positions filling 15% faster than Q3
                 </li>
                 <li className="flex items-start gap-2">

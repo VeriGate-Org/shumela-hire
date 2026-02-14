@@ -63,7 +63,7 @@ const RealTimeMetrics: React.FC<RealTimeMetricsProps> = ({
       previousValue: 42,
       format: 'number',
       icon: UserGroupIcon,
-      color: 'text-blue-600 bg-blue-100',
+      color: 'text-violet-600 bg-violet-100',
     },
     {
       id: 'active_sessions',
@@ -219,7 +219,7 @@ const RealTimeMetrics: React.FC<RealTimeMetricsProps> = ({
             ].map((activity, index) => (
               <div key={index} className="flex items-start gap-3 text-sm">
                 <div className={`w-2 h-2 rounded-full mt-1.5 ${
-                  activity.type === 'application' ? 'bg-blue-500' :
+                  activity.type === 'application' ? 'bg-violet-500' :
                   activity.type === 'interview' ? 'bg-orange-500' : 'bg-green-500'
                 }`} />
                 <div>

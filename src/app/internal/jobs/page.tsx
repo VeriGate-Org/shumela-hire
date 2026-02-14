@@ -278,7 +278,7 @@ export default function InternalJobsBoard() {
           </span>
         )}
         {isInternal && (
-          <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+          <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-violet-100 text-violet-800">
             <UserGroupIcon className="w-3 h-3 mr-1" />
             Internal
           </span>
@@ -347,7 +347,7 @@ export default function InternalJobsBoard() {
         
         <div className="flex items-center justify-between">
           <Link href={`/internal/jobs/${job.id}`}>
-            <button className="text-blue-600 hover:text-blue-800 text-sm font-medium">
+            <button className="text-violet-600 hover:text-violet-800 text-sm font-medium">
               View Details
             </button>
           </Link>
@@ -355,7 +355,7 @@ export default function InternalJobsBoard() {
           {daysLeft > 0 && (
             <button
               onClick={() => handleApply(job)}
-              className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors"
+              className="bg-violet-600 hover:bg-violet-700 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors"
             >
               Apply Now
             </button>
@@ -422,7 +422,7 @@ export default function InternalJobsBoard() {
                 placeholder="Search jobs by title, keywords, or description..."
                 value={filters.search}
                 onChange={(e) => handleFilterChange('search', e.target.value)}
-                className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-violet-500/40 focus:border-violet-400"
               />
             </div>
 
@@ -435,7 +435,7 @@ export default function InternalJobsBoard() {
                 <FunnelIcon className="w-4 h-4 mr-2" />
                 Filters
                 {Object.values(filters).some(v => v) && (
-                  <span className="ml-2 px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded-full">
+                  <span className="ml-2 px-2 py-1 bg-violet-100 text-violet-800 text-xs rounded-full">
                     Active
                   </span>
                 )}
@@ -457,7 +457,7 @@ export default function InternalJobsBoard() {
                     <select
                       value={filters.department}
                       onChange={(e) => handleFilterChange('department', e.target.value)}
-                      className="w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                      className="w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-violet-500/40 focus:border-violet-400"
                     >
                       <option value="">All Departments</option>
                       {filterOptions.departments.map(dept => (
@@ -473,7 +473,7 @@ export default function InternalJobsBoard() {
                     <select
                       value={filters.location}
                       onChange={(e) => handleFilterChange('location', e.target.value)}
-                      className="w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                      className="w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-violet-500/40 focus:border-violet-400"
                     >
                       <option value="">All Locations</option>
                       {filterOptions.locations.map(location => (
@@ -489,7 +489,7 @@ export default function InternalJobsBoard() {
                     <select
                       value={filters.employmentType}
                       onChange={(e) => handleFilterChange('employmentType', e.target.value)}
-                      className="w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                      className="w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-violet-500/40 focus:border-violet-400"
                     >
                       <option value="">All Types</option>
                       {filterOptions.employmentTypes.map(type => (
@@ -505,7 +505,7 @@ export default function InternalJobsBoard() {
                     <select
                       value={filters.closingDate}
                       onChange={(e) => handleFilterChange('closingDate', e.target.value)}
-                      className="w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                      className="w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-violet-500/40 focus:border-violet-400"
                     >
                       <option value="">Any Time</option>
                       <option value="7">Next 7 days</option>
@@ -520,7 +520,7 @@ export default function InternalJobsBoard() {
                   <div className="mt-4">
                     <button
                       onClick={clearFilters}
-                      className="text-sm text-blue-600 hover:text-blue-800"
+                      className="text-sm text-violet-600 hover:text-violet-800"
                     >
                       Clear all filters
                     </button>
@@ -565,7 +565,7 @@ export default function InternalJobsBoard() {
             {Object.values(filters).some(v => v) && (
               <button
                 onClick={clearFilters}
-                className="text-blue-600 hover:text-blue-800"
+                className="text-violet-600 hover:text-violet-800"
               >
                 Clear filters
               </button>

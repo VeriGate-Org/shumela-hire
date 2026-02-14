@@ -416,7 +416,7 @@ export default function WorkflowPage() {
       {activeView !== 'builder' && (
         <button
           onClick={handleCreateWorkflow}
-          className="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 flex items-center gap-2"
+          className="px-4 py-2 text-sm font-medium text-white bg-violet-600 rounded-lg hover:bg-violet-700 flex items-center gap-2"
         >
           <PlusIcon className="h-4 w-4" />
           Create Workflow
@@ -447,7 +447,7 @@ export default function WorkflowPage() {
                 onClick={() => setActiveView(item.id)}
                 className={`flex items-center gap-3 px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
                   activeView === item.id
-                    ? 'bg-blue-100 text-blue-700'
+                    ? 'bg-violet-100 text-violet-700'
                     : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
                 }`}
               >

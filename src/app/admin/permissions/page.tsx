@@ -242,7 +242,7 @@ export default function AdminPermissionsPage() {
   const getRoleColor = (color: string) => {
     const colors = {
       red: 'bg-red-100 text-red-800 border-red-200',
-      blue: 'bg-blue-100 text-blue-800 border-blue-200',
+      blue: 'bg-violet-100 text-violet-800 border-violet-200',
       green: 'bg-green-100 text-green-800 border-green-200',
       purple: 'bg-purple-100 text-purple-800 border-purple-200',
       yellow: 'bg-yellow-100 text-yellow-800 border-yellow-200',
@@ -254,7 +254,7 @@ export default function AdminPermissionsPage() {
   const getPermissionLevel = (level: string) => {
     const levels = {
       read: { color: 'bg-green-100 text-green-800', icon: EyeIcon },
-      write: { color: 'bg-blue-100 text-blue-800', icon: PencilIcon },
+      write: { color: 'bg-violet-100 text-violet-800', icon: PencilIcon },
       admin: { color: 'bg-red-100 text-red-800', icon: ShieldCheckIcon }
     };
     return levels[level as keyof typeof levels] || levels.read;
@@ -311,7 +311,7 @@ export default function AdminPermissionsPage() {
       </button>
       <button 
         onClick={handleCreateRole}
-        className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700"
+        className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-violet-600 hover:bg-violet-700"
       >
         <PlusIcon className="w-4 h-4 mr-2" />
         Create Role
@@ -331,7 +331,7 @@ export default function AdminPermissionsPage() {
           <div className="bg-white rounded-lg shadow p-6">
             <div className="flex items-center">
               <div className="flex-shrink-0">
-                <ShieldCheckIcon className="w-8 h-8 text-blue-500" />
+                <ShieldCheckIcon className="w-8 h-8 text-violet-500" />
               </div>
               <div className="ml-4">
                 <p className="text-sm font-medium text-gray-500">Total Roles</p>
@@ -391,7 +391,7 @@ export default function AdminPermissionsPage() {
                   onClick={() => setSelectedView(view.id as any)}
                   className={`flex items-center px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
                     selectedView === view.id
-                      ? 'bg-blue-100 text-blue-800'
+                      ? 'bg-violet-100 text-violet-800'
                       : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
                   }`}
                 >
@@ -406,7 +406,7 @@ export default function AdminPermissionsPage() {
               placeholder="Search..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-violet-500/40 focus:border-violet-400"
             />
           </div>
         </div>
@@ -460,7 +460,7 @@ export default function AdminPermissionsPage() {
                   <div className="flex gap-2">
                     <button
                       onClick={() => setSelectedRole(role)}
-                      className="flex-1 px-3 py-2 bg-blue-100 text-blue-800 rounded-lg hover:bg-blue-200 transition-colors"
+                      className="flex-1 px-3 py-2 bg-violet-100 text-violet-800 rounded-lg hover:bg-violet-200 transition-colors"
                     >
                       View Details
                     </button>
@@ -605,7 +605,7 @@ export default function AdminPermissionsPage() {
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                             <div className="flex gap-2">
-                              <button className="text-blue-600 hover:text-blue-900">
+                              <button className="text-violet-600 hover:text-violet-900">
                                 <PencilIcon className="w-4 h-4" />
                               </button>
                               <button className="text-red-600 hover:text-red-900">
@@ -672,7 +672,7 @@ export default function AdminPermissionsPage() {
                                       onClick={() => handleRolePermissionToggle(selectedRole.id, permission.id)}
                                       className={`w-6 h-6 rounded border-2 flex items-center justify-center ${
                                         hasPermission 
-                                          ? 'bg-blue-600 border-blue-600 text-white' 
+                                          ? 'bg-violet-600 border-violet-600 text-white' 
                                           : 'border-gray-300 hover:border-gray-400'
                                       }`}
                                     >
@@ -681,7 +681,7 @@ export default function AdminPermissionsPage() {
                                   ) : (
                                     <div className={`w-6 h-6 rounded border-2 flex items-center justify-center ${
                                       hasPermission 
-                                        ? 'bg-blue-600 border-blue-600 text-white' 
+                                        ? 'bg-violet-600 border-violet-600 text-white' 
                                         : 'border-gray-300'
                                     }`}>
                                       {hasPermission && <CheckIcon className="w-4 h-4" />}
@@ -705,7 +705,7 @@ export default function AdminPermissionsPage() {
                     Close
                   </button>
                   {!selectedRole.isSystem && (
-                    <button className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
+                    <button className="px-4 py-2 bg-violet-600 text-white rounded-lg hover:bg-violet-700">
                       Save Changes
                     </button>
                   )}

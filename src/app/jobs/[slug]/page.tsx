@@ -186,7 +186,7 @@ export default async function JobDetailPage({ params }: { params: Promise<{ slug
             </p>
           </div>
           <Link href="/jobs">
-            <button className="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors">
+            <button className="inline-flex items-center px-4 py-2 bg-violet-600 text-white rounded-md hover:bg-violet-700 transition-colors">
               <ArrowLeftIcon className="w-4 h-4 mr-2" />
               View All Jobs
             </button>
@@ -248,7 +248,7 @@ export default async function JobDetailPage({ params }: { params: Promise<{ slug
             <div className="py-6">
               <div className="flex items-center justify-between">
                 <Link href="/jobs">
-                  <button className="inline-flex items-center text-blue-600 hover:text-blue-800 transition-colors">
+                  <button className="inline-flex items-center text-violet-600 hover:text-violet-800 transition-colors">
                     <ArrowLeftIcon className="w-4 h-4 mr-2" />
                     Back to jobs
                   </button>
@@ -319,15 +319,15 @@ export default async function JobDetailPage({ params }: { params: Promise<{ slug
 
               {/* Apply Now Section */}
               {isActive && (
-                <div className="mb-8 p-6 bg-blue-50 rounded-lg border border-blue-200">
+                <div className="mb-8 p-6 bg-violet-50 rounded-lg border border-violet-200">
                   <div className="text-center">
-                    <h2 className="text-xl font-semibold text-blue-900 mb-2">Ready to Apply?</h2>
-                    <p className="text-blue-700 mb-4">
+                    <h2 className="text-xl font-semibold text-violet-900 mb-2">Ready to Apply?</h2>
+                    <p className="text-violet-700 mb-4">
                       Take the next step in your career journey with us.
                     </p>
                     {job.requisitionId ? (
                       <Link href={`/apply/${job.requisitionId}`}>
-                        <button className="inline-flex items-center px-6 py-3 bg-blue-600 text-white text-lg font-medium rounded-lg hover:bg-blue-700 transition-colors">
+                        <button className="inline-flex items-center px-6 py-3 bg-violet-600 text-white text-lg font-medium rounded-lg hover:bg-violet-700 transition-colors">
                           Apply Now
                         </button>
                       </Link>
@@ -361,7 +361,7 @@ export default async function JobDetailPage({ params }: { params: Promise<{ slug
               and excellence.
             </p>
             <Link href="/jobs">
-              <button className="text-blue-600 hover:text-blue-800 text-sm transition-colors">
+              <button className="text-violet-600 hover:text-violet-800 text-sm transition-colors">
                 View all open positions →
               </button>
             </Link>

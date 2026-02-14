@@ -91,7 +91,7 @@ const JobTemplatesPage: React.FC = () => {
             {stats && (
               <div className="hidden md:flex items-center space-x-6 text-sm">
                 <div className="text-center">
-                  <div className="text-2xl font-bold text-blue-600">{stats.activeTemplates}</div>
+                  <div className="text-2xl font-bold text-violet-600">{stats.activeTemplates}</div>
                   <div className="text-gray-500">Active</div>
                 </div>
                 <div className="text-center">
@@ -113,7 +113,7 @@ const JobTemplatesPage: React.FC = () => {
                 onClick={() => setActiveView('list')}
                 className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
                   activeView === 'list'
-                    ? 'bg-blue-600 text-white'
+                    ? 'bg-violet-600 text-white'
                     : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                 }`}
               >
@@ -125,7 +125,7 @@ const JobTemplatesPage: React.FC = () => {
                 onClick={handleCreateNew}
                 className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
                   activeView === 'editor'
-                    ? 'bg-blue-600 text-white'
+                    ? 'bg-violet-600 text-white'
                     : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                 }`}
               >
@@ -137,7 +137,7 @@ const JobTemplatesPage: React.FC = () => {
                 onClick={() => setActiveView('generate')}
                 className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
                   activeView === 'generate'
-                    ? 'bg-blue-600 text-white'
+                    ? 'bg-violet-600 text-white'
                     : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                 }`}
               >
@@ -157,7 +157,7 @@ const JobTemplatesPage: React.FC = () => {
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Features Banner */}
-        <div className="mb-8 bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg p-6 text-white">
+        <div className="mb-8 bg-gradient-to-r from-violet-600 to-violet-700 rounded-lg p-6 text-white">
           <h2 className="text-xl font-semibold mb-2">Job Ad Template Manager Features</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
             <div>

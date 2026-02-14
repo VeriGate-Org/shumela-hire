@@ -131,7 +131,7 @@ export function LoadingSpinner({ size = 'md', color = 'blue' }: {
   };
   
   const colorClasses = {
-    blue: 'text-blue-600',
+    blue: 'text-violet-600',
     gray: 'text-gray-400',
     white: 'text-white'
   };
@@ -220,7 +220,7 @@ export function ErrorFallback({ error, resetError }: { error: Error; resetError:
         </p>
         <button 
           onClick={resetError}
-          className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg transition-colors"
+          className="bg-violet-600 hover:bg-violet-700 text-white px-6 py-2 rounded-lg transition-colors"
         >
           Try again
         </button>
