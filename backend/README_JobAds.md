@@ -1,6 +1,6 @@
 # Job Ads Service Documentation
 
-This document describes the Job Ads service implementation for the e-recruitment system.
+This document describes the Job Ads service implementation for the TalentGate platform.
 
 ## Overview
 

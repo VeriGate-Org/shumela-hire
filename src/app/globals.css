@@ -3,379 +3,321 @@
 @tailwind utilities;
 
 :root {
-  /* Enterprise Design System - Base Colors */
-  --background: 255 255 255;
-  --foreground: 15 23 42;
-  --card: 255 255 255;
-  --card-foreground: 15 23 42;
-  --popover: 255 255 255;
-  --popover-foreground: 15 23 42;
-  --primary: 79 70 229;
-  --primary-foreground: 255 255 255;
-  --secondary: 243 244 246;
-  --secondary-foreground: 15 23 42;
-  --muted: 248 250 252;
-  --muted-foreground: 100 116 139;
-  --accent: 243 244 246;
-  --accent-foreground: 15 23 42;
-  --destructive: 239 68 68;
-  --destructive-foreground: 255 255 255;
-  --border: 226 232 240;
-  --input: 226 232 240;
-  --ring: 79 70 229;
-  --radius: 0.5rem;
-  
-  /* Enterprise Shadows */
-  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
-  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
-  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
-  --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
-  
-  /* Enterprise Gradients */
-  --gradient-primary: linear-gradient(135deg, rgb(79 70 229) 0%, rgb(99 102 241) 100%);
-  --gradient-secondary: linear-gradient(135deg, rgb(148 163 184) 0%, rgb(203 213 225) 100%);
-  --gradient-success: linear-gradient(135deg, rgb(34 197 94) 0%, rgb(74 222 128) 100%);
-  --gradient-warning: linear-gradient(135deg, rgb(251 191 36) 0%, rgb(253 224 71) 100%);
-  --gradient-danger: linear-gradient(135deg, rgb(239 68 68) 0%, rgb(248 113 113) 100%);
+  /* TalentGate Design System */
+  --background: #F8FAFC;
+  --foreground: #0F172A;
+  --card: #FFFFFF;
+  --card-foreground: #0F172A;
+  --popover: #FFFFFF;
+  --popover-foreground: #0F172A;
+  --primary: #7C3AED;
+  --primary-foreground: #FFFFFF;
+  --secondary: #F8FAFC;
+  --secondary-foreground: #0F172A;
+  --muted: #F8FAFC;
+  --muted-foreground: #64748B;
+  --accent: #F8FAFC;
+  --accent-foreground: #0F172A;
+  --destructive: #EF4444;
+  --destructive-foreground: #FFFFFF;
+  --border: #E2E8F0;
+  --input: #E2E8F0;
+  --ring: #7C3AED;
+
+  /* Brand Radius */
+  --radius: 0.375rem;
+  --radius-control: 6px;
+  --radius-card: 10px;
+
+  /* Stripe Dual-Layer Shadows */
+  --shadow-sm: 0 2px 5px rgba(50, 50, 93, 0.09), 0 1px 3px rgba(0, 0, 0, 0.07);
+  --shadow-md: 0 4px 10px rgba(50, 50, 93, 0.09), 0 2px 5px rgba(0, 0, 0, 0.07);
+  --shadow-lg: 0 10px 20px rgba(50, 50, 93, 0.09), 0 5px 10px rgba(0, 0, 0, 0.07);
+  --shadow-xl: 0 15px 35px rgba(50, 50, 93, 0.1), 0 5px 15px rgba(0, 0, 0, 0.07);
+
+  /* Motion Tokens */
+  --motion-duration-quick: 100ms;
+  --motion-duration-show: 200ms;
+  --motion-easing: cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .dark {
-  --background: 15 23 42;
-  --foreground: 248 250 252;
-  --card: 30 41 59;
-  --card-foreground: 248 250 252;
-  --popover: 30 41 59;
-  --popover-foreground: 248 250 252;
-  --primary: 99 102 241;
-  --primary-foreground: 15 23 42;
-  --secondary: 71 85 105;
-  --secondary-foreground: 248 250 252;
-  --muted: 51 65 85;
-  --muted-foreground: 148 163 184;
-  --accent: 71 85 105;
-  --accent-foreground: 248 250 252;
-  --destructive: 248 113 113;
-  --destructive-foreground: 15 23 42;
-  --border: 71 85 105;
-  --input: 71 85 105;
-  --ring: 99 102 241;
+  --background: #0F172A;
+  --foreground: #F8FAFC;
+  --card: #1E293B;
+  --card-foreground: #F8FAFC;
+  --popover: #1E293B;
+  --popover-foreground: #F8FAFC;
+  --primary: #8B5CF6;
+  --primary-foreground: #FFFFFF;
+  --secondary: #334155;
+  --secondary-foreground: #F8FAFC;
+  --muted: #334155;
+  --muted-foreground: #94A3B8;
+  --accent: #334155;
+  --accent-foreground: #F8FAFC;
+  --destructive: #F87171;
+  --destructive-foreground: #0F172A;
+  --border: #334155;
+  --input: #334155;
+  --ring: #8B5CF6;
+
+  --shadow-sm: 0 2px 5px rgba(0, 0, 0, 0.2), 0 1px 3px rgba(0, 0, 0, 0.15);
+  --shadow-md: 0 4px 10px rgba(0, 0, 0, 0.25), 0 2px 5px rgba(0, 0, 0, 0.15);
+  --shadow-lg: 0 10px 20px rgba(0, 0, 0, 0.3), 0 5px 10px rgba(0, 0, 0, 0.2);
+  --shadow-xl: 0 15px 35px rgba(0, 0, 0, 0.35), 0 5px 15px rgba(0, 0, 0, 0.2);
 }
 
 .high-contrast {
-  --foreground: 0 0 0;
-  --background: 255 255 255;
-  --primary: 0 0 0;
-  --primary-foreground: 255 255 255;
-  --border: 0 0 0;
-  --ring: 0 0 0;
+  --foreground: #000000;
+  --background: #FFFFFF;
+  --primary: #000000;
+  --primary-foreground: #FFFFFF;
+  --border: #000000;
+  --ring: #000000;
 }
 
 .high-contrast.dark {
-  --foreground: 255 255 255;
-  --background: 0 0 0;
-  --primary: 255 255 255;
-  --primary-foreground: 0 0 0;
-  --border: 255 255 255;
-  --ring: 255 255 255;
+  --foreground: #FFFFFF;
+  --background: #000000;
+  --primary: #FFFFFF;
+  --primary-foreground: #000000;
+  --border: #FFFFFF;
+  --ring: #FFFFFF;
 }
 
-/* Role-based Theme Variables */
-.theme-executive {
-  --primary: 55 48 163;
-  --primary-foreground: 255 255 255;
-  --accent: 236 254 255;
-  --accent-foreground: 12 74 110;
-  --gradient-primary: linear-gradient(135deg, rgb(55 48 163) 0%, rgb(79 70 229) 100%);
-}
-
-.theme-hr {
-  --primary: 16 185 129;
-  --primary-foreground: 255 255 255;
-  --accent: 236 253 245;
-  --accent-foreground: 6 78 59;
-  --gradient-primary: linear-gradient(135deg, rgb(16 185 129) 0%, rgb(52 211 153) 100%);
-}
-
-.theme-admin {
-  --primary: 239 68 68;
-  --primary-foreground: 255 255 255;
-  --accent: 254 242 242;
-  --accent-foreground: 127 29 29;
-  --gradient-primary: linear-gradient(135deg, rgb(239 68 68) 0%, rgb(248 113 113) 100%);
-}
-
-.theme-hiring {
-  --primary: 245 158 11;
-  --primary-foreground: 255 255 255;
-  --accent: 255 251 235;
-  --accent-foreground: 146 64 14;
-  --gradient-primary: linear-gradient(135deg, rgb(245 158 11) 0%, rgb(251 191 36) 100%);
-}
-
-.theme-recruiter {
-  --primary: 168 85 247;
-  --primary-foreground: 255 255 255;
-  --accent: 250 245 255;
-  --accent-foreground: 88 28 135;
-  --gradient-primary: linear-gradient(135deg, rgb(168 85 247) 0%, rgb(196 181 253) 100%);
-}
-
-.theme-applicant {
-  --primary: 59 130 246;
-  --primary-foreground: 255 255 255;
-  --accent: 239 246 255;
-  --accent-foreground: 30 64 175;
-  --gradient-primary: linear-gradient(135deg, rgb(59 130 246) 0%, rgb(96 165 250) 100%);
-}
-
-/* Base Layer - Global Styles */
+/* Base Layer */
 @layer base {
   * {
-    border-color: rgb(var(--border));
+    border-color: var(--border);
   }
 
   body {
-    background-color: rgb(var(--background));
-    color: rgb(var(--foreground));
+    background-color: var(--background);
+    color: var(--foreground);
+    font-family: var(--font-manrope), 'Manrope', system-ui, sans-serif;
     font-feature-settings: "rlig" 1, "calt" 1;
+    line-height: 1.7;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
 
   h1, h2, h3, h4, h5, h6 {
-    font-weight: 600;
+    font-weight: 800;
     line-height: 1.2;
-    letter-spacing: -0.025em;
+    letter-spacing: -0.03em;
+  }
+
+  h1 { letter-spacing: -0.04em; }
+
+  /* Labels / overline text */
+  .label, .overline {
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    font-size: 0.75rem;
+  }
+
+  code, pre {
+    font-family: var(--font-mono), 'JetBrains Mono', monospace;
   }
 
   button:focus-visible,
   input:focus-visible,
   select:focus-visible,
   textarea:focus-visible {
-    outline: 2px solid rgb(var(--ring));
+    outline: 2px solid var(--ring);
     outline-offset: 2px;
   }
 
   input:focus,
   select:focus,
   textarea:focus {
-    box-shadow: 0 0 0 2px rgb(var(--ring) / 0.2);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--ring) 20%, transparent);
   }
 }
 
 @layer components {
-  /* Enterprise Card Component */
+  /* TalentGate Card */
   .enterprise-card {
-    background-color: rgb(var(--card));
-    color: rgb(var(--card-foreground));
-    border-radius: 0.75rem;
-    border: 1px solid rgb(var(--border));
-    box-shadow: var(--shadow-md);
-    transition: all 300ms ease-in-out;
+    background-color: var(--card);
+    color: var(--card-foreground);
+    border-radius: var(--radius-card);
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow-sm);
+    transition: box-shadow var(--motion-duration-show) var(--motion-easing),
+                border-color var(--motion-duration-show) var(--motion-easing);
   }
 
   .enterprise-card:hover {
-    box-shadow: var(--shadow-lg);
-    border-color: rgb(var(--border) / 0.8);
+    box-shadow: var(--shadow-md);
   }
 
   .enterprise-card-elevated {
-    background: var(--gradient-primary);
-    color: rgb(var(--primary-foreground));
+    background-color: var(--primary);
+    color: var(--primary-foreground);
     border: none;
-    box-shadow: var(--shadow-xl);
+    box-shadow: var(--shadow-lg);
   }
 
   .enterprise-card-elevated:hover {
-    transform: translateY(-2px);
-    box-shadow: var(--shadow-xl), 0 25px 50px -12px rgb(0 0 0 / 0.25);
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-xl);
   }
 
-  /* Enterprise Button Styles */
+  /* TalentGate Button - Flat, no gradients */
   .btn-primary {
-    background: var(--gradient-primary);
-    color: rgb(var(--primary-foreground));
+    background-color: var(--primary);
+    color: var(--primary-foreground);
     border: none;
-    border-radius: 0.5rem;
-    padding: 0.75rem 1.5rem;
-    font-weight: 600;
+    border-radius: var(--radius-control);
+    padding: 0.625rem 1.25rem;
+    font-weight: 700;
     font-size: 0.875rem;
     line-height: 1.25rem;
-    transition: all 300ms ease-in-out;
+    transition: all var(--motion-duration-show) var(--motion-easing);
     box-shadow: var(--shadow-sm);
   }
 
   .btn-primary:hover {
-    transform: translateY(-1px);
+    filter: brightness(1.1);
     box-shadow: var(--shadow-md);
-    filter: brightness(1.05);
   }
 
   .btn-primary:active {
-    transform: translateY(0);
+    filter: brightness(0.95);
     box-shadow: var(--shadow-sm);
   }
 
   .btn-secondary {
-    background-color: rgb(var(--secondary));
-    color: rgb(var(--secondary-foreground));
-    border: 1px solid rgb(var(--border));
-    border-radius: 0.5rem;
-    padding: 0.75rem 1.5rem;
-    font-weight: 600;
+    background-color: var(--secondary);
+    color: var(--secondary-foreground);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-control);
+    padding: 0.625rem 1.25rem;
+    font-weight: 700;
     font-size: 0.875rem;
     line-height: 1.25rem;
-    transition: all 300ms ease-in-out;
+    transition: all var(--motion-duration-show) var(--motion-easing);
   }
 
   .btn-secondary:hover {
-    background-color: rgb(var(--accent));
-    border-color: rgb(var(--border) / 0.8);
-    transform: translateY(-1px);
+    background-color: var(--accent);
     box-shadow: var(--shadow-sm);
   }
 
   .btn-outline {
     background: transparent;
-    color: rgb(var(--primary));
-    border: 2px solid rgb(var(--primary));
-    border-radius: 0.5rem;
-    padding: 0.75rem 1.5rem;
-    font-weight: 600;
+    color: var(--primary);
+    border: 2px solid var(--primary);
+    border-radius: var(--radius-control);
+    padding: 0.625rem 1.25rem;
+    font-weight: 700;
     font-size: 0.875rem;
     line-height: 1.25rem;
-    transition: all 300ms ease-in-out;
+    transition: all var(--motion-duration-show) var(--motion-easing);
   }
 
   .btn-outline:hover {
-    background: rgb(var(--primary));
-    color: rgb(var(--primary-foreground));
-    transform: translateY(-1px);
+    background: var(--primary);
+    color: var(--primary-foreground);
     box-shadow: var(--shadow-sm);
   }
 
-  /* Navigation Styles */
+  /* Navigation - Solid background, no glassmorphism */
   .nav-primary {
-    background: rgb(var(--card) / 0.8);
-    backdrop-filter: blur(10px);
-    border-bottom: 1px solid rgb(var(--border));
+    background-color: var(--card);
+    border-bottom: 1px solid var(--border);
   }
 
   .nav-item {
-    color: rgb(var(--muted-foreground));
-    transition: color 300ms ease-in-out;
+    color: var(--muted-foreground);
+    transition: color var(--motion-duration-quick) var(--motion-easing);
   }
 
   .nav-item:hover {
-    color: rgb(var(--foreground));
+    color: var(--foreground);
   }
 
   .nav-item-active {
-    color: rgb(var(--primary));
-    font-weight: 600;
+    color: var(--primary);
+    font-weight: 700;
   }
 }
 
 /* Animation Classes */
 .animate-fade-in {
-  animation: fade-in 0.5s ease-out;
+  animation: fade-in 0.3s var(--motion-easing);
 }
 
 .animate-slide-up {
-  animation: slide-up 0.6s ease-out;
+  animation: slide-up 0.3s var(--motion-easing);
 }
 
 .animate-scale-in {
-  animation: scale-in 0.4s ease-out;
+  animation: scale-in 0.2s var(--motion-easing);
 }
 
-/* Keyframe Animations */
 @keyframes fade-in {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 
 @keyframes slide-up {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 @keyframes scale-in {
-  from {
-    opacity: 0;
-    transform: scale(0.95);
-  }
-  to {
-    opacity: 1;
-    transform: scale(1);
-  }
+  from { opacity: 0; transform: scale(0.97); }
+  to { opacity: 1; transform: scale(1); }
 }
 
-/* Enterprise Loading States */
+/* Loading States */
 .loading-shimmer {
   background: linear-gradient(
     90deg,
-    rgb(var(--muted)) 0%,
-    rgb(var(--accent)) 50%,
-    rgb(var(--muted)) 100%
+    var(--muted) 0%,
+    var(--accent) 50%,
+    var(--muted) 100%
   );
   background-size: 200% 100%;
   animation: shimmer 2s infinite;
 }
 
 @keyframes shimmer {
-  0% {
-    background-position: 200% 0;
-  }
-  100% {
-    background-position: -200% 0;
-  }
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
 }
 
-/* Enterprise Form Elements */
+/* Form Elements */
 @layer utilities {
   .form-input {
-    background-color: rgb(var(--input));
-    border: 1px solid rgb(var(--border));
-    border-radius: 0.5rem;
-    padding: 0.75rem 1rem;
+    background-color: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-control);
+    padding: 0.625rem 0.875rem;
     font-size: 0.875rem;
-    transition: all 200ms ease-in-out;
+    transition: all var(--motion-duration-show) var(--motion-easing);
   }
 
   .form-input:focus {
-    border-color: rgb(var(--ring));
-    box-shadow: 0 0 0 2px rgb(var(--ring) / 0.2);
+    border-color: var(--ring);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--ring) 20%, transparent);
   }
 
   .form-label {
-    font-weight: 500;
-    font-size: 0.875rem;
-    color: rgb(var(--foreground));
+    font-weight: 700;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--foreground);
     margin-bottom: 0.5rem;
     display: block;
   }
 }
 
-/* Dark Mode Overrides */
-@layer base {
-  .dark {
-    --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.3);
-    --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.4), 0 2px 4px -2px rgb(0 0 0 / 0.3);
-    --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.5), 0 4px 6px -4px rgb(0 0 0 / 0.4);
-    --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.6), 0 8px 10px -6px rgb(0 0 0 / 0.5);
-  }
-}
-
-/* Accessibility Features */
+/* Accessibility */
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
@@ -387,16 +329,15 @@
   }
 }
 
-/* High Contrast Mode Enhancements */
 @media (prefers-contrast: high) {
   :root {
-    --border: 0 0 0;
-    --ring: 0 0 0;
+    --border: #000000;
+    --ring: #000000;
   }
 
   .dark {
-    --border: 255 255 255;
-    --ring: 255 255 255;
+    --border: #FFFFFF;
+    --ring: #FFFFFF;
   }
 }
 
@@ -408,15 +349,15 @@
 
   .enterprise-card {
     box-shadow: none !important;
-    border: 1px solid rgb(0 0 0 / 0.2) !important;
+    border: 1px solid rgba(0, 0, 0, 0.2) !important;
   }
 
   .btn-primary,
   .btn-secondary,
   .btn-outline {
     background: transparent !important;
-    color: rgb(0 0 0) !important;
-    border: 1px solid rgb(0 0 0) !important;
+    color: rgb(0, 0, 0) !important;
+    border: 1px solid rgb(0, 0, 0) !important;
     box-shadow: none !important;
   }
 }

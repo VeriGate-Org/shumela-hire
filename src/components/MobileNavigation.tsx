@@ -147,10 +147,10 @@ const MobileNavigation: React.FC<MobileNavigationProps> = ({ isOpen, onClose }) 
         {/* Header */}
         <div className="flex items-center justify-between p-4 border-b border-gray-200">
           <div className="flex items-center space-x-3">
-            <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
-              <span className="text-white font-bold text-sm">E-R</span>
+            <div className="w-8 h-8 bg-violet-600 rounded-lg flex items-center justify-center">
+              <span className="text-white font-bold text-sm">TG</span>
             </div>
-            <h2 className="text-lg font-bold text-gray-900">E-Recruitment</h2>
+            <h2 className="text-lg font-bold text-gray-900">TalentGate</h2>
           </div>
           <button
             onClick={onClose}
@@ -283,7 +283,7 @@ export const MobileHeader: React.FC = () => {
       'offers': 'Offers'
     };
 
-    return pageTitles[pathSegments[0]] || 'E-Recruitment';
+    return pageTitles[pathSegments[0]] || 'TalentGate';
   };
 
   return (

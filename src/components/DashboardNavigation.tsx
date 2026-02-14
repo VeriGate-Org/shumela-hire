@@ -277,11 +277,11 @@ const DashboardNavigation: React.FC = () => {
       `}>
         <div className="p-6 border-b border-gray-200">
           <div className="flex items-center">
-            <div className="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center">
-              <span className="text-white font-bold text-lg">eR</span>
+            <div className="w-10 h-10 bg-violet-600 rounded-lg flex items-center justify-center">
+              <span className="text-white font-bold text-lg">TG</span>
             </div>
             <div className="ml-3">
-              <h1 className="text-lg font-bold text-gray-900">E-Recruitment</h1>
+              <h1 className="text-lg font-bold text-gray-900">TalentGate</h1>
               <p className="text-sm text-gray-500">Dashboard v1.0</p>
             </div>
           </div>

@@ -235,9 +235,9 @@ export const enterpriseDesignTokens: DesignTokens = {
   
   typography: {
     fontFamily: {
-      sans: ['Inter', 'system-ui', 'sans-serif'],
-      mono: ['Fira Code', 'Monaco', 'Consolas', 'monospace'],
-      display: ['Cal Sans', 'Inter', 'system-ui', 'sans-serif'],
+      sans: ['Manrope', 'system-ui', 'sans-serif'],
+      mono: ['JetBrains Mono', 'monospace'],
+      display: ['Manrope', 'system-ui', 'sans-serif'],
     },
     fontSize: {
       xs: ['0.75rem', '1rem'],

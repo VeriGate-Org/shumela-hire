@@ -65,7 +65,7 @@ const ModernLayout: React.FC<ModernLayoutProps> = ({
                 {/* Mobile menu button */}
                 <button
                   onClick={() => setMobileMenuOpen(true)}
-                  className="lg:hidden p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-blue-500"
+                  className="lg:hidden p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-violet-500"
                 >
                   <Bars3Icon className="h-6 w-6" />
                 </button>
@@ -92,7 +92,7 @@ const ModernLayout: React.FC<ModernLayoutProps> = ({
                     <input
                       type="text"
                       placeholder="Search across platform..."
-                      className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md leading-5 bg-white placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-1 focus:ring-blue-500 focus:border-blue-500 text-sm"
+                      className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md leading-5 bg-white placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-1 focus:ring-violet-500 focus:border-blue-500 text-sm"
                     />
                   </div>
                 </div>
@@ -119,7 +119,7 @@ const ModernLayout: React.FC<ModernLayoutProps> = ({
                 <div className="relative">
                   <button className="flex items-center p-2 text-sm rounded-lg hover:bg-gray-100 transition-colors">
                     <div className={`w-8 h-8 rounded-full flex items-center justify-center ${
-                      roleConfig ? roleConfig.primaryColor : 'bg-gradient-to-br from-blue-600 to-blue-700'
+                      'bg-violet-600'
                     }`}>
                       <span className="text-white font-medium text-sm">{userInitials}</span>
                     </div>
@@ -151,7 +151,7 @@ const ModernLayout: React.FC<ModernLayoutProps> = ({
           <div className="px-4 sm:px-6 lg:px-8 py-6">
             <div className="flex flex-col sm:flex-row justify-between items-center text-sm text-gray-500">
               <div className="flex items-center space-x-6">
-                <p>&copy; 2025 E-Recruitment. All rights reserved.</p>
+                <p>&copy; 2026 TalentGate. All rights reserved.</p>
                 <div className="flex space-x-4">
                   <a href="#" className="hover:text-gray-700 transition-colors">Privacy Policy</a>
                   <a href="#" className="hover:text-gray-700 transition-colors">Terms of Service</a>

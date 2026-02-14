@@ -2,19 +2,12 @@
 
 import { useRouter } from 'next/navigation';
 import { useAuth } from '../../contexts/AuthContext';
-import { useTheme } from '../../contexts/ThemeContext';
 import { useEffect } from 'react';
-import EnterpriseThemeToggle from '../../components/EnterpriseThemeToggle';
+import ThemeToggle from '../../components/ThemeToggle';
 
 export default function LoginPage() {
   const router = useRouter();
   const { user, login } = useAuth();
-  const { setCurrentRole } = useTheme();
-
-  // Set theme to applicant for login page
-  useEffect(() => {
-    setCurrentRole('Applicant');
-  }, [setCurrentRole]);
 
   // Redirect to dashboard if already logged in
   useEffect(() => {
@@ -46,7 +39,7 @@ export default function LoginPage() {
     <div className="min-h-screen flex items-center justify-center bg-gray-50 relative">
       {/* Theme Toggle in top-right corner */}
       <div className="absolute top-6 right-6">
-        <EnterpriseThemeToggle variant="compact" />
+        <ThemeToggle compact />
       </div>
       
       <div className="max-w-md w-full space-y-8">
@@ -55,13 +48,13 @@ export default function LoginPage() {
             Sign in to your account
           </h2>
           <p className="mt-2 text-center text-sm text-gray-600">
-            E-Recruitment Dashboard
+            TalentGate
           </p>
         </div>
         <div>
           <button
             onClick={handleMockLogin}
-            className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+            className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-violet-600 hover:bg-violet-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-violet-500"
           >
             Sign In (Demo)
           </button>

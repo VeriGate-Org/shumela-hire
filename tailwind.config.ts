@@ -10,58 +10,25 @@ const config: Config = {
   darkMode: 'class',
   theme: {
     extend: {
+      fontFamily: {
+        sans: ['var(--font-manrope)', 'Manrope', 'system-ui', 'sans-serif'],
+        mono: ['var(--font-mono)', 'JetBrains Mono', 'monospace'],
+      },
       colors: {
-        // Custom brand colors for each role
-        brand: {
-          admin: {
-            50: '#fef2f2',
-            100: '#fee2e2',
-            500: '#ef4444',
-            600: '#dc2626',
-            700: '#b91c1c',
-            900: '#7f1d1d',
-          },
-          hr: {
-            50: '#eff6ff',
-            100: '#dbeafe',
-            500: '#3b82f6',
-            600: '#2563eb',
-            700: '#1d4ed8',
-            900: '#1e3a8a',
-          },
-          hiring: {
-            50: '#f0fdf4',
-            100: '#dcfce7',
-            500: '#22c55e',
-            600: '#16a34a',
-            700: '#15803d',
-            900: '#14532d',
-          },
-          recruiter: {
-            50: '#faf5ff',
-            100: '#f3e8ff',
-            500: '#a855f7',
-            600: '#9333ea',
-            700: '#7c3aed',
-            900: '#581c87',
-          },
-          applicant: {
-            50: '#fff7ed',
-            100: '#ffedd5',
-            500: '#f97316',
-            600: '#ea580c',
-            700: '#c2410c',
-            900: '#9a3412',
-          },
-          executive: {
-            50: '#eef2ff',
-            100: '#e0e7ff',
-            500: '#6366f1',
-            600: '#4f46e5',
-            700: '#4338ca',
-            900: '#312e81',
-          },
+        talentgate: {
+          50: '#FAF5FF',
+          100: '#F3E8FF',
+          200: '#E9D5FF',
+          300: '#D8B4FE',
+          400: '#C084FC',
+          500: '#7C3AED',
+          600: '#6D28D9',
+          700: '#5B21B6',
+          800: '#4C1D95',
+          900: '#3B0764',
         },
+        navy: '#0F172A',
+        charcoal: '#1E293B',
         // Theme-aware semantic colors using CSS variables
         background: 'var(--background)',
         foreground: 'var(--foreground)',
@@ -83,30 +50,15 @@ const config: Config = {
         input: 'var(--input)',
         ring: 'var(--ring)',
       },
-      animation: {
-        'theme-transition': 'theme-transition 0.3s ease-in-out',
-        'role-switch': 'role-switch 0.5s ease-out',
-        'dark-mode-toggle': 'dark-mode-toggle 0.4s ease-in-out',
-      },
-      keyframes: {
-        'theme-transition': {
-          '0%': { opacity: '0.8', transform: 'scale(0.98)' },
-          '100%': { opacity: '1', transform: 'scale(1)' },
-        },
-        'role-switch': {
-          '0%': { opacity: '0', transform: 'translateY(-10px)' },
-          '50%': { opacity: '0.5', transform: 'translateY(-5px)' },
-          '100%': { opacity: '1', transform: 'translateY(0)' },
-        },
-        'dark-mode-toggle': {
-          '0%': { transform: 'rotate(0deg)' },
-          '100%': { transform: 'rotate(360deg)' },
-        },
+      borderRadius: {
+        control: '6px',
+        card: '10px',
       },
       boxShadow: {
-        'role-glow': '0 0 20px rgba(var(--role-color-rgb), 0.3)',
-        'dark-card': '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)',
-        'light-card': '0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06)',
+        sm: '0 2px 5px rgba(50, 50, 93, 0.09), 0 1px 3px rgba(0, 0, 0, 0.07)',
+        md: '0 4px 10px rgba(50, 50, 93, 0.09), 0 2px 5px rgba(0, 0, 0, 0.07)',
+        lg: '0 10px 20px rgba(50, 50, 93, 0.09), 0 5px 10px rgba(0, 0, 0, 0.07)',
+        xl: '0 15px 35px rgba(50, 50, 93, 0.1), 0 5px 15px rgba(0, 0, 0, 0.07)',
       },
     },
   },

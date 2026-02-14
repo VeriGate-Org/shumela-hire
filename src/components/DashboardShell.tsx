@@ -50,7 +50,7 @@ const DashboardShell: React.FC<DashboardShellProps> = ({ title, children }) => {
             <div className="flex items-center space-x-3">
               <span className="text-2xl">{currentConfig.logo}</span>
               <div>
-                <h1 className="text-lg font-bold">E-Recruit</h1>
+                <h1 className="text-lg font-bold">TalentGate</h1>
                 <p className="text-sm opacity-75">{user.role}</p>
               </div>
             </div>

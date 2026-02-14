@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useCallback } from 'react';
+import DashboardShell from '@/components/DashboardShell';
 import PageWrapper from '@/components/PageWrapper';
 import {
   ReportBuilder,

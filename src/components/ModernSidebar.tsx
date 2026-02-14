@@ -207,11 +207,11 @@ const ModernSidebar: React.FC<ModernSidebarProps> = ({
               group flex items-center px-3 py-2.5 text-sm font-medium rounded-lg transition-all duration-200 ease-in-out
               ${isChild 
                 ? `ml-8 ${isActive 
-                    ? 'text-blue-600 bg-blue-50 border-r-2 border-blue-600' 
+                    ? 'text-violet-600 bg-violet-50 border-r-2 border-violet-600'
                     : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
                   }`
-                : `${isActive 
-                    ? 'bg-gradient-to-r from-blue-600 to-blue-700 text-white shadow-lg shadow-blue-600/25' 
+                : `${isActive
+                    ? 'bg-violet-600 text-white shadow-sm'
                     : 'text-gray-700 hover:bg-gray-100 hover:text-gray-900'
                   }`
               }
@@ -253,7 +253,7 @@ const ModernSidebar: React.FC<ModernSidebarProps> = ({
           
           {/* Active indicator for collapsed sidebar */}
           {isCollapsed && isActive && !isChild && (
-            <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-8 bg-blue-600 rounded-r-full" />
+            <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-8 bg-violet-600 rounded-r-full" />
           )}
         </div>
         
@@ -281,20 +281,20 @@ const ModernSidebar: React.FC<ModernSidebarProps> = ({
           {!isCollapsed && (
             <div className="flex items-center">
               <div className="flex-shrink-0">
-                <div className="w-8 h-8 bg-gradient-to-br from-blue-600 to-blue-700 rounded-lg flex items-center justify-center">
-                  <span className="text-white font-bold text-sm">ER</span>
+                <div className="w-8 h-8 bg-violet-600 rounded-lg flex items-center justify-center">
+                  <span className="text-white font-bold text-sm">TG</span>
                 </div>
               </div>
               <div className="ml-3">
-                <h1 className="text-lg font-bold text-gray-900">E-Recruitment</h1>
+                <h1 className="text-lg font-bold text-gray-900">TalentGate</h1>
                 <p className="text-xs text-gray-500">Talent Management Suite</p>
               </div>
             </div>
           )}
           
           {isCollapsed && (
-            <div className="w-8 h-8 bg-gradient-to-br from-blue-600 to-blue-700 rounded-lg flex items-center justify-center">
-              <span className="text-white font-bold text-sm">ER</span>
+            <div className="w-8 h-8 bg-violet-600 rounded-lg flex items-center justify-center">
+              <span className="text-white font-bold text-sm">TG</span>
             </div>
           )}
           
@@ -318,7 +318,7 @@ const ModernSidebar: React.FC<ModernSidebarProps> = ({
                 placeholder="Search..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-10 pr-4 py-2 bg-gray-50 border border-gray-200 rounded-lg text-sm placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full pl-10 pr-4 py-2 bg-gray-50 border border-gray-200 rounded-lg text-sm placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-transparent"
               />
             </div>
           </div>
@@ -343,7 +343,7 @@ const ModernSidebar: React.FC<ModernSidebarProps> = ({
           <div className="border-t border-gray-100 p-4">
             <div className="flex items-center">
               <div className="flex-shrink-0">
-                <div className="w-8 h-8 bg-gradient-to-br from-blue-600 to-blue-700 rounded-full flex items-center justify-center">
+                <div className="w-8 h-8 bg-violet-600 rounded-full flex items-center justify-center">
                   <span className="text-white font-medium text-xs">
                     {user ? user.name.split(' ').map(n => n[0]).join('') : 'JD'}
                   </span>

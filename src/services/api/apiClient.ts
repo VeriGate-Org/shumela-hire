@@ -52,7 +52,7 @@ export class ApiClient {
 
   constructor(config: ApiClientConfig = {}) {
     this.baseURL = config.baseURL || (process.env.NODE_ENV === 'production' 
-      ? 'https://api.recruitment.com'
+      ? 'https://api.talentgate.co.za'
       : 'http://localhost:8080');
     this.timeout = config.timeout || 30000;
     this.retryAttempts = config.retryAttempts || 3;

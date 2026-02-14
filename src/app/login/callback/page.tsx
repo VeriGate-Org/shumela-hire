@@ -39,7 +39,7 @@ function LoginCallbackContent() {
             roles: ['Admin', 'user'] // Role mapping would be configured in Keycloak
           },
           resource_access: {
-            'e-recruitment-dashboard': {
+            'talentgate': {
               roles: ['Admin']
             }
           }
@@ -51,10 +51,10 @@ function LoginCallbackContent() {
           resource_access?: { [key: string]: { roles?: string[] } };
         }): string => {
           // Check resource-specific roles first
-          const clientRoles = payload.resource_access?.['e-recruitment-dashboard']?.roles || [];
+          const clientRoles = payload.resource_access?.['talentgate']?.roles || [];
           const realmRoles = payload.realm_access?.roles || [];
           
-          // Define role hierarchy for e-recruitment dashboard
+          // Define role hierarchy for TalentGate
           const roleHierarchy = ['Admin', 'HR', 'Hiring Manager', 'Recruiter', 'Applicant'];
           
           // Find highest priority role

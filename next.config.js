@@ -17,7 +17,7 @@ const nextConfig = {
   
   // Image optimization
   images: {
-    domains: ['localhost', 'api.recruitment.com'],
+    domains: ['localhost', 'api.talentgate.co.za'],
     formats: ['image/webp', 'image/avif'],
   },
   

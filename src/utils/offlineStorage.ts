@@ -18,7 +18,7 @@ export interface OfflineAction {
 }
 
 export class IndexedDBManager implements OfflineStorageManager {
-  private dbName = 'e-recruitment-offline';
+  private dbName = 'talentgate-offline';
   private version = 1;
   private db: IDBDatabase | null = null;
 
