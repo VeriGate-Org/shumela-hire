@@ -4,14 +4,14 @@ server:
 spring:
   application:
     name: talentgate-backend
-  
-  # H2 Database Configuration
+
+  # H2 Database Configuration (development)
   datasource:
     url: jdbc:h2:mem:talentgate
     driver-class-name: org.h2.Driver
     username: sa
-    password: 
-  
+    password:
+
   # JPA Configuration
   jpa:
     database-platform: org.hibernate.dialect.H2Dialect
@@ -21,12 +21,57 @@ spring:
     properties:
       hibernate:
         format_sql: true
-  
+
   # H2 Console (for development/testing)
   h2:
     console:
       enabled: true
       path: /h2-console
+
+# JWT Configuration
+jwt:
+  secret: ${JWT_SECRET}
+  expiration: 86400000
+  refresh-expiration: 604800000
+
+# Encryption
+encryption:
+  key: ${ENCRYPTION_KEY}
+
+# Storage
+storage:
+  provider: ${STORAGE_PROVIDER:local}
+
+# S3 Configuration (used when storage.provider=s3)
+s3:
+  bucket: ${S3_BUCKET:talentgate-documents}
+  region: ${S3_REGION:af-south-1}
+  access-key: ${S3_ACCESS_KEY:}
+  secret-key: ${S3_SECRET_KEY:}
+
+# E-Signature
+esignature:
+  provider: ${ESIGNATURE_PROVIDER:docusign}
+
+# DocuSign Configuration
+docusign:
+  base-url: ${DOCUSIGN_BASE_URL:https://demo.docusign.net/restapi}
+  account-id: ${DOCUSIGN_ACCOUNT_ID:}
+  integration-key: ${DOCUSIGN_INTEGRATION_KEY:}
+  secret-key: ${DOCUSIGN_SECRET_KEY:}
+  user-id: ${DOCUSIGN_USER_ID:}
+  webhook-hmac-key: ${DOCUSIGN_WEBHOOK_HMAC_KEY:}
+
+# Data Residency
+data-residency:
+  region: ${DATA_RESIDENCY_REGION:ZA}
+  provider: ${DATA_RESIDENCY_PROVIDER:local}
+  compliance-standard: POPIA
+
+# File Upload
+app:
+  file:
+    upload-dir: ${UPLOAD_DIR:uploads}
 
 # Logging Configuration
 logging:

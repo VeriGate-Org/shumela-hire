@@ -3,6 +3,7 @@ package com.arthmatic.talentgate.controller;
 import com.arthmatic.talentgate.service.DataVisualizationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
@@ -11,6 +12,7 @@ import java.util.Map;
 @RestController
 @RequestMapping("/api/visualization")
 @CrossOrigin(origins = "http://localhost:3000")
+@PreAuthorize("hasAnyRole('ADMIN', 'HR_MANAGER')")
 public class DataVisualizationController {
 
     @Autowired

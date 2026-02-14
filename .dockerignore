@@ -1,0 +1,9 @@
+node_modules
+.next
+backend/target
+.git
+.env
+coverage
+*.md
+.idea
+.vscode

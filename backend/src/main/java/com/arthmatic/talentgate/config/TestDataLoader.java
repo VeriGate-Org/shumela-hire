@@ -7,6 +7,7 @@ import com.arthmatic.talentgate.repository.ApplicantRepository;
 import com.arthmatic.talentgate.repository.ApplicationRepository;
 import com.arthmatic.talentgate.repository.InterviewRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
@@ -19,12 +20,15 @@ import java.util.Random;
 public class TestDataLoader implements CommandLineRunner {
 
     @Autowired
+    @Qualifier("talentgateApplicantRepository")
     private ApplicantRepository applicantRepository;
 
     @Autowired
+    @Qualifier("talentgateApplicationRepository")
     private ApplicationRepository applicationRepository;
 
     @Autowired
+    @Qualifier("talentgateInterviewRepository")
     private InterviewRepository interviewRepository;
 
     private final Random random = new Random();

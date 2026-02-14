@@ -11,7 +11,7 @@ import org.springframework.stereotype.Repository;
 import java.time.LocalDateTime;
 import java.util.List;
 
-@Repository
+@Repository("talentgateApplicationRepository")
 public interface ApplicationRepository extends JpaRepository<Application, Long>, JpaSpecificationExecutor<Application> {
 
     List<Application> findByApplicant(Applicant applicant);
@@ -38,20 +38,20 @@ public interface ApplicationRepository extends JpaRepository<Application, Long>,
     long countByRatingGreaterThanEqual(Integer rating);
 
     // Custom queries for statistics
-    @Query("SELECT AVG(a.rating) FROM Application a WHERE a.rating IS NOT NULL")
+    @Query("SELECT AVG(a.rating) FROM TgApplication a WHERE a.rating IS NOT NULL")
     Double findAverageRating();
 
-    @Query("SELECT a.jobTitle, COUNT(a) FROM Application a GROUP BY a.jobTitle ORDER BY COUNT(a) DESC")
+    @Query("SELECT a.jobTitle, COUNT(a) FROM TgApplication a GROUP BY a.jobTitle ORDER BY COUNT(a) DESC")
     List<Object[]> findTopPositionsByApplicationCount();
 
-    @Query("SELECT a.status, COUNT(a) FROM Application a GROUP BY a.status")
+    @Query("SELECT a.status, COUNT(a) FROM TgApplication a GROUP BY a.status")
     List<Object[]> findApplicationCountByStatus();
 
-    @Query("SELECT DATE(a.submittedAt), COUNT(a) FROM Application a WHERE a.submittedAt >= :fromDate GROUP BY DATE(a.submittedAt) ORDER BY DATE(a.submittedAt)")
+    @Query("SELECT DATE(a.submittedAt), COUNT(a) FROM TgApplication a WHERE a.submittedAt >= :fromDate GROUP BY DATE(a.submittedAt) ORDER BY DATE(a.submittedAt)")
     List<Object[]> findApplicationCountByDate(@Param("fromDate") LocalDateTime fromDate);
 
     // Advanced search queries
-    @Query("SELECT a FROM Application a WHERE " +
+    @Query("SELECT a FROM TgApplication a WHERE " +
            "(:keyword IS NULL OR LOWER(a.applicant.fullName) LIKE LOWER(CONCAT('%', :keyword, '%')) OR " +
            "LOWER(a.applicant.email) LIKE LOWER(CONCAT('%', :keyword, '%')) OR " +
            "LOWER(a.jobTitle) LIKE LOWER(CONCAT('%', :keyword, '%'))) AND " +
@@ -68,37 +68,37 @@ public interface ApplicationRepository extends JpaRepository<Application, Long>,
     );
 
     // Applications requiring action (submitted or in screening)
-    @Query("SELECT a FROM Application a WHERE a.status IN ('SUBMITTED', 'SCREENING') ORDER BY a.submittedAt ASC")
+    @Query("SELECT a FROM TgApplication a WHERE a.status IN ('SUBMITTED', 'SCREENING') ORDER BY a.submittedAt ASC")
     List<Application> findApplicationsRequiringAction();
 
     // Recent applications
-    @Query("SELECT a FROM Application a WHERE a.submittedAt >= :date ORDER BY a.submittedAt DESC")
+    @Query("SELECT a FROM TgApplication a WHERE a.submittedAt >= :date ORDER BY a.submittedAt DESC")
     List<Application> findRecentApplications(@Param("date") LocalDateTime date);
 
     // Applications by rating range
-    @Query("SELECT a FROM Application a WHERE a.rating IS NOT NULL AND a.rating >= :minRating ORDER BY a.rating DESC")
+    @Query("SELECT a FROM TgApplication a WHERE a.rating IS NOT NULL AND a.rating >= :minRating ORDER BY a.rating DESC")
     List<Application> findHighRatedApplications(@Param("minRating") Integer minRating);
 
     // Analytics queries for performance dashboard
-    @Query("SELECT a.id, a.submittedAt, a.updatedAt, a.jobTitle FROM Application a WHERE a.status = 'HIRED'")
+    @Query("SELECT a.id, a.submittedAt, a.updatedAt, a.jobTitle FROM TgApplication a WHERE a.status = 'HIRED'")
     List<Object[]> findHiredApplicationsWithDates();
 
-    @Query("SELECT a.applicant.source, a.status FROM Application a WHERE a.applicant.source IS NOT NULL")
+    @Query("SELECT a.applicant.source, a.status FROM TgApplication a WHERE a.applicant.source IS NOT NULL")
     List<Object[]> findApplicationsBySource();
 
-    @Query("SELECT a.jobTitle, COUNT(a) FROM Application a WHERE a.status = 'HIRED' GROUP BY a.jobTitle")
+    @Query("SELECT a.jobTitle, COUNT(a) FROM TgApplication a WHERE a.status = 'HIRED' GROUP BY a.jobTitle")
     List<Object[]> findHiresByDepartment();
 
     @Query("SELECT YEAR(a.submittedAt), MONTH(a.submittedAt), " +
            "SUM(CASE WHEN a.status = 'HIRED' THEN 1 ELSE 0 END), COUNT(a) " +
-           "FROM Application a GROUP BY YEAR(a.submittedAt), MONTH(a.submittedAt) " +
+           "FROM TgApplication a GROUP BY YEAR(a.submittedAt), MONTH(a.submittedAt) " +
            "ORDER BY YEAR(a.submittedAt), MONTH(a.submittedAt)")
     List<Object[]> findMonthlyHiringTrends();
 
-    @Query("SELECT a.jobTitle, COUNT(a) FROM Application a GROUP BY a.jobTitle")
+    @Query("SELECT a.jobTitle, COUNT(a) FROM TgApplication a GROUP BY a.jobTitle")
     List<Object[]> findApplicationsByPositionType();
 
     @Query("SELECT MONTH(a.submittedAt), SUM(CASE WHEN a.status = 'HIRED' THEN 1 ELSE 0 END) " +
-           "FROM Application a GROUP BY MONTH(a.submittedAt)")
+           "FROM TgApplication a GROUP BY MONTH(a.submittedAt)")
     List<Object[]> findSeasonalHiringTrends();
 }

@@ -5,6 +5,7 @@ import com.arthmatic.talentgate.entity.Application;
 import com.arthmatic.talentgate.repository.InterviewRepository;
 import com.arthmatic.talentgate.repository.ApplicationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,9 +20,11 @@ import java.util.stream.Collectors;
 public class InterviewSchedulingService {
 
     @Autowired
+    @Qualifier("talentgateInterviewRepository")
     private InterviewRepository interviewRepository;
 
     @Autowired
+    @Qualifier("talentgateApplicationRepository")
     private ApplicationRepository applicationRepository;
 
     @Autowired

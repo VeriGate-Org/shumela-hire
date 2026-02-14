@@ -3,6 +3,7 @@ package com.arthmatic.talentgate.service;
 import com.arthmatic.talentgate.repository.ApplicationRepository;
 import com.arthmatic.talentgate.repository.InterviewRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -14,9 +15,11 @@ import java.util.stream.Collectors;
 public class DataVisualizationService {
 
     @Autowired
+    @Qualifier("talentgateApplicationRepository")
     private ApplicationRepository applicationRepository;
 
     @Autowired
+    @Qualifier("talentgateInterviewRepository")
     private InterviewRepository interviewRepository;
 
     @Autowired

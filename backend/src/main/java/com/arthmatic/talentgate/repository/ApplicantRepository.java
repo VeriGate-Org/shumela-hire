@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
-@Repository
+@Repository("talentgateApplicantRepository")
 public interface ApplicantRepository extends JpaRepository<Applicant, Long> {
 
     Optional<Applicant> findByEmail(String email);
@@ -22,10 +22,10 @@ public interface ApplicantRepository extends JpaRepository<Applicant, Long> {
 
     List<Applicant> findByCreatedAtBetween(LocalDateTime start, LocalDateTime end);
 
-    @Query("SELECT COUNT(a) FROM Applicant a WHERE a.createdAt > :date")
+    @Query("SELECT COUNT(a) FROM TgApplicant a WHERE a.createdAt > :date")
     long countByCreatedAtAfter(LocalDateTime date);
 
-    @Query("SELECT a FROM Applicant a WHERE a.skills LIKE %:skill%")
+    @Query("SELECT a FROM TgApplicant a WHERE a.skills LIKE %:skill%")
     List<Applicant> findBySkillsContaining(String skill);
 
     boolean existsByEmail(String email);

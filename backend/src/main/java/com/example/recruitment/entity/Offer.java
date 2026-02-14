@@ -235,6 +235,25 @@ public class Offer {
     @Column(name = "signed_document_path")
     private String signedDocumentPath;
 
+    // E-Signature
+    @Column(name = "e_signature_envelope_id")
+    private String eSignatureEnvelopeId;
+
+    @Column(name = "e_signature_status")
+    private String eSignatureStatus;
+
+    @Column(name = "e_signature_sent_at")
+    private LocalDateTime eSignatureSentAt;
+
+    @Column(name = "e_signature_completed_at")
+    private LocalDateTime eSignatureCompletedAt;
+
+    @Column(name = "e_signature_provider")
+    private String eSignatureProvider;
+
+    @Column(name = "e_signature_signer_email")
+    private String eSignatureSignerEmail;
+
     // Tracking
     @Column(name = "created_by", nullable = false)
     private Long createdBy;
@@ -380,6 +399,14 @@ public class Offer {
 
     public boolean isVersionSuperseded() {
         return supersededByOfferId != null;
+    }
+
+    public boolean isAwaitingSignature() {
+        return status == OfferStatus.AWAITING_SIGNATURE;
+    }
+
+    public boolean isSigned() {
+        return status == OfferStatus.SIGNED;
     }
 
     // Getters and Setters
@@ -981,5 +1008,53 @@ public class Offer {
 
     public void setSupersedesOfferId(Long supersedesOfferId) {
         this.supersedesOfferId = supersedesOfferId;
+    }
+
+    public String getESignatureEnvelopeId() {
+        return eSignatureEnvelopeId;
+    }
+
+    public void setESignatureEnvelopeId(String eSignatureEnvelopeId) {
+        this.eSignatureEnvelopeId = eSignatureEnvelopeId;
+    }
+
+    public String getESignatureStatus() {
+        return eSignatureStatus;
+    }
+
+    public void setESignatureStatus(String eSignatureStatus) {
+        this.eSignatureStatus = eSignatureStatus;
+    }
+
+    public LocalDateTime getESignatureSentAt() {
+        return eSignatureSentAt;
+    }
+
+    public void setESignatureSentAt(LocalDateTime eSignatureSentAt) {
+        this.eSignatureSentAt = eSignatureSentAt;
+    }
+
+    public LocalDateTime getESignatureCompletedAt() {
+        return eSignatureCompletedAt;
+    }
+
+    public void setESignatureCompletedAt(LocalDateTime eSignatureCompletedAt) {
+        this.eSignatureCompletedAt = eSignatureCompletedAt;
+    }
+
+    public String getESignatureProvider() {
+        return eSignatureProvider;
+    }
+
+    public void setESignatureProvider(String eSignatureProvider) {
+        this.eSignatureProvider = eSignatureProvider;
+    }
+
+    public String getESignatureSignerEmail() {
+        return eSignatureSignerEmail;
+    }
+
+    public void setESignatureSignerEmail(String eSignatureSignerEmail) {
+        this.eSignatureSignerEmail = eSignatureSignerEmail;
     }
 }

@@ -5,6 +5,8 @@ public enum OfferStatus {
     PENDING_APPROVAL("Pending Approval", "Waiting for management approval"),
     APPROVED("Approved", "Offer approved and ready to send"),
     SENT("Sent", "Offer has been sent to candidate"),
+    AWAITING_SIGNATURE("Awaiting Signature", "Offer sent for e-signature"),
+    SIGNED("Signed", "Offer has been electronically signed"),
     UNDER_NEGOTIATION("Under Negotiation", "Candidate is negotiating terms"),
     ACCEPTED("Accepted", "Candidate has accepted the offer"),
     DECLINED("Declined", "Candidate has declined the offer"),
@@ -29,17 +31,17 @@ public enum OfferStatus {
     }
 
     public boolean isActive() {
-        return this == DRAFT || this == PENDING_APPROVAL || this == APPROVED || 
-               this == SENT || this == UNDER_NEGOTIATION;
+        return this == DRAFT || this == PENDING_APPROVAL || this == APPROVED ||
+               this == SENT || this == AWAITING_SIGNATURE || this == UNDER_NEGOTIATION;
     }
 
     public boolean isTerminal() {
-        return this == ACCEPTED || this == DECLINED || this == WITHDRAWN || 
+        return this == ACCEPTED || this == SIGNED || this == DECLINED || this == WITHDRAWN ||
                this == EXPIRED || this == SUPERSEDED;
     }
 
     public boolean isSuccessful() {
-        return this == ACCEPTED;
+        return this == ACCEPTED || this == SIGNED;
     }
 
     public boolean requiresApproval() {
@@ -76,6 +78,10 @@ public enum OfferStatus {
                 return "bg-blue-100 text-blue-800 border-blue-200";
             case SENT:
                 return "bg-purple-100 text-purple-800 border-purple-200";
+            case AWAITING_SIGNATURE:
+                return "bg-indigo-100 text-indigo-800 border-indigo-200";
+            case SIGNED:
+                return "bg-emerald-100 text-emerald-800 border-emerald-200";
             case UNDER_NEGOTIATION:
                 return "bg-orange-100 text-orange-800 border-orange-200";
             case ACCEPTED:
@@ -97,6 +103,8 @@ public enum OfferStatus {
             case PENDING_APPROVAL: return "⏳";
             case APPROVED: return "✅";
             case SENT: return "📤";
+            case AWAITING_SIGNATURE: return "✍️";
+            case SIGNED: return "📝";
             case UNDER_NEGOTIATION: return "🤝";
             case ACCEPTED: return "🎉";
             case DECLINED: return "❌";
@@ -116,11 +124,16 @@ public enum OfferStatus {
             case APPROVED:
                 return targetStatus == SENT || targetStatus == WITHDRAWN;
             case SENT:
-                return targetStatus == UNDER_NEGOTIATION || targetStatus == ACCEPTED || 
-                       targetStatus == DECLINED || targetStatus == WITHDRAWN || targetStatus == EXPIRED;
+                return targetStatus == UNDER_NEGOTIATION || targetStatus == ACCEPTED ||
+                       targetStatus == DECLINED || targetStatus == WITHDRAWN || targetStatus == EXPIRED ||
+                       targetStatus == AWAITING_SIGNATURE;
+            case AWAITING_SIGNATURE:
+                return targetStatus == SIGNED || targetStatus == DECLINED ||
+                       targetStatus == WITHDRAWN || targetStatus == EXPIRED;
             case UNDER_NEGOTIATION:
                 return targetStatus == ACCEPTED || targetStatus == DECLINED || 
                        targetStatus == WITHDRAWN || targetStatus == EXPIRED || targetStatus == SUPERSEDED;
+            case SIGNED:
             case ACCEPTED:
             case DECLINED:
             case WITHDRAWN:

@@ -4,8 +4,8 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
-@Entity
-@Table(name = "interviews")
+@Entity(name = "TgInterview")
+@Table(name = "tg_interviews")
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Interview {
 

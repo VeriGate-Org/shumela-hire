@@ -13,6 +13,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -20,6 +21,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/ads")
 @CrossOrigin(origins = "*") // Configure as needed for your frontend
+@PreAuthorize("hasAnyRole('ADMIN', 'HR_MANAGER')")
 public class JobAdController {
     
     private static final Logger logger = LoggerFactory.getLogger(JobAdController.class);

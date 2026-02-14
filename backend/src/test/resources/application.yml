@@ -1,0 +1,64 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: talentgate-backend
+  datasource:
+    url: jdbc:h2:mem:testdb
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: false
+  h2:
+    console:
+      enabled: false
+  cache:
+    type: simple
+
+# Test-only security keys (NOT for production use)
+jwt:
+  secret: dGVzdC1vbmx5LWp3dC1zZWNyZXQta2V5LXRoYXQtaXMtYXQtbGVhc3Qtc2l4dHktZm91ci1ieXRlcy1sb25nLWZvci1oczUxMi1hbGdvcml0aG0=
+  expiration: 86400000
+  refresh-expiration: 604800000
+
+encryption:
+  key: dGVzdC1vbmx5LWVuY3J5cHRpb24ta2V5LWZvci10ZXN0cw==
+
+storage:
+  provider: local
+
+esignature:
+  provider: docusign
+
+docusign:
+  base-url: https://demo.docusign.net/restapi
+  account-id: test-account
+  integration-key: test-key
+  secret-key: test-secret
+  user-id: test-user
+  webhook-hmac-key: test-hmac
+
+data-residency:
+  region: ZA
+  provider: local
+  compliance-standard: POPIA
+
+app:
+  file:
+    upload-dir: uploads
+
+logging:
+  level:
+    com.arthmatic.talentgate: DEBUG
+    com.example.recruitment: DEBUG
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics

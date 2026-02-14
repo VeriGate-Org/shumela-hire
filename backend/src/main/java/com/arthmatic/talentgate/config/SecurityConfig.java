@@ -131,6 +131,26 @@ public class SecurityConfig {
                 .requestMatchers("/api/applications/manage/**").hasAnyRole("ADMIN", "HR_MANAGER", "RECRUITER")
                 .requestMatchers("/api/interviews/**").hasAnyRole("ADMIN", "HR_MANAGER", "RECRUITER", "HIRING_MANAGER")
                 
+                // E-Signature endpoints
+                .requestMatchers("/api/esignature/webhook").permitAll()
+                .requestMatchers("/api/esignature/**").hasAnyRole("ADMIN", "HR_MANAGER", "RECRUITER")
+
+                // Payroll endpoints
+                .requestMatchers("/api/payroll/**").hasAnyRole("ADMIN", "HR_MANAGER")
+
+                // Agency portal endpoints
+                .requestMatchers("/api/agencies/register").hasAnyRole("ADMIN", "HR_MANAGER")
+                .requestMatchers("/api/agencies/**").hasAnyRole("ADMIN", "HR_MANAGER", "RECRUITER")
+
+                // Shortlisting endpoints
+                .requestMatchers("/api/shortlisting/**").hasAnyRole("ADMIN", "HR_MANAGER", "RECRUITER")
+
+                // Talent pool endpoints
+                .requestMatchers("/api/talent-pools/**").hasAnyRole("ADMIN", "HR_MANAGER", "RECRUITER")
+
+                // Compliance endpoints
+                .requestMatchers("/api/compliance/**").hasAnyRole("ADMIN", "HR_MANAGER")
+
                 // General authenticated endpoints
                 .requestMatchers("/api/**").authenticated()
                 

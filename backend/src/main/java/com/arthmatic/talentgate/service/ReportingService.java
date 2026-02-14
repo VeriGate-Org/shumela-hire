@@ -4,6 +4,7 @@ import com.arthmatic.talentgate.repository.ApplicationRepository;
 import com.arthmatic.talentgate.repository.InterviewRepository;
 import com.arthmatic.talentgate.repository.ApplicantRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -19,12 +20,15 @@ import java.util.zip.ZipOutputStream;
 public class ReportingService {
 
     @Autowired
+    @Qualifier("talentgateApplicationRepository")
     private ApplicationRepository applicationRepository;
 
     @Autowired
+    @Qualifier("talentgateInterviewRepository")
     private InterviewRepository interviewRepository;
 
     @Autowired
+    @Qualifier("talentgateApplicantRepository")
     private ApplicantRepository applicantRepository;
 
     @Autowired

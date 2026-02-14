@@ -2,6 +2,7 @@ package com.arthmatic.talentgate.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import com.arthmatic.talentgate.service.PerformanceService;
 
@@ -15,6 +16,7 @@ import java.util.concurrent.CompletableFuture;
 @RestController
 @RequestMapping("/api/performance")
 @CrossOrigin(origins = "*")
+@PreAuthorize("hasAnyRole('ADMIN', 'HR_MANAGER')")
 public class PerformanceController {
     
     @Autowired
