@@ -20,6 +20,8 @@ public interface ApplicationRepository extends JpaRepository<Application, Long>,
 
     List<Application> findByStatusIn(List<String> statuses);
 
+    List<Application> findByJobId(String jobId);
+
     List<Application> findByJobTitle(String jobTitle);
 
     List<Application> findByJobTitleContainingIgnoreCase(String jobTitle);

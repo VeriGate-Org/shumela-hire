@@ -94,6 +94,12 @@ public class User implements UserDetails {
     @Column(name = "two_factor_secret")
     private String twoFactorSecret;
 
+    @Column(name = "sso_provider")
+    private String ssoProvider; // "AZURE_AD", "SAML2", null for local
+
+    @Column(name = "sso_user_id")
+    private String ssoUserId; // External user ID from SSO
+
     // Constructors
     public User() {}
 
@@ -221,6 +227,12 @@ public class User implements UserDetails {
 
     public String getTwoFactorSecret() { return twoFactorSecret; }
     public void setTwoFactorSecret(String twoFactorSecret) { this.twoFactorSecret = twoFactorSecret; }
+
+    public String getSsoProvider() { return ssoProvider; }
+    public void setSsoProvider(String ssoProvider) { this.ssoProvider = ssoProvider; }
+
+    public String getSsoUserId() { return ssoUserId; }
+    public void setSsoUserId(String ssoUserId) { this.ssoUserId = ssoUserId; }
 
     /**
      * User roles enum

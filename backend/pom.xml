@@ -57,6 +57,18 @@
             <artifactId>spring-boot-starter-security</artifactId>
         </dependency>
         
+        <!-- OAuth2 Client (SSO) -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-oauth2-client</artifactId>
+        </dependency>
+
+        <!-- SAML2 Service Provider -->
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-saml2-service-provider</artifactId>
+        </dependency>
+
         <!-- JWT -->
         <dependency>
             <groupId>io.jsonwebtoken</groupId>
@@ -180,6 +192,14 @@
             <version>5.9</version>
         </dependency>
     </dependencies>
+
+    <repositories>
+        <repository>
+            <id>shibboleth</id>
+            <name>Shibboleth Repository</name>
+            <url>https://build.shibboleth.net/maven/releases/</url>
+        </repository>
+    </repositories>
 
     <build>
         <plugins>

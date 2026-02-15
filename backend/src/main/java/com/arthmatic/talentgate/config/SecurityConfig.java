@@ -113,6 +113,9 @@ public class SecurityConfig {
             .authorizeHttpRequests(authz -> authz
                 // Public endpoints
                 .requestMatchers("/api/auth/**").permitAll()
+                .requestMatchers("/api/auth/sso/**").permitAll()
+                .requestMatchers("/login/oauth2/**").permitAll()
+                .requestMatchers("/saml2/**").permitAll()
                 .requestMatchers("/api/public/**").permitAll()
                 .requestMatchers("/api/health").permitAll()
                 .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
@@ -150,6 +153,15 @@ public class SecurityConfig {
                 // Agency portal endpoints
                 .requestMatchers("/api/agencies/register").hasAnyRole("ADMIN", "HR_MANAGER")
                 .requestMatchers("/api/agencies/**").hasAnyRole("ADMIN", "HR_MANAGER", "RECRUITER")
+
+                // Job board endpoints
+                .requestMatchers("/api/job-boards/**").hasAnyRole("ADMIN", "HR_MANAGER", "RECRUITER")
+
+                // Salary recommendation endpoints
+                .requestMatchers("/api/salary-recommendations/**").hasAnyRole("ADMIN", "HR_MANAGER", "RECRUITER")
+
+                // Vacancy report endpoints
+                .requestMatchers("/api/vacancy-reports/**").hasAnyRole("ADMIN", "HR_MANAGER", "RECRUITER")
 
                 // Shortlisting endpoints
                 .requestMatchers("/api/shortlisting/**").hasAnyRole("ADMIN", "HR_MANAGER", "RECRUITER")

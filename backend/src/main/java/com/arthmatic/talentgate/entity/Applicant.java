@@ -46,6 +46,25 @@ public class Applicant {
     @Column(name = "source")
     private String source; // How the applicant found the job (LinkedIn, Website, Referral, etc.)
 
+    // Employment Equity demographic fields (optional, POPIA-compliant)
+    @Column(name = "gender")
+    private String gender; // Male, Female, Non-binary, Prefer not to say
+
+    @Column(name = "race")
+    private String race; // African, Coloured, Indian, White, Other, Prefer not to say
+
+    @Column(name = "disability_status")
+    private String disabilityStatus; // Yes, No, Prefer not to say
+
+    @Column(name = "citizenship_status")
+    private String citizenshipStatus; // South African, Work Permit, Other
+
+    @Column(name = "demographics_consent")
+    private Boolean demographicsConsent;
+
+    @Column(name = "demographics_consent_date")
+    private LocalDateTime demographicsConsentDate;
+
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
 
@@ -177,6 +196,25 @@ public class Applicant {
     public void setUpdatedAt(LocalDateTime updatedAt) {
         this.updatedAt = updatedAt;
     }
+
+    // Employment Equity getters/setters
+    public String getGender() { return gender; }
+    public void setGender(String gender) { this.gender = gender; }
+
+    public String getRace() { return race; }
+    public void setRace(String race) { this.race = race; }
+
+    public String getDisabilityStatus() { return disabilityStatus; }
+    public void setDisabilityStatus(String disabilityStatus) { this.disabilityStatus = disabilityStatus; }
+
+    public String getCitizenshipStatus() { return citizenshipStatus; }
+    public void setCitizenshipStatus(String citizenshipStatus) { this.citizenshipStatus = citizenshipStatus; }
+
+    public Boolean getDemographicsConsent() { return demographicsConsent; }
+    public void setDemographicsConsent(Boolean demographicsConsent) { this.demographicsConsent = demographicsConsent; }
+
+    public LocalDateTime getDemographicsConsentDate() { return demographicsConsentDate; }
+    public void setDemographicsConsentDate(LocalDateTime demographicsConsentDate) { this.demographicsConsentDate = demographicsConsentDate; }
 
     @PreUpdate
     public void preUpdate() {

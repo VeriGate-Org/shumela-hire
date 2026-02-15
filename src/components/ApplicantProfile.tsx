@@ -29,6 +29,11 @@ interface ApplicantData {
   education: Education[];
   experience: Experience[];
   skills: string[];
+  gender?: string;
+  race?: string;
+  disabilityStatus?: string;
+  citizenshipStatus?: string;
+  demographicsConsent?: boolean;
 }
 
 interface Document {
@@ -445,6 +450,93 @@ export default function ApplicantProfile({ applicantId, onSave }: ApplicantProfi
           </div>
         </div>
         
+        {/* Employment Equity Information (Optional) */}
+        <div className="border-t pt-6">
+          <h3 className="text-lg font-medium mb-1">Employment Equity Information (Optional)</h3>
+          <p className="text-sm text-gray-500 mb-4">
+            This information is collected in compliance with the Employment Equity Act and is used for reporting purposes only.
+            Providing this information is voluntary and will not affect your application.
+          </p>
+
+          <div className="mb-4">
+            <label className="flex items-center gap-2">
+              <input
+                type="checkbox"
+                checked={formData.demographicsConsent || false}
+                onChange={(e) => setFormData(prev => ({ ...prev, demographicsConsent: e.target.checked }))}
+                className="h-4 w-4 text-violet-600 border-gray-300 rounded"
+              />
+              <span className="text-sm text-gray-700">
+                I consent to the collection and processing of my demographic information in accordance with POPIA
+              </span>
+            </label>
+          </div>
+
+          {formData.demographicsConsent && (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Gender</label>
+                <select
+                  value={formData.gender || ''}
+                  onChange={(e) => setFormData(prev => ({ ...prev, gender: e.target.value || undefined }))}
+                  className="w-full p-2 border border-gray-300 rounded-md"
+                >
+                  <option value="">Select...</option>
+                  <option value="Male">Male</option>
+                  <option value="Female">Female</option>
+                  <option value="Non-binary">Non-binary</option>
+                  <option value="Prefer not to say">Prefer not to say</option>
+                </select>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Race</label>
+                <select
+                  value={formData.race || ''}
+                  onChange={(e) => setFormData(prev => ({ ...prev, race: e.target.value || undefined }))}
+                  className="w-full p-2 border border-gray-300 rounded-md"
+                >
+                  <option value="">Select...</option>
+                  <option value="African">African</option>
+                  <option value="Coloured">Coloured</option>
+                  <option value="Indian">Indian</option>
+                  <option value="White">White</option>
+                  <option value="Other">Other</option>
+                  <option value="Prefer not to say">Prefer not to say</option>
+                </select>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Disability Status</label>
+                <select
+                  value={formData.disabilityStatus || ''}
+                  onChange={(e) => setFormData(prev => ({ ...prev, disabilityStatus: e.target.value || undefined }))}
+                  className="w-full p-2 border border-gray-300 rounded-md"
+                >
+                  <option value="">Select...</option>
+                  <option value="Yes">Yes</option>
+                  <option value="No">No</option>
+                  <option value="Prefer not to say">Prefer not to say</option>
+                </select>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Citizenship Status</label>
+                <select
+                  value={formData.citizenshipStatus || ''}
+                  onChange={(e) => setFormData(prev => ({ ...prev, citizenshipStatus: e.target.value || undefined }))}
+                  className="w-full p-2 border border-gray-300 rounded-md"
+                >
+                  <option value="">Select...</option>
+                  <option value="South African">South African</option>
+                  <option value="Work Permit">Work Permit</option>
+                  <option value="Other">Other</option>
+                </select>
+              </div>
+            </div>
+          )}
+        </div>
+
         {/* Submit Button */}
         <div className="flex justify-end">
           <button

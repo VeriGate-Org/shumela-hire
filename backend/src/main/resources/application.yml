@@ -73,6 +73,20 @@ app:
   file:
     upload-dir: ${UPLOAD_DIR:uploads}
 
+# SSO Configuration
+sso:
+  enabled: ${SSO_ENABLED:false}
+  default-role: EMPLOYEE
+  auto-provision-users: true
+
+# Job Board Configuration
+job-boards:
+  linkedin:
+    enabled: ${LINKEDIN_ENABLED:false}
+    api-key: ${LINKEDIN_API_KEY:}
+    api-secret: ${LINKEDIN_API_SECRET:}
+    org-id: ${LINKEDIN_ORG_ID:}
+
 # Logging Configuration
 logging:
   level:

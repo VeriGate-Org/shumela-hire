@@ -74,6 +74,7 @@ export const roleConfigurations: Record<UserRole, RoleConfig> = {
       { label: 'Onboarding', href: '/hr/onboarding', icon: '🚀' },
       { label: 'Policies & Compliance', href: '/hr/policies', icon: '📜' },
       { label: 'Performance Reviews', href: '/hr/performance', icon: '⭐' },
+      { label: 'Salary Recommendations', href: '/salary-recommendations', icon: '💵' },
     ],
   },
   HIRING_MANAGER: {
@@ -117,6 +118,7 @@ export const roleConfigurations: Record<UserRole, RoleConfig> = {
       { label: 'Pipeline Management', href: '/pipeline', icon: '🔄' },
       { label: 'Offers', href: '/offers', icon: '💰' },
       { label: 'Analytics', href: '/analytics', icon: '📊' },
+      { label: 'Salary Recommendations', href: '/salary-recommendations', icon: '💵' },
     ],
   },
   INTERVIEWER: {
