@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { useAuth, UserRole } from '../contexts/AuthContext';
+import { useAuth, UserRole, ALL_ROLES, ROLE_DISPLAY_NAMES } from '../contexts/AuthContext';
 import { roleConfigurations } from '../config/roleConfig';
 import ThemeToggle from './ThemeToggle';
 
@@ -26,7 +26,7 @@ const DashboardShell: React.FC<DashboardShellProps> = ({ title, children }) => {
   }
 
   const currentConfig = roleConfigurations[user.role];
-  const roles: UserRole[] = ['Admin', 'HR', 'Hiring Manager', 'Recruiter', 'Applicant', 'Executive'];
+  const roles = ALL_ROLES;
 
   return (
     <div className="min-h-screen bg-gray-50 lg:flex">
@@ -51,7 +51,7 @@ const DashboardShell: React.FC<DashboardShellProps> = ({ title, children }) => {
               <span className="text-2xl">{currentConfig.logo}</span>
               <div>
                 <h1 className="text-lg font-bold">TalentGate</h1>
-                <p className="text-sm opacity-75">{user.role}</p>
+                <p className="text-sm opacity-75">{ROLE_DISPLAY_NAMES[user.role]}</p>
               </div>
             </div>
             <button
@@ -90,7 +90,7 @@ const DashboardShell: React.FC<DashboardShellProps> = ({ title, children }) => {
             >
               {roles.map((role) => (
                 <option key={role} value={role}>
-                  {role}
+                  {ROLE_DISPLAY_NAMES[role]}
                 </option>
               ))}
             </select>
@@ -158,10 +158,10 @@ const DashboardShell: React.FC<DashboardShellProps> = ({ title, children }) => {
                 {children || (
                   <div className="bg-white rounded-lg shadow p-6">
                     <h3 className="text-lg font-medium text-gray-900 mb-4">
-                      {user.role} Dashboard Content
+                      {ROLE_DISPLAY_NAMES[user.role]} Dashboard Content
                     </h3>
                     <p className="text-gray-600">
-                      This is where the main dashboard content for {user.role} would appear. 
+                      This is where the main dashboard content for {ROLE_DISPLAY_NAMES[user.role]} would appear.
                       The navigation, colors, and layout are all customized based on the user&apos;s role.
                     </p>
                     <div className="mt-6 grid grid-cols-1 lg:grid-cols-2 gap-6">

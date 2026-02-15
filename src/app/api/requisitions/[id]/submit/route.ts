@@ -12,7 +12,7 @@ export async function POST(
     const body = await request.json();
     const {
       userId = 'demo_user',
-      userRole = 'HR',
+      userRole = 'HR_MANAGER',
       comment
     } = body;
 

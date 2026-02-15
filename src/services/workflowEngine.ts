@@ -293,13 +293,7 @@ export class WorkflowEngine {
    * Get requisitions pending approval for a role
    */
   async getPendingRequisitions(userRole: ApprovalRole): Promise<RequisitionData[]> {
-    const roleMap = {
-      [ApprovalRole.HR]: 'HR',
-      [ApprovalRole.HIRING_MANAGER]: 'Hiring Manager',
-      [ApprovalRole.EXECUTIVE]: 'Admin'
-    };
-
-    return requisitionService.getPendingRequisitionsForRole(roleMap[userRole]);
+    return requisitionService.getPendingRequisitionsForRole(userRole);
   }
 
   // Private helper methods

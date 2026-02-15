@@ -13,7 +13,7 @@ export default function ApplicantsPage() {
 
   // Set theme to recruiter for applicants page
   useEffect(() => {
-    setCurrentRole('Recruiter');
+    setCurrentRole('RECRUITER');
   }, [setCurrentRole]);
 
   const handleCreateNew = () => {

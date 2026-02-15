@@ -494,7 +494,7 @@ export class JobAdService {
       'DRAFT',
       'PUBLISHED',
       publishedBy,
-      'HR',
+      'HR_MANAGER',
       `Published to channels: ${publishingRequest.channels.join(', ')}`
     );
 
@@ -530,7 +530,7 @@ export class JobAdService {
         'PUBLISHED',
         'UNPUBLISHED',
         performedBy,
-        'HR',
+        'HR_MANAGER',
         reason || 'Job ad unpublished'
       );
     }
@@ -552,7 +552,7 @@ export class JobAdService {
         'UNPUBLISHED',
         'PUBLISHED',
         performedBy,
-        'HR',
+        'HR_MANAGER',
         `Republished to channels: ${channels.join(', ')}`
       );
     }

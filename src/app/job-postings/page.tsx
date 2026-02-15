@@ -60,7 +60,7 @@ export default function JobPostingsPage() {
 
   // Set theme to admin for job postings page
   useEffect(() => {
-    setCurrentRole('Admin');
+    setCurrentRole('ADMIN');
   }, [setCurrentRole]);
 
   useEffect(() => {

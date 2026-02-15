@@ -3,14 +3,14 @@
 import React, { useState } from 'react';
 import PageWrapper from '../../components/PageWrapper';
 import RoleDashboard from '../../components/dashboard/RoleDashboard';
-import { useAuth } from '../../contexts/AuthContext';
+import { useAuth, ROLE_DISPLAY_NAMES } from '../../contexts/AuthContext';
 
 export default function DashboardPage() {
   const [selectedTimeframe, setSelectedTimeframe] = useState('30days');
   const { user } = useAuth();
 
   // Default to Hiring Manager if no user role is available
-  const userRole = user?.role || 'Hiring Manager';
+  const userRole = user?.role || 'HIRING_MANAGER';
 
   const actions = (
     <div className="flex items-center space-x-3">
@@ -31,10 +31,12 @@ export default function DashboardPage() {
     />
   );
 
+  const displayName = ROLE_DISPLAY_NAMES[userRole];
+
   return (
-    <PageWrapper 
-      title={`${userRole} Dashboard`}
-      subtitle={`Welcome back! Here's your ${userRole.toLowerCase()} overview for the selected timeframe.`}
+    <PageWrapper
+      title={`${displayName} Dashboard`}
+      subtitle={`Welcome back. Here is your ${displayName.toLowerCase()} overview for the selected timeframe.`}
       actions={actions}
       showLayoutToggle={true}
     >

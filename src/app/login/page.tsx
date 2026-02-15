@@ -22,7 +22,7 @@ export default function LoginPage() {
       id: '1',
       name: 'John Doe',
       email: 'john.doe@company.com',
-      role: 'Admin' as const
+      role: 'ADMIN' as const
     };
 
     // Set a mock token

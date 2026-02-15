@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
+import { UserRole, ROLE_DISPLAY_NAMES } from '../contexts/AuthContext';
 
 interface UserProfileProps {
   user?: {
@@ -17,7 +18,7 @@ const UserProfile: React.FC<UserProfileProps> = ({ user }) => {
   const currentUser = user || {
     name: 'John Doe',
     email: 'john.doe@company.com',
-    role: 'HR Manager'
+    role: 'HR_MANAGER'
   };
 
   const getInitials = (name: string) => {
@@ -84,7 +85,7 @@ const UserProfile: React.FC<UserProfileProps> = ({ user }) => {
             {currentUser.name}
           </p>
           <p className="text-xs text-gray-500 truncate">
-            {currentUser.role}
+            {ROLE_DISPLAY_NAMES[currentUser.role as UserRole] || currentUser.role}
           </p>
         </div>
 
@@ -129,7 +130,7 @@ const UserProfile: React.FC<UserProfileProps> = ({ user }) => {
                     {currentUser.email}
                   </p>
                   <p className="text-xs text-gray-400 truncate">
-                    {currentUser.role}
+                    {ROLE_DISPLAY_NAMES[currentUser.role as UserRole] || currentUser.role}
                   </p>
                 </div>
               </div>

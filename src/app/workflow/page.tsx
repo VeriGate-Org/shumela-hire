@@ -490,8 +490,8 @@ export default function WorkflowPage() {
                 { id: 'skill_match', name: 'Skill Match %', type: 'number' },
               ]}
               availableUsers={[
-                { id: 'user-001', name: 'John Doe', email: 'john.doe@company.com', role: 'HR Manager' },
-                { id: 'user-002', name: 'Sarah Wilson', email: 'sarah.wilson@company.com', role: 'Recruiter' },
+                { id: 'user-001', name: 'John Doe', email: 'john.doe@company.com', role: 'HR_MANAGER' },
+                { id: 'user-002', name: 'Sarah Wilson', email: 'sarah.wilson@company.com', role: 'RECRUITER' },
                 { id: 'user-003', name: 'Mike Johnson', email: 'mike.johnson@company.com', role: 'Team Lead' },
               ]}
             />

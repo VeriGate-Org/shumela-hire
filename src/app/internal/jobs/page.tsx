@@ -236,7 +236,7 @@ export default function InternalJobsBoard() {
 
       const filteredJobs = apiResponse.data.content.filter(job => {
         if (job.channelInternal) return true;
-        if (job.channelExternal) return user?.role !== 'Applicant';
+        if (job.channelExternal) return user?.role !== 'APPLICANT';
         return false;
       });
 

@@ -36,11 +36,11 @@ function LoginCallbackContent() {
           // Mock role claim - in production this would come from Keycloak
           // Keycloak typically stores roles in: realm_access.roles, resource_access, or custom claims
           realm_access: {
-            roles: ['Admin', 'user'] // Role mapping would be configured in Keycloak
+            roles: ['ADMIN', 'user'] // Role mapping would be configured in Keycloak
           },
           resource_access: {
             'talentgate': {
-              roles: ['Admin']
+              roles: ['ADMIN']
             }
           }
         };
@@ -53,18 +53,18 @@ function LoginCallbackContent() {
           // Check resource-specific roles first
           const clientRoles = payload.resource_access?.['talentgate']?.roles || [];
           const realmRoles = payload.realm_access?.roles || [];
-          
+
           // Define role hierarchy for TalentGate
-          const roleHierarchy = ['Admin', 'HR', 'Hiring Manager', 'Recruiter', 'Applicant'];
-          
+          const roleHierarchy = ['ADMIN', 'EXECUTIVE', 'HR_MANAGER', 'HIRING_MANAGER', 'RECRUITER', 'INTERVIEWER', 'EMPLOYEE', 'APPLICANT'];
+
           // Find highest priority role
           for (const role of roleHierarchy) {
             if (clientRoles.includes(role) || realmRoles.includes(role)) {
               return role;
             }
           }
-          
-          return 'Applicant'; // Default role
+
+          return 'APPLICANT'; // Default role
         };
 
         const userRole = extractUserRole(mockJwtPayload);

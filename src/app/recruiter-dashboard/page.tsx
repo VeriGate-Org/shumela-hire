@@ -8,7 +8,7 @@ const RecruiterDashboardPage: React.FC = () => {
   const { user } = useAuth();
 
   // Check if user has recruiter or manager role
-  const hasAccess = user && (user.role === 'Recruiter' || user.role === 'Hiring Manager' || user.role === 'HR');
+  const hasAccess = user && (user.role === 'RECRUITER' || user.role === 'HIRING_MANAGER' || user.role === 'HR_MANAGER');
 
   if (!hasAccess) {
     return (

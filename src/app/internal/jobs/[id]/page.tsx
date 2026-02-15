@@ -134,7 +134,7 @@ export default function InternalJobDetailPage() {
         
         // Check if user has access to this job based on role
         const jobData = apiResponse.data;
-        if (!jobData.channelInternal && user?.role === 'Applicant') {
+        if (!jobData.channelInternal && user?.role === 'APPLICANT') {
           setError('You do not have access to this job posting');
           return;
         }

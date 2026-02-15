@@ -66,13 +66,13 @@ class MockRequisitionStore {
     let targetStatus: RequisitionStatus;
     
     switch (role) {
-      case 'HR':
+      case 'HR_MANAGER':
         targetStatus = RequisitionStatus.SUBMITTED;
         break;
-      case 'Hiring Manager':
+      case 'HIRING_MANAGER':
         targetStatus = RequisitionStatus.PENDING_HIRING_MANAGER_APPROVAL;
         break;
-      case 'Admin':
+      case 'ADMIN':
         targetStatus = RequisitionStatus.PENDING_EXECUTIVE_APPROVAL;
         break;
       default:

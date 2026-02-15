@@ -78,7 +78,7 @@ export async function POST(request: NextRequest) {
     await auditLogService.logRequisitionCreated(
       requisition.id,
       createdBy,
-      'HR', // Default role for demo
+      'HR_MANAGER', // Default role for demo
       {
         jobTitle: requisition.jobTitle,
         department: requisition.department,

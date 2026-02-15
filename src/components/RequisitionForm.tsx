@@ -200,7 +200,7 @@ const RequisitionForm: React.FC<RequisitionFormProps> = ({
         const submitResponse = await fetch(`/api/requisitions/${createResult.data.id}/submit`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ userId: 'demo_user', userRole: 'HR' })
+          body: JSON.stringify({ userId: 'demo_user', userRole: 'HR_MANAGER' })
         });
 
         const submitResult = await submitResponse.json();

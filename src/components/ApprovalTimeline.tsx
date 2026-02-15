@@ -45,11 +45,14 @@ const ApprovalTimeline: React.FC<ApprovalTimelineProps> = ({ steps, className = 
 
   const getRoleIcon = (role: string) => {
     const roleIcons: Record<string, string> = {
-      'HR': '👥',
-      'Manager': '👔',
-      'Executive': '👑',
-      'Admin': '⚙️',
-      'Recruiter': '🔍',
+      'HR_MANAGER': '👥',
+      'HIRING_MANAGER': '👔',
+      'EXECUTIVE': '👑',
+      'ADMIN': '⚙️',
+      'RECRUITER': '🔍',
+      'INTERVIEWER': '🎤',
+      'EMPLOYEE': '👤',
+      'APPLICANT': '👤',
     };
     return roleIcons[role] || '👤';
   };

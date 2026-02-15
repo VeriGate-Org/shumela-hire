@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { UserRole } from '../../contexts/AuthContext';
+import { UserRole, ROLE_DISPLAY_NAMES } from '../../contexts/AuthContext';
 
 interface RoleDashboardProps {
   role: UserRole;
@@ -17,37 +17,49 @@ const RoleDashboard: React.FC<RoleDashboardProps> = ({
 }) => {
   const getRoleData = () => {
     switch (role) {
-      case 'Admin':
+      case 'ADMIN':
         return {
           title: 'System Administration',
           description: 'Manage users, system settings, and oversee all recruitment activities.',
           stats: { total: 847, active: 156, pending: 23, completed: 1234 }
         };
-      case 'HR':
+      case 'HR_MANAGER':
         return {
           title: 'Human Resources Dashboard',
           description: 'Manage employee lifecycle, policies, and recruitment coordination.',
           stats: { total: 234, active: 67, pending: 12, completed: 456 }
         };
-      case 'Hiring Manager':
+      case 'HIRING_MANAGER':
         return {
           title: 'Hiring Manager Dashboard',
           description: 'Oversee hiring for your team and manage interview processes.',
           stats: { total: 45, active: 12, pending: 5, completed: 28 }
         };
-      case 'Recruiter':
+      case 'RECRUITER':
         return {
           title: 'Recruiter Dashboard',
           description: 'Source, screen, and manage candidates throughout the hiring process.',
           stats: { total: 123, active: 34, pending: 8, completed: 67 }
         };
-      case 'Applicant':
+      case 'INTERVIEWER':
+        return {
+          title: 'Interviewer Dashboard',
+          description: 'Conduct interviews, provide feedback, and evaluate candidates.',
+          stats: { total: 18, active: 5, pending: 3, completed: 10 }
+        };
+      case 'EMPLOYEE':
+        return {
+          title: 'Employee Dashboard',
+          description: 'Access internal opportunities, training, and profile management.',
+          stats: { total: 12, active: 4, pending: 1, completed: 7 }
+        };
+      case 'APPLICANT':
         return {
           title: 'Applicant Portal',
           description: 'Track your applications and manage your job search journey.',
           stats: { total: 8, active: 3, pending: 2, completed: 3 }
         };
-      case 'Executive':
+      case 'EXECUTIVE':
         return {
           title: 'Executive Dashboard',
           description: 'Strategic oversight of organizational hiring and high-level approvals.',
@@ -55,7 +67,7 @@ const RoleDashboard: React.FC<RoleDashboardProps> = ({
         };
       default:
         return {
-          title: `${role} Dashboard`,
+          title: `${ROLE_DISPLAY_NAMES[role] ?? role} Dashboard`,
           description: 'Role-specific dashboard view.',
           stats: { total: 0, active: 0, pending: 0, completed: 0 }
         };
@@ -88,7 +100,7 @@ const RoleDashboard: React.FC<RoleDashboardProps> = ({
 
       {/* Overview Stats */}
       <div className="bg-white rounded-lg border border-gray-200 p-6">
-        <h3 className="text-lg font-semibold text-gray-900 mb-4">{role} Overview</h3>
+        <h3 className="text-lg font-semibold text-gray-900 mb-4">{ROLE_DISPLAY_NAMES[role]} Overview</h3>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
           <div className="bg-violet-50 p-4 rounded-lg">
             <h4 className="font-medium text-violet-900">Total Items</h4>
@@ -112,16 +124,18 @@ const RoleDashboard: React.FC<RoleDashboardProps> = ({
           <div className="mb-4">
             <div className="inline-flex items-center justify-center w-12 h-12 bg-gray-100 rounded-full mb-3">
               <span className="text-2xl">
-                {role === 'Admin' ? '👑' : 
-                 role === 'HR' ? '👔' : 
-                 role === 'Hiring Manager' ? '🎯' : 
-                 role === 'Recruiter' ? '🔍' : 
-                 role === 'Applicant' ? '👤' : 
-                 role === 'Executive' ? '🏛️' : '📊'}
+                {role === 'ADMIN' ? '👑' :
+                 role === 'HR_MANAGER' ? '👔' :
+                 role === 'HIRING_MANAGER' ? '🎯' :
+                 role === 'RECRUITER' ? '🔍' :
+                 role === 'INTERVIEWER' ? '🎤' :
+                 role === 'EMPLOYEE' ? '👤' :
+                 role === 'APPLICANT' ? '👤' :
+                 role === 'EXECUTIVE' ? '🏛️' : '📊'}
               </span>
             </div>
           </div>
-          <h4 className="text-lg font-semibold text-gray-900 mb-2">{role} Features</h4>
+          <h4 className="text-lg font-semibold text-gray-900 mb-2">{ROLE_DISPLAY_NAMES[role]} Features</h4>
           <p className="mb-4">Advanced role-specific dashboard components are being loaded.</p>
           <div className="inline-flex items-center text-sm text-violet-600 bg-violet-50 px-3 py-1 rounded-full">
             <span className="animate-pulse w-2 h-2 bg-violet-500 rounded-full mr-2"></span>
@@ -134,7 +148,7 @@ const RoleDashboard: React.FC<RoleDashboardProps> = ({
       <div className="bg-white rounded-lg border border-gray-200 p-6">
         <h3 className="text-lg font-semibold text-gray-900 mb-4">Quick Actions</h3>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {role === 'Admin' && (
+          {role === 'ADMIN' && (
             <>
               <button className="bg-red-600 text-white p-4 rounded-lg hover:bg-red-700 transition-colors text-left">
                 <h4 className="font-medium mb-1">User Management</h4>
@@ -150,7 +164,7 @@ const RoleDashboard: React.FC<RoleDashboardProps> = ({
               </button>
             </>
           )}
-          {role === 'HR' && (
+          {role === 'HR_MANAGER' && (
             <>
               <button className="bg-violet-600 text-white p-4 rounded-lg hover:bg-violet-700 transition-colors text-left">
                 <h4 className="font-medium mb-1">Employee Records</h4>
@@ -166,7 +180,7 @@ const RoleDashboard: React.FC<RoleDashboardProps> = ({
               </button>
             </>
           )}
-          {role === 'Hiring Manager' && (
+          {role === 'HIRING_MANAGER' && (
             <>
               <button className="bg-green-600 text-white p-4 rounded-lg hover:bg-green-700 transition-colors text-left">
                 <h4 className="font-medium mb-1">My Job Postings</h4>
@@ -182,7 +196,39 @@ const RoleDashboard: React.FC<RoleDashboardProps> = ({
               </button>
             </>
           )}
-          {(role === 'Recruiter' || role === 'Applicant' || role === 'Executive') && (
+          {role === 'INTERVIEWER' && (
+            <>
+              <button className="bg-violet-600 text-white p-4 rounded-lg hover:bg-violet-700 transition-colors text-left">
+                <h4 className="font-medium mb-1">My Interviews</h4>
+                <p className="text-sm opacity-90">View upcoming interview schedule</p>
+              </button>
+              <button className="bg-purple-600 text-white p-4 rounded-lg hover:bg-purple-700 transition-colors text-left">
+                <h4 className="font-medium mb-1">Submit Feedback</h4>
+                <p className="text-sm opacity-90">Provide candidate evaluations</p>
+              </button>
+              <button className="bg-teal-600 text-white p-4 rounded-lg hover:bg-teal-700 transition-colors text-left">
+                <h4 className="font-medium mb-1">Internal Jobs</h4>
+                <p className="text-sm opacity-90">Browse internal opportunities</p>
+              </button>
+            </>
+          )}
+          {role === 'EMPLOYEE' && (
+            <>
+              <button className="bg-violet-600 text-white p-4 rounded-lg hover:bg-violet-700 transition-colors text-left">
+                <h4 className="font-medium mb-1">Internal Jobs</h4>
+                <p className="text-sm opacity-90">Browse internal opportunities</p>
+              </button>
+              <button className="bg-purple-600 text-white p-4 rounded-lg hover:bg-purple-700 transition-colors text-left">
+                <h4 className="font-medium mb-1">My Profile</h4>
+                <p className="text-sm opacity-90">Update your profile details</p>
+              </button>
+              <button className="bg-green-600 text-white p-4 rounded-lg hover:bg-green-700 transition-colors text-left">
+                <h4 className="font-medium mb-1">Training</h4>
+                <p className="text-sm opacity-90">View available training modules</p>
+              </button>
+            </>
+          )}
+          {(role === 'RECRUITER' || role === 'APPLICANT' || role === 'EXECUTIVE') && (
             <>
               <button className="bg-indigo-600 text-white p-4 rounded-lg hover:bg-indigo-700 transition-colors text-left">
                 <h4 className="font-medium mb-1">Primary Action</h4>

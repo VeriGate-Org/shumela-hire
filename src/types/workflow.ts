@@ -15,9 +15,9 @@ export enum WorkflowAction {
 }
 
 export enum ApprovalRole {
-  HR = 'HR',
-  HIRING_MANAGER = 'Hiring Manager',
-  EXECUTIVE = 'Executive'
+  HR = 'HR_MANAGER',
+  HIRING_MANAGER = 'HIRING_MANAGER',
+  EXECUTIVE = 'EXECUTIVE'
 }
 
 export interface WorkflowTransition {

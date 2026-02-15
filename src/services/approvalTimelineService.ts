@@ -76,21 +76,21 @@ export class ApprovalTimelineService {
   getDemoApprovalTimeline(): ApprovalStep[] {
     return [
       {
-        role: 'HR',
+        role: 'HR_MANAGER',
         approverName: 'Sarah Johnson',
         status: 'approved',
         timestamp: '2024-01-15T10:30:00Z',
         comment: 'Job requirements are well-defined and align with company standards.'
       },
       {
-        role: 'Hiring Manager',
+        role: 'HIRING_MANAGER',
         approverName: 'Michael Chen',
         status: 'approved',
         timestamp: '2024-01-16T14:20:00Z',
         comment: 'Team needs this role urgently. Budget approved.'
       },
       {
-        role: 'Executive',
+        role: 'EXECUTIVE',
         approverName: 'Jennifer Davis',
         status: 'pending',
         timestamp: undefined,
@@ -137,7 +137,7 @@ export class ApprovalTimelineService {
   private getWorkflowSteps(): Array<{role: string, defaultApprover: string}> {
     return [
       { role: ApprovalRole.HR, defaultApprover: 'HR Team' },
-      { role: ApprovalRole.HIRING_MANAGER, defaultApprover: 'Hiring Manager' },
+      { role: ApprovalRole.HIRING_MANAGER, defaultApprover: 'HIRING_MANAGER' },
       { role: ApprovalRole.EXECUTIVE, defaultApprover: 'Executive Team' }
     ];
   }

@@ -206,22 +206,22 @@ export default function OfferManagement() {
     
     switch (action) {
       case 'approve':
-        return offer.status === 'PENDING_APPROVAL' && 
-               ['Admin', 'HR', 'Hiring Manager'].includes(userRole);
+        return offer.status === 'PENDING_APPROVAL' &&
+               ['ADMIN', 'HR_MANAGER', 'HIRING_MANAGER'].includes(userRole);
       case 'send':
-        return offer.status === 'APPROVED' && 
-               ['Admin', 'HR', 'Hiring Manager'].includes(userRole);
+        return offer.status === 'APPROVED' &&
+               ['ADMIN', 'HR_MANAGER', 'HIRING_MANAGER'].includes(userRole);
       case 'withdraw':
-        return ['SENT', 'UNDER_NEGOTIATION'].includes(offer.status) && 
-               ['Admin', 'HR', 'Hiring Manager'].includes(userRole);
+        return ['SENT', 'UNDER_NEGOTIATION'].includes(offer.status) &&
+               ['ADMIN', 'HR_MANAGER', 'HIRING_MANAGER'].includes(userRole);
       case 'accept':
-        return ['SENT', 'UNDER_NEGOTIATION'].includes(offer.status) && 
-               userRole === 'Applicant';
+        return ['SENT', 'UNDER_NEGOTIATION'].includes(offer.status) &&
+               userRole === 'APPLICANT';
       case 'decline':
-        return ['SENT', 'UNDER_NEGOTIATION'].includes(offer.status) && 
-               userRole === 'Applicant';
+        return ['SENT', 'UNDER_NEGOTIATION'].includes(offer.status) &&
+               userRole === 'APPLICANT';
       case 'negotiate':
-        return offer.status === 'SENT' && userRole === 'Applicant';
+        return offer.status === 'SENT' && userRole === 'APPLICANT';
       default:
         return false;
     }

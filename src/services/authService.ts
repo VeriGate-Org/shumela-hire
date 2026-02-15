@@ -12,7 +12,7 @@ export interface AuthUser {
   email: string;
   firstName: string;
   lastName: string;
-  role: 'admin' | 'recruiter' | 'hiring_manager' | 'interviewer';
+  role: 'ADMIN' | 'EXECUTIVE' | 'HR_MANAGER' | 'HIRING_MANAGER' | 'RECRUITER' | 'INTERVIEWER' | 'EMPLOYEE' | 'APPLICANT';
   department: string;
   permissions: string[];
   avatar?: string;
@@ -264,19 +264,19 @@ class AuthService {
 
   // Role-based checks
   isAdmin(): boolean {
-    return this.user?.role === 'admin';
+    return this.user?.role === 'ADMIN';
   }
 
   isRecruiter(): boolean {
-    return this.user?.role === 'recruiter' || this.isAdmin();
+    return this.user?.role === 'RECRUITER' || this.isAdmin();
   }
 
   isHiringManager(): boolean {
-    return this.user?.role === 'hiring_manager' || this.isAdmin();
+    return this.user?.role === 'HIRING_MANAGER' || this.isAdmin();
   }
 
   isInterviewer(): boolean {
-    return this.user?.role === 'interviewer' || this.isRecruiter() || this.isHiringManager();
+    return this.user?.role === 'INTERVIEWER' || this.isRecruiter() || this.isHiringManager();
   }
 
   // Get user's department

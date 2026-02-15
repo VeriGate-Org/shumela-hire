@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { useAuth, UserRole } from '../contexts/AuthContext';
+import { useAuth, UserRole, ALL_ROLES, ROLE_DISPLAY_NAMES } from '../contexts/AuthContext';
 import { roleConfigurations } from '../config/roleConfig';
 import { ChevronDownIcon, CheckIcon } from '@heroicons/react/24/outline';
 
@@ -15,7 +15,7 @@ export default function RoleSwitcher({ compact = false }: RoleSwitcherProps) {
 
   if (!user) return null;
 
-  const roles: UserRole[] = ['Admin', 'HR', 'Hiring Manager', 'Recruiter', 'Applicant', 'Executive'];
+  const roles = ALL_ROLES;
   const currentRoleConfig = roleConfigurations[user.role];
 
   const handleRoleSwitch = (role: UserRole) => {
@@ -31,7 +31,7 @@ export default function RoleSwitcher({ compact = false }: RoleSwitcherProps) {
           className="flex items-center w-full px-3 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-violet-500"
         >
           <span className="mr-2">{currentRoleConfig.logo}</span>
-          <span className="flex-1 text-left truncate">{user.role}</span>
+          <span className="flex-1 text-left truncate">{ROLE_DISPLAY_NAMES[user.role]}</span>
           <ChevronDownIcon className="w-4 h-4 ml-1" />
         </button>
 
@@ -52,7 +52,7 @@ export default function RoleSwitcher({ compact = false }: RoleSwitcherProps) {
                     `}
                   >
                     <span className="mr-3">{roleConfig.logo}</span>
-                    <span className="flex-1 text-left">{role}</span>
+                    <span className="flex-1 text-left">{ROLE_DISPLAY_NAMES[role]}</span>
                     {isActive && <CheckIcon className="w-4 h-4 text-violet-600" />}
                   </button>
                 );
@@ -77,7 +77,7 @@ export default function RoleSwitcher({ compact = false }: RoleSwitcherProps) {
         >
           <span className="mr-3 text-lg">{currentRoleConfig.logo}</span>
           <div className="flex-1 text-left">
-            <p className="font-medium text-gray-900">{user.role}</p>
+            <p className="font-medium text-gray-900">{ROLE_DISPLAY_NAMES[user.role]}</p>
             <p className="text-xs text-gray-500 truncate">{currentRoleConfig.description.split('.')[0]}</p>
           </div>
           <ChevronDownIcon className={`w-5 h-5 text-gray-400 transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`} />
@@ -112,7 +112,7 @@ export default function RoleSwitcher({ compact = false }: RoleSwitcherProps) {
                       <span className="mr-3 text-lg flex-shrink-0">{roleConfig.logo}</span>
                       <div className="flex-1 text-left min-w-0">
                         <p className={`font-medium ${isActive ? 'text-violet-900' : 'text-gray-900'}`}>
-                          {role}
+                          {ROLE_DISPLAY_NAMES[role]}
                         </p>
                         <p className={`text-xs mt-1 ${isActive ? 'text-violet-600' : 'text-gray-500'} line-clamp-2`}>
                           {roleConfig.description}

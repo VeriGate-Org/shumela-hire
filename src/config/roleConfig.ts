@@ -14,7 +14,7 @@ export interface RoleConfig {
 }
 
 export const roleConfigurations: Record<UserRole, RoleConfig> = {
-  Admin: {
+  ADMIN: {
     primaryColor: 'bg-violet-600',
     secondaryColor: 'bg-violet-50',
     logo: '👑',
@@ -33,7 +33,25 @@ export const roleConfigurations: Record<UserRole, RoleConfig> = {
       { label: 'Internal Jobs', href: '/internal/jobs', icon: '💼' },
     ],
   },
-  HR: {
+  EXECUTIVE: {
+    primaryColor: 'bg-violet-600',
+    secondaryColor: 'bg-violet-50',
+    logo: '🏛️',
+    welcomeMessage: 'Executive Dashboard',
+    description: 'Strategic oversight of organizational hiring and high-level approvals.',
+    navigationItems: [
+      { label: 'Workflow Management', href: '/workflow', icon: '🔄' },
+      { label: 'Internal Jobs', href: '/internal/jobs', icon: '💼' },
+      { label: 'Strategic Planning', href: '/executive/planning', icon: '🎯' },
+      { label: 'Budget & Approvals', href: '/executive/budget', icon: '💰' },
+      { label: 'Executive Reports', href: '/executive/reports', icon: '📊' },
+      { label: 'Analytics Dashboard', href: '/analytics', icon: '📈' },
+      { label: 'High-Value Offers', href: '/offers', icon: '💰' },
+      { label: 'Organizational Overview', href: '/executive/overview', icon: '🏢' },
+      { label: 'Leadership Team', href: '/executive/leadership', icon: '👥' },
+    ],
+  },
+  HR_MANAGER: {
     primaryColor: 'bg-violet-600',
     secondaryColor: 'bg-violet-50',
     logo: '👔',
@@ -58,7 +76,7 @@ export const roleConfigurations: Record<UserRole, RoleConfig> = {
       { label: 'Performance Reviews', href: '/hr/performance', icon: '⭐' },
     ],
   },
-  'Hiring Manager': {
+  HIRING_MANAGER: {
     primaryColor: 'bg-violet-600',
     secondaryColor: 'bg-violet-50',
     logo: '🎯',
@@ -79,7 +97,7 @@ export const roleConfigurations: Record<UserRole, RoleConfig> = {
       { label: 'Hiring Analytics', href: '/hiring/analytics', icon: '📈' },
     ],
   },
-  Recruiter: {
+  RECRUITER: {
     primaryColor: 'bg-violet-600',
     secondaryColor: 'bg-violet-50',
     logo: '🔍',
@@ -101,7 +119,33 @@ export const roleConfigurations: Record<UserRole, RoleConfig> = {
       { label: 'Analytics', href: '/analytics', icon: '📊' },
     ],
   },
-  Applicant: {
+  INTERVIEWER: {
+    primaryColor: 'bg-violet-600',
+    secondaryColor: 'bg-violet-50',
+    logo: '🎤',
+    welcomeMessage: 'Interviewer Dashboard',
+    description: 'Conduct interviews, provide feedback, and evaluate candidates.',
+    navigationItems: [
+      { label: 'Dashboard', href: '/dashboard', icon: '🏠' },
+      { label: 'My Interviews', href: '/interviews', icon: '📅' },
+      { label: 'Interview Feedback', href: '/interviews/feedback', icon: '📝' },
+      { label: 'Internal Jobs', href: '/internal/jobs', icon: '💼' },
+    ],
+  },
+  EMPLOYEE: {
+    primaryColor: 'bg-violet-600',
+    secondaryColor: 'bg-violet-50',
+    logo: '👤',
+    welcomeMessage: 'Employee Dashboard',
+    description: 'Access internal opportunities, training, and profile management.',
+    navigationItems: [
+      { label: 'Dashboard', href: '/dashboard', icon: '🏠' },
+      { label: 'Internal Jobs', href: '/internal/jobs', icon: '💼' },
+      { label: 'My Profile', href: '/profile', icon: '👤' },
+      { label: 'Training', href: '/training', icon: '🎓' },
+    ],
+  },
+  APPLICANT: {
     primaryColor: 'bg-violet-600',
     secondaryColor: 'bg-violet-50',
     logo: '👤',
@@ -115,24 +159,6 @@ export const roleConfigurations: Record<UserRole, RoleConfig> = {
       { label: 'My Offers', href: '/candidate/offers', icon: '💰' },
       { label: 'Internal Jobs', href: '/internal/jobs', icon: '💼' },
       { label: 'Messages', href: '/applicant/messages', icon: '💬' },
-    ],
-  },
-  Executive: {
-    primaryColor: 'bg-violet-600',
-    secondaryColor: 'bg-violet-50',
-    logo: '🏛️',
-    welcomeMessage: 'Executive Dashboard',
-    description: 'Strategic oversight of organizational hiring and high-level approvals.',
-    navigationItems: [
-      { label: 'Workflow Management', href: '/workflow', icon: '🔄' },
-      { label: 'Internal Jobs', href: '/internal/jobs', icon: '💼' },
-      { label: 'Strategic Planning', href: '/executive/planning', icon: '🎯' },
-      { label: 'Budget & Approvals', href: '/executive/budget', icon: '💰' },
-      { label: 'Executive Reports', href: '/executive/reports', icon: '📊' },
-      { label: 'Analytics Dashboard', href: '/analytics', icon: '📈' },
-      { label: 'High-Value Offers', href: '/offers', icon: '💰' },
-      { label: 'Organizational Overview', href: '/executive/overview', icon: '🏢' },
-      { label: 'Leadership Team', href: '/executive/leadership', icon: '👥' },
     ],
   },
 };

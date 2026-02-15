@@ -81,7 +81,7 @@ export default function AnalyticsPage() {
 
   // Set theme to executive for analytics
   useEffect(() => {
-    setCurrentRole('Executive');
+    setCurrentRole('EXECUTIVE');
   }, [setCurrentRole]);
 
   const handleFilterChange = (values: FilterValue[]) => {

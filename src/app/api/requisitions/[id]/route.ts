@@ -53,7 +53,7 @@ export async function PUT(
       salaryMax,
       description,
       userId = 'demo_user',
-      userRole = 'HR'
+      userRole = 'HR_MANAGER'
     } = body;
 
     // Get current requisition to track changes
@@ -117,7 +117,7 @@ export async function DELETE(
     const params = await context.params;
     const { searchParams } = new URL(request.url);
     const userId = searchParams.get('userId') || 'demo_user';
-    const userRole = searchParams.get('userRole') || 'HR';
+    const userRole = searchParams.get('userRole') || 'HR_MANAGER';
 
     const deleted = await requisitionService.deleteRequisition(params.id);
 
