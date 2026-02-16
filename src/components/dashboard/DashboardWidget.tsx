@@ -90,7 +90,7 @@ const DashboardWidget: React.FC<DashboardWidgetProps> = ({
   };
 
   return (
-    <div className={`bg-white rounded-lg border border-gray-200 shadow-sm ${getSizeClasses()} ${getHeightClass()} ${className}`}>
+    <div className={`bg-white rounded-sm border border-gray-200 border-t-2 border-t-gold-500 shadow-sm ${getSizeClasses()} ${getHeightClass()} ${className}`}>
       {/* Widget Header */}
       <div className="flex items-center justify-between p-4 border-b border-gray-200">
         <div className="flex-1 min-w-0">
@@ -129,7 +129,7 @@ const DashboardWidget: React.FC<DashboardWidgetProps> = ({
               </button>
 
               {showMenu && (
-                <div className="absolute right-0 top-8 w-48 bg-white rounded-lg shadow-lg border border-gray-200 py-1 z-50">
+                <div className="absolute right-0 top-8 w-48 bg-white rounded-sm shadow-lg border border-gray-200 py-1 z-50">
                   {collapsible && (
                     <button
                       onClick={() => {
@@ -162,7 +162,7 @@ const DashboardWidget: React.FC<DashboardWidgetProps> = ({
                           }}
                           className={`flex items-center justify-between w-full px-3 py-2 text-sm ${
                             size === sizeOption
-                              ? 'text-violet-600 bg-violet-50'
+                              ? 'text-gold-600 bg-gold-50'
                               : 'text-gray-700 hover:bg-gray-50'
                           }`}
                         >
@@ -218,7 +218,7 @@ const DashboardWidget: React.FC<DashboardWidgetProps> = ({
         <div className="p-4 flex-1 overflow-hidden">
           {loading ? (
             <div className="flex items-center justify-center h-32">
-              <div className="animate-spin rounded-full h-8 w-8 border-2 border-violet-600 border-t-transparent"></div>
+              <div className="animate-spin rounded-full h-8 w-8 border-2 border-gold-500 border-t-transparent"></div>
             </div>
           ) : error ? (
             <div className="flex items-center justify-center h-32">
@@ -230,7 +230,7 @@ const DashboardWidget: React.FC<DashboardWidgetProps> = ({
                 {refreshable && (
                   <button
                     onClick={handleRefresh}
-                    className="mt-2 text-sm text-violet-600 hover:text-violet-800"
+                    className="mt-2 text-sm text-gold-600 hover:text-gold-800"
                   >
                     Try again
                   </button>

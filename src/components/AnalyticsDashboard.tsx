@@ -193,14 +193,14 @@ export default function AnalyticsDashboard() {
   const getStatusColor = (status: string): string => {
     switch (status) {
       case 'EXCEEDING': return 'bg-green-100 text-green-800 border-green-200';
-      case 'ON_TARGET': return 'bg-violet-100 text-violet-800 border-violet-200';
+      case 'ON_TARGET': return 'bg-gold-100 text-gold-800 border-violet-200';
       case 'BELOW_TARGET': return 'bg-red-100 text-red-800 border-red-200';
       default: return 'bg-gray-100 text-gray-800 border-gray-200';
     }
   };
 
   const renderKPICard = (name: string, kpi: KPI) => (
-    <div key={name} className="bg-white rounded-lg shadow p-6">
+    <div key={name} className="bg-white rounded-sm shadow p-6">
       <div className="flex items-center justify-between mb-4">
         <h3 className="text-sm font-medium text-gray-700 capitalize">
           {name.replace(/_/g, ' ')}
@@ -235,7 +235,7 @@ export default function AnalyticsDashboard() {
     const range = maxValue - minValue || 1;
 
     return (
-      <div className="bg-white rounded-lg shadow p-6">
+      <div className="bg-white rounded-sm shadow p-6">
         <h3 className="text-lg font-medium text-gray-900 mb-4">{title}</h3>
         <div className="h-64 flex items-end space-x-2">
           {data.map((point, index) => {
@@ -243,7 +243,7 @@ export default function AnalyticsDashboard() {
             return (
               <div key={index} className="flex-1 flex flex-col items-center">
                 <div
-                  className="w-full bg-violet-500 rounded-t transition-all duration-300 hover:bg-violet-600"
+                  className="w-full bg-gold-500 rounded-t transition-all duration-300 hover:bg-gold-600"
                   style={{ height: `${Math.max(height, 5)}%` }}
                   title={`${point.date}: ${formatNumber(point.value)}`}
                 />
@@ -261,7 +261,7 @@ export default function AnalyticsDashboard() {
   return (
     <div className="space-y-6">
       {/* Header Controls */}
-      <div className="bg-white rounded-lg shadow p-6">
+      <div className="bg-white rounded-sm shadow p-6">
         <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between space-y-4 lg:space-y-0">
           <div>
             <h1 className="text-2xl font-bold text-gray-900">Analytics Dashboard</h1>
@@ -272,7 +272,7 @@ export default function AnalyticsDashboard() {
             <select
               value={selectedDepartment}
               onChange={(e) => setSelectedDepartment(e.target.value)}
-              className="px-3 py-2 border border-gray-300 rounded-md text-sm"
+              className="px-3 py-2 border border-gray-300 rounded-sm text-sm"
             >
               <option value="">All Departments</option>
               <option value="Engineering">Engineering</option>
@@ -286,19 +286,19 @@ export default function AnalyticsDashboard() {
               type="date"
               value={dateRange.startDate}
               onChange={(e) => setDateRange({...dateRange, startDate: e.target.value})}
-              className="px-3 py-2 border border-gray-300 rounded-md text-sm"
+              className="px-3 py-2 border border-gray-300 rounded-sm text-sm"
             />
             
             <input
               type="date"
               value={dateRange.endDate}
               onChange={(e) => setDateRange({...dateRange, endDate: e.target.value})}
-              className="px-3 py-2 border border-gray-300 rounded-md text-sm"
+              className="px-3 py-2 border border-gray-300 rounded-sm text-sm"
             />
             
             <button
               onClick={() => setShowReportModal(true)}
-              className="px-4 py-2 bg-violet-600 text-white rounded-md hover:bg-violet-700 text-sm"
+              className="px-4 py-2 bg-gold-500 text-violet-950 rounded-sm hover:bg-gold-600 text-sm"
             >
               Generate Report
             </button>
@@ -308,7 +308,7 @@ export default function AnalyticsDashboard() {
 
       {/* Alerts */}
       {dashboardData.alerts && dashboardData.alerts.length > 0 && (
-        <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+        <div className="bg-yellow-50 border border-yellow-200 rounded-sm p-4">
           <h3 className="text-lg font-medium text-yellow-800 mb-3">⚠️ Performance Alerts</h3>
           <div className="space-y-2">
             {dashboardData.alerts.slice(0, 3).map((alert, index) => (
@@ -333,7 +333,7 @@ export default function AnalyticsDashboard() {
       </div>
 
       {/* Category Tabs */}
-      <div className="bg-white rounded-lg shadow">
+      <div className="bg-white rounded-sm shadow">
         <div className="border-b border-gray-200">
           <nav className="flex space-x-8 px-6">
             {METRIC_CATEGORIES.map((category) => (
@@ -342,7 +342,7 @@ export default function AnalyticsDashboard() {
                 onClick={() => setSelectedCategory(category.value)}
                 className={`py-4 px-1 border-b-2 font-medium text-sm ${
                   selectedCategory === category.value
-                    ? 'border-violet-500 text-violet-600'
+                    ? 'border-gold-500 text-gold-700'
                     : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
                 }`}
               >
@@ -357,7 +357,7 @@ export default function AnalyticsDashboard() {
         <div className="p-6">
           {loading ? (
             <div className="flex items-center justify-center h-64">
-              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-violet-500"></div>
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gold-500"></div>
             </div>
           ) : (
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -368,7 +368,7 @@ export default function AnalyticsDashboard() {
               
               {/* Statistics */}
               {detailedData?.statistics && (
-                <div className="bg-gray-50 rounded-lg p-6">
+                <div className="bg-gray-50 rounded-sm p-6">
                   <h3 className="text-lg font-medium text-gray-900 mb-4">Statistics</h3>
                   <div className="space-y-3">
                     {detailedData.statistics.map((stat: any, index: number) => (
@@ -390,7 +390,7 @@ export default function AnalyticsDashboard() {
       {/* Report Modal */}
       {showReportModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-lg shadow-xl max-w-2xl w-full m-4 max-h-[80vh] overflow-hidden">
+          <div className="bg-white rounded-sm shadow-xl max-w-2xl w-full m-4 max-h-[80vh] overflow-hidden">
             <div className="px-6 py-4 border-b border-gray-200 flex justify-between items-center">
               <h3 className="text-lg font-medium text-gray-900">Generate Report</h3>
               <button
@@ -409,7 +409,7 @@ export default function AnalyticsDashboard() {
                 <select
                   value={selectedReportType}
                   onChange={(e) => setSelectedReportType(e.target.value)}
-                  className="w-full p-3 border border-gray-300 rounded-md"
+                  className="w-full p-3 border border-gray-300 rounded-sm"
                 >
                   <option value="">Select report type...</option>
                   {REPORT_TYPES.map(type => (
@@ -423,7 +423,7 @@ export default function AnalyticsDashboard() {
               {reportData && (
                 <div className="mt-6 max-h-96 overflow-y-auto">
                   <h4 className="text-md font-medium text-gray-900 mb-3">Report Results</h4>
-                  <pre className="bg-gray-50 p-4 rounded-md text-xs overflow-x-auto">
+                  <pre className="bg-gray-50 p-4 rounded-sm text-xs overflow-x-auto">
                     {JSON.stringify(reportData, null, 2)}
                   </pre>
                 </div>
@@ -433,14 +433,14 @@ export default function AnalyticsDashboard() {
             <div className="px-6 py-4 bg-gray-50 flex justify-end space-x-3">
               <button
                 onClick={() => setShowReportModal(false)}
-                className="px-4 py-2 text-gray-700 border border-gray-300 rounded-md hover:bg-gray-50"
+                className="px-4 py-2 text-gray-700 border border-gray-300 rounded-sm hover:bg-gray-50"
               >
                 Close
               </button>
               <button
                 onClick={generateReport}
                 disabled={!selectedReportType || loading}
-                className="px-4 py-2 bg-violet-600 text-white rounded-md hover:bg-violet-700 disabled:opacity-50"
+                className="px-4 py-2 bg-gold-500 text-violet-950 rounded-sm hover:bg-gold-600 disabled:opacity-50"
               >
                 {loading ? 'Generating...' : 'Generate'}
               </button>

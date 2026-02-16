@@ -91,7 +91,7 @@ const JobTemplatesPage: React.FC = () => {
             {stats && (
               <div className="hidden md:flex items-center space-x-6 text-sm">
                 <div className="text-center">
-                  <div className="text-2xl font-bold text-violet-600">{stats.activeTemplates}</div>
+                  <div className="text-2xl font-bold text-gold-600">{stats.activeTemplates}</div>
                   <div className="text-gray-500">Active</div>
                 </div>
                 <div className="text-center">
@@ -111,9 +111,9 @@ const JobTemplatesPage: React.FC = () => {
             <div className="flex space-x-2">
               <button
                 onClick={() => setActiveView('list')}
-                className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
+                className={`px-4 py-2 rounded-sm text-sm font-medium transition-colors ${
                   activeView === 'list'
-                    ? 'bg-violet-600 text-white'
+                    ? 'bg-gold-500 text-violet-950'
                     : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                 }`}
               >
@@ -123,9 +123,9 @@ const JobTemplatesPage: React.FC = () => {
               
               <button
                 onClick={handleCreateNew}
-                className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
+                className={`px-4 py-2 rounded-sm text-sm font-medium transition-colors ${
                   activeView === 'editor'
-                    ? 'bg-violet-600 text-white'
+                    ? 'bg-gold-500 text-violet-950'
                     : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                 }`}
               >
@@ -135,9 +135,9 @@ const JobTemplatesPage: React.FC = () => {
               
               <button
                 onClick={() => setActiveView('generate')}
-                className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
+                className={`px-4 py-2 rounded-sm text-sm font-medium transition-colors ${
                   activeView === 'generate'
-                    ? 'bg-violet-600 text-white'
+                    ? 'bg-gold-500 text-violet-950'
                     : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                 }`}
               >
@@ -157,7 +157,7 @@ const JobTemplatesPage: React.FC = () => {
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Features Banner */}
-        <div className="mb-8 bg-gradient-to-r from-violet-600 to-violet-700 rounded-lg p-6 text-white">
+        <div className="mb-8 bg-violet-600 rounded-sm p-6 text-white">
           <h2 className="text-xl font-semibold mb-2">Job Ad Template Manager Features</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
             <div>
@@ -176,7 +176,7 @@ const JobTemplatesPage: React.FC = () => {
         </div>
 
         {/* Main Content */}
-        <div className="bg-white rounded-lg shadow-lg min-h-[600px]">
+        <div className="bg-white rounded-sm shadow-lg min-h-[600px]">
           {activeView === 'list' && (
             <TemplateList
               onEdit={handleEdit}
@@ -206,7 +206,7 @@ const JobTemplatesPage: React.FC = () => {
         </div>
 
         {/* Footer Info */}
-        <div className="mt-8 bg-white rounded-lg shadow p-6">
+        <div className="mt-8 bg-white rounded-sm shadow p-6">
           <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
             <ChartBarIcon className="w-5 h-5 mr-2" />
             Available Placeholders

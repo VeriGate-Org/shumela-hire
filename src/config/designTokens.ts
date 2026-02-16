@@ -257,7 +257,7 @@ export const enterpriseDesignTokens: DesignTokens = {
       medium: 500,
       semibold: 600,
       bold: 700,
-      extrabold: 800,
+      extrabold: 700,
     },
     lineHeight: {
       none: 1,
@@ -309,13 +309,13 @@ export const enterpriseDesignTokens: DesignTokens = {
   
   borderRadius: {
     none: '0px',
-    sm: '0.125rem',
-    base: '0.25rem',
-    md: '0.375rem',
-    lg: '0.5rem',
-    xl: '0.75rem',
-    '2xl': '1rem',
-    '3xl': '1.5rem',
+    sm: '2px',
+    base: '2px',
+    md: '2px',
+    lg: '2px',
+    xl: '4px',
+    '2xl': '4px',
+    '3xl': '4px',
     full: '9999px',
   },
   

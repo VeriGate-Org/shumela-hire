@@ -55,7 +55,7 @@ export default function AdminDashboard({ selectedTimeframe, onTimeframeChange }:
           <select
             value={selectedTimeframe}
             onChange={(e) => onTimeframeChange(e.target.value)}
-            className="border border-gray-300 rounded-lg px-3 py-2 text-sm"
+            className="border border-gray-300 rounded-sm px-3 py-2 text-sm"
           >
             <option value="7days">Last 7 days</option>
             <option value="30days">Last 30 days</option>
@@ -93,7 +93,7 @@ export default function AdminDashboard({ selectedTimeframe, onTimeframeChange }:
               size="large"
             >
               <div className="w-full h-64 overflow-hidden">
-                <div className="bg-gradient-to-r from-gray-50 to-violet-50 p-6 rounded-lg h-full flex items-center justify-center">
+                <div className="bg-gradient-to-r from-gray-50 to-violet-50 p-6 rounded-sm h-full flex items-center justify-center">
                   <p className="text-gray-600">System Health Chart Component</p>
                 </div>
               </div>
@@ -128,7 +128,7 @@ export default function AdminDashboard({ selectedTimeframe, onTimeframeChange }:
                     message: 'New user registration: jane.smith@company.com',
                     time: '12 minutes ago',
                     severity: 'medium',
-                    color: 'text-violet-600',
+                    color: 'text-gold-600',
                   },
                   {
                     id: '3',
@@ -147,7 +147,7 @@ export default function AdminDashboard({ selectedTimeframe, onTimeframeChange }:
                     color: 'text-orange-600',
                   },
                 ].map((event) => (
-                  <div key={event.id} className="flex items-start gap-3 p-3 hover:bg-gray-50 rounded-lg">
+                  <div key={event.id} className="flex items-start gap-3 p-3 hover:bg-gray-50 rounded-sm">
                     <div className={`w-2 h-2 rounded-full mt-2 flex-shrink-0 ${event.color.replace('text-', 'bg-')}`}></div>
                     <div className="flex-1 min-w-0">
                       <p className="text-sm text-gray-900 truncate">{event.message}</p>
@@ -177,7 +177,7 @@ export default function AdminDashboard({ selectedTimeframe, onTimeframeChange }:
                 ].map((action) => (
                   <button
                     key={action.label}
-                    className={`${action.color} text-white p-3 rounded-lg hover:opacity-90 transition-opacity text-sm font-medium text-center w-full flex items-center justify-center gap-2`}
+                    className={`${action.color} text-white p-3 rounded-sm hover:opacity-90 transition-opacity text-sm font-medium text-center w-full flex items-center justify-center gap-2`}
                   >
                     <span>{action.icon}</span>
                     {action.label}

@@ -35,7 +35,7 @@ const InterviewerDashboard: React.FC<InterviewerDashboardProps> = ({
           <select
             value={selectedTimeframe}
             onChange={(e) => onTimeframeChange(e.target.value)}
-            className="border border-gray-300 rounded-lg px-3 py-2 text-sm"
+            className="border border-gray-300 rounded-sm px-3 py-2 text-sm"
           >
             <option value="7days">Last 7 days</option>
             <option value="30days">Last 30 days</option>
@@ -46,40 +46,40 @@ const InterviewerDashboard: React.FC<InterviewerDashboardProps> = ({
 
       {/* Stats */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        <div className="bg-white rounded-lg border border-gray-200 p-5">
+        <div className="bg-white rounded-sm border border-gray-200 p-5">
           <h4 className="text-sm font-medium text-gray-500">Upcoming Interviews</h4>
-          <p className="text-2xl font-bold text-violet-600 mt-1">{upcomingInterviews.length}</p>
+          <p className="text-2xl font-bold text-gold-600 mt-1">{upcomingInterviews.length}</p>
         </div>
-        <div className="bg-white rounded-lg border border-gray-200 p-5">
+        <div className="bg-white rounded-sm border border-gray-200 p-5">
           <h4 className="text-sm font-medium text-gray-500">Pending Feedback</h4>
           <p className="text-2xl font-bold text-yellow-600 mt-1">{pendingFeedback.length}</p>
         </div>
-        <div className="bg-white rounded-lg border border-gray-200 p-5">
+        <div className="bg-white rounded-sm border border-gray-200 p-5">
           <h4 className="text-sm font-medium text-gray-500">Completed This Month</h4>
           <p className="text-2xl font-bold text-green-600 mt-1">12</p>
         </div>
-        <div className="bg-white rounded-lg border border-gray-200 p-5">
+        <div className="bg-white rounded-sm border border-gray-200 p-5">
           <h4 className="text-sm font-medium text-gray-500">Average Rating Given</h4>
           <p className="text-2xl font-bold text-purple-600 mt-1">4.2</p>
         </div>
       </div>
 
       {/* Upcoming Interviews */}
-      <div className="bg-white rounded-lg border border-gray-200 p-6">
+      <div className="bg-white rounded-sm border border-gray-200 border-t-2 border-t-gold-500 p-6">
         <h3 className="text-lg font-semibold text-gray-900 mb-4">Upcoming Interviews</h3>
         {upcomingInterviews.length === 0 ? (
           <p className="text-gray-500">No upcoming interviews scheduled.</p>
         ) : (
           <div className="space-y-3">
             {upcomingInterviews.map((interview) => (
-              <div key={interview.id} className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
+              <div key={interview.id} className="flex items-center justify-between p-4 bg-gray-50 rounded-sm">
                 <div>
                   <p className="font-medium text-gray-900">{interview.candidate}</p>
                   <p className="text-sm text-gray-500">{interview.position}</p>
                 </div>
                 <div className="text-right">
                   <p className="text-sm font-medium text-gray-900">{new Date(interview.date).toLocaleDateString()} at {interview.time}</p>
-                  <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-violet-100 text-violet-800">
+                  <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-gold-100 text-gold-800">
                     {interview.type}
                   </span>
                 </div>
@@ -90,21 +90,21 @@ const InterviewerDashboard: React.FC<InterviewerDashboardProps> = ({
       </div>
 
       {/* Pending Feedback */}
-      <div className="bg-white rounded-lg border border-gray-200 p-6">
+      <div className="bg-white rounded-sm border border-gray-200 border-t-2 border-t-gold-500 p-6">
         <h3 className="text-lg font-semibold text-gray-900 mb-4">Pending Feedback</h3>
         {pendingFeedback.length === 0 ? (
           <p className="text-gray-500">All feedback has been submitted.</p>
         ) : (
           <div className="space-y-3">
             {pendingFeedback.map((item) => (
-              <div key={item.id} className="flex items-center justify-between p-4 bg-yellow-50 rounded-lg border border-yellow-200">
+              <div key={item.id} className="flex items-center justify-between p-4 bg-yellow-50 rounded-sm border border-yellow-200">
                 <div>
                   <p className="font-medium text-gray-900">{item.candidate}</p>
                   <p className="text-sm text-gray-500">{item.position} — {item.type} Interview</p>
                 </div>
                 <div className="text-right">
                   <p className="text-sm text-gray-500">Interviewed {new Date(item.interviewDate).toLocaleDateString()}</p>
-                  <button className="mt-1 text-sm font-medium text-violet-600 hover:text-violet-800">
+                  <button className="mt-1 text-sm font-medium text-gold-600 hover:text-gold-800">
                     Submit Feedback
                   </button>
                 </div>

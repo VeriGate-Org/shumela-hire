@@ -137,7 +137,7 @@ const NotificationCenter: React.FC = () => {
       case 'success': return 'border-green-200 bg-green-50';
       case 'warning': return 'border-yellow-200 bg-yellow-50';
       case 'error': return 'border-red-200 bg-red-50';
-      case 'info': return 'border-violet-200 bg-violet-50';
+      case 'info': return 'border-violet-200 bg-gold-50';
       default: return 'border-gray-200 bg-gray-50';
     }
   };
@@ -197,7 +197,7 @@ const NotificationCenter: React.FC = () => {
           <div
             role="menu"
             aria-labelledby="notification-panel-title"
-            className="absolute right-0 mt-2 w-96 bg-white rounded-lg shadow-lg border border-gray-200 z-50 max-h-96 overflow-hidden"
+            className="absolute right-0 mt-2 w-96 bg-white rounded-sm shadow-lg border border-gray-200 z-50 max-h-96 overflow-hidden"
           >
             {/* Header */}
             <div className="px-4 py-3 border-b border-gray-200 flex items-center justify-between">
@@ -206,7 +206,7 @@ const NotificationCenter: React.FC = () => {
                 {unreadCount > 0 && (
                   <button
                     onClick={markAllAsRead}
-                    className="text-sm text-violet-600 hover:text-violet-800"
+                    className="text-sm text-gold-600 hover:text-gold-800"
                   >
                     Mark all read
                   </button>
@@ -241,7 +241,7 @@ const NotificationCenter: React.FC = () => {
                       type="checkbox"
                       checked={enabled}
                       onChange={(e) => updatePreference(type, e.target.checked)}
-                      className="rounded border-gray-300 text-violet-600 focus:ring-violet-500"
+                      className="rounded border-gray-300 text-gold-600 focus:ring-gold-500"
                     />
                   </label>
                 ))}
@@ -285,7 +285,7 @@ const NotificationCenter: React.FC = () => {
                         key={notification.id}
                         role="menuitem"
                         className={`relative p-4 border-b border-gray-100 hover:bg-gray-50 ${
-                          !notification.read ? 'bg-violet-50 border-l-4 border-l-violet-500' : ''
+                          !notification.read ? 'bg-gold-50 border-l-4 border-l-violet-500' : ''
                         }`}
                         onClick={() => !notification.read && markAsRead(notification.id)}
                       >
@@ -319,7 +319,7 @@ const NotificationCenter: React.FC = () => {
                                 <a
                                   href={notification.action.href}
                                   onClick={(e) => e.stopPropagation()}
-                                  className="text-xs text-violet-600 hover:text-violet-800 font-medium"
+                                  className="text-xs text-gold-600 hover:text-gold-800 font-medium"
                                 >
                                   {notification.action.label}
                                 </a>
@@ -327,7 +327,7 @@ const NotificationCenter: React.FC = () => {
                             </div>
                           </div>
                           {!notification.read && (
-                            <div className="absolute top-4 right-4 w-2 h-2 bg-violet-500 rounded-full"></div>
+                            <div className="absolute top-4 right-4 w-2 h-2 bg-gold-500 rounded-full"></div>
                           )}
                         </div>
                       </div>
@@ -342,7 +342,7 @@ const NotificationCenter: React.FC = () => {
               <a
                 href="/notifications"
                 role="menuitem"
-                className="text-sm text-violet-600 hover:text-violet-800 font-medium"
+                className="text-sm text-gold-600 hover:text-gold-800 font-medium"
               >
                 View all notifications →
               </a>

@@ -304,7 +304,7 @@ export default function CandidateProfilePage() {
     switch (status) {
       case 'hired': return 'bg-green-100 text-green-800';
       case 'offer_extended': return 'bg-yellow-100 text-yellow-800';
-      case 'interview_scheduled': return 'bg-violet-100 text-violet-800';
+      case 'interview_scheduled': return 'bg-gold-100 text-gold-800';
       case 'interview_completed': return 'bg-purple-100 text-purple-800';
       case 'reviewing': return 'bg-orange-100 text-orange-800';
       case 'rejected': return 'bg-red-100 text-red-800';
@@ -316,7 +316,7 @@ export default function CandidateProfilePage() {
   const getSkillLevelColor = (level: string) => {
     switch (level) {
       case 'expert': return 'bg-green-100 text-green-800 border-green-300';
-      case 'advanced': return 'bg-violet-100 text-violet-800 border-violet-300';
+      case 'advanced': return 'bg-gold-100 text-gold-800 border-violet-300';
       case 'intermediate': return 'bg-yellow-100 text-yellow-800 border-yellow-300';
       case 'beginner': return 'bg-gray-100 text-gray-800 border-gray-300';
       default: return 'bg-gray-100 text-gray-800 border-gray-300';
@@ -335,10 +335,10 @@ export default function CandidateProfilePage() {
     <div className="flex items-center gap-3">
       <button
         onClick={() => setIsEditing(!isEditing)}
-        className={`inline-flex items-center px-4 py-2 border text-sm font-medium rounded-md shadow-sm ${
-          isEditing 
-            ? 'border-gray-300 text-gray-700 bg-white hover:bg-gray-50' 
-            : 'border-transparent text-white bg-violet-600 hover:bg-violet-700'
+        className={`inline-flex items-center px-4 py-2 border text-sm font-medium rounded-full shadow-sm ${
+          isEditing
+            ? 'border-gray-300 text-gray-700 bg-white hover:bg-gray-50'
+            : 'bg-transparent border-2 border-gold-500 text-violet-900 hover:bg-gold-500 hover:text-violet-950 uppercase tracking-wider'
         }`}
       >
         <PencilIcon className="w-4 h-4 mr-2" />
@@ -351,7 +351,7 @@ export default function CandidateProfilePage() {
     return (
       <PageWrapper title="My Profile" subtitle="Loading your profile..." actions={actions}>
         <div className="flex items-center justify-center h-96">
-          <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-violet-500"></div>
+          <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-gold-500"></div>
         </div>
       </PageWrapper>
     );
@@ -365,10 +365,10 @@ export default function CandidateProfilePage() {
     >
       <div className="space-y-6">
         {/* Profile Header Card */}
-        <div className="bg-white rounded-lg shadow p-6">
+        <div className="bg-white rounded-sm shadow p-6">
           <div className="flex items-start space-x-6">
             <div className="relative">
-              <div className="w-24 h-24 bg-gradient-to-br from-violet-500 to-violet-700 rounded-full flex items-center justify-center">
+              <div className="w-24 h-24 bg-violet-600 rounded-full flex items-center justify-center">
                 {profile?.profileImage ? (
                   <img 
                     src={profile.profileImage} 
@@ -380,7 +380,7 @@ export default function CandidateProfilePage() {
                 )}
               </div>
               {isEditing && (
-                <button className="absolute -bottom-2 -right-2 p-2 bg-violet-600 text-white rounded-full shadow-sm hover:bg-violet-700">
+                <button className="absolute -bottom-2 -right-2 p-2 bg-gold-500 text-violet-950 rounded-full shadow-sm hover:bg-gold-600">
                   <CameraIcon className="w-4 h-4" />
                 </button>
               )}
@@ -392,7 +392,7 @@ export default function CandidateProfilePage() {
                   <h1 className="text-2xl font-bold text-gray-900">
                     {profile?.firstName} {profile?.lastName}
                   </h1>
-                  <p className="text-lg text-violet-600 font-medium mt-1">
+                  <p className="text-lg text-gold-600 font-medium mt-1">
                     {profile?.headline}
                   </p>
                   
@@ -434,7 +434,7 @@ export default function CandidateProfilePage() {
         </div>
 
         {/* Tab Navigation */}
-        <div className="bg-white rounded-lg shadow">
+        <div className="bg-white rounded-sm shadow">
           <div className="border-b border-gray-200">
             <nav className="flex space-x-8 px-6">
               {[
@@ -450,7 +450,7 @@ export default function CandidateProfilePage() {
                   onClick={() => setActiveTab(tab.id as any)}
                   className={`py-4 px-1 border-b-2 font-medium text-sm flex items-center space-x-2 ${
                     activeTab === tab.id
-                      ? 'border-violet-500 text-violet-600'
+                      ? 'border-gold-500 text-gold-700'
                       : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
                   }`}
                 >
@@ -528,7 +528,7 @@ export default function CandidateProfilePage() {
                         <label className="block text-sm font-medium text-gray-700">Preferred Job Types</label>
                         <div className="flex flex-wrap gap-2 mt-1">
                           {profile?.preferredJobTypes.map((type, index) => (
-                            <span key={index} className="px-2 py-1 bg-violet-100 text-violet-800 text-sm rounded-full">
+                            <span key={index} className="px-2 py-1 bg-gold-100 text-gold-800 text-sm rounded-full">
                               {type}
                             </span>
                           ))}
@@ -546,7 +546,7 @@ export default function CandidateProfilePage() {
                 <div className="flex items-center justify-between">
                   <h3 className="text-lg font-semibold text-gray-900">Work Experience</h3>
                   {isEditing && (
-                    <button className="inline-flex items-center px-3 py-2 border border-transparent text-sm font-medium rounded-md text-violet-600 hover:bg-violet-50">
+                    <button className="inline-flex items-center px-3 py-2 border border-transparent text-sm font-medium rounded-full text-gold-600 hover:bg-gold-50">
                       <PlusIcon className="w-4 h-4 mr-2" />
                       Add Experience
                     </button>
@@ -555,16 +555,16 @@ export default function CandidateProfilePage() {
                 
                 <div className="space-y-6">
                   {experiences.map((exp, index) => (
-                    <div key={exp.id} className="border border-gray-200 rounded-lg p-6">
+                    <div key={exp.id} className="border border-gray-200 rounded-sm p-6">
                       <div className="flex items-start justify-between">
                         <div className="flex-1">
                           <div className="flex items-start space-x-4">
-                            <div className="w-12 h-12 bg-gray-100 rounded-lg flex items-center justify-center">
+                            <div className="w-12 h-12 bg-gray-100 rounded-sm flex items-center justify-center">
                               <BriefcaseIcon className="w-6 h-6 text-gray-600" />
                             </div>
                             <div className="flex-1">
                               <h4 className="text-lg font-semibold text-gray-900">{exp.position}</h4>
-                              <p className="text-violet-600 font-medium">{exp.company}</p>
+                              <p className="text-gold-600 font-medium">{exp.company}</p>
                               <div className="flex items-center space-x-4 mt-2 text-sm text-gray-600">
                                 <span>
                                   {new Date(exp.startDate).toLocaleDateString()} - {
@@ -596,7 +596,7 @@ export default function CandidateProfilePage() {
                         
                         {isEditing && (
                           <div className="flex space-x-2">
-                            <button className="p-2 text-gray-400 hover:text-violet-600">
+                            <button className="p-2 text-gray-400 hover:text-gold-600">
                               <PencilIcon className="w-4 h-4" />
                             </button>
                             <button className="p-2 text-gray-400 hover:text-red-600">
@@ -617,7 +617,7 @@ export default function CandidateProfilePage() {
                 <div className="flex items-center justify-between">
                   <h3 className="text-lg font-semibold text-gray-900">Education</h3>
                   {isEditing && (
-                    <button className="inline-flex items-center px-3 py-2 border border-transparent text-sm font-medium rounded-md text-violet-600 hover:bg-violet-50">
+                    <button className="inline-flex items-center px-3 py-2 border border-transparent text-sm font-medium rounded-full text-gold-600 hover:bg-gold-50">
                       <PlusIcon className="w-4 h-4 mr-2" />
                       Add Education
                     </button>
@@ -626,16 +626,16 @@ export default function CandidateProfilePage() {
                 
                 <div className="space-y-6">
                   {education.map((edu, index) => (
-                    <div key={edu.id} className="border border-gray-200 rounded-lg p-6">
+                    <div key={edu.id} className="border border-gray-200 rounded-sm p-6">
                       <div className="flex items-start justify-between">
                         <div className="flex-1">
                           <div className="flex items-start space-x-4">
-                            <div className="w-12 h-12 bg-gray-100 rounded-lg flex items-center justify-center">
+                            <div className="w-12 h-12 bg-gray-100 rounded-sm flex items-center justify-center">
                               <AcademicCapIcon className="w-6 h-6 text-gray-600" />
                             </div>
                             <div className="flex-1">
                               <h4 className="text-lg font-semibold text-gray-900">{edu.degree} in {edu.field}</h4>
-                              <p className="text-violet-600 font-medium">{edu.institution}</p>
+                              <p className="text-gold-600 font-medium">{edu.institution}</p>
                               <div className="flex items-center space-x-4 mt-2 text-sm text-gray-600">
                                 <span>
                                   {edu.startYear} - {edu.isCurrent ? 'Present' : edu.endYear}
@@ -668,7 +668,7 @@ export default function CandidateProfilePage() {
                         
                         {isEditing && (
                           <div className="flex space-x-2">
-                            <button className="p-2 text-gray-400 hover:text-violet-600">
+                            <button className="p-2 text-gray-400 hover:text-gold-600">
                               <PencilIcon className="w-4 h-4" />
                             </button>
                             <button className="p-2 text-gray-400 hover:text-red-600">
@@ -689,7 +689,7 @@ export default function CandidateProfilePage() {
                 <div className="flex items-center justify-between">
                   <h3 className="text-lg font-semibold text-gray-900">Skills & Expertise</h3>
                   {isEditing && (
-                    <button className="inline-flex items-center px-3 py-2 border border-transparent text-sm font-medium rounded-md text-violet-600 hover:bg-violet-50">
+                    <button className="inline-flex items-center px-3 py-2 border border-transparent text-sm font-medium rounded-full text-gold-600 hover:bg-gold-50">
                       <PlusIcon className="w-4 h-4 mr-2" />
                       Add Skill
                     </button>
@@ -708,7 +708,7 @@ export default function CandidateProfilePage() {
                       <div className="space-y-3">
                         {skills.filter(skill => skill.category === category).map((skill) => (
                           <div key={skill.id} className="relative">
-                            <div className={`inline-flex items-center px-3 py-2 rounded-lg border text-sm font-medium ${getSkillLevelColor(skill.level)}`}>
+                            <div className={`inline-flex items-center px-3 py-2 rounded-sm border text-sm font-medium ${getSkillLevelColor(skill.level)}`}>
                               <span>{skill.name}</span>
                               <span className="ml-2 text-xs opacity-75">
                                 {skill.level} ({skill.years}y)
@@ -734,7 +734,7 @@ export default function CandidateProfilePage() {
                 <div className="flex items-center justify-between">
                   <h3 className="text-lg font-semibold text-gray-900">Documents & Portfolio</h3>
                   {isEditing && (
-                    <button className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-violet-600 hover:bg-violet-700">
+                    <button className="inline-flex items-center px-4 py-2 bg-transparent border-2 border-gold-500 text-violet-900 hover:bg-gold-500 hover:text-violet-950 uppercase tracking-wider rounded-full text-sm font-medium">
                       <ArrowUpTrayIcon className="w-4 h-4 mr-2" />
                       Upload Document
                     </button>
@@ -743,11 +743,11 @@ export default function CandidateProfilePage() {
                 
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                   {documents.map((doc) => (
-                    <div key={doc.id} className="border border-gray-200 rounded-lg p-4 hover:border-gray-300 transition-colors">
+                    <div key={doc.id} className="border border-gray-200 rounded-sm p-4 hover:border-gray-300 transition-colors">
                       <div className="flex items-start justify-between">
                         <div className="flex items-start space-x-3">
-                          <div className="w-10 h-10 bg-violet-100 rounded-lg flex items-center justify-center">
-                            <DocumentTextIcon className="w-5 h-5 text-violet-600" />
+                          <div className="w-10 h-10 bg-gold-100 rounded-sm flex items-center justify-center">
+                            <DocumentTextIcon className="w-5 h-5 text-gold-600" />
                           </div>
                           <div className="flex-1 min-w-0">
                             <p className="text-sm font-medium text-gray-900 truncate">{doc.name}</p>
@@ -759,7 +759,7 @@ export default function CandidateProfilePage() {
                         </div>
                         
                         <div className="flex space-x-1">
-                          <button className="p-1 text-gray-400 hover:text-violet-600">
+                          <button className="p-1 text-gray-400 hover:text-gold-600">
                             <EyeIcon className="w-4 h-4" />
                           </button>
                           {isEditing && (
@@ -787,16 +787,16 @@ export default function CandidateProfilePage() {
                 
                 <div className="space-y-4">
                   {applications.map((app) => (
-                    <div key={app.id} className="border border-gray-200 rounded-lg p-6 hover:border-gray-300 transition-colors">
+                    <div key={app.id} className="border border-gray-200 rounded-sm p-6 hover:border-gray-300 transition-colors">
                       <div className="flex items-start justify-between">
                         <div className="flex-1">
                           <div className="flex items-center space-x-3">
-                            <div className="w-12 h-12 bg-gray-100 rounded-lg flex items-center justify-center">
+                            <div className="w-12 h-12 bg-gray-100 rounded-sm flex items-center justify-center">
                               <BriefcaseIcon className="w-6 h-6 text-gray-600" />
                             </div>
                             <div>
                               <h4 className="text-lg font-semibold text-gray-900">{app.jobTitle}</h4>
-                              <p className="text-violet-600 font-medium">{app.company}</p>
+                              <p className="text-gold-600 font-medium">{app.company}</p>
                               <p className="text-sm text-gray-600 mt-1">
                                 Applied on {new Date(app.appliedDate).toLocaleDateString()}
                               </p>
@@ -810,7 +810,7 @@ export default function CandidateProfilePage() {
                             </span>
                             <span className="text-sm text-gray-600">Current Stage: {app.currentStage}</span>
                             {app.interviewDate && (
-                              <span className="text-sm text-violet-600">
+                              <span className="text-sm text-gold-600">
                                 Interview: {new Date(app.interviewDate).toLocaleDateString()}
                               </span>
                             )}
@@ -824,7 +824,7 @@ export default function CandidateProfilePage() {
                         </div>
                         
                         <div className="flex space-x-2">
-                          <button className="p-2 text-gray-400 hover:text-violet-600">
+                          <button className="p-2 text-gray-400 hover:text-gold-600">
                             <EyeIcon className="w-5 h-5" />
                           </button>
                           <button className="p-2 text-gray-400 hover:text-gray-600">

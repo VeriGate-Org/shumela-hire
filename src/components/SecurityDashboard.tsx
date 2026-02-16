@@ -40,7 +40,7 @@ const SecurityDashboard: React.FC = () => {
 
   if (!hasPermission('SECURITY_VIEW')) {
     return (
-      <div className="bg-red-50 border border-red-200 rounded-md p-4">
+      <div className="bg-red-50 border border-red-200 rounded-sm p-4">
         <div className="flex">
           <div className="ml-3">
             <h3 className="text-sm font-medium text-red-800">
@@ -58,7 +58,7 @@ const SecurityDashboard: React.FC = () => {
   return (
     <div className="space-y-6">
       {/* Security Status Overview */}
-      <div className="bg-white shadow rounded-lg">
+      <div className="bg-white shadow rounded-sm">
         <div className="px-4 py-5 sm:p-6">
           <h3 className="text-lg leading-6 font-medium text-gray-900">
             Security Status Overview
@@ -93,25 +93,25 @@ const SecurityDashboard: React.FC = () => {
 
       {/* Failed Login Attempts */}
       {securityReport?.failedLogins && (
-        <div className="bg-white shadow rounded-lg">
+        <div className="bg-white shadow rounded-sm">
           <div className="px-4 py-5 sm:p-6">
             <h3 className="text-lg leading-6 font-medium text-gray-900">
               Failed Login Attempts
             </h3>
             <div className="mt-4 grid grid-cols-1 sm:grid-cols-3 gap-4">
-              <div className="bg-red-50 p-4 rounded-lg">
+              <div className="bg-red-50 p-4 rounded-sm">
                 <dt className="text-sm font-medium text-red-800">Total Attempts</dt>
                 <dd className="mt-1 text-2xl font-semibold text-red-900">
                   {securityReport.failedLogins.totalAttempts}
                 </dd>
               </div>
-              <div className="bg-orange-50 p-4 rounded-lg">
+              <div className="bg-orange-50 p-4 rounded-sm">
                 <dt className="text-sm font-medium text-orange-800">Unique IPs</dt>
                 <dd className="mt-1 text-2xl font-semibold text-orange-900">
                   {securityReport.failedLogins.uniqueIPs}
                 </dd>
               </div>
-              <div className="bg-yellow-50 p-4 rounded-lg">
+              <div className="bg-yellow-50 p-4 rounded-sm">
                 <dt className="text-sm font-medium text-yellow-800">Recent (24h)</dt>
                 <dd className="mt-1 text-2xl font-semibold text-yellow-900">
                   {securityReport.failedLogins.recentAttempts}
@@ -124,7 +124,7 @@ const SecurityDashboard: React.FC = () => {
 
       {/* Account Security Status */}
       {securityReport?.accountSecurity && (
-        <div className="bg-white shadow rounded-lg">
+        <div className="bg-white shadow rounded-sm">
           <div className="px-4 py-5 sm:p-6">
             <h3 className="text-lg leading-6 font-medium text-gray-900">
               Account Security Status
@@ -133,7 +133,7 @@ const SecurityDashboard: React.FC = () => {
               <SecurityStat
                 title="Total Users"
                 value={securityReport.accountSecurity.totalUsers}
-                color="text-violet-600"
+                color="text-gold-600"
               />
               <SecurityStat
                 title="Enabled Users"
@@ -157,7 +157,7 @@ const SecurityDashboard: React.FC = () => {
 
       {/* Security Recommendations */}
       {securityReport?.recommendations && securityReport.recommendations.length > 0 && (
-        <div className="bg-white shadow rounded-lg">
+        <div className="bg-white shadow rounded-sm">
           <div className="px-4 py-5 sm:p-6">
             <h3 className="text-lg leading-6 font-medium text-gray-900">
               Security Recommendations
@@ -181,7 +181,7 @@ const SecurityDashboard: React.FC = () => {
       )}
 
       {/* Quick Actions */}
-      <div className="bg-white shadow rounded-lg">
+      <div className="bg-white shadow rounded-sm">
         <div className="px-4 py-5 sm:p-6">
           <h3 className="text-lg leading-6 font-medium text-gray-900">
             Quick Security Actions
@@ -189,16 +189,16 @@ const SecurityDashboard: React.FC = () => {
           <div className="mt-4 flex flex-wrap gap-4">
             <button
               onClick={loadSecurityReport}
-              className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-violet-600 hover:bg-violet-700"
+              className="inline-flex items-center px-4 py-2 border-2 border-gold-500 text-sm font-medium rounded-full text-violet-900 bg-transparent hover:bg-gold-500 hover:text-violet-950 uppercase tracking-wider"
             >
               Refresh Report
             </button>
             {hasPermission('SECURITY_MANAGE') && (
               <>
-                <button className="inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">
+                <button className="inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-sm text-gray-700 bg-white hover:bg-gray-50">
                   Manage IP Blocks
                 </button>
-                <button className="inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">
+                <button className="inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-sm text-gray-700 bg-white hover:bg-gray-50">
                   Export Audit Logs
                 </button>
               </>

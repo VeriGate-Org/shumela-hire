@@ -472,7 +472,7 @@ export default function LeadershipTeamPage() {
     switch (type) {
       case 'critical': return 'bg-red-50 border-red-200 text-red-800';
       case 'warning': return 'bg-yellow-50 border-yellow-200 text-yellow-800';
-      case 'info': return 'bg-violet-50 border-violet-200 text-violet-800';
+      case 'info': return 'bg-gold-50 border-violet-200 text-violet-800';
       case 'opportunity': return 'bg-green-50 border-green-200 text-green-800';
       default: return 'bg-gray-50 border-gray-200 text-gray-800';
     }
@@ -501,7 +501,7 @@ export default function LeadershipTeamPage() {
     switch (status) {
       case 'on_track': return 'bg-green-100 text-green-800 border-green-300';
       case 'at_risk': return 'bg-yellow-100 text-yellow-800 border-yellow-300';
-      case 'completed': return 'bg-violet-100 text-violet-800 border-violet-300';
+      case 'completed': return 'bg-gold-100 text-gold-800 border-violet-300';
       case 'delayed': return 'bg-red-100 text-red-800 border-red-300';
       default: return 'bg-gray-100 text-gray-800 border-gray-300';
     }
@@ -530,14 +530,14 @@ export default function LeadershipTeamPage() {
               placeholder="Search leaders..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="pl-10 pr-4 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-violet-500/60 focus:border-violet-400"
+              className="pl-10 pr-4 py-2 border border-gray-300 rounded-sm text-sm focus:ring-2 focus:ring-gold-500/60 focus:border-violet-400"
             />
           </div>
           
           <select
             value={filterDepartment}
             onChange={(e) => setFilterDepartment(e.target.value)}
-            className="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-violet-500/60 focus:border-violet-400"
+            className="px-3 py-2 border border-gray-300 rounded-sm text-sm focus:ring-2 focus:ring-gold-500/60 focus:border-violet-400"
           >
             <option value="all">All Departments</option>
             {departments.map(dept => (
@@ -547,7 +547,7 @@ export default function LeadershipTeamPage() {
         </>
       )}
       
-      <button className="flex items-center px-4 py-2 bg-violet-600 text-white rounded-lg hover:bg-violet-700 text-sm font-medium">
+      <button className="flex items-center px-4 py-2 bg-transparent border-2 border-gold-500 text-violet-900 hover:bg-gold-500 hover:text-violet-950 uppercase tracking-wider rounded-full text-sm font-medium">
         <PlusIcon className="w-4 h-4 mr-2" />
         Export Directory
       </button>
@@ -558,7 +558,7 @@ export default function LeadershipTeamPage() {
     return (
       <PageWrapper title="Leadership Team" subtitle="Loading leadership data..." actions={actions}>
         <div className="flex items-center justify-center h-96">
-          <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-violet-500"></div>
+          <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-gold-500"></div>
         </div>
       </PageWrapper>
     );
@@ -572,7 +572,7 @@ export default function LeadershipTeamPage() {
     >
       <div className="space-y-6">
         {/* View Navigation */}
-        <div className="bg-white rounded-lg shadow p-4">
+        <div className="bg-white rounded-sm shadow p-4">
           <nav className="flex space-x-8">
             {[
               { id: 'overview', name: 'Team Overview', icon: ChartBarIcon },
@@ -583,9 +583,9 @@ export default function LeadershipTeamPage() {
               <button
                 key={item.id}
                 onClick={() => setActiveView(item.id as any)}
-                className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+                className={`flex items-center gap-2 px-4 py-2 rounded-sm text-sm font-medium transition-colors ${
                   activeView === item.id
-                    ? 'bg-violet-100 text-violet-700'
+                    ? 'bg-gold-100 text-violet-700'
                     : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
                 }`}
               >
@@ -601,7 +601,7 @@ export default function LeadershipTeamPage() {
           <div className="space-y-6">
             {/* Key Leadership Metrics */}
             <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
-              <div className="bg-white rounded-lg shadow p-6">
+              <div className="bg-white rounded-sm shadow p-6">
                 <div className="flex items-center">
                   <UsersIcon className="w-8 h-8 text-violet-500" />
                   <div className="ml-4">
@@ -614,7 +614,7 @@ export default function LeadershipTeamPage() {
                 </div>
               </div>
 
-              <div className="bg-white rounded-lg shadow p-6">
+              <div className="bg-white rounded-sm shadow p-6">
                 <div className="flex items-center">
                   <TrophyIconSolid className="w-8 h-8 text-purple-500" />
                   <div className="ml-4">
@@ -625,7 +625,7 @@ export default function LeadershipTeamPage() {
                 </div>
               </div>
 
-              <div className="bg-white rounded-lg shadow p-6">
+              <div className="bg-white rounded-sm shadow p-6">
                 <div className="flex items-center">
                   <ShieldCheckIcon className="w-8 h-8 text-green-500" />
                   <div className="ml-4">
@@ -636,7 +636,7 @@ export default function LeadershipTeamPage() {
                 </div>
               </div>
 
-              <div className="bg-white rounded-lg shadow p-6">
+              <div className="bg-white rounded-sm shadow p-6">
                 <div className="flex items-center">
                   <StarIconSolid className="w-8 h-8 text-orange-500" />
                   <div className="ml-4">
@@ -649,13 +649,13 @@ export default function LeadershipTeamPage() {
             </div>
 
             {/* Leadership Alerts */}
-            <div className="bg-white rounded-lg shadow">
+            <div className="bg-white rounded-sm shadow">
               <div className="p-6 border-b border-gray-200">
                 <h3 className="text-lg font-medium text-gray-900">Leadership Alerts</h3>
               </div>
               <div className="p-6 space-y-4">
                 {alerts.map((alert) => (
-                  <div key={alert.id} className={`p-4 rounded-lg border ${getAlertColor(alert.type)}`}>
+                  <div key={alert.id} className={`p-4 rounded-sm border ${getAlertColor(alert.type)}`}>
                     <div className="flex items-start">
                       <div className="flex-shrink-0">
                         {getAlertIcon(alert.type)}
@@ -681,7 +681,7 @@ export default function LeadershipTeamPage() {
             </div>
 
             {/* Executive Team Summary */}
-            <div className="bg-white rounded-lg shadow">
+            <div className="bg-white rounded-sm shadow">
               <div className="p-6 border-b border-gray-200">
                 <h3 className="text-lg font-medium text-gray-900">Executive Team at a Glance</h3>
               </div>
@@ -689,7 +689,7 @@ export default function LeadershipTeamPage() {
                 <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
                   {leaders.slice(0, 4).map((leader) => (
                     <div key={leader.id} className="text-center">
-                      <div className="w-16 h-16 bg-violet-100 rounded-full flex items-center justify-center mx-auto mb-3 text-2xl">
+                      <div className="w-16 h-16 bg-gold-100 rounded-full flex items-center justify-center mx-auto mb-3 text-2xl">
                         {leader.avatar}
                       </div>
                       <h4 className="text-lg font-semibold text-gray-900">{leader.name}</h4>
@@ -715,11 +715,11 @@ export default function LeadershipTeamPage() {
           <div className="space-y-6">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
               {filteredLeaders.map((leader) => (
-                <div key={leader.id} className="bg-white rounded-lg shadow border-l-4 border-l-violet-500">
+                <div key={leader.id} className="bg-white rounded-sm shadow border-l-4 border-l-violet-500">
                   <div className="p-6">
                     <div className="flex items-start justify-between mb-4">
                       <div className="flex items-center space-x-4">
-                        <div className="w-12 h-12 bg-violet-100 rounded-full flex items-center justify-center text-xl">
+                        <div className="w-12 h-12 bg-gold-100 rounded-full flex items-center justify-center text-xl">
                           {leader.avatar}
                         </div>
                         <div>
@@ -730,7 +730,7 @@ export default function LeadershipTeamPage() {
                       </div>
                       <button
                         onClick={() => setSelectedLeader(leader)}
-                        className="flex items-center px-3 py-1 text-xs font-medium text-violet-600 bg-violet-50 rounded-full hover:bg-violet-100"
+                        className="flex items-center px-3 py-1 text-xs font-medium text-gold-600 bg-gold-50 rounded-full hover:bg-gold-100"
                       >
                         <EyeIcon className="w-3 h-3 mr-1" />
                         View Profile
@@ -777,12 +777,12 @@ export default function LeadershipTeamPage() {
                     </div>
 
                     <div className="flex items-center space-x-4 text-sm">
-                      <a href={`mailto:${leader.email}`} className="flex items-center text-violet-600 hover:text-violet-800">
+                      <a href={`mailto:${leader.email}`} className="flex items-center text-gold-600 hover:text-gold-800">
                         <EnvelopeIcon className="w-4 h-4 mr-1" />
                         Email
                       </a>
                       {leader.socialLinks.linkedin && (
-                        <a href={leader.socialLinks.linkedin} className="flex items-center text-violet-600 hover:text-violet-800">
+                        <a href={leader.socialLinks.linkedin} className="flex items-center text-gold-600 hover:text-gold-800">
                           <LinkIcon className="w-4 h-4 mr-1" />
                           LinkedIn
                         </a>
@@ -801,16 +801,16 @@ export default function LeadershipTeamPage() {
         {/* Performance Metrics */}
         {activeView === 'performance' && (
           <div className="space-y-6">
-            <div className="bg-white rounded-lg shadow">
+            <div className="bg-white rounded-sm shadow">
               <div className="p-6 border-b border-gray-200">
                 <h3 className="text-lg font-medium text-gray-900">Leadership Performance Dashboard</h3>
               </div>
               <div className="p-6">
                 <div className="space-y-8">
                   {leaders.map((leader) => (
-                    <div key={leader.id} className="border border-gray-200 rounded-lg p-4">
+                    <div key={leader.id} className="border border-gray-200 rounded-sm p-4">
                       <div className="flex items-center space-x-4 mb-4">
-                        <div className="w-10 h-10 bg-violet-100 rounded-full flex items-center justify-center text-lg">
+                        <div className="w-10 h-10 bg-gold-100 rounded-full flex items-center justify-center text-lg">
                           {leader.avatar}
                         </div>
                         <div>
@@ -824,7 +824,7 @@ export default function LeadershipTeamPage() {
                           <p className="text-sm text-gray-500 mb-1">Team Performance</p>
                           <div className="flex items-center">
                             <div className="w-16 bg-gray-200 rounded-full h-2 mr-2">
-                              <div className="bg-violet-500 h-2 rounded-full" style={{ width: `${leader.metrics.teamPerformance * 20}%` }}></div>
+                              <div className="bg-gold-500 h-2 rounded-full" style={{ width: `${leader.metrics.teamPerformance * 20}%` }}></div>
                             </div>
                             <span className="text-sm font-medium">{leader.metrics.teamPerformance}/5.0</span>
                           </div>
@@ -881,17 +881,17 @@ export default function LeadershipTeamPage() {
         {/* Succession Planning */}
         {activeView === 'succession' && (
           <div className="space-y-6">
-            <div className="bg-white rounded-lg shadow">
+            <div className="bg-white rounded-sm shadow">
               <div className="p-6 border-b border-gray-200">
                 <h3 className="text-lg font-medium text-gray-900">Leadership Succession Planning</h3>
               </div>
               <div className="p-6">
                 <div className="space-y-6">
                   {leaders.map((leader) => (
-                    <div key={leader.id} className="border border-gray-200 rounded-lg p-4">
+                    <div key={leader.id} className="border border-gray-200 rounded-sm p-4">
                       <div className="flex items-center justify-between mb-4">
                         <div className="flex items-center space-x-4">
-                          <div className="w-10 h-10 bg-violet-100 rounded-full flex items-center justify-center text-lg">
+                          <div className="w-10 h-10 bg-gold-100 rounded-full flex items-center justify-center text-lg">
                             {leader.avatar}
                           </div>
                           <div>
@@ -915,7 +915,7 @@ export default function LeadershipTeamPage() {
                           <p className="text-sm text-gray-500 mb-2">Potential Successors</p>
                           <div className="space-y-1">
                             {leader.successionPlan.potentialSuccessors.map((successor, index) => (
-                              <span key={index} className="inline-block text-xs px-2 py-1 bg-violet-100 text-violet-800 rounded-full mr-1">
+                              <span key={index} className="inline-block text-xs px-2 py-1 bg-gold-100 text-gold-800 rounded-full mr-1">
                                 {successor}
                               </span>
                             ))}
@@ -944,11 +944,11 @@ export default function LeadershipTeamPage() {
         {/* Leader Profile Modal */}
         {selectedLeader && (
           <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-            <div className="bg-white rounded-lg shadow-xl max-w-6xl w-full max-h-[90vh] overflow-y-auto">
+            <div className="bg-white rounded-sm shadow-xl max-w-6xl w-full max-h-[90vh] overflow-y-auto">
               <div className="p-6">
                 <div className="flex items-start justify-between mb-6">
                   <div className="flex items-center space-x-4">
-                    <div className="w-16 h-16 bg-violet-100 rounded-full flex items-center justify-center text-2xl">
+                    <div className="w-16 h-16 bg-gold-100 rounded-full flex items-center justify-center text-2xl">
                       {selectedLeader.avatar}
                     </div>
                     <div>
@@ -975,12 +975,12 @@ export default function LeadershipTeamPage() {
                     <div>
                       <h3 className="text-lg font-semibold text-gray-900 mb-3">Experience</h3>
                       <div className="space-y-3">
-                        <div className="bg-violet-50 border border-violet-200 rounded-lg p-3">
+                        <div className="bg-gold-50 border border-violet-200 rounded-sm p-3">
                           <h4 className="font-medium text-violet-900">{selectedLeader.title}</h4>
                           <p className="text-sm text-violet-700">Current Company • {selectedLeader.experience.yearsAtCompany} years</p>
                         </div>
                         {selectedLeader.experience.previousRoles.map((role, index) => (
-                          <div key={index} className="bg-gray-50 border border-gray-200 rounded-lg p-3">
+                          <div key={index} className="bg-gray-50 border border-gray-200 rounded-sm p-3">
                             <h4 className="font-medium text-gray-900">{role.title}</h4>
                             <p className="text-sm text-gray-600">{role.company} • {role.duration}</p>
                           </div>
@@ -992,7 +992,7 @@ export default function LeadershipTeamPage() {
                       <h3 className="text-lg font-semibold text-gray-900 mb-3">Current Focus Areas</h3>
                       <div className="space-y-3">
                         {selectedLeader.currentFocus.map((focus, index) => (
-                          <div key={index} className="flex items-center justify-between p-3 bg-gray-50 border border-gray-200 rounded-lg">
+                          <div key={index} className="flex items-center justify-between p-3 bg-gray-50 border border-gray-200 rounded-sm">
                             <div>
                               <h4 className="font-medium text-gray-900">{focus.initiative}</h4>
                               <p className="text-sm text-gray-600">Timeline: {focus.timeline}</p>
@@ -1035,7 +1035,7 @@ export default function LeadershipTeamPage() {
                       <div className="space-y-2 text-sm">
                         <div className="flex items-center">
                           <EnvelopeIcon className="w-4 h-4 text-gray-400 mr-2" />
-                          <a href={`mailto:${selectedLeader.email}`} className="text-violet-600 hover:text-violet-800">
+                          <a href={`mailto:${selectedLeader.email}`} className="text-gold-600 hover:text-gold-800">
                             {selectedLeader.email}
                           </a>
                         </div>
@@ -1061,7 +1061,7 @@ export default function LeadershipTeamPage() {
                             <span className="font-medium">{selectedLeader.metrics.teamPerformance}/5.0</span>
                           </div>
                           <div className="w-full bg-gray-200 rounded-full h-2">
-                            <div className="bg-violet-500 h-2 rounded-full" style={{ width: `${selectedLeader.metrics.teamPerformance * 20}%` }}></div>
+                            <div className="bg-gold-500 h-2 rounded-full" style={{ width: `${selectedLeader.metrics.teamPerformance * 20}%` }}></div>
                           </div>
                         </div>
                         
@@ -1129,7 +1129,7 @@ export default function LeadershipTeamPage() {
                 <div className="flex justify-end mt-6 pt-6 border-t">
                   <button
                     onClick={() => setSelectedLeader(null)}
-                    className="px-6 py-2 bg-violet-600 text-white rounded-lg hover:bg-violet-700"
+                    className="px-6 py-2 bg-transparent border-2 border-gold-500 text-violet-900 hover:bg-gold-500 hover:text-violet-950 uppercase tracking-wider rounded-full"
                   >
                     Close
                   </button>

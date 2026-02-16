@@ -137,7 +137,7 @@ const RecruiterDashboard: React.FC = () => {
   const getStatusBadgeColor = (status: string) => {
     switch (status.toLowerCase()) {
       case 'hired': return 'bg-green-100 text-green-800';
-      case 'interview_scheduled': return 'bg-violet-100 text-violet-800';
+      case 'interview_scheduled': return 'bg-gold-100 text-gold-800';
       case 'screening': return 'bg-yellow-100 text-yellow-800';
       case 'rejected': return 'bg-red-100 text-red-800';
       case 'withdrawn': return 'bg-gray-100 text-gray-800';
@@ -148,7 +148,7 @@ const RecruiterDashboard: React.FC = () => {
   if (loading) {
     return (
       <div className="flex justify-center items-center min-h-screen">
-        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-violet-600"></div>
+        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-gold-500"></div>
       </div>
     );
   }
@@ -156,12 +156,12 @@ const RecruiterDashboard: React.FC = () => {
   if (error) {
     return (
       <div className="flex justify-center items-center min-h-screen">
-        <div className="bg-white p-8 rounded-lg shadow-lg max-w-md w-full">
+        <div className="bg-white p-8 rounded-sm shadow-lg max-w-md w-full">
           <h2 className="text-xl font-semibold text-red-600 mb-4">Error</h2>
           <p className="text-gray-600 mb-4">{error}</p>
           <button 
             onClick={fetchDashboardData}
-            className="bg-violet-600 text-white px-4 py-2 rounded hover:bg-violet-700"
+            className="bg-gold-500 text-violet-950 px-4 py-2 rounded hover:bg-gold-600"
           >
             Try Again
           </button>
@@ -208,22 +208,22 @@ const RecruiterDashboard: React.FC = () => {
       {/* KPI Cards */}
       {metrics && (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          <div className="bg-white p-6 rounded-lg shadow">
+          <div className="bg-white p-6 rounded-sm shadow">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm font-medium text-gray-600">Total Applications</p>
                 <p className="text-2xl font-bold text-gray-900">{metrics.totalApplications}</p>
                 <p className="text-xs text-gray-500">{metrics.newApplicants} new applicants</p>
               </div>
-              <div className="p-3 bg-violet-100 rounded-full">
-                <svg className="w-6 h-6 text-violet-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <div className="p-3 bg-gold-100 rounded-full">
+                <svg className="w-6 h-6 text-gold-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
                 </svg>
               </div>
             </div>
           </div>
 
-          <div className="bg-white p-6 rounded-lg shadow">
+          <div className="bg-white p-6 rounded-sm shadow">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm font-medium text-gray-600">Active Job Postings</p>
@@ -238,7 +238,7 @@ const RecruiterDashboard: React.FC = () => {
             </div>
           </div>
 
-          <div className="bg-white p-6 rounded-lg shadow">
+          <div className="bg-white p-6 rounded-sm shadow">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm font-medium text-gray-600">Interview Rate</p>
@@ -253,7 +253,7 @@ const RecruiterDashboard: React.FC = () => {
             </div>
           </div>
 
-          <div className="bg-white p-6 rounded-lg shadow">
+          <div className="bg-white p-6 rounded-sm shadow">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm font-medium text-gray-600">Hire Rate</p>
@@ -273,7 +273,7 @@ const RecruiterDashboard: React.FC = () => {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Pipeline Funnel */}
         {pipelineFunnel && (
-          <div className="bg-white p-6 rounded-lg shadow">
+          <div className="bg-white p-6 rounded-sm shadow">
             <h3 className="text-lg font-semibold text-gray-900 mb-4">Recruitment Pipeline</h3>
             <p className="text-sm text-gray-600 mb-6">{pipelineFunnel.department} - {pipelineFunnel.period}</p>
             <div className="space-y-4">
@@ -290,7 +290,7 @@ const RecruiterDashboard: React.FC = () => {
                       </div>
                       <div className="w-full bg-gray-200 rounded-full h-2">
                         <div 
-                          className="bg-violet-600 h-2 rounded-full transition-all duration-300" 
+                          className="bg-gold-500 h-2 rounded-full transition-all duration-300" 
                           style={{ width: `${percentage}%` }}
                         ></div>
                       </div>
@@ -303,7 +303,7 @@ const RecruiterDashboard: React.FC = () => {
         )}
 
         {/* Applications per Vacancy */}
-        <div className="bg-white p-6 rounded-lg shadow">
+        <div className="bg-white p-6 rounded-sm shadow">
           <h3 className="text-lg font-semibold text-gray-900 mb-4">Applications per Vacancy</h3>
           <p className="text-sm text-gray-600 mb-6">Job postings with highest application volume</p>
           <div className="space-y-3">
@@ -332,7 +332,7 @@ const RecruiterDashboard: React.FC = () => {
 
         {/* Time to Fill */}
         {timeToFill && (
-          <div className="bg-white p-6 rounded-lg shadow">
+          <div className="bg-white p-6 rounded-sm shadow">
             <h3 className="text-lg font-semibold text-gray-900 mb-4">Time to Fill</h3>
             <p className="text-sm text-gray-600 mb-6">
               Average: {timeToFill.averageDays.toFixed(1)} days ({timeToFill.department})
@@ -355,7 +355,7 @@ const RecruiterDashboard: React.FC = () => {
         )}
 
         {/* Recent Activity */}
-        <div className="bg-white p-6 rounded-lg shadow">
+        <div className="bg-white p-6 rounded-sm shadow">
           <h3 className="text-lg font-semibold text-gray-900 mb-4">Recent Activity</h3>
           <p className="text-sm text-gray-600 mb-6">Latest recruitment activities</p>
           <div className="space-y-4">
@@ -381,7 +381,7 @@ const RecruiterDashboard: React.FC = () => {
 
       {/* Department Statistics */}
       {departmentStats && (
-        <div className="bg-white p-6 rounded-lg shadow">
+        <div className="bg-white p-6 rounded-sm shadow">
           <h3 className="text-lg font-semibold text-gray-900 mb-4">Department Performance</h3>
           <p className="text-sm text-gray-600 mb-6">Statistics by department for {departmentStats.period}</p>
           <div className="overflow-x-auto">

@@ -26,7 +26,7 @@ export default function ApplicantDashboard({ selectedTimeframe, onTimeframeChang
           <select
             value={selectedTimeframe}
             onChange={(e) => onTimeframeChange(e.target.value)}
-            className="border border-gray-300 rounded-lg px-3 py-2 text-sm"
+            className="border border-gray-300 rounded-sm px-3 py-2 text-sm"
           >
             <option value="7days">Last 7 days</option>
             <option value="30days">Last 30 days</option>
@@ -50,12 +50,12 @@ export default function ApplicantDashboard({ selectedTimeframe, onTimeframeChang
             >
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                 {[
-                  { status: 'Applied', count: 8, color: 'bg-violet-100 text-violet-800' },
+                  { status: 'Applied', count: 8, color: 'bg-gold-100 text-gold-800' },
                   { status: 'Under Review', count: 3, color: 'bg-yellow-100 text-yellow-800' },
                   { status: 'Interview', count: 2, color: 'bg-purple-100 text-purple-800' },
                   { status: 'Offer', count: 1, color: 'bg-green-100 text-green-800' },
                 ].map((item) => (
-                  <div key={item.status} className="text-center p-4 bg-gray-50 rounded-lg">
+                  <div key={item.status} className="text-center p-4 bg-gray-50 rounded-sm">
                     <div className={`text-2xl font-bold mb-2 px-3 py-1 rounded-full ${item.color} inline-block`}>
                       {item.count}
                     </div>
@@ -102,7 +102,7 @@ export default function ApplicantDashboard({ selectedTimeframe, onTimeframeChang
                     appliedDate: '1 week ago',
                     status: 'Applied',
                     location: 'New York, NY',
-                    statusColor: 'bg-violet-100 text-violet-800',
+                    statusColor: 'bg-gold-100 text-gold-800',
                   },
                   {
                     id: '4',
@@ -114,7 +114,7 @@ export default function ApplicantDashboard({ selectedTimeframe, onTimeframeChang
                     statusColor: 'bg-green-100 text-green-800',
                   },
                 ].map((application) => (
-                  <div key={application.id} className="flex items-center justify-between p-4 border border-gray-200 rounded-lg hover:bg-gray-50">
+                  <div key={application.id} className="flex items-center justify-between p-4 border border-gray-200 rounded-sm hover:bg-gray-50">
                     <div className="flex-1 min-w-0">
                       <h4 className="text-lg font-semibold text-gray-900 truncate">{application.position}</h4>
                       <p className="text-sm text-gray-600">{application.company} • {application.location}</p>
@@ -124,7 +124,7 @@ export default function ApplicantDashboard({ selectedTimeframe, onTimeframeChang
                       <span className={`px-3 py-1 rounded-full text-sm font-medium ${application.statusColor}`}>
                         {application.status}
                       </span>
-                      <button className="text-violet-600 hover:text-violet-800 text-sm font-medium">
+                      <button className="text-gold-600 hover:text-gold-800 text-sm font-medium">
                         View Details
                       </button>
                     </div>
@@ -193,7 +193,7 @@ export default function ApplicantDashboard({ selectedTimeframe, onTimeframeChang
                     date: 'Tomorrow',
                     time: '2:00 PM',
                     type: 'Video Call',
-                    color: 'text-violet-600',
+                    color: 'text-gold-600',
                   },
                   {
                     id: '2',
@@ -205,7 +205,7 @@ export default function ApplicantDashboard({ selectedTimeframe, onTimeframeChang
                     color: 'text-purple-600',
                   },
                 ].map((interview) => (
-                  <div key={interview.id} className="flex items-start gap-3 p-3 hover:bg-gray-50 rounded-lg">
+                  <div key={interview.id} className="flex items-start gap-3 p-3 hover:bg-gray-50 rounded-sm">
                     <div className={`w-2 h-2 rounded-full mt-2 flex-shrink-0 ${interview.color.replace('text-', 'bg-')}`}></div>
                     <div className="flex-1 min-w-0">
                       <p className="text-sm font-medium text-gray-900 truncate">{interview.company}</p>
@@ -236,7 +236,7 @@ export default function ApplicantDashboard({ selectedTimeframe, onTimeframeChang
                 ].map((action) => (
                   <button
                     key={action.label}
-                    className={`${action.color} text-white p-3 rounded-lg hover:opacity-90 transition-opacity text-sm font-medium text-center w-full flex items-center justify-center gap-2`}
+                    className={`${action.color} text-white p-3 rounded-sm hover:opacity-90 transition-opacity text-sm font-medium text-center w-full flex items-center justify-center gap-2`}
                   >
                     <span>{action.icon}</span>
                     {action.label}

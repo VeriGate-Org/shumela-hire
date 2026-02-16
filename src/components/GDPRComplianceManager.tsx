@@ -96,7 +96,7 @@ const GDPRComplianceManager: React.FC = () => {
 
   if (!hasPermission('GDPR_VIEW')) {
     return (
-      <div className="bg-red-50 border border-red-200 rounded-md p-4">
+      <div className="bg-red-50 border border-red-200 rounded-sm p-4">
         <h3 className="text-sm font-medium text-red-800">Access Denied</h3>
         <p className="mt-2 text-sm text-red-700">
           You don&apos;t have permission to view GDPR compliance information.
@@ -121,7 +121,7 @@ const GDPRComplianceManager: React.FC = () => {
               onClick={() => setActiveTab(tab.key as any)}
               className={`py-2 px-1 border-b-2 font-medium text-sm ${
                 activeTab === tab.key
-                  ? 'border-violet-500 text-violet-600'
+                  ? 'border-gold-500 text-gold-700'
                   : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
               }`}
             >
@@ -134,7 +134,7 @@ const GDPRComplianceManager: React.FC = () => {
       {/* Overview Tab */}
       {activeTab === 'overview' && (
         <div className="space-y-6">
-          <div className="bg-white shadow rounded-lg p-6">
+          <div className="bg-white shadow rounded-sm p-6">
             <h3 className="text-lg font-medium text-gray-900 mb-4">
               GDPR Compliance Overview
             </h3>
@@ -147,19 +147,19 @@ const GDPRComplianceManager: React.FC = () => {
               </div>
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div className="bg-violet-50 p-4 rounded-lg">
+                <div className="bg-gold-50 p-4 rounded-sm">
                   <h4 className="text-sm font-medium text-violet-900">Compliance Score</h4>
-                  <p className="text-2xl font-bold text-violet-600">
+                  <p className="text-2xl font-bold text-gold-600">
                     {complianceData?.complianceScore || 0}%
                   </p>
                 </div>
-                <div className="bg-green-50 p-4 rounded-lg">
+                <div className="bg-green-50 p-4 rounded-sm">
                   <h4 className="text-sm font-medium text-green-900">Active Consents</h4>
                   <p className="text-2xl font-bold text-green-600">
                     {complianceData?.activeConsents || 0}
                   </p>
                 </div>
-                <div className="bg-yellow-50 p-4 rounded-lg">
+                <div className="bg-yellow-50 p-4 rounded-sm">
                   <h4 className="text-sm font-medium text-yellow-900">Pending Requests</h4>
                   <p className="text-2xl font-bold text-yellow-600">
                     {complianceData?.pendingRequests || 0}
@@ -170,7 +170,7 @@ const GDPRComplianceManager: React.FC = () => {
           </div>
 
           {/* Data Categories */}
-          <div className="bg-white shadow rounded-lg p-6">
+          <div className="bg-white shadow rounded-sm p-6">
             <h3 className="text-lg font-medium text-gray-900 mb-4">
               Data Categories We Process
             </h3>
@@ -201,7 +201,7 @@ const GDPRComplianceManager: React.FC = () => {
                   legalBasis: 'Legal obligation',
                 },
               ].map((item, index) => (
-                <div key={index} className="border border-gray-200 rounded-lg p-4">
+                <div key={index} className="border border-gray-200 rounded-sm p-4">
                   <h4 className="font-medium text-gray-900">{item.category}</h4>
                   <p className="text-sm text-gray-600 mt-1">
                     <strong>Data:</strong> {item.data}
@@ -222,7 +222,7 @@ const GDPRComplianceManager: React.FC = () => {
       {/* Data Requests Tab */}
       {activeTab === 'requests' && (
         <div className="space-y-6">
-          <div className="bg-white shadow rounded-lg p-6">
+          <div className="bg-white shadow rounded-sm p-6">
             <h3 className="text-lg font-medium text-gray-900 mb-4">
               Your Data Rights
             </h3>
@@ -249,12 +249,12 @@ const GDPRComplianceManager: React.FC = () => {
                   action: exportUserData,
                 },
               ].map((item, index) => (
-                <div key={index} className="border border-gray-200 rounded-lg p-4">
+                <div key={index} className="border border-gray-200 rounded-sm p-4">
                   <h4 className="font-medium text-gray-900">{item.right}</h4>
                   <p className="text-sm text-gray-600 mt-2">{item.description}</p>
                   <button
                     onClick={item.action}
-                    className="mt-3 inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-white bg-violet-600 hover:bg-violet-700"
+                    className="mt-3 inline-flex items-center px-3 py-2 border-2 border-gold-500 text-sm leading-4 font-medium rounded-full text-violet-900 bg-transparent hover:bg-gold-500 hover:text-violet-950 uppercase tracking-wider"
                   >
                     Submit Request
                   </button>
@@ -264,12 +264,12 @@ const GDPRComplianceManager: React.FC = () => {
           </div>
 
           {/* Recent Requests */}
-          <div className="bg-white shadow rounded-lg p-6">
+          <div className="bg-white shadow rounded-sm p-6">
             <h3 className="text-lg font-medium text-gray-900 mb-4">
               Recent Requests
             </h3>
             {dataRequests.length > 0 ? (
-              <div className="overflow-hidden shadow ring-1 ring-black ring-opacity-5 md:rounded-lg">
+              <div className="overflow-hidden shadow ring-1 ring-black ring-opacity-5 md:rounded-sm">
                 <table className="min-w-full divide-y divide-gray-300">
                   <thead className="bg-gray-50">
                     <tr>
@@ -308,7 +308,7 @@ const GDPRComplianceManager: React.FC = () => {
                           {new Date(request.date).toLocaleDateString()}
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                          <button className="text-violet-600 hover:text-violet-900">
+                          <button className="text-gold-600 hover:text-violet-900">
                             View Details
                           </button>
                         </td>
@@ -326,7 +326,7 @@ const GDPRComplianceManager: React.FC = () => {
 
       {/* Other tabs would be implemented similarly */}
       {activeTab === 'exports' && (
-        <div className="bg-white shadow rounded-lg p-6">
+        <div className="bg-white shadow rounded-sm p-6">
           <h3 className="text-lg font-medium text-gray-900 mb-4">
             Data Export
           </h3>
@@ -335,7 +335,7 @@ const GDPRComplianceManager: React.FC = () => {
           </p>
           <button
             onClick={exportUserData}
-            className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700"
+            className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-sm text-white bg-green-600 hover:bg-green-700"
           >
             Download My Data
           </button>
@@ -343,12 +343,12 @@ const GDPRComplianceManager: React.FC = () => {
       )}
 
       {activeTab === 'retention' && (
-        <div className="bg-white shadow rounded-lg p-6">
+        <div className="bg-white shadow rounded-sm p-6">
           <h3 className="text-lg font-medium text-gray-900 mb-4">
             Data Retention Policy
           </h3>
           <div className="space-y-4">
-            <div className="border-l-4 border-violet-500 pl-4">
+            <div className="border-l-4 border-gold-500 pl-4">
               <h4 className="font-medium text-gray-900">Account Data</h4>
               <p className="text-sm text-gray-600">
                 Retained as long as your account is active, plus 2 years after account closure.

@@ -295,7 +295,7 @@ export default function ApplicationManagementConsole() {
 
   const getStatusColor = (status: string) => {
     const colors = {
-      APPLIED: 'bg-violet-100 text-violet-800',
+      APPLIED: 'bg-gold-100 text-gold-800',
       UNDER_REVIEW: 'bg-yellow-100 text-yellow-800',
       INTERVIEWED: 'bg-purple-100 text-purple-800',
       OFFERED: 'bg-green-100 text-green-800',
@@ -317,20 +317,20 @@ export default function ApplicationManagementConsole() {
   return (
     <div className="space-y-6">
       {/* Header with Statistics */}
-      <div className="bg-white rounded-lg shadow p-6">
+      <div className="bg-white rounded-sm shadow p-6">
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-2xl font-bold text-gray-900">Application Management Console</h2>
           <div className="flex space-x-3">
             <button
               onClick={() => setShowFilters(!showFilters)}
-              className="flex items-center px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50"
+              className="flex items-center px-4 py-2 border border-gray-300 rounded-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50"
             >
               <Filter className="w-4 h-4 mr-2" />
               Filters
             </button>
             <button
               onClick={exportApplications}
-              className="flex items-center px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50"
+              className="flex items-center px-4 py-2 border border-gray-300 rounded-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50"
             >
               <Download className="w-4 h-4 mr-2" />
               Export
@@ -340,16 +340,16 @@ export default function ApplicationManagementConsole() {
 
         {/* Statistics Cards */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-          <div className="bg-violet-50 p-4 rounded-lg">
+          <div className="bg-gold-50 p-4 rounded-sm">
             <div className="flex items-center">
-              <Users className="w-8 h-8 text-violet-600 mr-3" />
+              <Users className="w-8 h-8 text-gold-600 mr-3" />
               <div>
-                <p className="text-sm font-medium text-violet-600">Total Applications</p>
+                <p className="text-sm font-medium text-gold-600">Total Applications</p>
                 <p className="text-2xl font-bold text-violet-900">{statistics.totalApplications}</p>
               </div>
             </div>
           </div>
-          <div className="bg-green-50 p-4 rounded-lg">
+          <div className="bg-green-50 p-4 rounded-sm">
             <div className="flex items-center">
               <CheckCircle className="w-8 h-8 text-green-600 mr-3" />
               <div>
@@ -358,7 +358,7 @@ export default function ApplicationManagementConsole() {
               </div>
             </div>
           </div>
-          <div className="bg-yellow-50 p-4 rounded-lg">
+          <div className="bg-yellow-50 p-4 rounded-sm">
             <div className="flex items-center">
               <Clock className="w-8 h-8 text-yellow-600 mr-3" />
               <div>
@@ -367,7 +367,7 @@ export default function ApplicationManagementConsole() {
               </div>
             </div>
           </div>
-          <div className="bg-purple-50 p-4 rounded-lg">
+          <div className="bg-purple-50 p-4 rounded-sm">
             <div className="flex items-center">
               <Star className="w-8 h-8 text-purple-600 mr-3" />
               <div>
@@ -387,12 +387,12 @@ export default function ApplicationManagementConsole() {
               placeholder="Search by candidate name, email, or job title..."
               value={filters.searchTerm}
               onChange={(e) => setFilters(prev => ({ ...prev, searchTerm: e.target.value }))}
-              className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-violet-500/60 focus:border-transparent"
+              className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-sm focus:ring-2 focus:ring-gold-500/60 focus:border-transparent"
             />
           </div>
           <button
             onClick={handleSearch}
-            className="px-6 py-2 bg-violet-600 text-white rounded-md hover:bg-violet-700 focus:outline-none focus:ring-2 focus:ring-violet-500/60"
+            className="px-6 py-2 bg-gold-500 text-violet-950 rounded-sm hover:bg-gold-600 focus:outline-none focus:ring-2 focus:ring-gold-500/60"
           >
             Search
           </button>
@@ -401,7 +401,7 @@ export default function ApplicationManagementConsole() {
 
       {/* Advanced Filters */}
       {showFilters && (
-        <div className="bg-white rounded-lg shadow p-6">
+        <div className="bg-white rounded-sm shadow p-6">
           <h3 className="text-lg font-medium text-gray-900 mb-4">Advanced Filters</h3>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             {/* Status Filter */}
@@ -411,7 +411,7 @@ export default function ApplicationManagementConsole() {
                 multiple
                 value={filters.statuses}
                 onChange={(e) => handleFilterChange('statuses', Array.from(e.target.selectedOptions, option => option.value))}
-                className="w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-violet-500/60"
+                className="w-full border border-gray-300 rounded-sm px-3 py-2 focus:ring-2 focus:ring-gold-500/60"
               >
                 {statusOptions.map(status => (
                   <option key={status} value={status}>{status.replace('_', ' ')}</option>
@@ -426,7 +426,7 @@ export default function ApplicationManagementConsole() {
                 multiple
                 value={filters.departments}
                 onChange={(e) => handleFilterChange('departments', Array.from(e.target.selectedOptions, option => option.value))}
-                className="w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-violet-500/60"
+                className="w-full border border-gray-300 rounded-sm px-3 py-2 focus:ring-2 focus:ring-gold-500/60"
               >
                 {departmentOptions.map(dept => (
                   <option key={dept} value={dept}>{dept}</option>
@@ -445,7 +445,7 @@ export default function ApplicationManagementConsole() {
                   placeholder="Min"
                   value={filters.minRating || ''}
                   onChange={(e) => handleFilterChange('minRating', parseInt(e.target.value) || 0)}
-                  className="flex-1 border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-violet-500/60"
+                  className="flex-1 border border-gray-300 rounded-sm px-3 py-2 focus:ring-2 focus:ring-gold-500/60"
                 />
                 <input
                   type="number"
@@ -454,7 +454,7 @@ export default function ApplicationManagementConsole() {
                   placeholder="Max"
                   value={filters.maxRating || ''}
                   onChange={(e) => handleFilterChange('maxRating', parseInt(e.target.value) || 5)}
-                  className="flex-1 border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-violet-500/60"
+                  className="flex-1 border border-gray-300 rounded-sm px-3 py-2 focus:ring-2 focus:ring-gold-500/60"
                 />
               </div>
             </div>
@@ -466,7 +466,7 @@ export default function ApplicationManagementConsole() {
                 type="datetime-local"
                 value={filters.dateFrom}
                 onChange={(e) => handleFilterChange('dateFrom', e.target.value)}
-                className="w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-violet-500/60"
+                className="w-full border border-gray-300 rounded-sm px-3 py-2 focus:ring-2 focus:ring-gold-500/60"
               />
             </div>
 
@@ -476,7 +476,7 @@ export default function ApplicationManagementConsole() {
                 type="datetime-local"
                 value={filters.dateTo}
                 onChange={(e) => handleFilterChange('dateTo', e.target.value)}
-                className="w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-violet-500/60"
+                className="w-full border border-gray-300 rounded-sm px-3 py-2 focus:ring-2 focus:ring-gold-500/60"
               />
             </div>
 
@@ -487,7 +487,7 @@ export default function ApplicationManagementConsole() {
                 <select
                   value={filters.sortBy}
                   onChange={(e) => handleFilterChange('sortBy', e.target.value)}
-                  className="flex-1 border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-violet-500/60"
+                  className="flex-1 border border-gray-300 rounded-sm px-3 py-2 focus:ring-2 focus:ring-gold-500/60"
                 >
                   <option value="submittedAt">Submit Date</option>
                   <option value="lastUpdated">Last Updated</option>
@@ -497,7 +497,7 @@ export default function ApplicationManagementConsole() {
                 <select
                   value={filters.sortDirection}
                   onChange={(e) => handleFilterChange('sortDirection', e.target.value)}
-                  className="border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-violet-500/60"
+                  className="border border-gray-300 rounded-sm px-3 py-2 focus:ring-2 focus:ring-gold-500/60"
                 >
                   <option value="desc">Desc</option>
                   <option value="asc">Asc</option>
@@ -509,7 +509,7 @@ export default function ApplicationManagementConsole() {
           <div className="mt-4 flex space-x-3">
             <button
               onClick={handleSearch}
-              className="px-4 py-2 bg-violet-600 text-white rounded-md hover:bg-violet-700"
+              className="px-4 py-2 bg-gold-500 text-violet-950 rounded-sm hover:bg-gold-600"
             >
               Apply Filters
             </button>
@@ -531,7 +531,7 @@ export default function ApplicationManagementConsole() {
                 });
                 searchApplications();
               }}
-              className="px-4 py-2 border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50"
+              className="px-4 py-2 border border-gray-300 text-gray-700 rounded-sm hover:bg-gray-50"
             >
               Clear Filters
             </button>
@@ -541,7 +541,7 @@ export default function ApplicationManagementConsole() {
 
       {/* Bulk Actions */}
       {selectedApplications.length > 0 && (
-        <div className="bg-white rounded-lg shadow p-4">
+        <div className="bg-white rounded-sm shadow p-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center">
               <span className="text-sm text-gray-700 mr-4">
@@ -549,7 +549,7 @@ export default function ApplicationManagementConsole() {
               </span>
               <button
                 onClick={() => setShowBulkActions(!showBulkActions)}
-                className="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 text-sm"
+                className="px-4 py-2 bg-indigo-600 text-white rounded-sm hover:bg-indigo-700 text-sm"
               >
                 Bulk Actions
               </button>
@@ -563,12 +563,12 @@ export default function ApplicationManagementConsole() {
           </div>
 
           {showBulkActions && (
-            <div className="mt-4 p-4 bg-gray-50 rounded-lg">
+            <div className="mt-4 p-4 bg-gray-50 rounded-sm">
               <div className="flex items-center space-x-4">
                 <select
                   value={bulkOperation.type}
                   onChange={(e) => setBulkOperation(prev => ({ ...prev, type: e.target.value as any }))}
-                  className="border border-gray-300 rounded-md px-3 py-2"
+                  className="border border-gray-300 rounded-sm px-3 py-2"
                 >
                   <option value="status">Update Status</option>
                   <option value="rating">Set Rating</option>
@@ -579,7 +579,7 @@ export default function ApplicationManagementConsole() {
                   <select
                     value={bulkOperation.value}
                     onChange={(e) => setBulkOperation(prev => ({ ...prev, value: e.target.value }))}
-                    className="border border-gray-300 rounded-md px-3 py-2"
+                    className="border border-gray-300 rounded-sm px-3 py-2"
                   >
                     <option value="">Select Status</option>
                     {statusOptions.map(status => (
@@ -592,7 +592,7 @@ export default function ApplicationManagementConsole() {
                   <select
                     value={bulkOperation.value}
                     onChange={(e) => setBulkOperation(prev => ({ ...prev, value: e.target.value }))}
-                    className="border border-gray-300 rounded-md px-3 py-2"
+                    className="border border-gray-300 rounded-sm px-3 py-2"
                   >
                     <option value="">Select Rating</option>
                     {[1, 2, 3, 4, 5].map(rating => (
@@ -605,7 +605,7 @@ export default function ApplicationManagementConsole() {
                   <select
                     value={bulkOperation.value}
                     onChange={(e) => setBulkOperation(prev => ({ ...prev, value: e.target.value }))}
-                    className="border border-gray-300 rounded-md px-3 py-2"
+                    className="border border-gray-300 rounded-sm px-3 py-2"
                   >
                     <option value="">Select Stage</option>
                     {stageOptions.map(stage => (
@@ -617,7 +617,7 @@ export default function ApplicationManagementConsole() {
                 <button
                   onClick={executeBulkOperation}
                   disabled={!bulkOperation.value}
-                  className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 disabled:bg-gray-300"
+                  className="px-4 py-2 bg-green-600 text-white rounded-sm hover:bg-green-700 disabled:bg-gray-300"
                 >
                   Execute
                 </button>
@@ -628,7 +628,7 @@ export default function ApplicationManagementConsole() {
       )}
 
       {/* Applications Table */}
-      <div className="bg-white rounded-lg shadow overflow-hidden">
+      <div className="bg-white rounded-sm shadow overflow-hidden">
         <div className="overflow-x-auto">
           <table className="min-w-full divide-y divide-gray-200">
             <thead className="bg-gray-50">
@@ -638,7 +638,7 @@ export default function ApplicationManagementConsole() {
                     type="checkbox"
                     checked={selectedApplications.length === applications.length && applications.length > 0}
                     onChange={handleSelectAll}
-                    className="rounded border-gray-300 text-violet-600 shadow-sm focus:border-violet-300 focus:ring focus:ring-violet-200 focus:ring-opacity-50"
+                    className="rounded border-gray-300 text-gold-600 shadow-sm focus:border-violet-300 focus:ring focus:ring-violet-200 focus:ring-opacity-50"
                   />
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
@@ -685,7 +685,7 @@ export default function ApplicationManagementConsole() {
                         type="checkbox"
                         checked={selectedApplications.includes(application.id)}
                         onChange={() => handleSelectApplication(application.id)}
-                        className="rounded border-gray-300 text-violet-600 shadow-sm focus:border-violet-300 focus:ring focus:ring-violet-200 focus:ring-opacity-50"
+                        className="rounded border-gray-300 text-gold-600 shadow-sm focus:border-violet-300 focus:ring focus:ring-violet-200 focus:ring-opacity-50"
                       />
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
@@ -724,7 +724,7 @@ export default function ApplicationManagementConsole() {
                       {formatDate(application.submittedAt)}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                      <button className="text-violet-600 hover:text-violet-900 mr-3">
+                      <button className="text-gold-600 hover:text-violet-900 mr-3">
                         View
                       </button>
                       <button className="text-green-600 hover:text-green-900 mr-3">
@@ -748,14 +748,14 @@ export default function ApplicationManagementConsole() {
               <button
                 onClick={() => handleFilterChange('page', Math.max(0, filters.page - 1))}
                 disabled={filters.page === 0}
-                className="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 disabled:bg-gray-100"
+                className="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-sm text-gray-700 bg-white hover:bg-gray-50 disabled:bg-gray-100"
               >
                 Previous
               </button>
               <button
                 onClick={() => handleFilterChange('page', filters.page + 1)}
                 disabled={(filters.page + 1) * filters.size >= totalElements}
-                className="ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 disabled:bg-gray-100"
+                className="ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-sm text-gray-700 bg-white hover:bg-gray-50 disabled:bg-gray-100"
               >
                 Next
               </button>
@@ -775,7 +775,7 @@ export default function ApplicationManagementConsole() {
                 </p>
               </div>
               <div>
-                <nav className="relative z-0 inline-flex rounded-md shadow-sm -space-x-px">
+                <nav className="relative z-0 inline-flex rounded-sm shadow-sm -space-x-px">
                   <button
                     onClick={() => handleFilterChange('page', Math.max(0, filters.page - 1))}
                     disabled={filters.page === 0}

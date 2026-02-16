@@ -20,7 +20,7 @@ const QuickActions: React.FC = () => {
       description: 'Create and publish a job posting',
       href: '/jobs/new',
       icon: '📝',
-      color: 'bg-violet-50 hover:bg-violet-100 border-violet-200'
+      color: 'bg-gold-50 hover:bg-gold-100 border-violet-200'
     },
     {
       id: 'schedule-interview',
@@ -118,7 +118,7 @@ const QuickActions: React.FC = () => {
           <h2 className="text-lg font-semibold text-gray-900">Quick Actions</h2>
           <Link
             href="/actions"
-            className="text-sm text-violet-600 hover:text-violet-800 font-medium"
+            className="text-sm text-gold-600 hover:text-gold-800 font-medium"
           >
             View all →
           </Link>
@@ -128,7 +128,7 @@ const QuickActions: React.FC = () => {
             <Link
               key={action.id}
               href={action.href}
-              className={`relative p-4 rounded-lg border-2 transition-all duration-200 transform hover:scale-105 ${
+              className={`relative p-4 rounded-sm border-2 transition-all duration-200 transform hover:scale-105 ${
                 action.disabled 
                   ? 'opacity-50 cursor-not-allowed bg-gray-50 border-gray-200' 
                   : `${action.color} cursor-pointer`
@@ -172,12 +172,12 @@ const QuickActions: React.FC = () => {
           <h2 className="text-lg font-semibold text-gray-900">Recently Accessed</h2>
           <Link
             href="/recent"
-            className="text-sm text-violet-600 hover:text-violet-800 font-medium"
+            className="text-sm text-gold-600 hover:text-gold-800 font-medium"
           >
             View all →
           </Link>
         </div>
-        <div className="bg-white rounded-lg border border-gray-200 divide-y divide-gray-200">
+        <div className="bg-white rounded-sm border border-gray-200 divide-y divide-gray-200">
           {recentActions.map((action) => (
             <Link
               key={action.id}
@@ -211,7 +211,7 @@ const QuickActions: React.FC = () => {
       </div>
 
       {/* Keyboard Shortcuts */}
-      <div className="bg-gray-50 rounded-lg p-4">
+      <div className="bg-gray-50 rounded-sm p-4">
         <h3 className="text-sm font-medium text-gray-900 mb-3">Keyboard Shortcuts</h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm">
           <div className="flex items-center justify-between">

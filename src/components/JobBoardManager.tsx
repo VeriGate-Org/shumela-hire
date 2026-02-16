@@ -88,7 +88,7 @@ export default function JobBoardManager({ jobId }: JobBoardManagerProps) {
   const unpostedBoards = availableBoards.filter(b => !postedBoardTypes.includes(b.type as JobBoardType));
 
   if (loading) {
-    return <div className="py-4"><div className="animate-spin h-6 w-6 border-2 border-violet-600 border-t-transparent rounded-full" /></div>;
+    return <div className="py-4"><div className="animate-spin h-6 w-6 border-2 border-gold-500 border-t-transparent rounded-full" /></div>;
   }
 
   return (
@@ -103,7 +103,7 @@ export default function JobBoardManager({ jobId }: JobBoardManagerProps) {
           <select
             value={selectedBoard}
             onChange={e => setSelectedBoard(e.target.value)}
-            className="text-sm p-2 border border-gray-300 rounded-md flex-1"
+            className="text-sm p-2 border border-gray-300 rounded-sm flex-1"
           >
             <option value="">Select a board...</option>
             {unpostedBoards.map(board => (
@@ -115,7 +115,7 @@ export default function JobBoardManager({ jobId }: JobBoardManagerProps) {
           <button
             onClick={handlePost}
             disabled={!selectedBoard || actionLoading === -1}
-            className="px-3 py-2 text-sm bg-violet-600 text-white rounded-md hover:bg-violet-700 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="px-3 py-2 text-sm bg-gold-500 text-violet-950 rounded-sm hover:bg-gold-600 disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {actionLoading === -1 ? 'Posting...' : 'Post'}
           </button>
@@ -128,7 +128,7 @@ export default function JobBoardManager({ jobId }: JobBoardManagerProps) {
       ) : (
         <div className="space-y-2">
           {postings.map(posting => (
-            <div key={posting.id} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg border border-gray-200">
+            <div key={posting.id} className="flex items-center justify-between p-3 bg-gray-50 rounded-sm border border-gray-200">
               <div className="flex items-center gap-3">
                 <span className="font-medium text-sm text-gray-900">
                   {getBoardDisplayName(posting.boardType)}
@@ -153,7 +153,7 @@ export default function JobBoardManager({ jobId }: JobBoardManagerProps) {
                       href={posting.externalUrl}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-xs px-2 py-1 text-violet-700 border border-violet-200 rounded hover:bg-violet-50"
+                      className="text-xs px-2 py-1 text-violet-700 border border-violet-200 rounded hover:bg-gold-50"
                     >
                       View
                     </a>

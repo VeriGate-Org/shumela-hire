@@ -43,7 +43,7 @@ export default function PerformanceDashboard() {
                 </div>
                 <button
                   onClick={handleCreateContract}
-                  className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700"
+                  className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-full text-white bg-green-600 hover:bg-green-700"
                 >
                   Create Contract
                 </button>
@@ -69,7 +69,7 @@ export default function PerformanceDashboard() {
           <div className="space-y-6">
             {/* Cycle Quick Stats */}
             {selectedCycle && (
-              <div className="bg-white shadow rounded-lg">
+              <div className="bg-white shadow rounded-sm">
                 <div className="px-4 py-5 sm:p-6">
                   <h3 className="text-lg leading-6 font-medium text-gray-900 mb-4">
                     Cycle Overview
@@ -99,19 +99,19 @@ export default function PerformanceDashboard() {
             )}
 
             {/* Quick Actions */}
-            <div className="bg-white shadow rounded-lg">
+            <div className="bg-white shadow rounded-sm">
               <div className="px-4 py-5 sm:p-6">
                 <h3 className="text-lg leading-6 font-medium text-gray-900 mb-4">
                   Quick Actions
                 </h3>
                 <div className="space-y-3">
-                  <button className="w-full text-left px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50">
+                  <button className="w-full text-left px-4 py-2 border border-gray-300 rounded-full text-sm font-medium text-gray-700 hover:bg-gray-50">
                     View All Contracts
                   </button>
-                  <button className="w-full text-left px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50">
+                  <button className="w-full text-left px-4 py-2 border border-gray-300 rounded-full text-sm font-medium text-gray-700 hover:bg-gray-50">
                     Performance Templates
                   </button>
-                  <button className="w-full text-left px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50">
+                  <button className="w-full text-left px-4 py-2 border border-gray-300 rounded-full text-sm font-medium text-gray-700 hover:bg-gray-50">
                     View Reports
                   </button>
                 </div>
@@ -123,7 +123,7 @@ export default function PerformanceDashboard() {
         {/* Contract Builder Modal */}
         {showContractBuilder && selectedCycle && (
           <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
-            <div className="relative top-10 mx-auto border w-full max-w-6xl shadow-lg rounded-md bg-white">
+            <div className="relative top-10 mx-auto border w-full max-w-6xl shadow-lg rounded-sm bg-white">
               <ContractBuilder
                 cycle={selectedCycle}
                 tenantId={tenantId}

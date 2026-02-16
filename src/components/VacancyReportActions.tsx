@@ -43,7 +43,7 @@ export default function VacancyReportActions({ jobId, showDemographics = false }
         <button
           onClick={() => handleDownload('summary')}
           disabled={downloading !== null}
-          className="inline-flex items-center px-3 py-2 text-sm font-medium text-violet-700 bg-violet-50 border border-violet-200 rounded-md hover:bg-violet-100 disabled:opacity-50 disabled:cursor-not-allowed"
+          className="inline-flex items-center px-3 py-2 text-sm font-medium text-violet-700 bg-gold-50 border border-violet-200 rounded-sm hover:bg-gold-100 disabled:opacity-50 disabled:cursor-not-allowed"
         >
           {downloading === 'summary' ? 'Generating...' : 'Vacancy Summary'}
         </button>
@@ -51,7 +51,7 @@ export default function VacancyReportActions({ jobId, showDemographics = false }
         <button
           onClick={() => handleDownload('shortlist')}
           disabled={downloading !== null}
-          className="inline-flex items-center px-3 py-2 text-sm font-medium text-violet-700 bg-violet-50 border border-violet-200 rounded-md hover:bg-violet-100 disabled:opacity-50 disabled:cursor-not-allowed"
+          className="inline-flex items-center px-3 py-2 text-sm font-medium text-violet-700 bg-gold-50 border border-violet-200 rounded-sm hover:bg-gold-100 disabled:opacity-50 disabled:cursor-not-allowed"
         >
           {downloading === 'shortlist' ? 'Generating...' : 'Shortlist Pack'}
         </button>
@@ -60,7 +60,7 @@ export default function VacancyReportActions({ jobId, showDemographics = false }
           <button
             onClick={() => handleDownload('demographics')}
             disabled={downloading !== null}
-            className="inline-flex items-center px-3 py-2 text-sm font-medium text-violet-700 bg-violet-50 border border-violet-200 rounded-md hover:bg-violet-100 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="inline-flex items-center px-3 py-2 text-sm font-medium text-violet-700 bg-gold-50 border border-violet-200 rounded-sm hover:bg-gold-100 disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {downloading === 'demographics' ? 'Generating...' : 'Demographics / EE'}
           </button>

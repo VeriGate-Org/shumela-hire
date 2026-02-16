@@ -44,7 +44,7 @@ const mockPipelineStages = [
   {
     id: 'applied',
     name: 'Applied',
-    color: 'bg-violet-100',
+    color: 'bg-gold-100',
     candidates: [
       { 
         id: '1', 
@@ -156,7 +156,7 @@ export default function HiringManagerDashboard({ selectedTimeframe, onTimeframeC
           <select
             value={selectedTimeframe}
             onChange={(e) => onTimeframeChange(e.target.value)}
-            className="border border-gray-300 rounded-lg px-3 py-2 text-sm"
+            className="border border-gray-300 rounded-sm px-3 py-2 text-sm"
           >
             <option value="7days">Last 7 days</option>
             <option value="30days">Last 30 days</option>
@@ -167,7 +167,7 @@ export default function HiringManagerDashboard({ selectedTimeframe, onTimeframeC
 
       {/* Real-Time Hiring Metrics */}
       {!isMounted ? (
-        <div className="bg-white rounded-lg border border-gray-200 p-6">
+        <div className="bg-white rounded-sm border border-gray-200 border-t-2 border-t-gold-500 p-6">
           <div className="animate-pulse">
             <div className="h-4 bg-gray-200 rounded w-1/4 mb-2"></div>
             <div className="h-3 bg-gray-200 rounded w-1/2"></div>
@@ -210,7 +210,7 @@ export default function HiringManagerDashboard({ selectedTimeframe, onTimeframeC
                     { role: 'UX/UI Designer', applications: 12, status: 'Draft', priority: 'Low' },
                     { role: 'DevOps Engineer', applications: 8, status: 'Active', priority: 'High' },
                   ].map((position) => (
-                    <div key={position.role} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                    <div key={position.role} className="flex items-center justify-between p-3 bg-gray-50 rounded-sm">
                       <div className="flex-1 min-w-0">
                         <p className="font-medium text-gray-900 truncate">{position.role}</p>
                         <p className="text-sm text-gray-500">{position.applications} applications</p>
@@ -287,7 +287,7 @@ export default function HiringManagerDashboard({ selectedTimeframe, onTimeframeC
                     position: 'Product Manager',
                     time: '10:00 AM',
                     type: 'Technical',
-                    color: 'text-violet-600',
+                    color: 'text-gold-600',
                   },
                   {
                     id: '2',
@@ -306,7 +306,7 @@ export default function HiringManagerDashboard({ selectedTimeframe, onTimeframeC
                     color: 'text-purple-600',
                   },
                 ].map((interview) => (
-                  <div key={interview.id} className="flex items-start gap-3 p-3 hover:bg-gray-50 rounded-lg">
+                  <div key={interview.id} className="flex items-start gap-3 p-3 hover:bg-gray-50 rounded-sm">
                     <div className={`w-2 h-2 rounded-full mt-2 flex-shrink-0 ${interview.color.replace('text-', 'bg-')}`}></div>
                     <div className="flex-1 min-w-0">
                       <p className="text-sm font-medium text-gray-900 truncate">{interview.candidate}</p>
@@ -336,7 +336,7 @@ export default function HiringManagerDashboard({ selectedTimeframe, onTimeframeC
                 ].map((action) => (
                   <button
                     key={action.label}
-                    className={`${action.color} text-white p-3 rounded-lg hover:opacity-90 transition-opacity text-sm font-medium text-center w-full flex items-center justify-center gap-2`}
+                    className={`${action.color} text-white p-3 rounded-sm hover:opacity-90 transition-opacity text-sm font-medium text-center w-full flex items-center justify-center gap-2`}
                   >
                     <span>{action.icon}</span>
                     {action.label}

@@ -99,10 +99,10 @@ export default function ModernDashboardDemo() {
 
   const actions = (
     <div className="flex space-x-3">
-      <button className="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-violet-500/60">
+      <button className="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-sm text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gold-500/60">
         Export Data
       </button>
-      <button className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-violet-600 hover:bg-violet-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-violet-500/60">
+      <button className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-sm shadow-sm text-violet-900 bg-transparent border-2 border-gold-500 hover:bg-gold-500 hover:text-violet-950 uppercase tracking-wider focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gold-500/60">
         Create Position
       </button>
     </div>
@@ -119,11 +119,11 @@ export default function ModernDashboardDemo() {
         {stats.map((stat) => {
           const Icon = stat.icon;
           return (
-            <div key={stat.name} className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 hover:shadow-md transition-shadow">
+            <div key={stat.name} className="bg-white rounded-sm shadow-sm border border-gray-200 p-6 hover:shadow-md transition-shadow">
               <div className="flex items-center">
                 <div className="flex-shrink-0">
-                  <div className="w-8 h-8 bg-violet-100 rounded-lg flex items-center justify-center">
-                    <Icon className="w-5 h-5 text-violet-600" />
+                  <div className="w-8 h-8 bg-gold-100 rounded-sm flex items-center justify-center">
+                    <Icon className="w-5 h-5 text-gold-600" />
                   </div>
                 </div>
                 <div className="ml-5 w-0 flex-1">
@@ -148,7 +148,7 @@ export default function ModernDashboardDemo() {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         {/* Recent Activity */}
         <div className="lg:col-span-2">
-          <div className="bg-white shadow-sm rounded-xl border border-gray-200">
+          <div className="bg-white shadow-sm rounded-sm border border-gray-200">
             <div className="px-6 py-4 border-b border-gray-200">
               <h3 className="text-lg font-medium text-gray-900">Recent Activity</h3>
             </div>
@@ -188,16 +188,16 @@ export default function ModernDashboardDemo() {
 
         {/* Upcoming Interviews */}
         <div>
-          <div className="bg-white shadow-sm rounded-xl border border-gray-200">
+          <div className="bg-white shadow-sm rounded-sm border border-gray-200">
             <div className="px-6 py-4 border-b border-gray-200">
               <h3 className="text-lg font-medium text-gray-900">Today's Interviews</h3>
             </div>
             <div className="p-6">
               <div className="space-y-4">
                 {upcomingInterviews.map((interview) => (
-                  <div key={interview.id} className="flex items-center space-x-3 p-3 rounded-lg hover:bg-gray-50 transition-colors">
-                    <div className="w-10 h-10 bg-violet-100 rounded-full flex items-center justify-center">
-                      <span className="text-sm font-medium text-violet-600">{interview.avatar}</span>
+                  <div key={interview.id} className="flex items-center space-x-3 p-3 rounded-sm hover:bg-gray-50 transition-colors">
+                    <div className="w-10 h-10 bg-gold-100 rounded-full flex items-center justify-center">
+                      <span className="text-sm font-medium text-gold-600">{interview.avatar}</span>
                     </div>
                     <div className="flex-1 min-w-0">
                       <p className="text-sm font-medium text-gray-900 truncate">{interview.candidate}</p>
@@ -214,25 +214,25 @@ export default function ModernDashboardDemo() {
           </div>
 
           {/* Quick Actions */}
-          <div className="mt-6 bg-white shadow-sm rounded-xl border border-gray-200">
+          <div className="mt-6 bg-white shadow-sm rounded-sm border border-gray-200">
             <div className="px-6 py-4 border-b border-gray-200">
               <h3 className="text-lg font-medium text-gray-900">Quick Actions</h3>
             </div>
             <div className="p-6">
               <div className="space-y-3">
-                <button className="w-full flex items-center px-4 py-3 text-sm font-medium text-gray-700 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
+                <button className="w-full flex items-center px-4 py-3 text-sm font-medium text-gray-700 bg-gray-50 rounded-sm hover:bg-gray-100 transition-colors">
                   <BriefcaseIcon className="w-5 h-5 mr-3 text-gray-400" />
                   Post New Position
                 </button>
-                <button className="w-full flex items-center px-4 py-3 text-sm font-medium text-gray-700 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
+                <button className="w-full flex items-center px-4 py-3 text-sm font-medium text-gray-700 bg-gray-50 rounded-sm hover:bg-gray-100 transition-colors">
                   <UserGroupIcon className="w-5 h-5 mr-3 text-gray-400" />
                   Review Applications
                 </button>
-                <button className="w-full flex items-center px-4 py-3 text-sm font-medium text-gray-700 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
+                <button className="w-full flex items-center px-4 py-3 text-sm font-medium text-gray-700 bg-gray-50 rounded-sm hover:bg-gray-100 transition-colors">
                   <CalendarIcon className="w-5 h-5 mr-3 text-gray-400" />
                   Schedule Interview
                 </button>
-                <button className="w-full flex items-center px-4 py-3 text-sm font-medium text-gray-700 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
+                <button className="w-full flex items-center px-4 py-3 text-sm font-medium text-gray-700 bg-gray-50 rounded-sm hover:bg-gray-100 transition-colors">
                   <ChartBarIcon className="w-5 h-5 mr-3 text-gray-400" />
                   View Analytics
                 </button>

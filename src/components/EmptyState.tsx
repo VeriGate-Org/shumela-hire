@@ -29,14 +29,14 @@ export default function EmptyState({ icon: Icon, title, description, action }: E
         action.href ? (
           <Link
             href={action.href}
-            className="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-violet-600 rounded-md hover:bg-violet-700"
+            className="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-violet-600 rounded-sm hover:bg-gold-600"
           >
             {action.label}
           </Link>
         ) : action.onClick ? (
           <button
             onClick={action.onClick}
-            className="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-violet-600 rounded-md hover:bg-violet-700"
+            className="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-violet-600 rounded-sm hover:bg-gold-600"
           >
             {action.label}
           </button>

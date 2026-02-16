@@ -228,11 +228,11 @@ const ReportingDashboard: React.FC = () => {
   };
 
   const QuickReportsSection = () => (
-    <div className="bg-white rounded-lg shadow-md p-6">
+    <div className="bg-white rounded-sm shadow-md p-6">
       <h3 className="text-lg font-semibold text-gray-900 mb-4">Quick Reports</h3>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {Object.entries(reportTypes).map(([key, reportType]) => (
-          <div key={key} className="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow">
+          <div key={key} className="border border-gray-200 rounded-sm p-4 hover:shadow-md transition-shadow">
             <div className="flex items-center justify-between mb-2">
               <h4 className="font-medium text-gray-900">{reportType.name}</h4>
               <span className="text-xs text-gray-500 uppercase tracking-wide">{key}</span>
@@ -242,7 +242,7 @@ const ReportingDashboard: React.FC = () => {
               <button
                 onClick={() => handleGenerateReport(key)}
                 disabled={isGenerating}
-                className="flex-1 bg-violet-600 text-white px-3 py-2 rounded text-sm hover:bg-violet-700 disabled:bg-gray-400 transition-colors"
+                className="flex-1 bg-gold-500 text-violet-950 px-3 py-2 rounded text-sm hover:bg-gold-600 disabled:bg-gray-400 transition-colors"
               >
                 {isGenerating ? 'Generating...' : 'Download CSV'}
               </button>
@@ -260,7 +260,7 @@ const ReportingDashboard: React.FC = () => {
   );
 
   const CustomReportSection = () => (
-    <div className="bg-white rounded-lg shadow-md p-6">
+    <div className="bg-white rounded-sm shadow-md p-6">
       <h3 className="text-lg font-semibold text-gray-900 mb-4">Custom Report Builder</h3>
       
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -270,7 +270,7 @@ const ReportingDashboard: React.FC = () => {
             <select
               value={reportConfig.reportType}
               onChange={(e) => setReportConfig({ ...reportConfig, reportType: e.target.value })}
-              className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-violet-500/60"
+              className="w-full border border-gray-300 rounded-sm px-3 py-2 focus:outline-none focus:ring-2 focus:ring-gold-500/60"
             >
               <option value="">Select Report Type</option>
               {Object.entries(reportTypes).map(([key, reportType]) => (
@@ -286,7 +286,7 @@ const ReportingDashboard: React.FC = () => {
                 type="date"
                 value={reportConfig.startDate}
                 onChange={(e) => setReportConfig({ ...reportConfig, startDate: e.target.value })}
-                className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-violet-500/60"
+                className="w-full border border-gray-300 rounded-sm px-3 py-2 focus:outline-none focus:ring-2 focus:ring-gold-500/60"
               />
             </div>
             <div>
@@ -295,7 +295,7 @@ const ReportingDashboard: React.FC = () => {
                 type="date"
                 value={reportConfig.endDate}
                 onChange={(e) => setReportConfig({ ...reportConfig, endDate: e.target.value })}
-                className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-violet-500/60"
+                className="w-full border border-gray-300 rounded-sm px-3 py-2 focus:outline-none focus:ring-2 focus:ring-gold-500/60"
               />
             </div>
           </div>
@@ -345,7 +345,7 @@ const ReportingDashboard: React.FC = () => {
         </div>
 
         {previewData && (
-          <div className="border border-gray-200 rounded-lg p-4">
+          <div className="border border-gray-200 rounded-sm p-4">
             <h4 className="font-medium text-gray-900 mb-3">Report Preview</h4>
             <div className="space-y-2 text-sm">
               <p><span className="font-medium">Type:</span> {previewData.reportType}</p>
@@ -389,7 +389,7 @@ const ReportingDashboard: React.FC = () => {
   );
 
   const BulkExportSection = () => (
-    <div className="bg-white rounded-lg shadow-md p-6">
+    <div className="bg-white rounded-sm shadow-md p-6">
       <h3 className="text-lg font-semibold text-gray-900 mb-4">Bulk Export</h3>
       
       <div className="space-y-4">
@@ -429,7 +429,7 @@ const ReportingDashboard: React.FC = () => {
               type="date"
               value={bulkExportConfig.startDate}
               onChange={(e) => setBulkExportConfig({ ...bulkExportConfig, startDate: e.target.value })}
-              className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-violet-500/60"
+              className="w-full border border-gray-300 rounded-sm px-3 py-2 focus:outline-none focus:ring-2 focus:ring-gold-500/60"
             />
           </div>
           <div>
@@ -438,7 +438,7 @@ const ReportingDashboard: React.FC = () => {
               type="date"
               value={bulkExportConfig.endDate}
               onChange={(e) => setBulkExportConfig({ ...bulkExportConfig, endDate: e.target.value })}
-              className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-violet-500/60"
+              className="w-full border border-gray-300 rounded-sm px-3 py-2 focus:outline-none focus:ring-2 focus:ring-gold-500/60"
             />
           </div>
         </div>
@@ -446,7 +446,7 @@ const ReportingDashboard: React.FC = () => {
         <button
           onClick={handleBulkExport}
           disabled={bulkExportConfig.reportTypes.length === 0 || isGenerating}
-          className="w-full bg-violet-600 text-white px-4 py-3 rounded hover:bg-violet-700 disabled:bg-gray-400 transition-colors"
+          className="w-full bg-gold-500 text-violet-950 px-4 py-3 rounded hover:bg-gold-600 disabled:bg-gray-400 transition-colors"
         >
           {isGenerating ? 'Generating Bulk Export...' : `Export ${bulkExportConfig.reportTypes.length} Reports as ZIP`}
         </button>
@@ -465,10 +465,10 @@ const ReportingDashboard: React.FC = () => {
   );
 
   const ScheduledReportsSection = () => (
-    <div className="bg-white rounded-lg shadow-md p-6">
+    <div className="bg-white rounded-sm shadow-md p-6">
       <div className="flex items-center justify-between mb-4">
         <h3 className="text-lg font-semibold text-gray-900">Scheduled Reports</h3>
-        <button className="bg-violet-600 text-white px-3 py-1 rounded text-sm hover:bg-violet-700 transition-colors">
+        <button className="bg-gold-500 text-violet-950 px-3 py-1 rounded text-sm hover:bg-gold-600 transition-colors">
           New Schedule
         </button>
       </div>
@@ -506,7 +506,7 @@ const ReportingDashboard: React.FC = () => {
                     </span>
                   </td>
                   <td className="px-4 py-2 text-sm">
-                    <button className="text-violet-600 hover:text-violet-800 mr-2">Edit</button>
+                    <button className="text-gold-600 hover:text-gold-800 mr-2">Edit</button>
                     <button className="text-red-600 hover:text-red-800">Delete</button>
                   </td>
                 </tr>
@@ -540,7 +540,7 @@ const ReportingDashboard: React.FC = () => {
               onClick={() => setActiveTab(tab.id)}
               className={`py-2 px-1 border-b-2 font-medium text-sm whitespace-nowrap transition-colors ${
                 activeTab === tab.id
-                  ? 'border-violet-500 text-violet-600'
+                  ? 'border-gold-500 text-gold-700'
                   : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
               }`}
             >
@@ -561,7 +561,7 @@ const ReportingDashboard: React.FC = () => {
       </div>
 
       {/* Help Section */}
-      <div className="mt-8 bg-violet-50 border border-violet-200 rounded-lg p-6">
+      <div className="mt-8 bg-gold-50 border border-violet-200 rounded-sm p-6">
         <h3 className="text-lg font-medium text-violet-900 mb-2">📖 Reporting Help</h3>
         <div className="text-sm text-violet-800 space-y-1">
           <p>• <strong>Quick Reports:</strong> Download pre-configured reports instantly</p>

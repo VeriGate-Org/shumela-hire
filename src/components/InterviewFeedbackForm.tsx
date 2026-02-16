@@ -50,9 +50,9 @@ const RECOMMENDATIONS = [
   { value: 'HIRE', label: 'Recommend for Hire', color: 'text-green-600' },
   { value: 'CONSIDER', label: 'Consider with Reservations', color: 'text-yellow-600' },
   { value: 'REJECT', label: 'Do Not Recommend', color: 'text-red-600' },
-  { value: 'ANOTHER_ROUND', label: 'Recommend Another Round', color: 'text-violet-600' },
+  { value: 'ANOTHER_ROUND', label: 'Recommend Another Round', color: 'text-gold-600' },
   { value: 'ON_HOLD', label: 'Put on Hold', color: 'text-gray-600' },
-  { value: 'SECOND_OPINION', label: 'Needs Second Opinion', color: 'text-violet-600' }
+  { value: 'SECOND_OPINION', label: 'Needs Second Opinion', color: 'text-gold-600' }
 ];
 
 export default function InterviewFeedbackForm({ interview, onSuccess, onCancel }: InterviewFeedbackFormProps) {
@@ -199,7 +199,7 @@ export default function InterviewFeedbackForm({ interview, onSuccess, onCancel }
   };
 
   return (
-    <div className="max-w-4xl mx-auto bg-white rounded-lg shadow-lg">
+    <div className="max-w-4xl mx-auto bg-white rounded-sm shadow-lg">
       {/* Header */}
       <div className="px-6 py-4 border-b border-gray-200">
         <h2 className="text-2xl font-bold text-gray-900">Interview Feedback</h2>
@@ -229,7 +229,7 @@ export default function InterviewFeedbackForm({ interview, onSuccess, onCancel }
               <label className="block text-sm font-medium text-gray-700 mb-2">
                 Average Skills Rating
               </label>
-              <div className="text-2xl font-bold text-violet-600">
+              <div className="text-2xl font-bold text-gold-600">
                 {getAverageSkillRating() || 'N/A'}
               </div>
               <p className="text-sm text-gray-500">Based on communication, technical, and cultural fit</p>
@@ -248,7 +248,7 @@ export default function InterviewFeedbackForm({ interview, onSuccess, onCancel }
               aria-required="true"
               aria-invalid={!!errors.feedback}
               aria-describedby={errors.feedback ? 'feedback-error' : undefined}
-              className={`w-full p-3 border rounded-md ${errors.feedback ? 'border-red-500' : 'border-gray-300'}`}
+              className={`w-full p-3 border rounded-sm ${errors.feedback ? 'border-red-500' : 'border-gray-300'}`}
               placeholder="Provide your overall assessment of the candidate's performance during the interview..."
             />
             {errors.feedback && <p id="feedback-error" role="alert" className="text-red-500 text-sm mt-1">{errors.feedback}</p>}
@@ -297,7 +297,7 @@ export default function InterviewFeedbackForm({ interview, onSuccess, onCancel }
               value={formData.overallImpression}
               onChange={(e) => handleInputChange('overallImpression', e.target.value)}
               rows={3}
-              className="w-full p-3 border border-gray-300 rounded-md"
+              className="w-full p-3 border border-gray-300 rounded-sm"
               placeholder="What are your overall thoughts about this candidate? What stood out (positive or negative)?"
             />
           </div>
@@ -311,7 +311,7 @@ export default function InterviewFeedbackForm({ interview, onSuccess, onCancel }
               value={formData.nextSteps}
               onChange={(e) => handleInputChange('nextSteps', e.target.value)}
               rows={3}
-              className="w-full p-3 border border-gray-300 rounded-md"
+              className="w-full p-3 border border-gray-300 rounded-sm"
               placeholder="What should happen next with this candidate? Any specific areas to explore in future rounds?"
             />
           </div>
@@ -326,7 +326,7 @@ export default function InterviewFeedbackForm({ interview, onSuccess, onCancel }
                 value={formData.technicalAssessment}
                 onChange={(e) => handleInputChange('technicalAssessment', e.target.value)}
                 rows={4}
-                className="w-full p-3 border border-gray-300 rounded-md"
+                className="w-full p-3 border border-gray-300 rounded-sm"
                 placeholder="Detail the technical questions asked, coding exercises, problem-solving approach, and technical competency demonstrated..."
               />
             </div>
@@ -341,7 +341,7 @@ export default function InterviewFeedbackForm({ interview, onSuccess, onCancel }
               value={formData.candidateQuestions}
               onChange={(e) => handleInputChange('candidateQuestions', e.target.value)}
               rows={3}
-              className="w-full p-3 border border-gray-300 rounded-md"
+              className="w-full p-3 border border-gray-300 rounded-sm"
               placeholder="What questions did the candidate ask? How engaged were they during the interview?"
             />
           </div>
@@ -355,7 +355,7 @@ export default function InterviewFeedbackForm({ interview, onSuccess, onCancel }
               value={formData.interviewerNotes}
               onChange={(e) => handleInputChange('interviewerNotes', e.target.value)}
               rows={3}
-              className="w-full p-3 border border-gray-300 rounded-md"
+              className="w-full p-3 border border-gray-300 rounded-sm"
               placeholder="Private notes for your reference and internal team discussion (not shared with candidate)..."
             />
             <p className="text-sm text-gray-500 mt-1">
@@ -365,7 +365,7 @@ export default function InterviewFeedbackForm({ interview, onSuccess, onCancel }
 
           {/* Recommendation Summary */}
           {formData.recommendation && (
-            <div className="bg-gray-50 rounded-lg p-4 border-l-4 border-violet-500">
+            <div className="bg-gray-50 rounded-sm p-4 border-l-4 border-gold-500">
               <h4 className="font-medium text-gray-900 mb-2">Recommendation Summary</h4>
               <p className={`font-medium ${getRecommendationInfo(formData.recommendation).color}`}>
                 {getRecommendationInfo(formData.recommendation).label}
@@ -405,7 +405,7 @@ export default function InterviewFeedbackForm({ interview, onSuccess, onCancel }
             <button
               type="button"
               onClick={onCancel}
-              className="px-6 py-2 border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50"
+              className="px-6 py-2 border border-gray-300 text-gray-700 rounded-sm hover:bg-gray-50"
             >
               Cancel
             </button>
@@ -413,7 +413,7 @@ export default function InterviewFeedbackForm({ interview, onSuccess, onCancel }
           <button
             type="submit"
             disabled={loading}
-            className="px-6 py-2 bg-violet-600 text-white rounded-md hover:bg-violet-700 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="px-6 py-2 bg-gold-500 text-violet-950 rounded-sm hover:bg-gold-600 disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {loading ? (
               <span className="flex items-center">

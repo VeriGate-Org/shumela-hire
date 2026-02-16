@@ -58,7 +58,7 @@ export default function ApplicantsPage() {
       <EnterpriseThemeToggle variant="compact" />
       <button
         onClick={handleCreateNew}
-        className="px-4 py-2 bg-violet-500 text-white rounded-md hover:bg-violet-600"
+        className="px-4 py-2 bg-gold-500 text-white rounded-sm hover:bg-gold-600"
       >
         Create New Applicant
       </button>
@@ -66,7 +66,7 @@ export default function ApplicantsPage() {
   ) : (
     <button
       onClick={handleBackToList}
-      className="text-violet-500 hover:text-violet-700 font-medium"
+      className="text-violet-500 hover:text-gold-700 font-medium"
     >
       ← Back to Applicants
     </button>
@@ -81,13 +81,13 @@ export default function ApplicantsPage() {
       <div className="space-y-6">
         {view === 'list' && (
           <div>
-            <div className="bg-white rounded-lg shadow p-6">
+            <div className="bg-white rounded-sm shadow p-6">
               <p className="text-gray-600 mb-4">
                 This is a demo of the Applicant Profile & Document Upload feature.
               </p>
               
               <div className="space-y-4">
-                <div className="border rounded-lg p-4">
+                <div className="border rounded-sm p-4">
                   <h3 className="font-medium text-lg mb-2">Feature Overview</h3>
                   <ul className="list-disc list-inside space-y-1 text-gray-600">
                     <li>Create and edit applicant profiles with personal information</li>
@@ -101,12 +101,12 @@ export default function ApplicantsPage() {
                   </ul>
                 </div>
                 
-                <div className="border rounded-lg p-4">
+                <div className="border rounded-sm p-4">
                   <h3 className="font-medium text-lg mb-2">Demo Actions</h3>
                   <div className="space-y-2">
                     <button
                       onClick={handleCreateNew}
-                      className="block w-full text-left px-3 py-2 bg-violet-50 text-violet-700 rounded border hover:bg-violet-100"
+                      className="block w-full text-left px-3 py-2 bg-gold-50 text-violet-700 rounded border hover:bg-gold-100"
                     >
                       Create New Applicant Profile
                     </button>
@@ -119,7 +119,7 @@ export default function ApplicantsPage() {
                   </div>
                 </div>
                 
-                <div className="border rounded-lg p-4 bg-yellow-50">
+                <div className="border rounded-sm p-4 bg-yellow-50">
                   <h3 className="font-medium text-lg mb-2 text-yellow-800">Implementation Notes</h3>
                   <ul className="list-disc list-inside space-y-1 text-yellow-700 text-sm">
                     <li>Backend API endpoints: POST/PUT /api/applicants, POST /api/applicants/{"{id}"}/documents</li>

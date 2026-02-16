@@ -147,14 +147,14 @@ const MobileNavigation: React.FC<MobileNavigationProps> = ({ isOpen, onClose }) 
         {/* Header */}
         <div className="flex items-center justify-between p-4 border-b border-gray-200">
           <div className="flex items-center space-x-3">
-            <div className="w-7 h-7 bg-violet-600 rounded-md flex items-center justify-center">
+            <div className="w-7 h-7 bg-violet-600 rounded-sm flex items-center justify-center">
               <span className="text-white font-bold text-xs">TG</span>
             </div>
             <h2 className="text-sm font-bold text-gray-900 tracking-tight">TalentGate</h2>
           </div>
           <button
             onClick={onClose}
-            className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-colors"
+            className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-sm transition-colors"
           >
             ✕
           </button>
@@ -169,9 +169,9 @@ const MobileNavigation: React.FC<MobileNavigationProps> = ({ isOpen, onClose }) 
                 <div className="flex items-center">
                   <Link
                     href={item.href}
-                    className={`flex-1 flex items-center space-x-3 px-3 py-2 rounded-lg transition-colors ${
+                    className={`flex-1 flex items-center space-x-3 px-3 py-2 rounded-sm transition-colors ${
                       isParentActive(item)
-                        ? 'bg-violet-50/80 text-violet-700 border-l-[3px] border-l-violet-600'
+                        ? 'bg-gold-50/80 text-violet-700 border-l-[3px] border-l-violet-600'
                         : 'text-gray-700 hover:bg-gray-100'
                     }`}
                   >
@@ -204,9 +204,9 @@ const MobileNavigation: React.FC<MobileNavigationProps> = ({ isOpen, onClose }) 
                       <Link
                         key={child.id}
                         href={child.href}
-                        className={`flex items-center space-x-3 px-3 py-2 rounded-lg text-sm transition-colors ${
+                        className={`flex items-center space-x-3 px-3 py-2 rounded-sm text-sm transition-colors ${
                           isActive(child.href)
-                            ? 'bg-violet-50/60 text-violet-700'
+                            ? 'bg-gold-50/60 text-violet-700'
                             : 'text-gray-600 hover:bg-gray-50'
                         }`}
                       >
@@ -242,14 +242,14 @@ const MobileNavigation: React.FC<MobileNavigationProps> = ({ isOpen, onClose }) 
           <div className="grid grid-cols-2 gap-2">
             <Link
               href="/profile"
-              className="flex items-center justify-center space-x-2 px-3 py-2 text-sm text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors"
+              className="flex items-center justify-center space-x-2 px-3 py-2 text-sm text-gray-700 bg-gray-100 rounded-sm hover:bg-gray-200 transition-colors"
             >
               <span>👤</span>
               <span>Profile</span>
             </Link>
             <Link
               href="/settings"
-              className="flex items-center justify-center space-x-2 px-3 py-2 text-sm text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors"
+              className="flex items-center justify-center space-x-2 px-3 py-2 text-sm text-gray-700 bg-gray-100 rounded-sm hover:bg-gray-200 transition-colors"
             >
               <span>⚙️</span>
               <span>Settings</span>
@@ -294,7 +294,7 @@ export const MobileHeader: React.FC = () => {
           <div className="flex items-center space-x-3">
             <button
               onClick={() => setIsMenuOpen(true)}
-              className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-colors"
+              className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-sm transition-colors"
             >
               <span className="text-lg">☰</span>
             </button>
@@ -303,12 +303,12 @@ export const MobileHeader: React.FC = () => {
 
           <div className="flex items-center space-x-2">
             {/* Search button */}
-            <button className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-colors">
+            <button className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-sm transition-colors">
               <span className="text-lg">🔍</span>
             </button>
             
             {/* Notifications button */}
-            <button className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-colors relative">
+            <button className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-sm transition-colors relative">
               <span className="text-lg">🔔</span>
               <span className="absolute -top-1 -right-1 inline-flex items-center justify-center px-1.5 py-0.5 text-xs font-bold leading-none text-white bg-red-500 rounded-full">
                 3

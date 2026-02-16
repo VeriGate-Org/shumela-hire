@@ -55,7 +55,7 @@ export default function HRDashboard({ selectedTimeframe, onTimeframeChange }: HR
           <select
             value={selectedTimeframe}
             onChange={(e) => onTimeframeChange(e.target.value)}
-            className="border border-gray-300 rounded-lg px-3 py-2 text-sm"
+            className="border border-gray-300 rounded-sm px-3 py-2 text-sm"
           >
             <option value="7days">Last 7 days</option>
             <option value="30days">Last 30 days</option>
@@ -100,11 +100,11 @@ export default function HRDashboard({ selectedTimeframe, onTimeframeChange }: HR
                     { department: 'Marketing', open: 3, inProgress: 2, filled: 1 },
                     { department: 'Operations', open: 4, inProgress: 1, filled: 0 },
                   ].map((dept) => (
-                    <div key={dept.department} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                    <div key={dept.department} className="flex items-center justify-between p-3 bg-gray-50 rounded-sm">
                       <span className="font-medium text-gray-900">{dept.department}</span>
                       <div className="flex items-center gap-4 text-sm">
                         <span className="text-orange-600">{dept.open} open</span>
-                        <span className="text-violet-600">{dept.inProgress} active</span>
+                        <span className="text-gold-600">{dept.inProgress} active</span>
                         <span className="text-green-600">{dept.filled} filled</span>
                       </div>
                     </div>
@@ -123,12 +123,12 @@ export default function HRDashboard({ selectedTimeframe, onTimeframeChange }: HR
               >
                 <div className="space-y-4">
                   {[
-                    { stage: 'New Hires (This Month)', count: 8, color: 'bg-violet-100 text-violet-800' },
+                    { stage: 'New Hires (This Month)', count: 8, color: 'bg-gold-100 text-gold-800' },
                     { stage: 'In Onboarding', count: 5, color: 'bg-yellow-100 text-yellow-800' },
                     { stage: 'Completed Training', count: 12, color: 'bg-green-100 text-green-800' },
                     { stage: 'Performance Review Due', count: 23, color: 'bg-purple-100 text-purple-800' },
                   ].map((item) => (
-                    <div key={item.stage} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                    <div key={item.stage} className="flex items-center justify-between p-3 bg-gray-50 rounded-sm">
                       <span className="font-medium text-gray-900">{item.stage}</span>
                       <span className={`px-2 py-1 rounded-full text-sm font-medium ${item.color}`}>
                         {item.count}
@@ -166,7 +166,7 @@ export default function HRDashboard({ selectedTimeframe, onTimeframeChange }: HR
                     type: 'policy',
                     message: 'Updated remote work policy published',
                     time: '3 hours ago',
-                    color: 'text-violet-600',
+                    color: 'text-gold-600',
                   },
                   {
                     id: '3',
@@ -183,7 +183,7 @@ export default function HRDashboard({ selectedTimeframe, onTimeframeChange }: HR
                     color: 'text-orange-600',
                   },
                 ].map((activity) => (
-                  <div key={activity.id} className="flex items-start gap-3 p-3 hover:bg-gray-50 rounded-lg">
+                  <div key={activity.id} className="flex items-start gap-3 p-3 hover:bg-gray-50 rounded-sm">
                     <div className={`w-2 h-2 rounded-full mt-2 flex-shrink-0 ${activity.color.replace('text-', 'bg-')}`}></div>
                     <div className="flex-1 min-w-0">
                       <p className="text-sm text-gray-900 truncate">{activity.message}</p>
@@ -213,7 +213,7 @@ export default function HRDashboard({ selectedTimeframe, onTimeframeChange }: HR
                 ].map((action) => (
                   <button
                     key={action.label}
-                    className={`${action.color} text-white p-3 rounded-lg hover:opacity-90 transition-opacity text-sm font-medium text-center w-full flex items-center justify-center gap-2`}
+                    className={`${action.color} text-white p-3 rounded-sm hover:opacity-90 transition-opacity text-sm font-medium text-center w-full flex items-center justify-center gap-2`}
                   >
                     <span>{action.icon}</span>
                     {action.label}

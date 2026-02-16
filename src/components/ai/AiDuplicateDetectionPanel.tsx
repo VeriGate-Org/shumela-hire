@@ -60,7 +60,7 @@ export default function AiDuplicateDetectionPanel({
         </div>
         {!autoCheck && (
           <button onClick={handleCheck} disabled={loading}
-            className="px-3 py-1.5 text-xs bg-violet-600 text-white rounded-md hover:bg-violet-700 disabled:opacity-50">
+            className="px-3 py-1.5 text-xs bg-gold-500 text-violet-950 rounded-sm hover:bg-gold-600 disabled:opacity-50">
             {loading ? 'Checking...' : 'Check Duplicates'}
           </button>
         )}
@@ -68,24 +68,24 @@ export default function AiDuplicateDetectionPanel({
 
       {loading && (
         <div className="flex items-center gap-2 text-xs text-gray-500">
-          <div className="animate-spin h-4 w-4 border-2 border-violet-600 border-t-transparent rounded-full" />
+          <div className="animate-spin h-4 w-4 border-2 border-gold-500 border-t-transparent rounded-full" />
           Checking for duplicates...
         </div>
       )}
 
       {checked && duplicates.length === 0 && (
-        <div className="text-xs text-green-700 bg-green-50 border border-green-200 rounded-md px-3 py-2">
+        <div className="text-xs text-green-700 bg-green-50 border border-green-200 rounded-sm px-3 py-2">
           {message}
         </div>
       )}
 
       {duplicates.length > 0 && (
         <div className="space-y-2">
-          <div className="text-xs text-orange-700 bg-orange-50 border border-orange-200 rounded-md px-3 py-2">
+          <div className="text-xs text-orange-700 bg-orange-50 border border-orange-200 rounded-sm px-3 py-2">
             {message}
           </div>
           {duplicates.map((dup, i) => (
-            <div key={i} className="flex items-center justify-between p-3 bg-gray-50 border border-gray-200 rounded-lg">
+            <div key={i} className="flex items-center justify-between p-3 bg-gray-50 border border-gray-200 rounded-sm">
               <div>
                 <p className="text-sm font-medium text-gray-900">{dup.fullName}</p>
                 <p className="text-xs text-gray-500">{dup.email}</p>
@@ -97,7 +97,7 @@ export default function AiDuplicateDetectionPanel({
                 </span>
                 {onViewCandidate && (
                   <button onClick={() => onViewCandidate(dup.applicantId)}
-                    className="text-xs px-2 py-1 text-violet-700 border border-violet-200 rounded hover:bg-violet-50">
+                    className="text-xs px-2 py-1 text-violet-700 border border-violet-200 rounded hover:bg-gold-50">
                     View
                   </button>
                 )}

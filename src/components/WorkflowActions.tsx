@@ -60,7 +60,7 @@ const WorkflowActions: React.FC<WorkflowActionsProps> = ({
   };
 
   const getActionButton = (action: WorkflowAction) => {
-    const baseClasses = "px-4 py-2 rounded-md font-medium transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed";
+    const baseClasses = "px-4 py-2 rounded-sm font-medium transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed";
     
     switch (action) {
       case WorkflowAction.SUBMIT:
@@ -69,7 +69,7 @@ const WorkflowActions: React.FC<WorkflowActionsProps> = ({
             key={action}
             onClick={() => handleAction(action)}
             disabled={disabled || isLoading}
-            className={`${baseClasses} bg-violet-600 hover:bg-violet-700 text-white`}
+            className={`${baseClasses} bg-transparent border-2 border-gold-500 text-violet-900 hover:bg-gold-500 hover:text-violet-950 uppercase tracking-wider`}
           >
             {isLoading ? 'Submitting...' : 'Submit for Approval'}
           </button>
@@ -118,7 +118,7 @@ const WorkflowActions: React.FC<WorkflowActionsProps> = ({
       {/* Comment Modal */}
       {showCommentModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-lg p-6 w-full max-w-md">
+          <div className="bg-white rounded-sm p-6 w-full max-w-md">
             <h3 className="text-lg font-medium text-gray-900 mb-4">
               {pendingAction === WorkflowAction.REJECT ? 'Rejection Reason' : 'Add Comment'}
             </h3>
@@ -127,7 +127,7 @@ const WorkflowActions: React.FC<WorkflowActionsProps> = ({
               value={comment}
               onChange={(e) => setComment(e.target.value)}
               placeholder={pendingAction === WorkflowAction.REJECT ? 'Please provide a reason for rejection...' : 'Optional comment...'}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-violet-500/60 focus:border-violet-400"
+              className="w-full px-3 py-2 border border-gray-300 rounded-sm focus:outline-none focus:ring-2 focus:ring-gold-500/60 focus:border-violet-400"
               rows={4}
               required={pendingAction === WorkflowAction.REJECT}
             />
@@ -144,17 +144,17 @@ const WorkflowActions: React.FC<WorkflowActionsProps> = ({
                   setComment('');
                 }}
                 disabled={isLoading}
-                className="px-4 py-2 text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-md transition-colors duration-200"
+                className="px-4 py-2 text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-sm transition-colors duration-200"
               >
                 Cancel
               </button>
               <button
                 onClick={handleCommentSubmit}
                 disabled={isLoading || (pendingAction === WorkflowAction.REJECT && !comment.trim())}
-                className={`px-4 py-2 rounded-md font-medium transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed ${
+                className={`px-4 py-2 rounded-sm font-medium transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed ${
                   pendingAction === WorkflowAction.REJECT 
                     ? 'bg-red-600 hover:bg-red-700 text-white'
-                    : 'bg-violet-600 hover:bg-violet-700 text-white'
+                    : 'bg-transparent border-2 border-gold-500 text-violet-900 hover:bg-gold-500 hover:text-violet-950 uppercase tracking-wider'
                 }`}
               >
                 {isLoading ? 'Processing...' : (pendingAction === WorkflowAction.REJECT ? 'Reject' : 'Submit')}

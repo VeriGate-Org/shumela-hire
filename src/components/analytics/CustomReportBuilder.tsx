@@ -271,7 +271,7 @@ const CustomReportBuilder: React.FC<CustomReportBuilderProps> = ({
   };
 
   return (
-    <div className={`bg-white rounded-lg border border-gray-200 ${className}`}>
+    <div className={`bg-white rounded-sm border border-gray-200 ${className}`}>
       {/* Header */}
       <div className="p-6 border-b border-gray-200">
         <div className="flex items-center justify-between">
@@ -292,12 +292,12 @@ const CustomReportBuilder: React.FC<CustomReportBuilderProps> = ({
             />
           </div>
           <div className="flex items-center gap-2">
-            <button className="p-2 text-gray-500 hover:text-gray-700 rounded-lg hover:bg-gray-100">
+            <button className="p-2 text-gray-500 hover:text-gray-700 rounded-sm hover:bg-gray-100">
               <ShareIcon className="w-5 h-5" />
             </button>
             <button
               onClick={() => onSave?.(reportConfig)}
-              className="px-4 py-2 bg-violet-600 text-white rounded-lg hover:bg-violet-700 flex items-center gap-2"
+              className="px-4 py-2 bg-gold-500 text-violet-950 rounded-sm hover:bg-gold-600 flex items-center gap-2"
             >
               <DocumentArrowDownIcon className="w-4 h-4" />
               Save Report
@@ -319,7 +319,7 @@ const CustomReportBuilder: React.FC<CustomReportBuilderProps> = ({
               onClick={() => setActiveTab(tab.id as any)}
               className={`flex items-center gap-2 px-4 py-3 border-b-2 text-sm font-medium transition-colors ${
                 activeTab === tab.id
-                  ? 'border-violet-500 text-violet-600'
+                  ? 'border-gold-500 text-gold-700'
                   : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
               }`}
             >
@@ -380,14 +380,14 @@ const CustomReportBuilder: React.FC<CustomReportBuilderProps> = ({
                 <div>
                   <h4 className="font-medium text-gray-900 mb-3">Dimensions</h4>
                   <div
-                    className="min-h-24 p-4 border-2 border-dashed border-gray-300 rounded-lg"
+                    className="min-h-24 p-4 border-2 border-dashed border-gray-300 rounded-sm"
                     onDragOver={(e) => e.preventDefault()}
                     onDrop={() => handleDrop('dimensions')}
                   >
                     {reportConfig.dimensions.map(dimId => {
                       const field = availableFields.find(f => f.id === dimId);
                       return (
-                        <div key={dimId} className="flex items-center justify-between bg-violet-100 text-violet-800 px-3 py-2 rounded mb-2">
+                        <div key={dimId} className="flex items-center justify-between bg-gold-100 text-gold-800 px-3 py-2 rounded mb-2">
                           <span className="text-sm">{field?.label}</span>
                           <button onClick={() => removeField('dimensions', dimId)}>
                             <TrashIcon className="w-4 h-4" />
@@ -404,7 +404,7 @@ const CustomReportBuilder: React.FC<CustomReportBuilderProps> = ({
                 <div>
                   <h4 className="font-medium text-gray-900 mb-3">Metrics</h4>
                   <div
-                    className="min-h-24 p-4 border-2 border-dashed border-gray-300 rounded-lg"
+                    className="min-h-24 p-4 border-2 border-dashed border-gray-300 rounded-sm"
                     onDragOver={(e) => e.preventDefault()}
                     onDrop={() => handleDrop('metrics')}
                   >
@@ -439,9 +439,9 @@ const CustomReportBuilder: React.FC<CustomReportBuilderProps> = ({
                     <button
                       key={viz.id}
                       onClick={() => setReportConfig(prev => ({ ...prev, visualization: viz.id as any }))}
-                      className={`flex items-center gap-2 px-3 py-2 rounded-lg text-sm ${
+                      className={`flex items-center gap-2 px-3 py-2 rounded-sm text-sm ${
                         reportConfig.visualization === viz.id
-                          ? 'bg-violet-100 text-violet-700'
+                          ? 'bg-gold-100 text-violet-700'
                           : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
                       }`}
                     >
@@ -458,7 +458,7 @@ const CustomReportBuilder: React.FC<CustomReportBuilderProps> = ({
                   <h4 className="font-medium text-gray-900">Filters</h4>
                   <button
                     onClick={addFilter}
-                    className="flex items-center gap-1 px-3 py-1 text-sm text-violet-600 hover:bg-violet-50 rounded"
+                    className="flex items-center gap-1 px-3 py-1 text-sm text-gold-600 hover:bg-gold-50 rounded"
                   >
                     <PlusIcon className="w-4 h-4" />
                     Add Filter
@@ -520,7 +520,7 @@ const CustomReportBuilder: React.FC<CustomReportBuilderProps> = ({
                 Preview based on sample data. Actual report will use live data.
               </p>
             </div>
-            <div className="border border-gray-200 rounded-lg p-4">
+            <div className="border border-gray-200 rounded-sm p-4">
               {renderVisualization()}
             </div>
           </div>
@@ -534,7 +534,7 @@ const CustomReportBuilder: React.FC<CustomReportBuilderProps> = ({
                 <label className="block text-sm font-medium text-gray-700 mb-2">
                   Delivery Frequency
                 </label>
-                <select className="w-full border border-gray-300 rounded-lg px-3 py-2">
+                <select className="w-full border border-gray-300 rounded-sm px-3 py-2">
                   <option value="manual">Manual Only</option>
                   <option value="daily">Daily</option>
                   <option value="weekly">Weekly</option>
@@ -548,7 +548,7 @@ const CustomReportBuilder: React.FC<CustomReportBuilderProps> = ({
                 <input
                   type="email"
                   placeholder="Enter email addresses"
-                  className="w-full border border-gray-300 rounded-lg px-3 py-2"
+                  className="w-full border border-gray-300 rounded-sm px-3 py-2"
                 />
               </div>
             </div>

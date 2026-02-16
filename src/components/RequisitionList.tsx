@@ -120,7 +120,7 @@ const RequisitionList: React.FC<RequisitionListProps> = ({
   if (loading) {
     return (
       <div className="flex justify-center items-center py-8">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-violet-600"></div>
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gold-500"></div>
         <span className="ml-2">Loading requisitions...</span>
       </div>
     );
@@ -128,7 +128,7 @@ const RequisitionList: React.FC<RequisitionListProps> = ({
 
   if (error) {
     return (
-      <div className="bg-red-50 border border-red-200 rounded-md p-4">
+      <div className="bg-red-50 border border-red-200 rounded-sm p-4">
         <p className="text-red-600">Error: {error}</p>
         <button 
           onClick={fetchRequisitions}
@@ -154,16 +154,16 @@ const RequisitionList: React.FC<RequisitionListProps> = ({
   return (
     <div className="space-y-4">
       {requisitions.map((requisition) => (
-        <div key={requisition.id} className="bg-white rounded-lg shadow border border-gray-200 p-6">
+        <div key={requisition.id} className="bg-white rounded-sm shadow border border-gray-200 p-6">
           <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between">
             <div className="flex-1">
               <div className="flex items-start justify-between mb-4">
                 <div>
                   <Link 
                     href={`/requisitions/${requisition.id}`}
-                    className="hover:text-violet-600 transition-colors"
+                    className="hover:text-gold-600 transition-colors"
                   >
-                    <h3 className="text-lg font-semibold text-gray-900 hover:text-violet-600">
+                    <h3 className="text-lg font-semibold text-gray-900 hover:text-gold-600">
                       {requisition.jobTitle}
                     </h3>
                   </Link>
@@ -178,7 +178,7 @@ const RequisitionList: React.FC<RequisitionListProps> = ({
                   <WorkflowStatusBadge status={requisition.status} showProgress />
                   <Link 
                     href={`/requisitions/${requisition.id}`}
-                    className="text-xs text-violet-600 hover:text-violet-800 transition-colors"
+                    className="text-xs text-gold-600 hover:text-gold-800 transition-colors"
                   >
                     View Details →
                   </Link>

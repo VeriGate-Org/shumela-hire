@@ -93,7 +93,7 @@ function LoginContent() {
 
       <div className="max-w-md w-full space-y-8">
         <div>
-          <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
+          <h2 className="mt-6 text-center text-3xl font-bold text-gray-900">
             Sign in to your account
           </h2>
           <p className="mt-2 text-center text-sm text-gray-600">
@@ -102,7 +102,7 @@ function LoginContent() {
         </div>
 
         {ssoError && (
-          <div className="p-3 bg-red-50 border border-red-200 text-red-700 text-sm rounded-md">
+          <div className="p-3 bg-red-50 border border-red-200 text-red-700 text-sm rounded-sm">
             {ssoError}
           </div>
         )}
@@ -114,7 +114,7 @@ function LoginContent() {
               <button
                 key={provider.id}
                 onClick={() => handleSsoLogin(provider.id)}
-                className="group relative w-full flex justify-center py-2 px-4 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-violet-500"
+                className="group relative w-full flex justify-center py-2 px-4 border border-gray-300 text-sm font-medium rounded-full text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gold-500"
               >
                 Sign in with {provider.name}
               </button>
@@ -141,10 +141,10 @@ function LoginContent() {
                 <button
                   key={role}
                   onClick={() => setSelectedRole(role)}
-                  className={`px-3 py-2 text-sm font-medium rounded-md border transition-colors ${
+                  className={`px-3 py-2 text-sm font-medium rounded-full border transition-colors ${
                     selectedRole === role
-                      ? 'bg-violet-600 text-white border-violet-600 ring-1 ring-gold-400/40'
-                      : 'bg-white text-gray-700 border-gray-300 hover:border-violet-300 hover:bg-violet-50'
+                      ? 'bg-gold-500 text-violet-950 border-gold-500 ring-1 ring-gold-400/40'
+                      : 'bg-white text-gray-700 border-gray-300 hover:border-violet-300 hover:bg-gold-50'
                   }`}
                 >
                   {ROLE_DISPLAY_NAMES[role]}
@@ -155,7 +155,7 @@ function LoginContent() {
 
           <button
             onClick={() => handleMockLogin(selectedRole)}
-            className="group relative w-full flex justify-center py-2.5 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-violet-600 hover:bg-violet-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-violet-500"
+            className="group relative w-full flex justify-center py-2.5 px-4 border-2 border-gold-500 text-sm font-medium rounded-full bg-transparent text-violet-900 hover:bg-gold-500 hover:text-violet-950 uppercase tracking-wider focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gold-500"
           >
             Sign In as {ROLE_DISPLAY_NAMES[selectedRole]}
           </button>
@@ -170,7 +170,7 @@ export default function LoginPage() {
     <Suspense fallback={
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-violet-600 mx-auto"></div>
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gold-500 mx-auto"></div>
           <p className="mt-4 text-gray-600">Loading...</p>
         </div>
       </div>

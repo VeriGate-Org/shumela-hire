@@ -76,15 +76,15 @@ const ModernSidebar: React.FC<ModernSidebarProps> = ({
           className={`
             group flex items-center gap-2.5 px-2.5 py-2 text-[13px] font-medium rounded transition-colors border border-transparent
             ${isActive
-              ? 'bg-violet-500/[0.06] text-violet-800 border-l-[3px] border-l-gold-500 border-y-transparent border-r-transparent pl-[7px]'
-              : 'text-gray-600 hover:bg-gray-100 hover:text-violet-700'
+              ? 'bg-gold-500/[0.06] text-violet-800 border-l-[3px] border-l-gold-500 border-y-transparent border-r-transparent pl-[7px]'
+              : 'text-gray-600 hover:bg-gray-100 hover:text-gold-700'
             }
             ${isCollapsed ? 'justify-center px-2' : ''}
           `}
         >
           <IconComponent className={`
             h-4 w-4 flex-shrink-0
-            ${isActive ? 'text-violet-600' : 'text-gray-400 group-hover:text-gray-500'}
+            ${isActive ? 'text-gold-600' : 'text-gray-400 group-hover:text-gray-500'}
             transition-colors
           `} />
 
@@ -93,7 +93,7 @@ const ModernSidebar: React.FC<ModernSidebarProps> = ({
               <span className="flex-1 text-left truncate">{item.label}</span>
 
               {item.badge && (
-                <span className="px-1.5 py-0.5 text-[10px] rounded bg-violet-600 text-white">
+                <span className="px-1.5 py-0.5 text-[10px] rounded bg-gold-500 text-violet-950">
                   {item.badge}
                 </span>
               )}
@@ -125,7 +125,7 @@ const ModernSidebar: React.FC<ModernSidebarProps> = ({
               placeholder="Search..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-8 pr-3 py-1.5 text-xs border border-gray-200 rounded bg-gray-50 text-gray-700 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-violet-500/25 focus:border-transparent"
+              className="w-full pl-8 pr-3 py-1.5 text-xs border border-gray-200 rounded bg-gray-50 text-gray-700 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-gold-500/25 focus:border-transparent"
             />
             {searchQuery && (
               <button onClick={() => setSearchQuery('')} className="absolute right-2.5 top-1/2 -translate-y-1/2">

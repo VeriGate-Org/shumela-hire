@@ -590,7 +590,7 @@ export default function BrowseJobsPage() {
 
   const getJobTypeColor = (jobType: string) => {
     switch (jobType) {
-      case 'full_time': return 'bg-violet-100 text-violet-800';
+      case 'full_time': return 'bg-gold-100 text-gold-800';
       case 'part_time': return 'bg-green-100 text-green-800';
       case 'contract': return 'bg-purple-100 text-purple-800';
       case 'internship': return 'bg-orange-100 text-orange-800';
@@ -603,7 +603,7 @@ export default function BrowseJobsPage() {
   const getExperienceLevelColor = (level: string) => {
     switch (level) {
       case 'entry': return 'bg-green-100 text-green-800';
-      case 'mid': return 'bg-violet-100 text-violet-800';
+      case 'mid': return 'bg-gold-100 text-gold-800';
       case 'senior': return 'bg-purple-100 text-purple-800';
       case 'executive': return 'bg-red-100 text-red-800';
       default: return 'bg-gray-100 text-gray-800';
@@ -619,7 +619,7 @@ export default function BrowseJobsPage() {
           placeholder="Search jobs, companies, skills..."
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
-          className="pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-violet-500/60 focus:border-violet-400 w-80"
+          className="pl-10 pr-4 py-2 border border-gray-300 rounded-sm focus:ring-2 focus:ring-gold-500/60 focus:border-violet-400 w-80"
         />
       </div>
       
@@ -628,10 +628,10 @@ export default function BrowseJobsPage() {
         placeholder="Location"
         value={locationFilter}
         onChange={(e) => setLocationFilter(e.target.value)}
-        className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-violet-500/60 focus:border-violet-400 w-40"
+        className="px-3 py-2 border border-gray-300 rounded-sm focus:ring-2 focus:ring-gold-500/60 focus:border-violet-400 w-40"
       />
       
-      <button className="flex items-center px-3 py-2 border border-gray-300 rounded-lg hover:bg-gray-50">
+      <button className="flex items-center px-3 py-2 border border-gray-300 rounded-full hover:bg-gray-50">
         <FunnelIcon className="w-4 h-4 mr-2" />
         Filters
       </button>
@@ -639,7 +639,7 @@ export default function BrowseJobsPage() {
       <select
         value={sortBy}
         onChange={(e) => setSortBy(e.target.value as any)}
-        className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-violet-500/60 focus:border-violet-400"
+        className="px-3 py-2 border border-gray-300 rounded-sm focus:ring-2 focus:ring-gold-500/60 focus:border-violet-400"
       >
         <option value="relevance">Most Relevant</option>
         <option value="date">Most Recent</option>
@@ -653,7 +653,7 @@ export default function BrowseJobsPage() {
     return (
       <PageWrapper title="Browse Jobs" subtitle="Loading available positions..." actions={actions}>
         <div className="flex items-center justify-center h-96">
-          <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-violet-500"></div>
+          <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-gold-500"></div>
         </div>
       </PageWrapper>
     );
@@ -667,12 +667,12 @@ export default function BrowseJobsPage() {
     >
       <div className="space-y-6">
         {/* Filter Bar */}
-        <div className="bg-white rounded-lg shadow p-4">
+        <div className="bg-white rounded-sm shadow p-4">
           <div className="flex flex-wrap items-center gap-4">
             <select
               value={jobTypeFilter}
               onChange={(e) => setJobTypeFilter(e.target.value)}
-              className="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-violet-500/60 focus:border-violet-400"
+              className="px-3 py-2 border border-gray-300 rounded-sm text-sm focus:ring-2 focus:ring-gold-500/60 focus:border-violet-400"
             >
               <option value="all">All Types</option>
               <option value="full_time">Full Time</option>
@@ -686,7 +686,7 @@ export default function BrowseJobsPage() {
             <select
               value={experienceLevelFilter}
               onChange={(e) => setExperienceLevelFilter(e.target.value)}
-              className="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-violet-500/60 focus:border-violet-400"
+              className="px-3 py-2 border border-gray-300 rounded-sm text-sm focus:ring-2 focus:ring-gold-500/60 focus:border-violet-400"
             >
               <option value="all">All Levels</option>
               <option value="entry">Entry Level</option>
@@ -700,7 +700,7 @@ export default function BrowseJobsPage() {
               placeholder="Min Salary"
               value={salaryMinFilter}
               onChange={(e) => setSalaryMinFilter(e.target.value)}
-              className="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-violet-500/60 focus:border-violet-400 w-32"
+              className="px-3 py-2 border border-gray-300 rounded-sm text-sm focus:ring-2 focus:ring-gold-500/60 focus:border-violet-400 w-32"
             />
 
             <label className="flex items-center">
@@ -708,7 +708,7 @@ export default function BrowseJobsPage() {
                 type="checkbox"
                 checked={remoteOnlyFilter}
                 onChange={(e) => setRemoteOnlyFilter(e.target.checked)}
-                className="rounded border-gray-300 text-violet-600 focus:ring-violet-500/60"
+                className="rounded border-gray-300 text-gold-600 focus:ring-gold-500/60"
               />
               <span className="ml-2 text-sm text-gray-700">Remote Only</span>
             </label>
@@ -716,7 +716,7 @@ export default function BrowseJobsPage() {
             <div className="flex items-center ml-auto">
               <button
                 onClick={() => setViewMode('list')}
-                className={`p-2 rounded-lg ${viewMode === 'list' ? 'bg-violet-100 text-violet-600' : 'text-gray-500 hover:bg-gray-100'}`}
+                className={`p-2 rounded-sm ${viewMode === 'list' ? 'bg-gold-100 text-gold-600' : 'text-gray-500 hover:bg-gray-100'}`}
               >
                 <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
                   <path d="M3 4a1 1 0 000 2h1a1 1 0 000-2H3zM3 8a1 1 0 000 2h1a1 1 0 000-2H3zM3 12a1 1 0 100 2h1a1 1 0 100-2H3zM7 4a1 1 0 000 2h9a1 1 0 100-2H7zM7 8a1 1 0 000 2h9a1 1 0 100-2H7zM7 12a1 1 0 000 2h9a1 1 0 100-2H7z" />
@@ -724,7 +724,7 @@ export default function BrowseJobsPage() {
               </button>
               <button
                 onClick={() => setViewMode('grid')}
-                className={`p-2 rounded-lg ml-2 ${viewMode === 'grid' ? 'bg-violet-100 text-violet-600' : 'text-gray-500 hover:bg-gray-100'}`}
+                className={`p-2 rounded-sm ml-2 ${viewMode === 'grid' ? 'bg-gold-100 text-gold-600' : 'text-gray-500 hover:bg-gray-100'}`}
               >
                 <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
                   <path d="M5 3a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2V5a2 2 0 00-2-2H5zM5 11a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2v-2a2 2 0 00-2-2H5zM11 5a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V5zM11 13a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
@@ -737,12 +737,12 @@ export default function BrowseJobsPage() {
         {/* Jobs List/Grid */}
         <div className={viewMode === 'grid' ? 'grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6' : 'space-y-4'}>
           {filteredJobs.map((job) => (
-            <div key={job.id} className="bg-white rounded-lg shadow border hover:shadow-md transition-shadow duration-200">
+            <div key={job.id} className="bg-white rounded-sm shadow border hover:shadow-md transition-shadow duration-200">
               <div className="p-6">
                 <div className="flex items-start justify-between mb-4">
                   <div className="flex-1">
                     <div className="flex items-start space-x-4">
-                      <div className="w-12 h-12 bg-gradient-to-br from-violet-500 to-violet-700 rounded-lg flex items-center justify-center flex-shrink-0">
+                      <div className="w-12 h-12 bg-violet-600 rounded-sm flex items-center justify-center flex-shrink-0">
                         <BuildingOfficeIcon className="w-6 h-6 text-white" />
                       </div>
                       
@@ -750,7 +750,7 @@ export default function BrowseJobsPage() {
                         <div className="flex items-start justify-between">
                           <div>
                             <h3 className="text-lg font-semibold text-gray-900 truncate">{job.title}</h3>
-                            <p className="text-base text-violet-600 font-medium">{job.company}</p>
+                            <p className="text-base text-gold-600 font-medium">{job.company}</p>
                             <div className="flex items-center space-x-2 mt-1 text-sm text-gray-600">
                               <MapPinIcon className="w-4 h-4" />
                               <span>{job.location}</span>
@@ -764,7 +764,7 @@ export default function BrowseJobsPage() {
                             className="p-2 hover:bg-gray-100 rounded-full"
                           >
                             {savedJobs.includes(job.id) ? (
-                              <BookmarkIconSolid className="w-5 h-5 text-violet-600" />
+                              <BookmarkIconSolid className="w-5 h-5 text-gold-600" />
                             ) : (
                               <BookmarkIcon className="w-5 h-5 text-gray-400" />
                             )}
@@ -812,12 +812,12 @@ export default function BrowseJobsPage() {
                   
                   <div className="flex flex-wrap gap-1">
                     {job.skills.slice(0, 4).map((skill, index) => (
-                      <span key={index} className="inline-flex items-center px-2 py-1 rounded-md text-xs font-medium bg-gray-100 text-gray-700">
+                      <span key={index} className="inline-flex items-center px-2 py-1 rounded-sm text-xs font-medium bg-gray-100 text-gray-700">
                         {skill}
                       </span>
                     ))}
                     {job.skills.length > 4 && (
-                      <span className="inline-flex items-center px-2 py-1 rounded-md text-xs font-medium bg-gray-100 text-gray-700">
+                      <span className="inline-flex items-center px-2 py-1 rounded-sm text-xs font-medium bg-gray-100 text-gray-700">
                         +{job.skills.length - 4} more
                       </span>
                     )}
@@ -850,13 +850,13 @@ export default function BrowseJobsPage() {
                     <div className="flex items-center space-x-2">
                       <button
                         onClick={() => setSelectedJob(job)}
-                        className="inline-flex items-center px-3 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50"
+                        className="inline-flex items-center px-3 py-2 border border-gray-300 text-sm font-medium rounded-full text-gray-700 bg-white hover:bg-gray-50"
                       >
                         <EyeIcon className="w-4 h-4 mr-2" />
                         View Details
                       </button>
                       
-                      <button className="inline-flex items-center px-3 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-violet-600 hover:bg-violet-700">
+                      <button className="inline-flex items-center px-3 py-2 bg-transparent border-2 border-gold-500 text-violet-900 hover:bg-gold-500 hover:text-violet-950 uppercase tracking-wider rounded-full text-sm font-medium">
                         {job.isEasyApply ? (
                           <>
                             <CheckCircleIcon className="w-4 h-4 mr-2" />
@@ -878,7 +878,7 @@ export default function BrowseJobsPage() {
         </div>
 
         {filteredJobs.length === 0 && (
-          <div className="bg-white rounded-lg shadow p-12 text-center">
+          <div className="bg-white rounded-sm shadow p-12 text-center">
             <BriefcaseIcon className="w-16 h-16 text-gray-400 mx-auto mb-4" />
             <h3 className="text-lg font-medium text-gray-900 mb-2">No jobs found</h3>
             <p className="text-gray-600">
@@ -890,16 +890,16 @@ export default function BrowseJobsPage() {
         {/* Job Details Modal */}
         {selectedJob && (
           <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-            <div className="bg-white rounded-lg shadow-xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
+            <div className="bg-white rounded-sm shadow-xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
               <div className="p-6">
                 <div className="flex items-start justify-between mb-6">
                   <div className="flex items-start space-x-4">
-                    <div className="w-16 h-16 bg-gradient-to-br from-violet-500 to-violet-700 rounded-lg flex items-center justify-center">
+                    <div className="w-16 h-16 bg-violet-600 rounded-sm flex items-center justify-center">
                       <BuildingOfficeIcon className="w-8 h-8 text-white" />
                     </div>
                     <div>
                       <h2 className="text-2xl font-bold text-gray-900">{selectedJob.title}</h2>
-                      <p className="text-lg text-violet-600 font-medium mt-1">{selectedJob.company}</p>
+                      <p className="text-lg text-gold-600 font-medium mt-1">{selectedJob.company}</p>
                       <div className="flex items-center space-x-4 mt-2 text-sm text-gray-600">
                         <span className="flex items-center">
                           <MapPinIcon className="w-4 h-4 mr-1" />
@@ -973,7 +973,7 @@ export default function BrowseJobsPage() {
                   <div className="space-y-6">
                     <div>
                       <h3 className="text-lg font-semibold text-gray-900 mb-3">Job Details</h3>
-                      <div className="bg-gray-50 rounded-lg p-4 space-y-3">
+                      <div className="bg-gray-50 rounded-sm p-4 space-y-3">
                         <div className="flex justify-between">
                           <span className="font-medium">Department:</span>
                           <span>{selectedJob.department}</span>
@@ -1007,7 +1007,7 @@ export default function BrowseJobsPage() {
                       <h3 className="text-lg font-semibold text-gray-900 mb-3">Skills & Technologies</h3>
                       <div className="flex flex-wrap gap-2">
                         {selectedJob.skills.map((skill, index) => (
-                          <span key={index} className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-violet-100 text-violet-800">
+                          <span key={index} className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-gold-100 text-gold-800">
                             {skill}
                           </span>
                         ))}
@@ -1051,7 +1051,7 @@ export default function BrowseJobsPage() {
                     {selectedJob.contactPerson && (
                       <div>
                         <h3 className="text-lg font-semibold text-gray-900 mb-3">Contact Person</h3>
-                        <div className="bg-gray-50 rounded-lg p-4">
+                        <div className="bg-gray-50 rounded-sm p-4">
                           <p className="font-medium">{selectedJob.contactPerson.name}</p>
                           <p className="text-sm text-gray-600">{selectedJob.contactPerson.title}</p>
                           <p className="text-sm text-gray-600">{selectedJob.contactPerson.email}</p>
@@ -1065,9 +1065,9 @@ export default function BrowseJobsPage() {
                   <div className="flex items-center space-x-4">
                     <button
                       onClick={() => toggleSaveJob(selectedJob.id)}
-                      className={`flex items-center px-4 py-2 border rounded-lg ${
+                      className={`flex items-center px-4 py-2 border rounded-full ${
                         savedJobs.includes(selectedJob.id)
-                          ? 'bg-violet-50 border-violet-300 text-violet-700'
+                          ? 'bg-gold-50 border-violet-300 text-violet-700'
                           : 'border-gray-300 text-gray-700 hover:bg-gray-50'
                       }`}
                     >
@@ -1079,7 +1079,7 @@ export default function BrowseJobsPage() {
                       {savedJobs.includes(selectedJob.id) ? 'Saved' : 'Save Job'}
                     </button>
                     
-                    <button className="flex items-center px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50">
+                    <button className="flex items-center px-4 py-2 border border-gray-300 text-gray-700 rounded-full hover:bg-gray-50">
                       <ShareIcon className="w-4 h-4 mr-2" />
                       Share
                     </button>
@@ -1088,12 +1088,12 @@ export default function BrowseJobsPage() {
                   <div className="flex items-center space-x-3">
                     <button
                       onClick={() => setSelectedJob(null)}
-                      className="px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700"
+                      className="px-4 py-2 bg-gray-600 text-white rounded-full hover:bg-gray-700"
                     >
                       Close
                     </button>
                     
-                    <button className="flex items-center px-6 py-2 bg-violet-600 text-white rounded-lg hover:bg-violet-700">
+                    <button className="flex items-center px-6 py-2 bg-gold-500 text-violet-950 rounded-full hover:bg-gold-600">
                       {selectedJob.isEasyApply ? (
                         <>
                           <CheckCircleIcon className="w-4 h-4 mr-2" />

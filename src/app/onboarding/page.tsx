@@ -16,8 +16,8 @@ export default function OnboardingPage() {
       {/* Header with logo */}
       <header className="w-full px-6 py-5">
         <div className="flex items-center gap-2.5">
-          <div className="h-8 w-8 bg-violet-600 rounded-lg grid place-items-center">
-            <span className="text-white font-bold text-sm">TG</span>
+          <div className="h-8 w-8 bg-gold-500 rounded-sm grid place-items-center">
+            <span className="text-violet-950 font-bold text-sm">TG</span>
           </div>
           <span className="font-bold text-sm tracking-tight text-gray-900">TalentGate</span>
         </div>

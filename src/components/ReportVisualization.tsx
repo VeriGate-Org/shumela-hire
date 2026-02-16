@@ -97,7 +97,7 @@ const ReportVisualization: React.FC = () => {
 
   const getColorClasses = (color: string) => {
     const colorMap: Record<string, string> = {
-      blue: 'bg-violet-500 text-violet-100',
+      blue: 'bg-gold-500 text-violet-100',
       green: 'bg-green-500 text-green-100',
       purple: 'bg-purple-500 text-purple-100',
       orange: 'bg-orange-500 text-orange-100',
@@ -107,7 +107,7 @@ const ReportVisualization: React.FC = () => {
   };
 
   const KPICard: React.FC<{ kpi: KPIWidget; name: string }> = ({ kpi, name }) => (
-    <div className="bg-white rounded-lg shadow-md p-6 border-l-4 border-violet-500">
+    <div className="bg-white rounded-sm shadow-md p-6 border-l-4 border-gold-500">
       <div className="flex items-center justify-between">
         <div>
           <p className="text-sm font-medium text-gray-600">{kpi.title}</p>
@@ -141,7 +141,7 @@ const ReportVisualization: React.FC = () => {
   );
 
   const ChartCard: React.FC<{ chart: ChartData; name: string }> = ({ chart, name }) => (
-    <div className="bg-white rounded-lg shadow-md p-6">
+    <div className="bg-white rounded-sm shadow-md p-6">
       <h3 className="text-lg font-semibold text-gray-900 mb-4">{chart.title}</h3>
       <div className="h-64 flex items-center justify-center">
         {chart.type === 'pie' && (
@@ -250,12 +250,12 @@ const ReportVisualization: React.FC = () => {
           <div className="h-8 bg-gray-200 rounded w-1/4 mb-4"></div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
             {[1, 2, 3, 4].map((i) => (
-              <div key={i} className="h-32 bg-gray-200 rounded-lg"></div>
+              <div key={i} className="h-32 bg-gray-200 rounded-sm"></div>
             ))}
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {[1, 2, 3, 4, 5, 6].map((i) => (
-              <div key={i} className="h-80 bg-gray-200 rounded-lg"></div>
+              <div key={i} className="h-80 bg-gray-200 rounded-sm"></div>
             ))}
           </div>
         </div>
@@ -275,7 +275,7 @@ const ReportVisualization: React.FC = () => {
             <select
               value={selectedDateRange}
               onChange={(e) => setSelectedDateRange(e.target.value)}
-              className="border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-violet-500/60"
+              className="border border-gray-300 rounded-sm px-3 py-2 focus:outline-none focus:ring-2 focus:ring-gold-500/60"
             >
               <option value="last-30-days">Last 30 Days</option>
               <option value="last-3-months">Last 3 Months</option>
@@ -283,7 +283,7 @@ const ReportVisualization: React.FC = () => {
             </select>
             <button
               onClick={() => exportVisualization('json')}
-              className="bg-violet-600 text-white px-4 py-2 rounded hover:bg-violet-700 transition-colors"
+              className="bg-gold-500 text-violet-950 px-4 py-2 rounded hover:bg-gold-600 transition-colors"
             >
               Export Data
             </button>
@@ -306,7 +306,7 @@ const ReportVisualization: React.FC = () => {
       </div>
 
       {/* Help Section */}
-      <div className="bg-violet-50 border border-violet-200 rounded-lg p-6">
+      <div className="bg-gold-50 border border-violet-200 rounded-sm p-6">
         <h3 className="text-lg font-medium text-violet-900 mb-2">📊 Visualization Guide</h3>
         <div className="text-sm text-violet-800 space-y-1">
           <p>• <strong>KPI Widgets:</strong> Key performance indicators with progress bars and trend indicators</p>

@@ -103,7 +103,7 @@ export default function PipelinePage() {
       name: 'screening',
       displayName: 'Screening',
       order: 2,
-      color: 'bg-violet-100 text-violet-800 border-violet-300',
+      color: 'bg-gold-100 text-gold-800 border-violet-300',
       icon: EyeIcon,
       description: 'Resume and initial screening'
     },
@@ -361,7 +361,7 @@ export default function PipelinePage() {
 
   const actions = (
     <div className="flex items-center gap-3">
-      <div className="flex rounded-lg border border-gray-300">
+      <div className="flex rounded-sm border border-gray-300">
         {[
           { id: 'kanban', name: 'Kanban', icon: UserGroupIcon },
           { id: 'list', name: 'List', icon: ChartBarIcon },
@@ -372,7 +372,7 @@ export default function PipelinePage() {
             onClick={() => setViewMode(mode.id as any)}
             className={`px-3 py-2 text-sm font-medium ${
               viewMode === mode.id
-                ? 'bg-violet-600 text-white'
+                ? 'bg-gold-500 text-violet-950'
                 : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
             } ${mode.id === 'kanban' ? 'rounded-l-lg' : mode.id === 'funnel' ? 'rounded-r-lg' : ''}`}
           >
@@ -381,7 +381,7 @@ export default function PipelinePage() {
           </button>
         ))}
       </div>
-      <button className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-violet-600 hover:bg-violet-700">
+      <button className="inline-flex items-center px-4 py-2 border-2 border-gold-500 text-sm font-medium rounded-full shadow-sm bg-transparent text-violet-900 hover:bg-gold-500 hover:text-violet-950 uppercase tracking-wider">
         <PlusIcon className="w-4 h-4 mr-2" />
         Add Application
       </button>
@@ -392,7 +392,7 @@ export default function PipelinePage() {
     return (
       <PageWrapper title="Recruitment Pipeline" subtitle="Loading pipeline data..." actions={actions}>
         <div className="flex items-center justify-center h-96">
-          <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-violet-500"></div>
+          <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-gold-500"></div>
         </div>
       </PageWrapper>
     );
@@ -407,7 +407,7 @@ export default function PipelinePage() {
       <div className="space-y-6">
         {/* Pipeline Metrics */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-          <div className="bg-white rounded-lg shadow p-6">
+          <div className="bg-white rounded-sm shadow p-6">
             <div className="flex items-center">
               <div className="flex-shrink-0">
                 <UserGroupIcon className="w-8 h-8 text-violet-500" />
@@ -419,7 +419,7 @@ export default function PipelinePage() {
             </div>
           </div>
           
-          <div className="bg-white rounded-lg shadow p-6">
+          <div className="bg-white rounded-sm shadow p-6">
             <div className="flex items-center">
               <div className="flex-shrink-0">
                 <ClockIcon className="w-8 h-8 text-green-500" />
@@ -431,7 +431,7 @@ export default function PipelinePage() {
             </div>
           </div>
           
-          <div className="bg-white rounded-lg shadow p-6">
+          <div className="bg-white rounded-sm shadow p-6">
             <div className="flex items-center">
               <div className="flex-shrink-0">
                 <ChartBarIcon className="w-8 h-8 text-purple-500" />
@@ -443,7 +443,7 @@ export default function PipelinePage() {
             </div>
           </div>
           
-          <div className="bg-white rounded-lg shadow p-6">
+          <div className="bg-white rounded-sm shadow p-6">
             <div className="flex items-center">
               <div className="flex-shrink-0">
                 <CheckCircleIcon className="w-8 h-8 text-yellow-500" />
@@ -457,7 +457,7 @@ export default function PipelinePage() {
         </div>
 
         {/* Search and Filters */}
-        <div className="bg-white rounded-lg shadow p-6">
+        <div className="bg-white rounded-sm shadow p-6">
           <div className="flex flex-col lg:flex-row gap-4 items-start lg:items-center justify-between">
             <div className="flex-1 max-w-md">
               <div className="relative">
@@ -467,7 +467,7 @@ export default function PipelinePage() {
                   placeholder="Search candidates or jobs..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="pl-10 pr-4 py-2 w-full border border-gray-300 rounded-lg focus:ring-2 focus:ring-violet-500/60 focus:border-violet-400"
+                  className="pl-10 pr-4 py-2 w-full border border-gray-300 rounded-sm focus:ring-2 focus:ring-gold-500/60 focus:border-violet-400"
                 />
               </div>
             </div>
@@ -476,7 +476,7 @@ export default function PipelinePage() {
               <select
                 value={selectedStage}
                 onChange={(e) => setSelectedStage(e.target.value)}
-                className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-violet-500/60 focus:border-violet-400"
+                className="px-3 py-2 border border-gray-300 rounded-sm focus:ring-2 focus:ring-gold-500/60 focus:border-violet-400"
               >
                 <option value="all">All Stages</option>
                 {pipelineStages.map(stage => (
@@ -495,7 +495,7 @@ export default function PipelinePage() {
 
         {/* Pipeline Views */}
         {viewMode === 'funnel' && (
-          <div className="bg-white rounded-lg shadow p-6">
+          <div className="bg-white rounded-sm shadow p-6">
             <h3 className="text-lg font-semibold text-gray-900 mb-6">Pipeline Funnel</h3>
             <div className="space-y-4">
               {pipelineStages.map((stage) => {
@@ -510,7 +510,7 @@ export default function PipelinePage() {
                     </div>
                     <div className="flex-1 bg-gray-200 rounded-full h-8 relative">
                       <div 
-                        className="h-8 rounded-full flex items-center justify-between px-4 text-white text-sm font-medium transition-all bg-violet-500"
+                        className="h-8 rounded-full flex items-center justify-between px-4 text-white text-sm font-medium transition-all bg-gold-500"
                         style={{ width: `${Math.max(width, 10)}%` }}
                       >
                         <span>{metrics.count} candidates</span>
@@ -528,7 +528,7 @@ export default function PipelinePage() {
         )}
 
         {viewMode === 'kanban' && (
-          <div className="bg-white rounded-lg shadow p-6">
+          <div className="bg-white rounded-sm shadow p-6">
             <div className="flex space-x-6 overflow-x-auto pb-4">
               {pipelineStages.map((stage, stageIndex) => {
                 const stageApplications = filteredApplications.filter(app => app.currentStage === stage.id);
@@ -539,7 +539,7 @@ export default function PipelinePage() {
 
                 return (
                   <div key={stage.id} className="flex-shrink-0 w-80">
-                    <div className={`rounded-lg border-2 ${stage.color} p-4 mb-4`}>
+                    <div className={`rounded-sm border-2 ${stage.color} p-4 mb-4`}>
                       <div className="flex items-center justify-between">
                         <div className="flex items-center space-x-2">
                           <input
@@ -554,7 +554,7 @@ export default function PipelinePage() {
                               }
                               setSelectedIds(next);
                             }}
-                            className="rounded border-gray-300 text-violet-600 focus:ring-violet-500"
+                            className="rounded border-gray-300 text-gold-600 focus:ring-gold-500"
                           />
                           <stage.icon className="w-5 h-5" />
                           <h3 className="font-semibold">{stage.displayName}</h3>
@@ -573,7 +573,7 @@ export default function PipelinePage() {
                     
                     <div className="space-y-3 max-h-96 overflow-y-auto">
                       {stageApplications.map(application => (
-                        <div key={application.id} className="bg-gray-50 rounded-lg p-4 border border-gray-200 hover:border-gray-300 transition-colors">
+                        <div key={application.id} className="bg-gray-50 rounded-sm p-4 border border-gray-200 hover:border-gray-300 transition-colors">
                           <div className="flex items-start justify-between mb-2">
                             <div className="flex items-start gap-2 flex-1">
                               <input
@@ -585,7 +585,7 @@ export default function PipelinePage() {
                                   else next.delete(application.id);
                                   setSelectedIds(next);
                                 }}
-                                className="mt-1 rounded border-gray-300 text-violet-600 focus:ring-violet-500"
+                                className="mt-1 rounded border-gray-300 text-gold-600 focus:ring-gold-500"
                               />
                               <div>
                               <h4 className="font-medium text-gray-900">
@@ -620,7 +620,7 @@ export default function PipelinePage() {
                           
                           <div className="bg-gray-200 rounded-full h-2 mb-3">
                             <div 
-                              className="bg-violet-500 h-2 rounded-full transition-all" 
+                              className="bg-gold-500 h-2 rounded-full transition-all" 
                               style={{ width: `${Math.min(application.progress, 100)}%` }}
                             ></div>
                           </div>
@@ -628,7 +628,7 @@ export default function PipelinePage() {
                           <div className="flex justify-between items-center">
                             <button
                               onClick={() => setSelectedApplication(application)}
-                              className="text-violet-600 hover:text-violet-800 text-xs font-medium"
+                              className="text-gold-600 hover:text-gold-800 text-xs font-medium"
                             >
                               <EyeIcon className="w-4 h-4 inline mr-1" />
                               View Details
@@ -663,7 +663,7 @@ export default function PipelinePage() {
         )}
 
         {viewMode === 'list' && (
-          <div className="bg-white rounded-lg shadow overflow-hidden">
+          <div className="bg-white rounded-sm shadow overflow-hidden">
             <div className="overflow-x-auto">
               <table className="min-w-full divide-y divide-gray-200">
                 <thead className="bg-gray-50">
@@ -730,7 +730,7 @@ export default function PipelinePage() {
                         <td className="px-6 py-4 whitespace-nowrap">
                           <div className="w-full bg-gray-200 rounded-full h-2">
                             <div 
-                              className="bg-violet-600 h-2 rounded-full" 
+                              className="bg-gold-500 h-2 rounded-full"
                               style={{ width: `${Math.min(application.progress, 100)}%` }}
                             ></div>
                           </div>
@@ -754,7 +754,7 @@ export default function PipelinePage() {
                           <div className="flex space-x-2">
                             <button
                               onClick={() => setSelectedApplication(application)}
-                              className="text-violet-600 hover:text-violet-900"
+                              className="text-gold-600 hover:text-violet-900"
                             >
                               <EyeIcon className="w-4 h-4" />
                             </button>
@@ -788,7 +788,7 @@ export default function PipelinePage() {
 
         {/* Bulk Action Bar */}
         {selectedIds.size > 0 && (
-          <div className="fixed bottom-6 left-1/2 transform -translate-x-1/2 bg-white border border-gray-200 rounded-lg shadow-lg px-6 py-3 flex items-center gap-4 z-50">
+          <div className="fixed bottom-6 left-1/2 transform -translate-x-1/2 bg-white border border-gray-200 rounded-sm shadow-lg px-6 py-3 flex items-center gap-4 z-50">
             <span className="text-sm font-medium text-gray-700">
               {selectedIds.size} selected
             </span>
@@ -800,7 +800,7 @@ export default function PipelinePage() {
                   e.target.value = '';
                 }
               }}
-              className="text-sm border border-gray-300 rounded-md px-2 py-1"
+              className="text-sm border border-gray-300 rounded-sm px-2 py-1"
               defaultValue=""
             >
               <option value="" disabled>Move to...</option>
@@ -826,7 +826,7 @@ export default function PipelinePage() {
         {/* Application Detail Modal */}
         {selectedApplication && (
           <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-            <div className="bg-white rounded-lg shadow-xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
+            <div className="bg-white rounded-sm shadow-xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
               <div className="p-6">
                 <div className="flex items-start justify-between mb-6">
                   <div>
@@ -846,7 +846,7 @@ export default function PipelinePage() {
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                   <div className="space-y-4">
                     <h3 className="text-lg font-semibold text-gray-900">Candidate Information</h3>
-                    <div className="bg-gray-50 rounded-lg p-4 space-y-2">
+                    <div className="bg-gray-50 rounded-sm p-4 space-y-2">
                       <p><strong>Email:</strong> {selectedApplication.candidate.email}</p>
                       <p><strong>Phone:</strong> {selectedApplication.candidate.phone}</p>
                       <p><strong>Applied:</strong> {new Date(selectedApplication.submittedAt).toLocaleDateString()}</p>
@@ -860,8 +860,8 @@ export default function PipelinePage() {
                       {selectedApplication.timeline.map((event, index) => (
                         <div key={index} className="flex space-x-3">
                           <div className="flex-shrink-0">
-                            <div className="w-8 h-8 bg-violet-100 rounded-full flex items-center justify-center">
-                              <div className="w-3 h-3 bg-violet-600 rounded-full"></div>
+                            <div className="w-8 h-8 bg-gold-100 rounded-full flex items-center justify-center">
+                              <div className="w-3 h-3 bg-gold-500 rounded-full"></div>
                             </div>
                           </div>
                           <div className="flex-1 min-w-0">
@@ -881,7 +881,7 @@ export default function PipelinePage() {
                 <div className="flex justify-end mt-6 pt-6 border-t">
                   <button
                     onClick={() => setSelectedApplication(null)}
-                    className="px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700"
+                    className="px-4 py-2 bg-gray-600 text-white rounded-full hover:bg-gray-700"
                   >
                     Close
                   </button>

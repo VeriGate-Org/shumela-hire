@@ -55,7 +55,7 @@ export default function ExecutiveDashboard({ selectedTimeframe, onTimeframeChang
           <select
             value={selectedTimeframe}
             onChange={(e) => onTimeframeChange(e.target.value)}
-            className="border border-gray-300 rounded-lg px-3 py-2 text-sm"
+            className="border border-gray-300 rounded-sm px-3 py-2 text-sm"
           >
             <option value="7days">Last 7 days</option>
             <option value="30days">Last 30 days</option>
@@ -100,7 +100,7 @@ export default function ExecutiveDashboard({ selectedTimeframe, onTimeframeChang
                     { department: 'Marketing', target: 15, current: 12, budget: 'R540K', utilization: 55 },
                     { department: 'Operations', target: 20, current: 18, budget: 'R720K', utilization: 82 },
                   ].map((dept) => (
-                    <div key={dept.department} className="p-3 bg-gray-50 rounded-lg">
+                    <div key={dept.department} className="p-3 bg-gray-50 rounded-sm">
                       <div className="flex items-center justify-between mb-2">
                         <span className="font-medium text-gray-900">{dept.department}</span>
                         <span className="text-sm text-gray-600">{dept.budget}</span>
@@ -150,7 +150,7 @@ export default function ExecutiveDashboard({ selectedTimeframe, onTimeframeChang
                       stage: 'Sourcing',
                       priority: 'High',
                       candidates: 0,
-                      statusColor: 'bg-violet-100 text-violet-800',
+                      statusColor: 'bg-gold-100 text-gold-800',
                       priorityColor: 'bg-orange-100 text-orange-800'
                     },
                     { 
@@ -164,7 +164,7 @@ export default function ExecutiveDashboard({ selectedTimeframe, onTimeframeChang
                       priorityColor: 'bg-yellow-100 text-yellow-800'
                     },
                   ].map((position) => (
-                    <div key={position.position} className="p-3 bg-gray-50 rounded-lg">
+                    <div key={position.position} className="p-3 bg-gray-50 rounded-sm">
                       <div className="flex items-start justify-between mb-2">
                         <div className="flex-1 min-w-0">
                           <h4 className="font-medium text-gray-900 truncate">{position.position}</h4>
@@ -224,7 +224,7 @@ export default function ExecutiveDashboard({ selectedTimeframe, onTimeframeChang
                     message: 'New VP Marketing position approval',
                     time: '1 day ago',
                     urgent: false,
-                    color: 'text-violet-600',
+                    color: 'text-gold-600',
                   },
                   {
                     id: '4',
@@ -235,7 +235,7 @@ export default function ExecutiveDashboard({ selectedTimeframe, onTimeframeChang
                     color: 'text-purple-600',
                   },
                 ].map((approval) => (
-                  <div key={approval.id} className="flex items-start gap-3 p-3 hover:bg-gray-50 rounded-lg border-l-2 border-transparent hover:border-gray-300">
+                  <div key={approval.id} className="flex items-start gap-3 p-3 hover:bg-gray-50 rounded-sm border-l-2 border-transparent hover:border-gray-300">
                     <div className={`w-2 h-2 rounded-full mt-2 flex-shrink-0 ${approval.color.replace('text-', 'bg-')}`}></div>
                     <div className="flex-1 min-w-0">
                       <p className={`text-sm ${approval.urgent ? 'font-semibold' : 'font-normal'} text-gray-900 truncate`}>
@@ -272,7 +272,7 @@ export default function ExecutiveDashboard({ selectedTimeframe, onTimeframeChang
                 ].map((action) => (
                   <button
                     key={action.label}
-                    className={`${action.color} text-white p-3 rounded-lg hover:opacity-90 transition-opacity text-sm font-medium text-center w-full flex items-center justify-center gap-2`}
+                    className={`${action.color} text-white p-3 rounded-sm hover:opacity-90 transition-opacity text-sm font-medium text-center w-full flex items-center justify-center gap-2`}
                   >
                     <span>{action.icon}</span>
                     {action.label}

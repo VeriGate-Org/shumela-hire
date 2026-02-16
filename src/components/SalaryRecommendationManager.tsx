@@ -137,7 +137,7 @@ export default function SalaryRecommendationManager() {
     if (rec.status === SalaryRecommendationStatus.DRAFT || rec.status === SalaryRecommendationStatus.RETURNED) {
       actions.push(
         <button key="submit" onClick={() => handleSubmitForReview(rec.id)} disabled={isLoading}
-          className="text-xs px-2 py-1 bg-violet-50 text-violet-700 border border-violet-200 rounded hover:bg-violet-100 disabled:opacity-50">
+          className="text-xs px-2 py-1 bg-gold-50 text-violet-700 border border-violet-200 rounded hover:bg-gold-100 disabled:opacity-50">
           Submit for Review
         </button>
       );
@@ -169,7 +169,7 @@ export default function SalaryRecommendationManager() {
   };
 
   if (loading) {
-    return <div className="flex justify-center py-12"><div className="animate-spin h-8 w-8 border-2 border-violet-600 border-t-transparent rounded-full" /></div>;
+    return <div className="flex justify-center py-12"><div className="animate-spin h-8 w-8 border-2 border-gold-500 border-t-transparent rounded-full" /></div>;
   }
 
   return (
@@ -181,14 +181,14 @@ export default function SalaryRecommendationManager() {
         </div>
         <button
           onClick={() => setShowCreateModal(true)}
-          className="px-4 py-2 bg-violet-600 text-white text-sm font-medium rounded-md hover:bg-violet-700"
+          className="px-4 py-2 bg-gold-500 text-violet-950 text-sm font-medium rounded-sm hover:bg-gold-600"
         >
           New Recommendation
         </button>
       </div>
 
       {/* Table */}
-      <div className="overflow-x-auto border border-gray-200 rounded-lg">
+      <div className="overflow-x-auto border border-gray-200 rounded-sm">
         <table className="min-w-full divide-y divide-gray-200">
           <thead className="bg-gray-50">
             <tr>
@@ -235,61 +235,61 @@ export default function SalaryRecommendationManager() {
       {/* Create Modal */}
       {showCreateModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-          <div className="bg-white rounded-lg shadow-xl max-w-lg w-full mx-4 p-6">
+          <div className="bg-white rounded-sm shadow-xl max-w-lg w-full mx-4 p-6">
             <h3 className="text-lg font-bold text-gray-900 mb-4">New Salary Recommendation</h3>
             <div className="space-y-3">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">Position Title *</label>
                 <input type="text" value={createForm.positionTitle}
                   onChange={e => setCreateForm(prev => ({ ...prev, positionTitle: e.target.value }))}
-                  className="w-full p-2 border border-gray-300 rounded-md text-sm" />
+                  className="w-full p-2 border border-gray-300 rounded-sm text-sm" />
               </div>
               <div className="grid grid-cols-2 gap-3">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">Department</label>
                   <input type="text" value={createForm.department || ''}
                     onChange={e => setCreateForm(prev => ({ ...prev, department: e.target.value }))}
-                    className="w-full p-2 border border-gray-300 rounded-md text-sm" />
+                    className="w-full p-2 border border-gray-300 rounded-sm text-sm" />
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">Job Grade</label>
                   <input type="text" value={createForm.jobGrade || ''}
                     onChange={e => setCreateForm(prev => ({ ...prev, jobGrade: e.target.value }))}
-                    className="w-full p-2 border border-gray-300 rounded-md text-sm" />
+                    className="w-full p-2 border border-gray-300 rounded-sm text-sm" />
                 </div>
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">Candidate Name</label>
                 <input type="text" value={createForm.candidateName || ''}
                   onChange={e => setCreateForm(prev => ({ ...prev, candidateName: e.target.value }))}
-                  className="w-full p-2 border border-gray-300 rounded-md text-sm" />
+                  className="w-full p-2 border border-gray-300 rounded-sm text-sm" />
               </div>
               <div className="grid grid-cols-3 gap-3">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">Min Salary (ZAR)</label>
                   <input type="number" value={createForm.proposedMinSalary || ''}
                     onChange={e => setCreateForm(prev => ({ ...prev, proposedMinSalary: e.target.value ? Number(e.target.value) : undefined }))}
-                    className="w-full p-2 border border-gray-300 rounded-md text-sm" />
+                    className="w-full p-2 border border-gray-300 rounded-sm text-sm" />
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">Target Salary</label>
                   <input type="number" value={createForm.proposedTargetSalary || ''}
                     onChange={e => setCreateForm(prev => ({ ...prev, proposedTargetSalary: e.target.value ? Number(e.target.value) : undefined }))}
-                    className="w-full p-2 border border-gray-300 rounded-md text-sm" />
+                    className="w-full p-2 border border-gray-300 rounded-sm text-sm" />
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">Max Salary</label>
                   <input type="number" value={createForm.proposedMaxSalary || ''}
                     onChange={e => setCreateForm(prev => ({ ...prev, proposedMaxSalary: e.target.value ? Number(e.target.value) : undefined }))}
-                    className="w-full p-2 border border-gray-300 rounded-md text-sm" />
+                    className="w-full p-2 border border-gray-300 rounded-sm text-sm" />
                 </div>
               </div>
             </div>
             <div className="flex justify-end gap-2 mt-6">
               <button onClick={() => setShowCreateModal(false)}
-                className="px-4 py-2 text-sm text-gray-700 border border-gray-300 rounded-md hover:bg-gray-50">Cancel</button>
+                className="px-4 py-2 text-sm text-gray-700 border border-gray-300 rounded-sm hover:bg-gray-50">Cancel</button>
               <button onClick={handleCreate} disabled={actionLoading === -1}
-                className="px-4 py-2 text-sm bg-violet-600 text-white rounded-md hover:bg-violet-700 disabled:opacity-50">
+                className="px-4 py-2 text-sm bg-gold-500 text-violet-950 rounded-sm hover:bg-gold-600 disabled:opacity-50">
                 {actionLoading === -1 ? 'Creating...' : 'Create'}
               </button>
             </div>
@@ -300,27 +300,27 @@ export default function SalaryRecommendationManager() {
       {/* Recommend Modal */}
       {showRecommendModal !== null && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-          <div className="bg-white rounded-lg shadow-xl max-w-lg w-full mx-4 p-6">
+          <div className="bg-white rounded-sm shadow-xl max-w-lg w-full mx-4 p-6">
             <h3 className="text-lg font-bold text-gray-900 mb-4">Provide Salary Recommendation</h3>
             <div className="space-y-3">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">Recommended Salary (ZAR) *</label>
                 <input type="number" value={recommendForm.recommendedSalary || ''}
                   onChange={e => setRecommendForm(prev => ({ ...prev, recommendedSalary: Number(e.target.value) }))}
-                  className="w-full p-2 border border-gray-300 rounded-md text-sm" />
+                  className="w-full p-2 border border-gray-300 rounded-sm text-sm" />
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">Justification</label>
                 <textarea value={recommendForm.recommendationJustification}
                   onChange={e => setRecommendForm(prev => ({ ...prev, recommendationJustification: e.target.value }))}
-                  className="w-full p-2 border border-gray-300 rounded-md text-sm" rows={4} />
+                  className="w-full p-2 border border-gray-300 rounded-sm text-sm" rows={4} />
               </div>
             </div>
             <div className="flex justify-end gap-2 mt-6">
               <button onClick={() => setShowRecommendModal(null)}
-                className="px-4 py-2 text-sm text-gray-700 border border-gray-300 rounded-md hover:bg-gray-50">Cancel</button>
+                className="px-4 py-2 text-sm text-gray-700 border border-gray-300 rounded-sm hover:bg-gray-50">Cancel</button>
               <button onClick={handleProvideRecommendation} disabled={actionLoading === showRecommendModal}
-                className="px-4 py-2 text-sm bg-violet-600 text-white rounded-md hover:bg-violet-700 disabled:opacity-50">
+                className="px-4 py-2 text-sm bg-gold-500 text-violet-950 rounded-sm hover:bg-gold-600 disabled:opacity-50">
                 {actionLoading === showRecommendModal ? 'Submitting...' : 'Submit Recommendation'}
               </button>
             </div>

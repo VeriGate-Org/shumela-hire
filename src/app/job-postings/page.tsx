@@ -133,7 +133,7 @@ export default function JobPostingsPage() {
                 <EnterpriseThemeToggle variant="compact" />
                 <button
                   onClick={() => setView('create')}
-                  className="px-4 py-2 bg-violet-500 text-white rounded-md hover:bg-violet-600"
+                  className="px-4 py-2 bg-transparent border-2 border-gold-500 text-violet-900 hover:bg-gold-500 hover:text-violet-950 uppercase tracking-wider rounded-full font-medium"
                 >
                   Create Job Posting
                 </button>
@@ -141,7 +141,7 @@ export default function JobPostingsPage() {
             </div>
 
             {/* Search and Filter */}
-            <div className="bg-white rounded-lg shadow p-4 mb-6">
+            <div className="bg-white rounded-sm shadow p-4 mb-6">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -152,7 +152,7 @@ export default function JobPostingsPage() {
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
                     placeholder="Search by title or department..."
-                    className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-violet-500/60 focus:border-violet-400"
+                    className="w-full p-2 border border-gray-300 rounded-sm focus:ring-2 focus:ring-gold-500/60 focus:border-violet-400"
                   />
                 </div>
                 <div>
@@ -162,7 +162,7 @@ export default function JobPostingsPage() {
                   <select
                     value={statusFilter}
                     onChange={(e) => setStatusFilter(e.target.value)}
-                    className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-violet-500/60 focus:border-violet-400"
+                    className="w-full p-2 border border-gray-300 rounded-sm focus:ring-2 focus:ring-gold-500/60 focus:border-violet-400"
                   >
                     <option value="ALL">All Statuses</option>
                     {getStatusOptions().map(status => (
@@ -176,12 +176,12 @@ export default function JobPostingsPage() {
             {/* Job Postings List */}
             {loading ? (
               <div className="flex items-center justify-center p-8">
-                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-violet-500"></div>
+                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gold-500"></div>
               </div>
             ) : (
               <div className="space-y-4">
                 {filteredJobPostings.length === 0 ? (
-                  <div className="bg-white rounded-lg shadow p-8 text-center">
+                  <div className="bg-white rounded-sm shadow p-8 text-center">
                     <p className="text-gray-600 mb-4">
                       {jobPostings.length === 0 ? 
                         'No job postings found. This is a demo of the Job Posting Management feature.' :
@@ -191,7 +191,7 @@ export default function JobPostingsPage() {
                     
                     {jobPostings.length === 0 && (
                       <div className="space-y-4">
-                        <div className="border rounded-lg p-4 text-left">
+                        <div className="border rounded-sm p-4 text-left">
                           <h3 className="font-medium text-lg mb-2">Feature Overview</h3>
                           <ul className="list-disc list-inside space-y-1 text-gray-600">
                             <li>Complete job posting creation with rich form validation</li>
@@ -207,7 +207,7 @@ export default function JobPostingsPage() {
                         
                         <button
                           onClick={() => setView('create')}
-                          className="px-4 py-2 bg-violet-500 text-white rounded-md hover:bg-violet-600"
+                          className="px-4 py-2 bg-transparent border-2 border-gold-500 text-violet-900 hover:bg-gold-500 hover:text-violet-950 uppercase tracking-wider rounded-full font-medium"
                         >
                           Try Demo Job Posting Form
                         </button>
@@ -216,7 +216,7 @@ export default function JobPostingsPage() {
                   </div>
                 ) : (
                   filteredJobPostings.map((jobPosting) => (
-                    <div key={jobPosting.id} className="bg-white rounded-lg shadow p-6">
+                    <div key={jobPosting.id} className="bg-white rounded-sm shadow p-6">
                       <div className="flex justify-between items-start">
                         <div className="flex-1">
                           <div className="flex items-center space-x-3 mb-2">
@@ -270,7 +270,7 @@ export default function JobPostingsPage() {
                                   setSelectedJobPosting(jobPosting);
                                   setView('edit');
                                 }}
-                                className="text-violet-600 hover:text-violet-800 text-sm font-medium"
+                                className="text-gold-600 hover:text-gold-800 text-sm font-medium"
                               >
                                 Edit
                               </button>
@@ -301,7 +301,7 @@ export default function JobPostingsPage() {
             <div className="mb-4">
               <button
                 onClick={() => setView('list')}
-                className="text-violet-500 hover:text-violet-700 font-medium"
+                className="text-violet-500 hover:text-gold-700 font-medium"
               >
                 ← Back to Job Postings
               </button>
@@ -319,7 +319,7 @@ export default function JobPostingsPage() {
             <div className="mb-4">
               <button
                 onClick={() => setView('list')}
-                className="text-violet-500 hover:text-violet-700 font-medium"
+                className="text-violet-500 hover:text-gold-700 font-medium"
               >
                 ← Back to Job Postings
               </button>
@@ -338,7 +338,7 @@ export default function JobPostingsPage() {
             <div className="mb-4">
               <button
                 onClick={() => setView('list')}
-                className="text-violet-500 hover:text-violet-700 font-medium"
+                className="text-violet-500 hover:text-gold-700 font-medium"
               >
                 ← Back to Job Postings
               </button>

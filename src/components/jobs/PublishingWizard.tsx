@@ -203,7 +203,7 @@ const PublishingWizard: React.FC<PublishingWizardProps> = ({
             type="text"
             value={formData.title}
             onChange={(e) => handleFormChange('title', e.target.value)}
-            className="w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-violet-500/60 focus:border-violet-400"
+            className="w-full border border-gray-300 rounded-sm px-3 py-2 focus:ring-2 focus:ring-gold-500/60 focus:border-violet-400"
           />
         </div>
 
@@ -215,7 +215,7 @@ const PublishingWizard: React.FC<PublishingWizardProps> = ({
             type="text"
             value={formData.companyName}
             onChange={(e) => handleFormChange('companyName', e.target.value)}
-            className="w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-violet-500/60 focus:border-violet-400"
+            className="w-full border border-gray-300 rounded-sm px-3 py-2 focus:ring-2 focus:ring-gold-500/60 focus:border-violet-400"
           />
         </div>
 
@@ -227,7 +227,7 @@ const PublishingWizard: React.FC<PublishingWizardProps> = ({
             type="text"
             value={formData.department}
             onChange={(e) => handleFormChange('department', e.target.value)}
-            className="w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-violet-500/60 focus:border-violet-400"
+            className="w-full border border-gray-300 rounded-sm px-3 py-2 focus:ring-2 focus:ring-gold-500/60 focus:border-violet-400"
             placeholder="e.g., Engineering"
           />
         </div>
@@ -240,7 +240,7 @@ const PublishingWizard: React.FC<PublishingWizardProps> = ({
             type="email"
             value={formData.contactEmail}
             onChange={(e) => handleFormChange('contactEmail', e.target.value)}
-            className="w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-violet-500/60 focus:border-violet-400"
+            className="w-full border border-gray-300 rounded-sm px-3 py-2 focus:ring-2 focus:ring-gold-500/60 focus:border-violet-400"
           />
         </div>
 
@@ -252,7 +252,7 @@ const PublishingWizard: React.FC<PublishingWizardProps> = ({
             type="text"
             value={formData.location}
             onChange={(e) => handleFormChange('location', e.target.value)}
-            className="w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-violet-500/60 focus:border-violet-400"
+            className="w-full border border-gray-300 rounded-sm px-3 py-2 focus:ring-2 focus:ring-gold-500/60 focus:border-violet-400"
           />
         </div>
 
@@ -263,7 +263,7 @@ const PublishingWizard: React.FC<PublishingWizardProps> = ({
           <select
             value={formData.employmentType}
             onChange={(e) => handleFormChange('employmentType', e.target.value)}
-            className="w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-violet-500/60 focus:border-violet-400"
+            className="w-full border border-gray-300 rounded-sm px-3 py-2 focus:ring-2 focus:ring-gold-500/60 focus:border-violet-400"
           >
             <option value="Full-time">Full-time</option>
             <option value="Part-time">Part-time</option>
@@ -283,14 +283,14 @@ const PublishingWizard: React.FC<PublishingWizardProps> = ({
             type="number"
             value={formData.salaryRangeMin || ''}
             onChange={(e) => handleFormChange('salaryRangeMin', parseInt(e.target.value) || undefined)}
-            className="w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-violet-500/60 focus:border-violet-400"
+            className="w-full border border-gray-300 rounded-sm px-3 py-2 focus:ring-2 focus:ring-gold-500/60 focus:border-violet-400"
             placeholder="Min salary"
           />
           <input
             type="number"
             value={formData.salaryRangeMax || ''}
             onChange={(e) => handleFormChange('salaryRangeMax', parseInt(e.target.value) || undefined)}
-            className="w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-violet-500/60 focus:border-violet-400"
+            className="w-full border border-gray-300 rounded-sm px-3 py-2 focus:ring-2 focus:ring-gold-500/60 focus:border-violet-400"
             placeholder="Max salary"
           />
         </div>
@@ -307,7 +307,7 @@ const PublishingWizard: React.FC<PublishingWizardProps> = ({
             type="text"
             value={formData.customSlug}
             onChange={(e) => handleFormChange('customSlug', e.target.value)}
-            className="flex-1 border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-violet-500/60 focus:border-violet-400"
+            className="flex-1 border border-gray-300 rounded-sm px-3 py-2 focus:ring-2 focus:ring-gold-500/60 focus:border-violet-400"
             placeholder={generatedSlug}
           />
         </div>
@@ -323,7 +323,7 @@ const PublishingWizard: React.FC<PublishingWizardProps> = ({
           id="featured"
           checked={formData.featured}
           onChange={(e) => handleFormChange('featured', e.target.checked)}
-          className="rounded border-gray-300 text-violet-600 focus:ring-violet-500/60"
+          className="rounded border-gray-300 text-gold-600 focus:ring-gold-500/60"
         />
         <label htmlFor="featured" className="ml-2 text-sm text-gray-700">
           Mark as featured job (appears prominently in listings)
@@ -345,15 +345,15 @@ const PublishingWizard: React.FC<PublishingWizardProps> = ({
         {/* Internal Channel */}
         <div
           onClick={() => handleChannelToggle(PublishingChannel.INTERNAL)}
-          className={`p-6 border-2 rounded-lg cursor-pointer transition-colors ${
+          className={`p-6 border-2 rounded-sm cursor-pointer transition-colors ${
             formData.channels.includes(PublishingChannel.INTERNAL)
-              ? 'border-violet-500 bg-violet-50'
+              ? 'border-gold-500 bg-gold-50'
               : 'border-gray-200 hover:border-gray-300'
           }`}
         >
           <div className="flex items-start">
             <div className="flex-shrink-0">
-              <BuildingOfficeIcon className="w-8 h-8 text-violet-600" />
+              <BuildingOfficeIcon className="w-8 h-8 text-gold-600" />
             </div>
             <div className="ml-4">
               <h4 className="text-lg font-semibold text-gray-900">Internal Portal</h4>
@@ -367,7 +367,7 @@ const PublishingWizard: React.FC<PublishingWizardProps> = ({
               </div>
             </div>
             {formData.channels.includes(PublishingChannel.INTERNAL) && (
-              <CheckIcon className="w-6 h-6 text-violet-600 ml-auto" />
+              <CheckIcon className="w-6 h-6 text-gold-600 ml-auto" />
             )}
           </div>
         </div>
@@ -375,9 +375,9 @@ const PublishingWizard: React.FC<PublishingWizardProps> = ({
         {/* External Channel */}
         <div
           onClick={() => handleChannelToggle(PublishingChannel.EXTERNAL)}
-          className={`p-6 border-2 rounded-lg cursor-pointer transition-colors ${
+          className={`p-6 border-2 rounded-sm cursor-pointer transition-colors ${
             formData.channels.includes(PublishingChannel.EXTERNAL)
-              ? 'border-violet-500 bg-violet-50'
+              ? 'border-gold-500 bg-gold-50'
               : 'border-gray-200 hover:border-gray-300'
           }`}
         >
@@ -415,7 +415,7 @@ const PublishingWizard: React.FC<PublishingWizardProps> = ({
           onChange={(e) => handleFormChange('expiresAt', new Date(e.target.value))}
           min={new Date().toISOString().split('T')[0]}
           max={new Date(Date.now() + DEFAULT_PUBLISHING_SETTINGS.maxExpiryDays * 24 * 60 * 60 * 1000).toISOString().split('T')[0]}
-          className="w-full md:w-auto border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-violet-500/60 focus:border-violet-400"
+          className="w-full md:w-auto border border-gray-300 rounded-sm px-3 py-2 focus:ring-2 focus:ring-gold-500/60 focus:border-violet-400"
         />
         <p className="text-xs text-gray-500 mt-1">
           Job will automatically unpublish after this date. Maximum {DEFAULT_PUBLISHING_SETTINGS.maxExpiryDays} days from today.
@@ -423,7 +423,7 @@ const PublishingWizard: React.FC<PublishingWizardProps> = ({
       </div>
 
       {formData.channels.length === 0 && (
-        <div className="p-4 bg-yellow-50 border border-yellow-200 rounded-md">
+        <div className="p-4 bg-yellow-50 border border-yellow-200 rounded-sm">
           <div className="flex">
             <ExclamationTriangleIcon className="w-5 h-5 text-yellow-400" />
             <div className="ml-3">
@@ -449,13 +449,13 @@ const PublishingWizard: React.FC<PublishingWizardProps> = ({
       {/* Channel toggles for preview */}
       <div className="flex space-x-4 mb-6">
         {formData.channels.includes(PublishingChannel.EXTERNAL) && (
-          <button className="px-4 py-2 bg-green-100 text-green-800 rounded-md text-sm font-medium">
+          <button className="px-4 py-2 bg-green-100 text-green-800 rounded-sm text-sm font-medium">
             <GlobeAltIcon className="w-4 h-4 inline mr-1" />
             Public View
           </button>
         )}
         {formData.channels.includes(PublishingChannel.INTERNAL) && (
-          <button className="px-4 py-2 bg-violet-100 text-violet-800 rounded-md text-sm font-medium">
+          <button className="px-4 py-2 bg-gold-100 text-gold-800 rounded-sm text-sm font-medium">
             <BuildingOfficeIcon className="w-4 h-4 inline mr-1" />
             Internal View
           </button>
@@ -463,7 +463,7 @@ const PublishingWizard: React.FC<PublishingWizardProps> = ({
       </div>
 
       {/* Preview */}
-      <div className="border border-gray-200 rounded-lg overflow-hidden">
+      <div className="border border-gray-200 rounded-sm overflow-hidden">
         <div className="bg-gray-50 px-4 py-2 border-b border-gray-200">
           <span className="text-sm text-gray-600">Preview</span>
         </div>
@@ -504,7 +504,7 @@ const PublishingWizard: React.FC<PublishingWizardProps> = ({
       </div>
 
       {/* Publishing Summary */}
-      <div className="bg-gray-50 rounded-lg p-6">
+      <div className="bg-gray-50 rounded-sm p-6">
         <h4 className="font-semibold text-gray-900 mb-4">Publishing Summary</h4>
         <div className="space-y-3 text-sm">
           <div className="flex justify-between">
@@ -539,7 +539,7 @@ const PublishingWizard: React.FC<PublishingWizardProps> = ({
       </div>
 
       {/* Warning about expiry */}
-      <div className="p-4 bg-violet-50 border border-violet-200 rounded-md">
+      <div className="p-4 bg-gold-50 border border-violet-200 rounded-sm">
         <div className="flex">
           <InformationCircleIcon className="w-5 h-5 text-violet-400" />
           <div className="ml-3">
@@ -557,7 +557,7 @@ const PublishingWizard: React.FC<PublishingWizardProps> = ({
         <button
           onClick={handlePublish}
           disabled={loading}
-          className="inline-flex items-center px-6 py-3 bg-violet-600 text-white rounded-lg font-medium hover:bg-violet-700 disabled:opacity-50 disabled:cursor-not-allowed"
+          className="inline-flex items-center px-6 py-3 bg-gold-500 text-violet-950 rounded-sm font-medium hover:bg-gold-600 disabled:opacity-50 disabled:cursor-not-allowed"
         >
           {loading ? (
             <>
@@ -578,14 +578,14 @@ const PublishingWizard: React.FC<PublishingWizardProps> = ({
   // Success state
   if (currentStep >= steps.length && publishedJobAd) {
     return (
-      <div className={`bg-white rounded-lg shadow-lg p-8 text-center ${className}`}>
+      <div className={`bg-white rounded-sm shadow-lg p-8 text-center ${className}`}>
         <CheckIcon className="w-16 h-16 text-green-500 mx-auto mb-4" />
         <h2 className="text-2xl font-bold text-gray-900 mb-2">Job Ad Published!</h2>
         <p className="text-gray-600 mb-6">
           Your job ad is now live and accepting applications.
         </p>
         
-        <div className="bg-gray-50 rounded-lg p-4 mb-6">
+        <div className="bg-gray-50 rounded-sm p-4 mb-6">
           <div className="text-sm space-y-2">
             <div><strong>Job ID:</strong> {publishedJobAd.id}</div>
             <div><strong>Channels:</strong> {publishedJobAd.channels.map(ch => 
@@ -601,13 +601,13 @@ const PublishingWizard: React.FC<PublishingWizardProps> = ({
         <div className="flex justify-center space-x-4">
           <button
             onClick={onCancel}
-            className="px-4 py-2 border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50"
+            className="px-4 py-2 border border-gray-300 text-gray-700 rounded-sm hover:bg-gray-50"
           >
             Close
           </button>
           <button
             onClick={() => window.open(`/jobs/${publishedJobAd.slug}`, '_blank')}
-            className="px-4 py-2 bg-violet-600 text-white rounded-md hover:bg-violet-700"
+            className="px-4 py-2 bg-gold-500 text-violet-950 rounded-sm hover:bg-gold-600"
           >
             View Live Job
           </button>
@@ -617,7 +617,7 @@ const PublishingWizard: React.FC<PublishingWizardProps> = ({
   }
 
   return (
-    <div className={`bg-white rounded-lg shadow-lg ${className}`}>
+    <div className={`bg-white rounded-sm shadow-lg ${className}`}>
       {/* Header */}
       <div className="px-6 py-4 border-b border-gray-200">
         <div className="flex items-center justify-between">
@@ -645,7 +645,7 @@ const PublishingWizard: React.FC<PublishingWizardProps> = ({
             <div key={step.id} className="flex items-center">
               <div className={`flex items-center justify-center w-8 h-8 rounded-full border-2 ${
                 step.completed ? 'bg-green-500 border-green-500 text-white' :
-                step.current ? 'bg-violet-600 border-violet-600 text-white' :
+                step.current ? 'bg-gold-500 border-gold-500 text-violet-950' :
                 'border-gray-300 text-gray-400'
               }`}>
                 {step.completed ? (
@@ -656,7 +656,7 @@ const PublishingWizard: React.FC<PublishingWizardProps> = ({
               </div>
               <div className="ml-3">
                 <div className={`text-sm font-medium ${
-                  step.current ? 'text-violet-600' : step.completed ? 'text-green-600' : 'text-gray-500'
+                  step.current ? 'text-gold-600' : step.completed ? 'text-green-600' : 'text-gray-500'
                 }`}>
                   {step.title}
                 </div>
@@ -674,7 +674,7 @@ const PublishingWizard: React.FC<PublishingWizardProps> = ({
 
       {/* Error Display */}
       {error && (
-        <div className="mx-6 mt-4 p-4 bg-red-50 border border-red-200 rounded-md">
+        <div className="mx-6 mt-4 p-4 bg-red-50 border border-red-200 rounded-sm">
           <div className="text-red-800">{error}</div>
         </div>
       )}
@@ -689,7 +689,7 @@ const PublishingWizard: React.FC<PublishingWizardProps> = ({
         <button
           onClick={handlePrevious}
           disabled={currentStep === 0}
-          className="inline-flex items-center px-4 py-2 border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+          className="inline-flex items-center px-4 py-2 border border-gray-300 text-gray-700 rounded-sm hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
         >
           <ArrowLeftIcon className="w-4 h-4 mr-2" />
           Previous
@@ -699,7 +699,7 @@ const PublishingWizard: React.FC<PublishingWizardProps> = ({
           <button
             onClick={handleNext}
             disabled={!canProceed()}
-            className="inline-flex items-center px-4 py-2 bg-violet-600 text-white rounded-md hover:bg-violet-700 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="inline-flex items-center px-4 py-2 bg-gold-500 text-violet-950 rounded-sm hover:bg-gold-600 disabled:opacity-50 disabled:cursor-not-allowed"
           >
             Next
             <ArrowRightIcon className="w-4 h-4 ml-2" />

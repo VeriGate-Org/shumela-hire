@@ -179,7 +179,7 @@ export default async function JobDetailPage({ params }: { params: Promise<{ slug
             </p>
           </div>
           <Link href="/jobs">
-            <button className="inline-flex items-center px-4 py-2 bg-violet-600 text-white rounded-md hover:bg-violet-700 transition-colors">
+            <button className="inline-flex items-center px-4 py-2 bg-gold-500 text-violet-950 rounded-sm hover:bg-gold-600 transition-colors">
               <ArrowLeftIcon className="w-4 h-4 mr-2" />
               View All Jobs
             </button>
@@ -241,7 +241,7 @@ export default async function JobDetailPage({ params }: { params: Promise<{ slug
             <div className="py-6">
               <div className="flex items-center justify-between">
                 <Link href="/jobs">
-                  <button className="inline-flex items-center text-violet-600 hover:text-violet-800 transition-colors">
+                  <button className="inline-flex items-center text-gold-600 hover:text-gold-800 transition-colors">
                     <ArrowLeftIcon className="w-4 h-4 mr-2" />
                     Back to jobs
                   </button>
@@ -255,7 +255,7 @@ export default async function JobDetailPage({ params }: { params: Promise<{ slug
 
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           {/* Job Header */}
-          <div className="bg-white rounded-lg shadow-lg mb-8">
+          <div className="bg-white rounded-sm shadow-lg mb-8">
             <div className="p-8">
               <div className="mb-6">
                 <h1 className="text-3xl font-bold text-gray-900 mb-4">{job.title}</h1>
@@ -312,7 +312,7 @@ export default async function JobDetailPage({ params }: { params: Promise<{ slug
 
               {/* Apply Now Section */}
               {isActive && (
-                <div className="mb-8 p-6 bg-violet-50 rounded-lg border border-violet-200">
+                <div className="mb-8 p-6 bg-gold-50 rounded-sm border border-violet-200">
                   <div className="text-center">
                     <h2 className="text-xl font-semibold text-violet-900 mb-2">Ready to Apply?</h2>
                     <p className="text-violet-700 mb-4">
@@ -320,14 +320,14 @@ export default async function JobDetailPage({ params }: { params: Promise<{ slug
                     </p>
                     {job.requisitionId ? (
                       <Link href={`/apply/${job.requisitionId}`}>
-                        <button className="inline-flex items-center px-6 py-3 bg-violet-600 text-white text-lg font-medium rounded-lg hover:bg-violet-700 transition-colors">
+                        <button className="inline-flex items-center px-6 py-3 bg-gold-500 text-violet-950 text-lg font-medium rounded-sm hover:bg-gold-600 transition-colors">
                           Apply Now
                         </button>
                       </Link>
                     ) : (
                       <button 
                         disabled 
-                        className="inline-flex items-center px-6 py-3 bg-gray-400 text-white text-lg font-medium rounded-lg cursor-not-allowed"
+                        className="inline-flex items-center px-6 py-3 bg-gray-400 text-white text-lg font-medium rounded-sm cursor-not-allowed"
                       >
                         Application Not Available
                       </button>
@@ -344,7 +344,7 @@ export default async function JobDetailPage({ params }: { params: Promise<{ slug
           </div>
 
           {/* Company Info */}
-          <div className="bg-white rounded-lg shadow p-6">
+          <div className="bg-white rounded-sm shadow p-6">
             <h3 className="text-lg font-semibold text-gray-900 mb-4">
               About {job.companyName || 'Our Company'}
             </h3>
@@ -354,7 +354,7 @@ export default async function JobDetailPage({ params }: { params: Promise<{ slug
               and excellence.
             </p>
             <Link href="/jobs">
-              <button className="text-violet-600 hover:text-violet-800 text-sm transition-colors">
+              <button className="text-gold-600 hover:text-gold-800 text-sm transition-colors">
                 View all open positions →
               </button>
             </Link>

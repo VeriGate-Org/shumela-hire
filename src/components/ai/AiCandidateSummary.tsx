@@ -34,13 +34,13 @@ export default function AiCandidateSummary({ applicationId }: AiCandidateSummary
           <span className="text-[10px] font-medium bg-teal-100 text-teal-700 px-1.5 py-0.5 rounded">AI-generated</span>
         </div>
         <button onClick={handleSummarize} disabled={loading}
-          className="px-3 py-1.5 text-xs bg-violet-600 text-white rounded-md hover:bg-violet-700 disabled:opacity-50">
+          className="px-3 py-1.5 text-xs bg-gold-500 text-violet-950 rounded-sm hover:bg-gold-600 disabled:opacity-50">
           {loading ? 'Summarizing...' : 'Summarize'}
         </button>
       </div>
 
       {result && (
-        <div className="border border-gray-200 rounded-lg p-4 bg-gray-50 space-y-4">
+        <div className="border border-gray-200 rounded-sm p-4 bg-gray-50 space-y-4">
           {result.executiveSummary && (
             <div>
               <h5 className="text-xs font-semibold text-gray-600 uppercase tracking-wider mb-1">Executive Summary</h5>

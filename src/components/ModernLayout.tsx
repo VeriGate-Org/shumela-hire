@@ -73,7 +73,7 @@ const ModernLayout: React.FC<ModernLayoutProps> = ({
             </button>
 
             <div className="flex items-center gap-2.5">
-              <div className="h-8 w-8 bg-violet-600 rounded-lg grid place-items-center ring-2 ring-gold-400/30">
+              <div className="h-8 w-8 bg-violet-600 rounded-sm grid place-items-center ring-2 ring-gold-400/30">
                 <span className="text-white font-bold text-sm">TG</span>
               </div>
               <span className="font-bold text-sm tracking-tight text-gray-900 hidden sm:block">TalentGate</span>
@@ -99,7 +99,7 @@ const ModernLayout: React.FC<ModernLayoutProps> = ({
             </button>
 
             {/* Density toggle */}
-            <div className="hidden sm:flex items-center bg-gray-100 rounded-md p-0.5 ml-1">
+            <div className="hidden sm:flex items-center bg-gray-100 rounded-sm p-0.5 ml-1">
               {densityOptions.map((opt) => (
                 <button
                   key={opt.value}
@@ -107,7 +107,7 @@ const ModernLayout: React.FC<ModernLayoutProps> = ({
                   title={opt.label}
                   className={`p-1.5 rounded transition-colors ${
                     density === opt.value
-                      ? 'bg-white text-violet-600 shadow-sm'
+                      ? 'bg-white text-gold-600 shadow-sm'
                       : 'text-gray-400 hover:text-gray-600'
                   }`}
                 >
@@ -117,7 +117,7 @@ const ModernLayout: React.FC<ModernLayoutProps> = ({
             </div>
 
             <button className="flex items-center gap-2 px-1.5 py-1 rounded-full hover:bg-gray-100 ml-1">
-              <div className="h-7 w-7 rounded-full bg-gradient-to-br from-violet-500 to-violet-700 text-white grid place-items-center font-semibold text-xs ring-2 ring-violet-500/20">
+              <div className="h-7 w-7 rounded-full bg-gold-500 text-violet-950 grid place-items-center font-semibold text-xs ring-2 ring-gold-400/30">
                 {userInitials}
               </div>
             </button>
@@ -161,9 +161,9 @@ const ModernLayout: React.FC<ModernLayoutProps> = ({
           <div className="px-6 py-4 flex flex-col sm:flex-row justify-between items-center text-xs text-gray-400">
             <p>&copy; 2026 TalentGate</p>
             <div className="flex gap-4 mt-2 sm:mt-0">
-              <a href="#" className="hover:text-gray-600 transition-colors">Privacy</a>
-              <a href="#" className="hover:text-gray-600 transition-colors">Terms</a>
-              <a href="#" className="hover:text-gray-600 transition-colors">Support</a>
+              <a href="#" className="text-[#0693E3] hover:text-[#0571B0] transition-colors">Privacy</a>
+              <a href="#" className="text-[#0693E3] hover:text-[#0571B0] transition-colors">Terms</a>
+              <a href="#" className="text-[#0693E3] hover:text-[#0571B0] transition-colors">Support</a>
             </div>
           </div>
         </footer>
@@ -173,7 +173,7 @@ const ModernLayout: React.FC<ModernLayoutProps> = ({
       {showOverlay && (
         <>
           <div className="fixed inset-0 bg-black bg-opacity-50 z-50" onClick={() => setShowOverlay(false)} />
-          <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white rounded-lg shadow-xl p-6 z-50 w-96">
+          <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white rounded-sm shadow-xl p-6 z-50 w-96">
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-lg font-semibold text-gray-900">Keyboard Shortcuts</h2>
               <button onClick={() => setShowOverlay(false)} className="text-gray-400 hover:text-gray-600">

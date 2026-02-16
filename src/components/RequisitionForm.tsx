@@ -220,7 +220,7 @@ const RequisitionForm: React.FC<RequisitionFormProps> = ({
   };
 
   return (
-    <div className="max-w-4xl mx-auto bg-white rounded-lg shadow-md">
+    <div className="max-w-4xl mx-auto bg-white rounded-sm shadow-md">
       <div className="px-6 py-4 border-b border-gray-200">
         <h2 className="text-2xl font-semibold text-gray-900">Job Requisition Form</h2>
         <p className="mt-1 text-sm text-gray-600">Create a new job requisition for your department</p>
@@ -241,7 +241,7 @@ const RequisitionForm: React.FC<RequisitionFormProps> = ({
             aria-required="true"
             aria-invalid={!!errors.jobTitle}
             aria-describedby={errors.jobTitle ? 'job-title-error' : undefined}
-            className={`w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-violet-500/60 focus:border-violet-400 ${
+            className={`w-full px-3 py-2 border rounded-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-gold-500/60 focus:border-violet-400 ${
               errors.jobTitle ? 'border-red-300' : 'border-gray-300'
             }`}
             placeholder="e.g., Senior Software Engineer"
@@ -265,7 +265,7 @@ const RequisitionForm: React.FC<RequisitionFormProps> = ({
               aria-required="true"
               aria-invalid={!!errors.department}
               aria-describedby={errors.department ? 'department-error' : undefined}
-              className={`w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-violet-500/60 focus:border-violet-400 ${
+              className={`w-full px-3 py-2 border rounded-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-gold-500/60 focus:border-violet-400 ${
                 errors.department ? 'border-red-300' : 'border-gray-300'
               }`}
             >
@@ -298,7 +298,7 @@ const RequisitionForm: React.FC<RequisitionFormProps> = ({
               aria-required="true"
               aria-invalid={!!errors.location}
               aria-describedby={errors.location ? 'location-error' : undefined}
-              className={`w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-violet-500/60 focus:border-violet-400 ${
+              className={`w-full px-3 py-2 border rounded-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-gold-500/60 focus:border-violet-400 ${
                 errors.location ? 'border-red-300' : 'border-gray-300'
               }`}
               placeholder="e.g., New York, NY or Remote"
@@ -322,7 +322,7 @@ const RequisitionForm: React.FC<RequisitionFormProps> = ({
             aria-required="true"
             aria-invalid={!!errors.employmentType}
             aria-describedby={errors.employmentType ? 'employment-type-error' : undefined}
-            className={`w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-violet-500/60 focus:border-violet-400 ${
+            className={`w-full px-3 py-2 border rounded-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-gold-500/60 focus:border-violet-400 ${
               errors.employmentType ? 'border-red-300' : 'border-gray-300'
             }`}
           >
@@ -358,7 +358,7 @@ const RequisitionForm: React.FC<RequisitionFormProps> = ({
                 step="1000"
                 aria-invalid={!!errors.salaryMin}
                 aria-describedby={errors.salaryMin ? 'salary-min-error' : undefined}
-                className={`w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-violet-500/60 focus:border-violet-400 ${
+                className={`w-full px-3 py-2 border rounded-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-gold-500/60 focus:border-violet-400 ${
                   errors.salaryMin ? 'border-red-300' : 'border-gray-300'
                 }`}
                 placeholder="50000"
@@ -381,7 +381,7 @@ const RequisitionForm: React.FC<RequisitionFormProps> = ({
                 step="1000"
                 aria-invalid={!!errors.salaryMax}
                 aria-describedby={errors.salaryMax ? 'salary-max-error' : undefined}
-                className={`w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-violet-500/60 focus:border-violet-400 ${
+                className={`w-full px-3 py-2 border rounded-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-gold-500/60 focus:border-violet-400 ${
                   errors.salaryMax ? 'border-red-300' : 'border-gray-300'
                 }`}
                 placeholder="80000"
@@ -406,7 +406,7 @@ const RequisitionForm: React.FC<RequisitionFormProps> = ({
             onChange={handleInputChange}
             aria-invalid={!!errors.description}
             aria-describedby={errors.description ? 'description-error' : undefined}
-            className={`w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-violet-500/60 focus:border-violet-400 ${
+            className={`w-full px-3 py-2 border rounded-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-gold-500/60 focus:border-violet-400 ${
               errors.description ? 'border-red-300' : 'border-gray-300'
             }`}
             placeholder="Describe the role, responsibilities, requirements, and qualifications..."
@@ -425,7 +425,7 @@ const RequisitionForm: React.FC<RequisitionFormProps> = ({
             type="button"
             onClick={handleSaveDraft}
             disabled={isSubmitting}
-            className="w-full sm:w-auto px-6 py-2 border border-gray-300 text-gray-700 bg-white rounded-md shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-violet-500/60 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="w-full sm:w-auto px-6 py-2 border border-gray-300 text-gray-700 bg-white rounded-sm shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-gold-500/60 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {isSubmitting ? 'Saving...' : 'Save as Draft'}
           </button>
@@ -433,7 +433,7 @@ const RequisitionForm: React.FC<RequisitionFormProps> = ({
             type="button"
             onClick={handleSubmitForApproval}
             disabled={isSubmitting}
-            className="w-full sm:w-auto px-6 py-2 bg-violet-600 text-white rounded-md shadow-sm hover:bg-violet-700 focus:outline-none focus:ring-2 focus:ring-violet-500/60 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="w-full sm:w-auto px-6 py-2 bg-gold-500 text-violet-950 rounded-sm shadow-sm hover:bg-gold-600 focus:outline-none focus:ring-2 focus:ring-gold-500/60 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {isSubmitting ? 'Submitting...' : 'Submit for Approval'}
           </button>

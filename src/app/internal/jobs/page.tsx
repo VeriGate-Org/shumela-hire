@@ -298,7 +298,7 @@ export default function InternalJobsBoard() {
           </span>
         )}
         {isInternal && (
-          <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-violet-100 text-violet-800">
+          <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-gold-100 text-gold-800">
             <UserGroupIcon className="w-3 h-3 mr-1" />
             Internal
           </span>
@@ -318,7 +318,7 @@ export default function InternalJobsBoard() {
     const description = stripHtmlTags(job.htmlBody).substring(0, 120) + '...';
     
     return (
-      <div className="bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow border border-gray-200 p-6">
+      <div className="bg-white rounded-sm shadow-md hover:shadow-lg transition-shadow border border-gray-200 p-6">
         <JobBadges job={job} />
         
         <div className="mb-4">
@@ -367,7 +367,7 @@ export default function InternalJobsBoard() {
         
         <div className="flex items-center justify-between">
           <Link href={`/internal/jobs/${job.id}`}>
-            <button className="text-violet-600 hover:text-violet-800 text-sm font-medium">
+            <button className="text-gold-600 hover:text-gold-800 text-sm font-medium">
               View Details
             </button>
           </Link>
@@ -375,7 +375,7 @@ export default function InternalJobsBoard() {
           {daysLeft > 0 && (
             <button
               onClick={() => handleApply(job)}
-              className="bg-violet-600 hover:bg-violet-700 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors"
+              className="bg-transparent border-2 border-gold-500 text-violet-900 hover:bg-gold-500 hover:text-violet-950 uppercase tracking-wider px-4 py-2 rounded-full text-sm font-medium transition-colors"
             >
               Apply Now
             </button>
@@ -420,7 +420,7 @@ export default function InternalJobsBoard() {
               <div className="flex items-center space-x-3">
                 <button
                   onClick={() => setViewMode(viewMode === 'cards' ? 'table' : 'cards')}
-                  className="px-3 py-2 border border-gray-300 rounded-md text-sm hover:bg-gray-50"
+                  className="px-3 py-2 border border-gray-300 rounded-sm text-sm hover:bg-gray-50"
                 >
                   {viewMode === 'cards' ? 'Table View' : 'Card View'}
                 </button>
@@ -433,7 +433,7 @@ export default function InternalJobsBoard() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Search and Filters */}
         <div className="mb-8">
-          <div className="bg-white rounded-lg shadow p-6">
+          <div className="bg-white rounded-sm shadow p-6">
             {/* Search Bar */}
             <div className="relative mb-4">
               <MagnifyingGlassIcon className="w-5 h-5 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
@@ -442,7 +442,7 @@ export default function InternalJobsBoard() {
                 placeholder="Search jobs by title, keywords, or description..."
                 value={filters.search}
                 onChange={(e) => handleFilterChange('search', e.target.value)}
-                className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-violet-500/60 focus:border-violet-400"
+                className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-sm focus:ring-2 focus:ring-gold-500/60 focus:border-violet-400"
               />
             </div>
 
@@ -450,12 +450,12 @@ export default function InternalJobsBoard() {
             <div className="flex items-center justify-between">
               <button
                 onClick={() => setShowFilters(!showFilters)}
-                className="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md hover:bg-gray-50"
+                className="inline-flex items-center px-4 py-2 border border-gray-300 rounded-sm hover:bg-gray-50"
               >
                 <FunnelIcon className="w-4 h-4 mr-2" />
                 Filters
                 {Object.values(filters).some(v => v) && (
-                  <span className="ml-2 px-2 py-1 bg-violet-100 text-violet-800 text-xs rounded-full">
+                  <span className="ml-2 px-2 py-1 bg-gold-100 text-gold-800 text-xs rounded-full">
                     Active
                   </span>
                 )}
@@ -477,7 +477,7 @@ export default function InternalJobsBoard() {
                     <select
                       value={filters.department}
                       onChange={(e) => handleFilterChange('department', e.target.value)}
-                      className="w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-violet-500/60 focus:border-violet-400"
+                      className="w-full border border-gray-300 rounded-sm px-3 py-2 focus:ring-2 focus:ring-gold-500/60 focus:border-violet-400"
                     >
                       <option value="">All Departments</option>
                       {filterOptions.departments.map(dept => (
@@ -493,7 +493,7 @@ export default function InternalJobsBoard() {
                     <select
                       value={filters.location}
                       onChange={(e) => handleFilterChange('location', e.target.value)}
-                      className="w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-violet-500/60 focus:border-violet-400"
+                      className="w-full border border-gray-300 rounded-sm px-3 py-2 focus:ring-2 focus:ring-gold-500/60 focus:border-violet-400"
                     >
                       <option value="">All Locations</option>
                       {filterOptions.locations.map(location => (
@@ -509,7 +509,7 @@ export default function InternalJobsBoard() {
                     <select
                       value={filters.employmentType}
                       onChange={(e) => handleFilterChange('employmentType', e.target.value)}
-                      className="w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-violet-500/60 focus:border-violet-400"
+                      className="w-full border border-gray-300 rounded-sm px-3 py-2 focus:ring-2 focus:ring-gold-500/60 focus:border-violet-400"
                     >
                       <option value="">All Types</option>
                       {filterOptions.employmentTypes.map(type => (
@@ -525,7 +525,7 @@ export default function InternalJobsBoard() {
                     <select
                       value={filters.closingDate}
                       onChange={(e) => handleFilterChange('closingDate', e.target.value)}
-                      className="w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-violet-500/60 focus:border-violet-400"
+                      className="w-full border border-gray-300 rounded-sm px-3 py-2 focus:ring-2 focus:ring-gold-500/60 focus:border-violet-400"
                     >
                       <option value="">Any Time</option>
                       <option value="7">Next 7 days</option>
@@ -540,7 +540,7 @@ export default function InternalJobsBoard() {
                   <div className="mt-4">
                     <button
                       onClick={clearFilters}
-                      className="text-sm text-violet-600 hover:text-violet-800"
+                      className="text-sm text-gold-600 hover:text-gold-800"
                     >
                       Clear all filters
                     </button>
@@ -553,7 +553,7 @@ export default function InternalJobsBoard() {
 
         {/* Error Display */}
         {error && (
-          <div className="mb-8 p-4 bg-red-50 border border-red-200 rounded-md">
+          <div className="mb-8 p-4 bg-red-50 border border-red-200 rounded-sm">
             <div className="flex">
               <ExclamationTriangleIcon className="w-5 h-5 text-red-400" />
               <div className="ml-3">
@@ -585,7 +585,7 @@ export default function InternalJobsBoard() {
             {Object.values(filters).some(v => v) && (
               <button
                 onClick={clearFilters}
-                className="text-violet-600 hover:text-violet-800"
+                className="text-gold-600 hover:text-gold-800"
               >
                 Clear filters
               </button>

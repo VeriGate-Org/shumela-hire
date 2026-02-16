@@ -94,7 +94,7 @@ export default function PipelineAnalytics({ analytics, onRefresh }: PipelineAnal
         {onRefresh && (
           <button
             onClick={onRefresh}
-            className="px-4 py-2 text-sm text-violet-600 hover:text-violet-800 font-medium"
+            className="px-4 py-2 text-sm text-gold-600 hover:text-gold-800 font-medium"
           >
             🔄 Refresh Data
           </button>
@@ -103,18 +103,18 @@ export default function PipelineAnalytics({ analytics, onRefresh }: PipelineAnal
 
       {/* Key Metrics Cards */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <div className="bg-violet-50 rounded-lg p-4 border border-violet-200">
+        <div className="bg-gold-50 rounded-sm p-4 border border-violet-200">
           <div className="flex items-center">
             <span className="text-2xl mr-3">📊</span>
             <div>
               <p className="text-sm font-medium text-violet-900">Total Pipeline</p>
-              <p className="text-xl font-bold text-violet-600">{getTotalApplications()}</p>
+              <p className="text-xl font-bold text-gold-600">{getTotalApplications()}</p>
               <p className="text-xs text-violet-700">applications processed</p>
             </div>
           </div>
         </div>
 
-        <div className="bg-green-50 rounded-lg p-4 border border-green-200">
+        <div className="bg-green-50 rounded-sm p-4 border border-green-200">
           <div className="flex items-center">
             <span className="text-2xl mr-3">✅</span>
             <div>
@@ -125,7 +125,7 @@ export default function PipelineAnalytics({ analytics, onRefresh }: PipelineAnal
           </div>
         </div>
 
-        <div className="bg-purple-50 rounded-lg p-4 border border-purple-200">
+        <div className="bg-purple-50 rounded-sm p-4 border border-purple-200">
           <div className="flex items-center">
             <span className="text-2xl mr-3">🚀</span>
             <div>
@@ -136,7 +136,7 @@ export default function PipelineAnalytics({ analytics, onRefresh }: PipelineAnal
           </div>
         </div>
 
-        <div className="bg-yellow-50 rounded-lg p-4 border border-yellow-200">
+        <div className="bg-yellow-50 rounded-sm p-4 border border-yellow-200">
           <div className="flex items-center">
             <span className="text-2xl mr-3">🤖</span>
             <div>
@@ -157,7 +157,7 @@ export default function PipelineAnalytics({ analytics, onRefresh }: PipelineAnal
               onClick={() => setActiveTab(tab.id as any)}
               className={`py-2 px-1 border-b-2 font-medium text-sm flex items-center space-x-2 ${
                 activeTab === tab.id
-                  ? 'border-violet-500 text-violet-600'
+                  ? 'border-gold-500 text-gold-700'
                   : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
               }`}
             >
@@ -169,7 +169,7 @@ export default function PipelineAnalytics({ analytics, onRefresh }: PipelineAnal
       </div>
 
       {/* Tab Content */}
-      <div className="bg-white rounded-lg shadow">
+      <div className="bg-white rounded-sm shadow">
         {/* Overview Tab */}
         {activeTab === 'overview' && (
           <div className="p-6">
@@ -178,7 +178,7 @@ export default function PipelineAnalytics({ analytics, onRefresh }: PipelineAnal
               <div>
                 <h3 className="text-lg font-medium mb-4">Stage Performance</h3>
                 <div className="space-y-4">
-                  <div className="bg-green-50 border border-green-200 rounded-lg p-4">
+                  <div className="bg-green-50 border border-green-200 rounded-sm p-4">
                     <div className="flex items-center justify-between">
                       <div>
                         <p className="text-sm font-medium text-green-900">Best Performing Stage</p>
@@ -191,7 +191,7 @@ export default function PipelineAnalytics({ analytics, onRefresh }: PipelineAnal
                     </div>
                   </div>
 
-                  <div className="bg-red-50 border border-red-200 rounded-lg p-4">
+                  <div className="bg-red-50 border border-red-200 rounded-sm p-4">
                     <div className="flex items-center justify-between">
                       <div>
                         <p className="text-sm font-medium text-red-900">Needs Attention</p>
@@ -210,7 +210,7 @@ export default function PipelineAnalytics({ analytics, onRefresh }: PipelineAnal
               <div>
                 <h3 className="text-lg font-medium mb-4">Pipeline Breakdown</h3>
                 <div className="space-y-3">
-                  <div className="flex justify-between items-center p-3 bg-gray-50 rounded-md">
+                  <div className="flex justify-between items-center p-3 bg-gray-50 rounded-sm">
                     <div className="flex items-center space-x-2">
                       <span className="text-lg">✅</span>
                       <span className="font-medium">Successful</span>
@@ -221,7 +221,7 @@ export default function PipelineAnalytics({ analytics, onRefresh }: PipelineAnal
                     </div>
                   </div>
 
-                  <div className="flex justify-between items-center p-3 bg-gray-50 rounded-md">
+                  <div className="flex justify-between items-center p-3 bg-gray-50 rounded-sm">
                     <div className="flex items-center space-x-2">
                       <span className="text-lg">❌</span>
                       <span className="font-medium">Rejected</span>
@@ -234,7 +234,7 @@ export default function PipelineAnalytics({ analytics, onRefresh }: PipelineAnal
                     </div>
                   </div>
 
-                  <div className="flex justify-between items-center p-3 bg-gray-50 rounded-md">
+                  <div className="flex justify-between items-center p-3 bg-gray-50 rounded-sm">
                     <div className="flex items-center space-x-2">
                       <span className="text-lg">↩️</span>
                       <span className="font-medium">Withdrawn</span>
@@ -258,7 +258,7 @@ export default function PipelineAnalytics({ analytics, onRefresh }: PipelineAnal
             <h3 className="text-lg font-medium mb-4">Average Time Spent in Each Stage</h3>
             <div className="space-y-3">
               {longestDurations.map((duration, index) => (
-                <div key={duration.stage} className="flex items-center justify-between p-4 border rounded-lg">
+                <div key={duration.stage} className="flex items-center justify-between p-4 border rounded-sm">
                   <div className="flex items-center space-x-3">
                     <div className={`w-8 h-8 rounded-full flex items-center justify-center text-white font-bold ${
                       index === 0 ? 'bg-red-500' : 
@@ -324,13 +324,13 @@ export default function PipelineAnalytics({ analytics, onRefresh }: PipelineAnal
             <div className="space-y-4">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {Object.entries(analytics.velocity).slice(-14).map(([date, count]) => (
-                  <div key={date} className="flex items-center justify-between p-3 border rounded-lg">
+                  <div key={date} className="flex items-center justify-between p-3 border rounded-sm">
                     <div>
                       <p className="font-medium text-gray-900">{new Date(date).toLocaleDateString()}</p>
                       <p className="text-sm text-gray-600">Transitions</p>
                     </div>
                     <div className="text-right">
-                      <p className="text-lg font-bold text-violet-600">{count}</p>
+                      <p className="text-lg font-bold text-gold-600">{count}</p>
                     </div>
                   </div>
                 ))}
@@ -341,7 +341,7 @@ export default function PipelineAnalytics({ analytics, onRefresh }: PipelineAnal
       </div>
 
       {/* Recommendations */}
-      <div className="bg-violet-50 border border-violet-200 rounded-lg p-4">
+      <div className="bg-gold-50 border border-violet-200 rounded-sm p-4">
         <h4 className="font-medium text-violet-900 mb-2">💡 Recommendations</h4>
         <ul className="text-sm text-violet-800 space-y-1">
           {performance.worst.rate < 50 && (

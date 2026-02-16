@@ -156,7 +156,7 @@ export default function JobPostingWorkflow({ jobPosting, onStatusChange, current
   const terminalInfo = getTerminalStatusInfo();
 
   return (
-    <div className="bg-white rounded-lg shadow-lg p-6">
+    <div className="bg-white rounded-sm shadow-lg p-6">
       {/* Header */}
       <div className="mb-6">
         <div className="flex justify-between items-start">
@@ -178,17 +178,17 @@ export default function JobPostingWorkflow({ jobPosting, onStatusChange, current
 
       {/* Analytics */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-        <div className="bg-violet-50 rounded-lg p-4">
+        <div className="bg-gold-50 rounded-sm p-4">
           <div className="flex items-center">
             <span className="text-2xl mr-3">👁️</span>
             <div>
               <p className="text-sm font-medium text-violet-900">Views</p>
-              <p className="text-lg font-bold text-violet-600">{jobPosting.viewsCount}</p>
+              <p className="text-lg font-bold text-gold-600">{jobPosting.viewsCount}</p>
             </div>
           </div>
         </div>
         
-        <div className="bg-green-50 rounded-lg p-4">
+        <div className="bg-green-50 rounded-sm p-4">
           <div className="flex items-center">
             <span className="text-2xl mr-3">📄</span>
             <div>
@@ -198,7 +198,7 @@ export default function JobPostingWorkflow({ jobPosting, onStatusChange, current
           </div>
         </div>
         
-        <div className="bg-purple-50 rounded-lg p-4">
+        <div className="bg-purple-50 rounded-sm p-4">
           <div className="flex items-center">
             <span className="text-2xl mr-3">📅</span>
             <div>
@@ -213,7 +213,7 @@ export default function JobPostingWorkflow({ jobPosting, onStatusChange, current
 
       {/* Terminal Status Display */}
       {terminalInfo && (
-        <div className={`${terminalInfo.bgColor} border rounded-lg p-4 mb-6`}>
+        <div className={`${terminalInfo.bgColor} border rounded-sm p-4 mb-6`}>
           <div className="flex items-center">
             <span className="text-2xl mr-3">{terminalInfo.icon}</span>
             <div>
@@ -234,7 +234,7 @@ export default function JobPostingWorkflow({ jobPosting, onStatusChange, current
                 <div className="flex-shrink-0">
                   <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium ${
                     isStepCompleted(index) ? 'bg-green-500 text-white' :
-                    isStepCurrent(index) ? 'bg-violet-500 text-white' :
+                    isStepCurrent(index) ? 'bg-gold-500 text-white' :
                     'bg-gray-200 text-gray-600'
                   }`}>
                     {isStepCompleted(index) ? '✓' : step.icon}
@@ -248,7 +248,7 @@ export default function JobPostingWorkflow({ jobPosting, onStatusChange, current
                       {step.label}
                     </p>
                     {isStepCurrent(index) && (
-                      <span className="text-xs bg-violet-100 text-violet-800 px-2 py-1 rounded">
+                      <span className="text-xs bg-gold-100 text-gold-800 px-2 py-1 rounded">
                         Current
                       </span>
                     )}
@@ -267,7 +267,7 @@ export default function JobPostingWorkflow({ jobPosting, onStatusChange, current
           <button
             onClick={() => handleWorkflowAction('submit-for-approval')}
             disabled={loading === 'submit-for-approval'}
-            className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-violet-600 hover:bg-violet-700 disabled:opacity-50"
+            className="w-full flex justify-center py-2 px-4 border border-transparent rounded-sm shadow-sm text-sm font-medium text-violet-900 bg-transparent border-2 border-gold-500 hover:bg-gold-500 hover:text-violet-950 uppercase tracking-wider disabled:opacity-50"
           >
             {loading === 'submit-for-approval' ? 'Submitting...' : 'Submit for Approval'}
           </button>
@@ -279,25 +279,25 @@ export default function JobPostingWorkflow({ jobPosting, onStatusChange, current
               <div className="flex space-x-2">
                 <button
                   onClick={() => setShowApprovalForm(true)}
-                  className="flex-1 py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-green-600 hover:bg-green-700"
+                  className="flex-1 py-2 px-4 border border-transparent rounded-sm shadow-sm text-sm font-medium text-white bg-green-600 hover:bg-green-700"
                 >
                   Approve Job Posting
                 </button>
                 <button
                   onClick={() => setShowRejectionForm(true)}
-                  className="flex-1 py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50"
+                  className="flex-1 py-2 px-4 border border-gray-300 rounded-sm shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50"
                 >
                   Reject Job Posting
                 </button>
               </div>
             ) : (
-              <div className="border rounded-md p-4">
+              <div className="border rounded-sm p-4">
                 <h5 className="font-medium text-gray-900 mb-2">Approve Job Posting</h5>
                 <textarea
                   value={approvalNotes}
                   onChange={(e) => setApprovalNotes(e.target.value)}
                   placeholder="Optional approval notes..."
-                  className="w-full p-2 border border-gray-300 rounded-md"
+                  className="w-full p-2 border border-gray-300 rounded-sm"
                   rows={3}
                 />
                 <div className="flex justify-end space-x-2 mt-3">
@@ -321,13 +321,13 @@ export default function JobPostingWorkflow({ jobPosting, onStatusChange, current
         )}
 
         {jobPosting.canBeRejected && showRejectionForm && (
-          <div className="border rounded-md p-4">
+          <div className="border rounded-sm p-4">
             <h5 className="font-medium text-gray-900 mb-2">Reject Job Posting</h5>
             <textarea
               value={rejectionReason}
               onChange={(e) => setRejectionReason(e.target.value)}
               placeholder="Please provide a reason for rejection..."
-              className="w-full p-2 border border-gray-300 rounded-md"
+              className="w-full p-2 border border-gray-300 rounded-sm"
               rows={3}
               required
             />
@@ -353,7 +353,7 @@ export default function JobPostingWorkflow({ jobPosting, onStatusChange, current
           <button
             onClick={() => handleWorkflowAction('publish')}
             disabled={loading === 'publish'}
-            className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-green-600 hover:bg-green-700 disabled:opacity-50"
+            className="w-full flex justify-center py-2 px-4 border border-transparent rounded-sm shadow-sm text-sm font-medium text-white bg-green-600 hover:bg-green-700 disabled:opacity-50"
           >
             {loading === 'publish' ? 'Publishing...' : 'Publish Job Posting'}
           </button>
@@ -363,7 +363,7 @@ export default function JobPostingWorkflow({ jobPosting, onStatusChange, current
           <button
             onClick={() => handleWorkflowAction('unpublish')}
             disabled={loading === 'unpublish'}
-            className="w-full flex justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 disabled:opacity-50"
+            className="w-full flex justify-center py-2 px-4 border border-gray-300 rounded-sm shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 disabled:opacity-50"
           >
             {loading === 'unpublish' ? 'Unpublishing...' : 'Unpublish Job Posting'}
           </button>
@@ -373,7 +373,7 @@ export default function JobPostingWorkflow({ jobPosting, onStatusChange, current
           <button
             onClick={() => handleWorkflowAction('close')}
             disabled={loading === 'close'}
-            className="w-full flex justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 disabled:opacity-50"
+            className="w-full flex justify-center py-2 px-4 border border-gray-300 rounded-sm shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 disabled:opacity-50"
           >
             {loading === 'close' ? 'Closing...' : 'Close Job Posting'}
           </button>

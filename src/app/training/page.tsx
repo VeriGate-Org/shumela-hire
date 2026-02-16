@@ -261,7 +261,7 @@ export default function TrainingPage() {
       case 'completed':
         return `${baseClasses} bg-green-100 text-green-800`;
       case 'in-progress':
-        return `${baseClasses} bg-violet-100 text-violet-800`;
+        return `${baseClasses} bg-gold-100 text-gold-800`;
       default:
         return `${baseClasses} bg-gray-100 text-gray-800`;
     }
@@ -305,11 +305,11 @@ export default function TrainingPage() {
 
   const actions = (
     <div className="flex items-center gap-3">
-      <button className="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">
+      <button className="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-full text-gray-700 bg-white hover:bg-gray-50">
         <CalendarIcon className="w-4 h-4 mr-2" />
         Schedule Training
       </button>
-      <button className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-violet-600 hover:bg-violet-700">
+      <button className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-full shadow-sm text-violet-900 bg-transparent border-2 border-gold-500 hover:bg-gold-500 hover:text-violet-950 uppercase tracking-wider">
         <PlusIcon className="w-4 h-4 mr-2" />
         Create Module
       </button>
@@ -326,7 +326,7 @@ export default function TrainingPage() {
         {/* Stats Overview */}
         {stats && (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            <div className="bg-white rounded-lg shadow p-6">
+            <div className="bg-white rounded-sm shadow p-6">
               <div className="flex items-center">
                 <div className="flex-shrink-0">
                   <BookOpenIcon className="w-8 h-8 text-violet-500" />
@@ -338,7 +338,7 @@ export default function TrainingPage() {
               </div>
             </div>
             
-            <div className="bg-white rounded-lg shadow p-6">
+            <div className="bg-white rounded-sm shadow p-6">
               <div className="flex items-center">
                 <div className="flex-shrink-0">
                   <TrophyIcon className="w-8 h-8 text-green-500" />
@@ -350,7 +350,7 @@ export default function TrainingPage() {
               </div>
             </div>
             
-            <div className="bg-white rounded-lg shadow p-6">
+            <div className="bg-white rounded-sm shadow p-6">
               <div className="flex items-center">
                 <div className="flex-shrink-0">
                   <ClockIcon className="w-8 h-8 text-yellow-500" />
@@ -362,7 +362,7 @@ export default function TrainingPage() {
               </div>
             </div>
             
-            <div className="bg-white rounded-lg shadow p-6">
+            <div className="bg-white rounded-sm shadow p-6">
               <div className="flex items-center">
                 <div className="flex-shrink-0">
                   <StarIcon className="w-8 h-8 text-purple-500" />
@@ -377,7 +377,7 @@ export default function TrainingPage() {
         )}
 
         {/* View Toggle */}
-        <div className="bg-white rounded-lg shadow p-6">
+        <div className="bg-white rounded-sm shadow p-6">
           <div className="flex flex-col lg:flex-row gap-4 items-start lg:items-center justify-between">
             <div className="flex gap-1">
               {[
@@ -388,9 +388,9 @@ export default function TrainingPage() {
                 <button
                   key={view.id}
                   onClick={() => setSelectedView(view.id as any)}
-                  className={`flex items-center px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+                  className={`flex items-center px-4 py-2 rounded-sm text-sm font-medium transition-colors ${
                     selectedView === view.id
-                      ? 'bg-violet-100 text-violet-800'
+                      ? 'bg-gold-100 text-gold-800'
                       : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
                   }`}
                 >
@@ -406,16 +406,16 @@ export default function TrainingPage() {
                 placeholder="Search training..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-violet-500/60 focus:border-violet-400"
+                className="px-4 py-2 border border-gray-300 rounded-sm focus:ring-2 focus:ring-gold-500/60 focus:border-violet-400"
               />
               <div className="flex gap-2 overflow-x-auto">
                 {categories.map(category => (
                   <button
                     key={category.id}
                     onClick={() => setSelectedCategory(category.id)}
-                    className={`px-3 py-2 rounded-lg whitespace-nowrap text-sm font-medium transition-colors ${
+                    className={`px-3 py-2 rounded-sm whitespace-nowrap text-sm font-medium transition-colors ${
                       selectedCategory === category.id
-                        ? 'bg-violet-100 text-violet-800 border border-violet-200'
+                        ? 'bg-gold-100 text-gold-800 border border-violet-200'
                         : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                     }`}
                   >
@@ -438,7 +438,7 @@ export default function TrainingPage() {
             ) : (
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 {filteredModules.map(module => (
-                  <div key={module.id} className="bg-white rounded-lg shadow hover:shadow-md transition-shadow">
+                  <div key={module.id} className="bg-white rounded-sm shadow hover:shadow-md transition-shadow">
                     <div className="p-6">
                       {/* Header */}
                       <div className="flex items-start justify-between mb-4">
@@ -475,8 +475,8 @@ export default function TrainingPage() {
                             <span>{module.progress}%</span>
                           </div>
                           <div className="w-full bg-gray-200 rounded-full h-2">
-                            <div 
-                              className="bg-violet-600 h-2 rounded-full transition-all duration-300"
+                            <div
+                              className="bg-gold-500 h-2 rounded-full transition-all duration-300"
                               style={{ width: `${module.progress}%` }}
                             ></div>
                           </div>
@@ -527,20 +527,20 @@ export default function TrainingPage() {
                         {module.status === 'not-started' ? (
                           <button
                             onClick={() => handleStartModule(module.id)}
-                            className="flex-1 px-4 py-2 bg-violet-600 text-white rounded-lg hover:bg-violet-700 transition-colors"
+                            className="flex-1 px-4 py-2 bg-gold-500 text-violet-950 rounded-full hover:bg-gold-600 transition-colors"
                           >
                             Start Module
                           </button>
                         ) : module.status === 'in-progress' ? (
-                          <button className="flex-1 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors">
+                          <button className="flex-1 px-4 py-2 bg-green-600 text-white rounded-full hover:bg-green-700 transition-colors">
                             Continue
                           </button>
                         ) : (
-                          <button className="flex-1 px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors">
+                          <button className="flex-1 px-4 py-2 bg-gray-600 text-white rounded-full hover:bg-gray-700 transition-colors">
                             Review
                           </button>
                         )}
-                        <button className="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors">
+                        <button className="px-4 py-2 border border-gray-300 text-gray-700 rounded-full hover:bg-gray-50 transition-colors">
                           Details
                         </button>
                       </div>
@@ -556,7 +556,7 @@ export default function TrainingPage() {
         {selectedView === 'paths' && (
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             {trainingPaths.map(path => (
-              <div key={path.id} className="bg-white rounded-lg shadow">
+              <div key={path.id} className="bg-white rounded-sm shadow">
                 <div className="p-6">
                   <h3 className="text-lg font-semibold text-gray-900 mb-2">{path.name}</h3>
                   <p className="text-gray-600 text-sm mb-4">{path.description}</p>
@@ -580,7 +580,7 @@ export default function TrainingPage() {
                     </div>
                   </div>
 
-                  <button className="w-full px-4 py-2 bg-violet-600 text-white rounded-lg hover:bg-violet-700 transition-colors">
+                  <button className="w-full px-4 py-2 bg-gold-500 text-violet-950 rounded-full hover:bg-gold-600 transition-colors">
                     {path.completedModules > 0 ? 'Continue Path' : 'Start Path'}
                   </button>
                 </div>
@@ -591,12 +591,12 @@ export default function TrainingPage() {
 
         {/* Progress View */}
         {selectedView === 'progress' && (
-          <div className="bg-white rounded-lg shadow p-6">
+          <div className="bg-white rounded-sm shadow p-6">
             <h3 className="text-lg font-semibold text-gray-900 mb-6">My Learning Progress</h3>
             
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
               <div className="text-center">
-                <div className="text-3xl font-bold text-violet-600 mb-2">
+                <div className="text-3xl font-bold text-gold-600 mb-2">
                   {stats?.completedModules}/{stats?.totalModules}
                 </div>
                 <div className="text-gray-600">Modules Completed</div>
@@ -618,7 +618,7 @@ export default function TrainingPage() {
             <div className="space-y-4">
               <h4 className="font-medium text-gray-900">Recent Activity</h4>
               {modules.filter(m => m.status !== 'not-started').map(module => (
-                <div key={module.id} className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
+                <div key={module.id} className="flex items-center justify-between p-4 bg-gray-50 rounded-sm">
                   <div className="flex items-center gap-3">
                     {getStatusIcon(module.status)}
                     <div>

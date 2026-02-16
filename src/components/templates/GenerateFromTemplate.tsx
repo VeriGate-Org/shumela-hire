@@ -109,7 +109,7 @@ const GenerateFromTemplate: React.FC<GenerateFromTemplateProps> = ({
     if (!generatedDraft) return null;
 
     return (
-      <div className="bg-white rounded-lg p-6 shadow-sm border border-gray-200">
+      <div className="bg-white rounded-sm p-6 shadow-sm border border-gray-200">
         <div className="space-y-6">
           {/* Job Title */}
           <div>
@@ -186,7 +186,7 @@ const GenerateFromTemplate: React.FC<GenerateFromTemplateProps> = ({
 
   if (step === 'complete') {
     return (
-      <div className={`bg-white rounded-lg shadow-lg p-8 text-center ${className}`}>
+      <div className={`bg-white rounded-sm shadow-lg p-8 text-center ${className}`}>
         <CheckCircleIcon className="w-16 h-16 text-green-500 mx-auto mb-4" />
         <h2 className="text-2xl font-bold text-gray-900 mb-2">Job Ad Generated!</h2>
         <p className="text-gray-600 mb-6">
@@ -195,13 +195,13 @@ const GenerateFromTemplate: React.FC<GenerateFromTemplateProps> = ({
         <div className="flex justify-center space-x-4">
           <button
             onClick={onCancel}
-            className="px-4 py-2 border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50"
+            className="px-4 py-2 border border-gray-300 text-gray-700 rounded-sm hover:bg-gray-50"
           >
             Close
           </button>
           <button
             onClick={handleComplete}
-            className="px-4 py-2 bg-violet-600 text-white rounded-md hover:bg-violet-700"
+            className="px-4 py-2 bg-gold-500 text-violet-950 rounded-sm hover:bg-gold-600"
           >
             View Draft
           </button>
@@ -211,7 +211,7 @@ const GenerateFromTemplate: React.FC<GenerateFromTemplateProps> = ({
   }
 
   return (
-    <div className={`bg-white rounded-lg shadow-lg ${className}`}>
+    <div className={`bg-white rounded-sm shadow-lg ${className}`}>
       {/* Header */}
       <div className="px-6 py-4 border-b border-gray-200">
         <div className="flex items-center justify-between">
@@ -237,7 +237,7 @@ const GenerateFromTemplate: React.FC<GenerateFromTemplateProps> = ({
 
       {/* Error Display */}
       {error && (
-        <div className="mx-6 mt-4 p-4 bg-red-50 border border-red-200 rounded-md">
+        <div className="mx-6 mt-4 p-4 bg-red-50 border border-red-200 rounded-sm">
           <div className="text-red-800">{error}</div>
         </div>
       )}
@@ -252,14 +252,14 @@ const GenerateFromTemplate: React.FC<GenerateFromTemplateProps> = ({
           ].map(({ key, label, icon: Icon }, index) => (
             <div key={key} className="flex items-center">
               <div className={`flex items-center justify-center w-8 h-8 rounded-full border-2 ${
-                step === key ? 'bg-violet-600 border-violet-600 text-white' :
+                step === key ? 'bg-gold-500 border-gold-500 text-violet-950' :
                 ['customize', 'preview'].includes(step) && index < (['select', 'customize', 'preview'].indexOf(step)) ? 'bg-green-500 border-green-500 text-white' :
                 'border-gray-300 text-gray-400'
               }`}>
                 <Icon className="w-4 h-4" />
               </div>
               <span className={`ml-2 text-sm font-medium ${
-                step === key ? 'text-violet-600' : 'text-gray-500'
+                step === key ? 'text-gold-600' : 'text-gray-500'
               }`}>
                 {label}
               </span>
@@ -287,9 +287,9 @@ const GenerateFromTemplate: React.FC<GenerateFromTemplateProps> = ({
                   <div
                     key={template.id}
                     onClick={() => setSelectedTemplate(template)}
-                    className={`p-4 border-2 rounded-lg cursor-pointer transition-colors ${
+                    className={`p-4 border-2 rounded-sm cursor-pointer transition-colors ${
                       selectedTemplate?.id === template.id
-                        ? 'border-violet-500 bg-violet-50'
+                        ? 'border-gold-500 bg-gold-50'
                         : 'border-gray-200 hover:border-gray-300'
                     }`}
                   >
@@ -318,9 +318,9 @@ const GenerateFromTemplate: React.FC<GenerateFromTemplateProps> = ({
               <div className="space-y-3">
                 <div
                   onClick={() => setSelectedRequisition(null)}
-                  className={`p-4 border-2 rounded-lg cursor-pointer transition-colors ${
+                  className={`p-4 border-2 rounded-sm cursor-pointer transition-colors ${
                     !selectedRequisition
-                      ? 'border-violet-500 bg-violet-50'
+                      ? 'border-gold-500 bg-gold-50'
                       : 'border-gray-200 hover:border-gray-300'
                   }`}
                 >
@@ -332,9 +332,9 @@ const GenerateFromTemplate: React.FC<GenerateFromTemplateProps> = ({
                   <div
                     key={requisition.id}
                     onClick={() => setSelectedRequisition(requisition)}
-                    className={`p-4 border-2 rounded-lg cursor-pointer transition-colors ${
+                    className={`p-4 border-2 rounded-sm cursor-pointer transition-colors ${
                       selectedRequisition?.id === requisition.id
-                        ? 'border-violet-500 bg-violet-50'
+                        ? 'border-gold-500 bg-gold-50'
                         : 'border-gray-200 hover:border-gray-300'
                     }`}
                   >
@@ -356,7 +356,7 @@ const GenerateFromTemplate: React.FC<GenerateFromTemplateProps> = ({
               <button
                 onClick={() => setStep('customize')}
                 disabled={!selectedTemplate}
-                className="px-4 py-2 bg-violet-600 text-white rounded-md hover:bg-violet-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="px-4 py-2 bg-gold-500 text-violet-950 rounded-sm hover:bg-gold-600 disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 Next: Customize Data
               </button>
@@ -375,7 +375,7 @@ const GenerateFromTemplate: React.FC<GenerateFromTemplateProps> = ({
             </div>
 
             {selectedRequisition && (
-              <div className="p-4 bg-green-50 border border-green-200 rounded-lg">
+              <div className="p-4 bg-green-50 border border-green-200 rounded-sm">
                 <h4 className="font-medium text-green-900 mb-2">From Requisition: {selectedRequisition.jobTitle}</h4>
                 <div className="grid grid-cols-2 gap-4 text-sm">
                   <div>
@@ -403,7 +403,7 @@ const GenerateFromTemplate: React.FC<GenerateFromTemplateProps> = ({
                   type="text"
                   value={customData.companyName || ''}
                   onChange={(e) => setCustomData(prev => ({ ...prev, companyName: e.target.value }))}
-                  className="w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-violet-500/60 focus:border-violet-400"
+                  className="w-full border border-gray-300 rounded-sm px-3 py-2 focus:ring-2 focus:ring-gold-500/60 focus:border-violet-400"
                   placeholder="Your Company Name"
                 />
               </div>
@@ -416,7 +416,7 @@ const GenerateFromTemplate: React.FC<GenerateFromTemplateProps> = ({
                   type="text"
                   value={customData.applicationDeadline || ''}
                   onChange={(e) => setCustomData(prev => ({ ...prev, applicationDeadline: e.target.value }))}
-                  className="w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-violet-500/60 focus:border-violet-400"
+                  className="w-full border border-gray-300 rounded-sm px-3 py-2 focus:ring-2 focus:ring-gold-500/60 focus:border-violet-400"
                   placeholder="March 31, 2024"
                 />
               </div>
@@ -431,7 +431,7 @@ const GenerateFromTemplate: React.FC<GenerateFromTemplateProps> = ({
                       type="text"
                       value={customData.jobTitle || ''}
                       onChange={(e) => setCustomData(prev => ({ ...prev, jobTitle: e.target.value }))}
-                      className="w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-violet-500/60 focus:border-violet-400"
+                      className="w-full border border-gray-300 rounded-sm px-3 py-2 focus:ring-2 focus:ring-gold-500/60 focus:border-violet-400"
                       placeholder="e.g., Senior Software Engineer"
                     />
                   </div>
@@ -444,7 +444,7 @@ const GenerateFromTemplate: React.FC<GenerateFromTemplateProps> = ({
                       type="text"
                       value={customData.department || ''}
                       onChange={(e) => setCustomData(prev => ({ ...prev, department: e.target.value }))}
-                      className="w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-violet-500/60 focus:border-violet-400"
+                      className="w-full border border-gray-300 rounded-sm px-3 py-2 focus:ring-2 focus:ring-gold-500/60 focus:border-violet-400"
                       placeholder="e.g., Engineering"
                     />
                   </div>
@@ -457,7 +457,7 @@ const GenerateFromTemplate: React.FC<GenerateFromTemplateProps> = ({
                       type="text"
                       value={customData.location || ''}
                       onChange={(e) => setCustomData(prev => ({ ...prev, location: e.target.value }))}
-                      className="w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-violet-500/60 focus:border-violet-400"
+                      className="w-full border border-gray-300 rounded-sm px-3 py-2 focus:ring-2 focus:ring-gold-500/60 focus:border-violet-400"
                       placeholder="e.g., San Francisco, CA"
                     />
                   </div>
@@ -470,7 +470,7 @@ const GenerateFromTemplate: React.FC<GenerateFromTemplateProps> = ({
                       type="text"
                       value={customData.salaryRange || ''}
                       onChange={(e) => setCustomData(prev => ({ ...prev, salaryRange: e.target.value }))}
-                      className="w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-violet-500/60 focus:border-violet-400"
+                      className="w-full border border-gray-300 rounded-sm px-3 py-2 focus:ring-2 focus:ring-gold-500/60 focus:border-violet-400"
                       placeholder="e.g., R2,000,000 - R3,000,000"
                     />
                   </div>
@@ -481,14 +481,14 @@ const GenerateFromTemplate: React.FC<GenerateFromTemplateProps> = ({
             <div className="flex justify-between">
               <button
                 onClick={() => setStep('select')}
-                className="px-4 py-2 border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50"
+                className="px-4 py-2 border border-gray-300 text-gray-700 rounded-sm hover:bg-gray-50"
               >
                 Back
               </button>
               <button
                 onClick={handleGenerate}
                 disabled={loading}
-                className="px-4 py-2 bg-violet-600 text-white rounded-md hover:bg-violet-700 disabled:opacity-50 flex items-center"
+                className="px-4 py-2 bg-gold-500 text-violet-950 rounded-sm hover:bg-gold-600 disabled:opacity-50 flex items-center"
               >
                 {loading ? (
                   <>
@@ -521,20 +521,20 @@ const GenerateFromTemplate: React.FC<GenerateFromTemplateProps> = ({
             <div className="flex justify-between">
               <button
                 onClick={() => setStep('customize')}
-                className="px-4 py-2 border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50"
+                className="px-4 py-2 border border-gray-300 text-gray-700 rounded-sm hover:bg-gray-50"
               >
                 Back to Customize
               </button>
               <div className="flex space-x-3">
                 <button
                   onClick={() => setStep('complete')}
-                  className="px-4 py-2 border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50"
+                  className="px-4 py-2 border border-gray-300 text-gray-700 rounded-sm hover:bg-gray-50"
                 >
                   Save as Draft
                 </button>
                 <button
                   onClick={handleComplete}
-                  className="px-4 py-2 bg-violet-600 text-white rounded-md hover:bg-violet-700"
+                  className="px-4 py-2 bg-gold-500 text-violet-950 rounded-sm hover:bg-gold-600"
                 >
                   Use This Job Ad
                 </button>

@@ -34,10 +34,10 @@ export default function AiSmartSearch() {
       <div className="flex gap-2">
         <input type="text" value={query} onChange={e => setQuery(e.target.value)}
           onKeyDown={e => e.key === 'Enter' && handleSearch()}
-          className="flex-1 text-sm p-2.5 border border-gray-300 rounded-md"
+          className="flex-1 text-sm p-2.5 border border-gray-300 rounded-sm"
           placeholder="e.g. Find senior Java developers who applied in the last month" />
         <button onClick={handleSearch} disabled={loading || !query.trim()}
-          className="px-4 py-2 text-sm bg-violet-600 text-white rounded-md hover:bg-violet-700 disabled:opacity-50 disabled:cursor-not-allowed">
+          className="px-4 py-2 text-sm bg-gold-500 text-violet-950 rounded-sm hover:bg-gold-600 disabled:opacity-50 disabled:cursor-not-allowed">
           {loading ? 'Searching...' : 'Search'}
         </button>
       </div>
@@ -54,7 +54,7 @@ export default function AiSmartSearch() {
           {result.parsedFilters && Object.keys(result.parsedFilters).length > 0 && (
             <div className="flex flex-wrap gap-2">
               {Object.entries(result.parsedFilters).map(([key, value]) => (
-                <span key={key} className="inline-flex items-center px-2.5 py-1 bg-violet-50 text-violet-700 text-xs rounded-full border border-violet-200">
+                <span key={key} className="inline-flex items-center px-2.5 py-1 bg-gold-50 text-violet-700 text-xs rounded-full border border-violet-200">
                   <span className="font-medium mr-1">{key}:</span>
                   {Array.isArray(value) ? value.join(', ') : String(value)}
                 </span>
@@ -67,7 +67,7 @@ export default function AiSmartSearch() {
             <div className="space-y-2">
               <p className="text-xs text-gray-500">{result.totalResults} result{result.totalResults !== 1 ? 's' : ''} found</p>
               {result.results.map((item, i) => (
-                <div key={i} className="p-3 bg-gray-50 border border-gray-200 rounded-lg">
+                <div key={i} className="p-3 bg-gray-50 border border-gray-200 rounded-sm">
                   <pre className="text-xs text-gray-700 whitespace-pre-wrap">{JSON.stringify(item, null, 2)}</pre>
                 </div>
               ))}

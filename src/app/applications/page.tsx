@@ -63,7 +63,7 @@ const DEPARTMENT_OPTIONS = [
 function getStatusColor(status: string): string {
   switch (status) {
     case 'SUBMITTED': return 'bg-slate-100 text-slate-700 border-slate-300';
-    case 'SCREENING': return 'bg-violet-100 text-violet-700 border-violet-300';
+    case 'SCREENING': return 'bg-gold-100 text-violet-700 border-violet-300';
     case 'INTERVIEW_SCHEDULED': return 'bg-purple-100 text-purple-700 border-purple-300';
     case 'INTERVIEW_COMPLETED': return 'bg-indigo-100 text-indigo-700 border-indigo-300';
     case 'REFERENCE_CHECK': return 'bg-yellow-100 text-yellow-700 border-yellow-300';
@@ -228,14 +228,14 @@ export default function ApplicationsPage() {
     <div className="flex items-center gap-3">
       <button
         onClick={loadApplications}
-        className="inline-flex items-center px-3 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50"
+        className="inline-flex items-center px-3 py-2 border border-gray-300 text-sm font-medium rounded-full text-gray-700 bg-white hover:bg-gray-50"
       >
         <ArrowPathIcon className="w-4 h-4 mr-1.5" />
         Refresh
       </button>
       <Link
         href="/applications/manage"
-        className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-violet-600 hover:bg-violet-700"
+        className="inline-flex items-center px-4 py-2 border-2 border-gold-500 text-sm font-medium rounded-full bg-transparent text-violet-900 hover:bg-gold-500 hover:text-violet-950 uppercase tracking-wider"
       >
         Advanced Management
       </Link>
@@ -246,7 +246,7 @@ export default function ApplicationsPage() {
     return (
       <PageWrapper title="Applications" subtitle="Loading applications..." actions={actions}>
         <div className="flex items-center justify-center h-96">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-violet-500"></div>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gold-500"></div>
         </div>
       </PageWrapper>
     );
@@ -310,7 +310,7 @@ export default function ApplicationsPage() {
                   placeholder="Search by name, job title, department, or email..."
                   value={searchTerm}
                   onChange={(e) => { setSearchTerm(e.target.value); setPage(0); }}
-                  className="pl-10 pr-4 py-2 w-full border border-gray-300 rounded-md focus:ring-2 focus:ring-violet-500/60 focus:border-violet-400"
+                  className="pl-10 pr-4 py-2 w-full border border-gray-300 rounded-sm focus:ring-2 focus:ring-gold-500/60 focus:border-violet-400"
                 />
               </div>
             </div>
@@ -318,7 +318,7 @@ export default function ApplicationsPage() {
               <select
                 value={statusFilter}
                 onChange={(e) => { setStatusFilter(e.target.value); setPage(0); }}
-                className="w-full py-2 px-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-violet-500/60 focus:border-violet-400"
+                className="w-full py-2 px-3 border border-gray-300 rounded-sm focus:ring-2 focus:ring-gold-500/60 focus:border-violet-400"
               >
                 {STATUS_OPTIONS.map(opt => (
                   <option key={opt.value} value={opt.value}>
@@ -331,7 +331,7 @@ export default function ApplicationsPage() {
               <select
                 value={departmentFilter}
                 onChange={(e) => { setDepartmentFilter(e.target.value); setPage(0); }}
-                className="w-full py-2 px-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-violet-500/60 focus:border-violet-400"
+                className="w-full py-2 px-3 border border-gray-300 rounded-sm focus:ring-2 focus:ring-gold-500/60 focus:border-violet-400"
               >
                 <option value="ALL">All Departments</option>
                 {DEPARTMENT_OPTIONS.map(dept => (
@@ -355,7 +355,7 @@ export default function ApplicationsPage() {
                   setSortDir(dir as typeof sortDir);
                   setPage(0);
                 }}
-                className="py-1 px-2 border border-gray-300 rounded-md text-sm focus:ring-2 focus:ring-violet-500/60 focus:border-violet-400"
+                className="py-1 px-2 border border-gray-300 rounded-sm text-sm focus:ring-2 focus:ring-gold-500/60 focus:border-violet-400"
               >
                 <option value="submittedAt-desc">Newest first</option>
                 <option value="submittedAt-asc">Oldest first</option>
@@ -409,8 +409,8 @@ export default function ApplicationsPage() {
                     <tr key={app.id} className="hover:bg-gray-50 transition-colors">
                       <td className="px-6 py-4 whitespace-nowrap">
                         <div className="flex items-center">
-                          <div className="w-9 h-9 bg-violet-100 rounded-full flex items-center justify-center flex-shrink-0">
-                            <UserIcon className="w-5 h-5 text-violet-600" />
+                          <div className="w-9 h-9 bg-gold-100 rounded-full flex items-center justify-center flex-shrink-0">
+                            <UserIcon className="w-5 h-5 text-gold-600" />
                           </div>
                           <div className="ml-3">
                             <p className="text-sm font-medium text-gray-900">{app.applicantName}</p>
@@ -444,7 +444,7 @@ export default function ApplicationsPage() {
                       <td className="px-6 py-4 whitespace-nowrap text-right">
                         <button
                           onClick={() => setSelectedApplication(app)}
-                          className="text-violet-600 hover:text-violet-800 text-sm font-medium"
+                          className="text-gold-600 hover:text-gold-800 text-sm font-medium"
                         >
                           View
                         </button>
@@ -466,7 +466,7 @@ export default function ApplicationsPage() {
                 <button
                   onClick={() => setPage(p => Math.max(0, p - 1))}
                   disabled={page === 0}
-                  className="p-1.5 rounded-md text-gray-500 hover:bg-gray-200 disabled:opacity-40 disabled:cursor-not-allowed"
+                  className="p-1.5 rounded-full text-gray-500 hover:bg-gray-200 disabled:opacity-40 disabled:cursor-not-allowed"
                 >
                   <ChevronLeftIcon className="w-5 h-5" />
                 </button>
@@ -485,9 +485,9 @@ export default function ApplicationsPage() {
                     <button
                       key={pageNum}
                       onClick={() => setPage(pageNum)}
-                      className={`w-8 h-8 rounded-md text-sm font-medium ${
+                      className={`w-8 h-8 rounded-full text-sm font-medium ${
                         page === pageNum
-                          ? 'bg-violet-600 text-white'
+                          ? 'bg-gold-500 text-violet-950'
                           : 'text-gray-600 hover:bg-gray-200'
                       }`}
                     >
@@ -498,7 +498,7 @@ export default function ApplicationsPage() {
                 <button
                   onClick={() => setPage(p => Math.min(totalPages - 1, p + 1))}
                   disabled={page >= totalPages - 1}
-                  className="p-1.5 rounded-md text-gray-500 hover:bg-gray-200 disabled:opacity-40 disabled:cursor-not-allowed"
+                  className="p-1.5 rounded-full text-gray-500 hover:bg-gray-200 disabled:opacity-40 disabled:cursor-not-allowed"
                 >
                   <ChevronRightIcon className="w-5 h-5" />
                 </button>
@@ -563,7 +563,7 @@ export default function ApplicationsPage() {
                 <div className="flex justify-end mt-6 pt-6 border-t border-gray-200">
                   <button
                     onClick={() => setSelectedApplication(null)}
-                    className="px-4 py-2 bg-gray-100 text-gray-700 rounded-md hover:bg-gray-200 text-sm font-medium"
+                    className="px-4 py-2 bg-gray-100 text-gray-700 rounded-full hover:bg-gray-200 text-sm font-medium"
                   >
                     Close
                   </button>

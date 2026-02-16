@@ -111,7 +111,7 @@ const CandidatePipeline: React.FC<CandidatePipelineProps> = ({
   const getStatusIcon = (status: Candidate['status']) => {
     switch (status) {
       case 'new':
-        return <UserIcon className="w-4 h-4 text-violet-600" />;
+        return <UserIcon className="w-4 h-4 text-gold-600" />;
       case 'in_review':
         return <ClockIcon className="w-4 h-4 text-yellow-600" />;
       case 'interview_scheduled':
@@ -164,7 +164,7 @@ const CandidatePipeline: React.FC<CandidatePipelineProps> = ({
     >
       <div className="h-full flex flex-col">
         {/* Pipeline Summary */}
-        <div className="flex items-center justify-between mb-6 p-4 bg-gray-50 rounded-lg">
+        <div className="flex items-center justify-between mb-6 p-4 bg-gray-50 rounded-sm">
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 flex-1">
             {stages.map((stage) => (
               <div key={stage.id} className="text-center">
@@ -191,8 +191,8 @@ const CandidatePipeline: React.FC<CandidatePipelineProps> = ({
             {stages.map((stage) => (
               <div
                 key={stage.id}
-                className={`flex-shrink-0 w-72 bg-gray-50 rounded-lg p-4 flex flex-col ${
-                  dragOverStage === stage.id ? 'ring-2 ring-violet-500 bg-violet-50' : ''
+                className={`flex-shrink-0 w-72 bg-gray-50 rounded-sm p-4 flex flex-col ${
+                  dragOverStage === stage.id ? 'ring-2 ring-gold-500 bg-gold-50' : ''
                 }`}
                 onDragOver={(e) => handleDragOver(e, stage.id)}
                 onDragLeave={handleDragLeave}
@@ -223,7 +223,7 @@ const CandidatePipeline: React.FC<CandidatePipelineProps> = ({
                       draggable
                       onDragStart={() => handleDragStart(candidate)}
                       onClick={() => onCandidateClick?.(candidate)}
-                      className="bg-white rounded-lg p-3 border border-gray-200 cursor-move hover:shadow-md transition-shadow group"
+                      className="bg-white rounded-sm p-3 border border-gray-200 cursor-move hover:shadow-md transition-shadow group"
                     >
                       {/* Candidate Header */}
                       <div className="flex items-start justify-between mb-2">
@@ -276,7 +276,7 @@ const CandidatePipeline: React.FC<CandidatePipelineProps> = ({
                             {candidate.tags.slice(0, 3).map((tag) => (
                               <span
                                 key={tag}
-                                className="px-2 py-1 bg-violet-100 text-violet-700 text-xs rounded"
+                                className="px-2 py-1 bg-gold-100 text-violet-700 text-xs rounded"
                               >
                                 {tag}
                               </span>

@@ -107,7 +107,7 @@ export default function PerformanceDashboard() {
           <button
             onClick={handleWarmUpCache}
             disabled={cacheWarming}
-            className="bg-violet-600 hover:bg-violet-700 disabled:bg-violet-400 text-white px-4 py-2 rounded-lg transition-colors flex items-center"
+            className="bg-violet-600 hover:bg-gold-600 disabled:bg-violet-400 text-white px-4 py-2 rounded-sm transition-colors flex items-center"
           >
             {cacheWarming && <LoadingSpinner size="sm" color="white" />}
             <span className={cacheWarming ? 'ml-2' : ''}>Warm Cache</span>
@@ -116,7 +116,7 @@ export default function PerformanceDashboard() {
           <button
             onClick={handleOptimizeMemory}
             disabled={memoryOptimizing}
-            className="bg-green-600 hover:bg-green-700 disabled:bg-green-400 text-white px-4 py-2 rounded-lg transition-colors flex items-center"
+            className="bg-green-600 hover:bg-green-700 disabled:bg-green-400 text-white px-4 py-2 rounded-sm transition-colors flex items-center"
           >
             {memoryOptimizing && <LoadingSpinner size="sm" color="white" />}
             <span className={memoryOptimizing ? 'ml-2' : ''}>Optimize Memory</span>
@@ -127,7 +127,7 @@ export default function PerformanceDashboard() {
       {/* Performance Metrics */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         {/* Response Time */}
-        <div className="bg-white rounded-lg shadow p-6">
+        <div className="bg-white rounded-sm shadow p-6">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm font-medium text-gray-600">Avg Response Time</p>
@@ -142,14 +142,14 @@ export default function PerformanceDashboard() {
                 )}
               </div>
             </div>
-            <div className="w-12 h-12 bg-violet-100 rounded-lg flex items-center justify-center">
-              <span className="text-violet-600 text-xl">⚡</span>
+            <div className="w-12 h-12 bg-gold-100 rounded-sm flex items-center justify-center">
+              <span className="text-gold-600 text-xl">⚡</span>
             </div>
           </div>
         </div>
 
         {/* Cache Hit Rate */}
-        <div className="bg-white rounded-lg shadow p-6">
+        <div className="bg-white rounded-sm shadow p-6">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm font-medium text-gray-600">Cache Hit Rate</p>
@@ -157,7 +157,7 @@ export default function PerformanceDashboard() {
                 {metrics?.cacheHitRate || 0}%
               </p>
             </div>
-            <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
+            <div className="w-12 h-12 bg-green-100 rounded-sm flex items-center justify-center">
               <span className="text-green-600 text-xl">💾</span>
             </div>
           </div>
@@ -172,7 +172,7 @@ export default function PerformanceDashboard() {
         </div>
 
         {/* Memory Usage */}
-        <div className="bg-white rounded-lg shadow p-6">
+        <div className="bg-white rounded-sm shadow p-6">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm font-medium text-gray-600">Memory Usage</p>
@@ -183,7 +183,7 @@ export default function PerformanceDashboard() {
                 of {health ? formatBytes(health.maxMemory) : '0 MB'}
               </p>
             </div>
-            <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center">
+            <div className="w-12 h-12 bg-purple-100 rounded-sm flex items-center justify-center">
               <span className="text-purple-600 text-xl">🧠</span>
             </div>
           </div>
@@ -200,7 +200,7 @@ export default function PerformanceDashboard() {
         </div>
 
         {/* Active Connections */}
-        <div className="bg-white rounded-lg shadow p-6">
+        <div className="bg-white rounded-sm shadow p-6">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm font-medium text-gray-600">Active Connections</p>
@@ -208,7 +208,7 @@ export default function PerformanceDashboard() {
                 {metrics?.activeConnections || 0}
               </p>
             </div>
-            <div className="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center">
+            <div className="w-12 h-12 bg-orange-100 rounded-sm flex items-center justify-center">
               <span className="text-orange-600 text-xl">🔗</span>
             </div>
           </div>
@@ -216,7 +216,7 @@ export default function PerformanceDashboard() {
       </div>
 
       {/* System Health */}
-      <div className="bg-white rounded-lg shadow p-6">
+      <div className="bg-white rounded-sm shadow p-6">
         <h2 className="text-lg font-semibold text-gray-900 mb-4">System Health</h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <div>
@@ -242,10 +242,10 @@ export default function PerformanceDashboard() {
 
       {/* Analytics Performance */}
       {dashboardData && (
-        <div className="bg-white rounded-lg shadow p-6">
+        <div className="bg-white rounded-sm shadow p-6">
           <h2 className="text-lg font-semibold text-gray-900 mb-4">Analytics Performance</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div className="bg-gray-50 rounded-lg p-4">
+            <div className="bg-gray-50 rounded-sm p-4">
               <h3 className="font-medium text-gray-900 mb-2">Application Analytics</h3>
               <p className="text-sm text-gray-600">
                 Last updated: {dashboardData.analytics?.applications?.processedAt ? 
@@ -254,7 +254,7 @@ export default function PerformanceDashboard() {
                 }
               </p>
             </div>
-            <div className="bg-gray-50 rounded-lg p-4">
+            <div className="bg-gray-50 rounded-sm p-4">
               <h3 className="font-medium text-gray-900 mb-2">Job Analytics</h3>
               <p className="text-sm text-gray-600">
                 Last updated: {dashboardData.analytics?.jobs?.processedAt ? 
@@ -263,7 +263,7 @@ export default function PerformanceDashboard() {
                 }
               </p>
             </div>
-            <div className="bg-gray-50 rounded-lg p-4">
+            <div className="bg-gray-50 rounded-sm p-4">
               <h3 className="font-medium text-gray-900 mb-2">Performance Analytics</h3>
               <p className="text-sm text-gray-600">
                 Last updated: {dashboardData.analytics?.performance?.processedAt ? 
@@ -277,7 +277,7 @@ export default function PerformanceDashboard() {
       )}
 
       {/* Performance Tips */}
-      <div className="bg-violet-50 rounded-lg p-6">
+      <div className="bg-gold-50 rounded-sm p-6">
         <h2 className="text-lg font-semibold text-gray-900 mb-4">Performance Tips</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="flex items-start space-x-3">

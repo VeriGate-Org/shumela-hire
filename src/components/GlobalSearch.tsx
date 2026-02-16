@@ -146,7 +146,7 @@ const GlobalSearch: React.FC = () => {
 
   const getTypeColor = (type: string) => {
     switch (type) {
-      case 'application': return 'bg-violet-100 text-violet-800';
+      case 'application': return 'bg-gold-100 text-gold-800';
       case 'candidate': return 'bg-green-100 text-green-800';
       case 'job': return 'bg-purple-100 text-purple-800';
       case 'template': return 'bg-orange-100 text-orange-800';
@@ -172,7 +172,7 @@ const GlobalSearch: React.FC = () => {
           setIsOpen(true);
           setTimeout(() => inputRef.current?.focus(), 100);
         }}
-        className="hidden md:flex items-center space-x-2 px-3 py-2 text-sm text-gray-500 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors"
+        className="hidden md:flex items-center space-x-2 px-3 py-2 text-sm text-gray-500 bg-gray-100 rounded-sm hover:bg-gray-200 transition-colors"
       >
         <span>🔍</span>
         <span>Search...</span>
@@ -207,7 +207,7 @@ const GlobalSearch: React.FC = () => {
             role="dialog"
             aria-modal="true"
             aria-labelledby="search-dialog-title"
-            className="fixed top-20 left-1/2 transform -translate-x-1/2 w-full max-w-2xl bg-white rounded-lg shadow-2xl z-50 mx-4"
+            className="fixed top-20 left-1/2 transform -translate-x-1/2 w-full max-w-2xl bg-white rounded-sm shadow-2xl z-50 mx-4"
           >
             <h2 id="search-dialog-title" className="sr-only">Search</h2>
             {/* Search Input */}
@@ -225,7 +225,7 @@ const GlobalSearch: React.FC = () => {
               />
               {isLoading && (
                 <div className="absolute right-4 top-1/2 transform -translate-y-1/2">
-                  <div className="animate-spin rounded-full h-5 w-5 border-2 border-violet-500 border-t-transparent"></div>
+                  <div className="animate-spin rounded-full h-5 w-5 border-2 border-gold-500 border-t-transparent"></div>
                 </div>
               )}
             </div>
@@ -268,7 +268,7 @@ const GlobalSearch: React.FC = () => {
                       role="option"
                       aria-selected={index === selectedIndex}
                       className={`block px-4 py-3 hover:bg-gray-50 transition-colors ${
-                        index === selectedIndex ? 'bg-violet-50 border-r-2 border-r-violet-500' : ''
+                        index === selectedIndex ? 'bg-gold-50 border-r-2 border-r-violet-500' : ''
                       }`}
                     >
                       <div className="flex items-center space-x-3">

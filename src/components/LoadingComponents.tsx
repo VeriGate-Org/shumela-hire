@@ -31,7 +31,7 @@ export function CardSkeleton({ count = 3 }: { count?: number }) {
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
       {Array.from({ length: count }).map((_, i) => (
-        <div key={i} className="bg-white rounded-lg shadow p-6 animate-pulse">
+        <div key={i} className="bg-white rounded-sm shadow p-6 animate-pulse">
           <div className="h-6 bg-gray-200 rounded mb-4"></div>
           <div className="h-4 bg-gray-200 rounded mb-2"></div>
           <div className="h-4 bg-gray-200 rounded mb-2"></div>
@@ -46,7 +46,7 @@ export function ListSkeleton({ items = 5 }: { items?: number }) {
   return (
     <div className="space-y-4">
       {Array.from({ length: items }).map((_, i) => (
-        <div key={i} className="flex items-center space-x-4 p-4 bg-white rounded-lg shadow animate-pulse">
+        <div key={i} className="flex items-center space-x-4 p-4 bg-white rounded-sm shadow animate-pulse">
           <div className="w-12 h-12 bg-gray-200 rounded-full"></div>
           <div className="flex-1">
             <div className="h-4 bg-gray-200 rounded mb-2"></div>
@@ -61,7 +61,7 @@ export function ListSkeleton({ items = 5 }: { items?: number }) {
 
 export function FormSkeleton() {
   return (
-    <div className="bg-white rounded-lg shadow p-6 animate-pulse">
+    <div className="bg-white rounded-sm shadow p-6 animate-pulse">
       <div className="h-6 bg-gray-200 rounded mb-6"></div>
       
       <div className="space-y-4">
@@ -93,7 +93,7 @@ export function DashboardSkeleton() {
       {/* Stats cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         {Array.from({ length: 4 }).map((_, i) => (
-          <div key={i} className="bg-white rounded-lg shadow p-6 animate-pulse">
+          <div key={i} className="bg-white rounded-sm shadow p-6 animate-pulse">
             <div className="flex items-center justify-between">
               <div className="h-4 bg-gray-200 rounded w-20"></div>
               <div className="w-8 h-8 bg-gray-200 rounded"></div>
@@ -106,11 +106,11 @@ export function DashboardSkeleton() {
       
       {/* Charts */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div className="bg-white rounded-lg shadow p-6 animate-pulse">
+        <div className="bg-white rounded-sm shadow p-6 animate-pulse">
           <div className="h-6 bg-gray-200 rounded mb-4 w-32"></div>
           <div className="h-64 bg-gray-200 rounded"></div>
         </div>
-        <div className="bg-white rounded-lg shadow p-6 animate-pulse">
+        <div className="bg-white rounded-sm shadow p-6 animate-pulse">
           <div className="h-6 bg-gray-200 rounded mb-4 w-32"></div>
           <div className="h-64 bg-gray-200 rounded"></div>
         </div>
@@ -131,7 +131,7 @@ export function LoadingSpinner({ size = 'md', color = 'blue' }: {
   };
   
   const colorClasses = {
-    blue: 'text-violet-600',
+    blue: 'text-gold-600',
     gray: 'text-gray-400',
     white: 'text-white'
   };
@@ -220,7 +220,7 @@ export function ErrorFallback({ error, resetError }: { error: Error; resetError:
         </p>
         <button 
           onClick={resetError}
-          className="bg-violet-600 hover:bg-violet-700 text-white px-6 py-2 rounded-lg transition-colors"
+          className="bg-transparent border-2 border-gold-500 text-violet-900 hover:bg-gold-500 hover:text-violet-950 uppercase tracking-wider px-6 py-2 rounded-sm transition-colors"
         >
           Try again
         </button>

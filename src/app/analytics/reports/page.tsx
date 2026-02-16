@@ -85,7 +85,7 @@ export default function CustomReportsPage() {
             </div>
             <button
               onClick={() => setShowBuilder(false)}
-              className="px-4 py-2 text-gray-600 border border-gray-300 rounded-lg hover:bg-gray-50"
+              className="px-4 py-2 text-gray-600 border border-gray-300 rounded-full hover:bg-gray-50"
             >
               Back to Reports
             </button>
@@ -110,7 +110,7 @@ export default function CustomReportsPage() {
           </div>
           <button
             onClick={() => setShowBuilder(true)}
-            className="flex items-center gap-2 px-4 py-2 bg-violet-600 text-white rounded-lg hover:bg-violet-700"
+            className="flex items-center gap-2 px-4 py-2 bg-gold-500 text-violet-950 rounded-full hover:bg-gold-600"
           >
             <PlusIcon className="w-4 h-4" />
             Create New Report
@@ -119,17 +119,17 @@ export default function CustomReportsPage() {
 
         {/* Quick Stats */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-          <div className="bg-white rounded-lg border border-gray-200 p-6">
+          <div className="bg-white rounded-sm border border-gray-200 border-t-2 border-t-gold-500 p-6">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm font-medium text-gray-600">Total Reports</p>
                 <p className="text-2xl font-bold text-gray-900">{savedReports.length}</p>
               </div>
-              <DocumentChartBarIcon className="w-8 h-8 text-violet-600" />
+              <DocumentChartBarIcon className="w-8 h-8 text-gold-600" />
             </div>
           </div>
           
-          <div className="bg-white rounded-lg border border-gray-200 p-6">
+          <div className="bg-white rounded-sm border border-gray-200 border-t-2 border-t-gold-500 p-6">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm font-medium text-gray-600">Active Reports</p>
@@ -141,7 +141,7 @@ export default function CustomReportsPage() {
             </div>
           </div>
           
-          <div className="bg-white rounded-lg border border-gray-200 p-6">
+          <div className="bg-white rounded-sm border border-gray-200 border-t-2 border-t-gold-500 p-6">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm font-medium text-gray-600">Scheduled Reports</p>
@@ -153,7 +153,7 @@ export default function CustomReportsPage() {
             </div>
           </div>
           
-          <div className="bg-white rounded-lg border border-gray-200 p-6">
+          <div className="bg-white rounded-sm border border-gray-200 border-t-2 border-t-gold-500 p-6">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm font-medium text-gray-600">Total Recipients</p>
@@ -167,7 +167,7 @@ export default function CustomReportsPage() {
         </div>
 
         {/* Report Templates */}
-        <div className="bg-white rounded-lg border border-gray-200 p-6">
+        <div className="bg-white rounded-sm border border-gray-200 border-t-2 border-t-gold-500 p-6">
           <h3 className="text-lg font-semibold text-gray-900 mb-4">Quick Start Templates</h3>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             {[
@@ -192,7 +192,7 @@ export default function CustomReportsPage() {
             ].map((template) => (
               <div
                 key={template.preset}
-                className="p-4 border border-gray-200 rounded-lg hover:shadow-md transition-shadow cursor-pointer"
+                className="p-4 border border-gray-200 rounded-sm hover:shadow-md transition-shadow cursor-pointer"
                 onClick={() => setShowBuilder(true)}
               >
                 <div className="flex items-start gap-3">
@@ -200,7 +200,7 @@ export default function CustomReportsPage() {
                   <div>
                     <h4 className="font-medium text-gray-900">{template.name}</h4>
                     <p className="text-sm text-gray-500 mt-1">{template.description}</p>
-                    <button className="text-violet-600 text-sm font-medium mt-2 hover:text-violet-700">
+                    <button className="text-gold-600 text-sm font-medium mt-2 hover:text-gold-700">
                       Use Template →
                     </button>
                   </div>
@@ -211,7 +211,7 @@ export default function CustomReportsPage() {
         </div>
 
         {/* Saved Reports */}
-        <div className="bg-white rounded-lg border border-gray-200">
+        <div className="bg-white rounded-sm border border-gray-200">
           <div className="p-6 border-b border-gray-200">
             <h3 className="text-lg font-semibold text-gray-900">Saved Reports</h3>
             <p className="text-sm text-gray-500 mt-1">
@@ -245,15 +245,15 @@ export default function CustomReportsPage() {
                   </div>
                   
                   <div className="flex items-center gap-2 ml-4">
-                    <button className="p-2 text-gray-400 hover:text-violet-600 rounded-lg hover:bg-violet-50">
+                    <button className="p-2 text-gray-400 hover:text-gold-600 rounded-sm hover:bg-gold-50">
                       <EyeIcon className="w-4 h-4" />
                     </button>
-                    <button className="p-2 text-gray-400 hover:text-orange-600 rounded-lg hover:bg-orange-50">
+                    <button className="p-2 text-gray-400 hover:text-orange-600 rounded-sm hover:bg-orange-50">
                       <PencilIcon className="w-4 h-4" />
                     </button>
                     <button 
                       onClick={() => handleDeleteReport(report.id)}
-                      className="p-2 text-gray-400 hover:text-red-600 rounded-lg hover:bg-red-50"
+                      className="p-2 text-gray-400 hover:text-red-600 rounded-sm hover:bg-red-50"
                     >
                       <TrashIcon className="w-4 h-4" />
                     </button>
@@ -272,7 +272,7 @@ export default function CustomReportsPage() {
               </p>
               <button
                 onClick={() => setShowBuilder(true)}
-                className="px-4 py-2 bg-violet-600 text-white rounded-lg hover:bg-violet-700"
+                className="px-4 py-2 bg-gold-500 text-violet-950 rounded-full hover:bg-gold-600"
               >
                 Create Your First Report
               </button>

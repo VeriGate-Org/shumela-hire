@@ -129,9 +129,9 @@ export default function ReportViewer({
           <div className="flex items-center gap-2">
             <button
               onClick={() => setViewMode('chart')}
-              className={`px-3 py-1.5 text-sm font-medium rounded-lg ${
+              className={`px-3 py-1.5 text-sm font-medium rounded-sm ${
                 viewMode === 'chart'
-                  ? 'bg-violet-100 text-violet-700'
+                  ? 'bg-gold-100 text-violet-700'
                   : 'text-gray-600 hover:bg-gray-100'
               }`}
             >
@@ -140,9 +140,9 @@ export default function ReportViewer({
             </button>
             <button
               onClick={() => setViewMode('table')}
-              className={`px-3 py-1.5 text-sm font-medium rounded-lg ${
+              className={`px-3 py-1.5 text-sm font-medium rounded-sm ${
                 viewMode === 'table'
-                  ? 'bg-violet-100 text-violet-700'
+                  ? 'bg-gold-100 text-violet-700'
                   : 'text-gray-600 hover:bg-gray-100'
               }`}
             >
@@ -153,7 +153,7 @@ export default function ReportViewer({
         </div>
 
         {/* Table */}
-        <div className="overflow-hidden border border-gray-200 rounded-lg">
+        <div className="overflow-hidden border border-gray-200 rounded-sm">
           <div className="overflow-x-auto">
             <table className="min-w-full divide-y divide-gray-200">
               <thead className="bg-gray-50">
@@ -194,7 +194,7 @@ export default function ReportViewer({
             <button
               onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
               disabled={currentPage === 1}
-              className="px-3 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="px-3 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-sm hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               Previous
             </button>
@@ -216,9 +216,9 @@ export default function ReportViewer({
                   <button
                     key={pageNum}
                     onClick={() => setCurrentPage(pageNum)}
-                    className={`px-3 py-2 text-sm font-medium rounded-lg ${
+                    className={`px-3 py-2 text-sm font-medium rounded-sm ${
                       currentPage === pageNum
-                        ? 'bg-violet-600 text-white'
+                        ? 'bg-gold-500 text-violet-950'
                         : 'text-gray-700 bg-white border border-gray-300 hover:bg-gray-50'
                     }`}
                   >
@@ -231,7 +231,7 @@ export default function ReportViewer({
             <button
               onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
               disabled={currentPage === totalPages}
-              className="px-3 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="px-3 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-sm hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               Next
             </button>
@@ -256,7 +256,7 @@ export default function ReportViewer({
 
   if (result.error) {
     return (
-      <div className={`bg-white rounded-lg shadow-sm border border-red-200 ${className}`}>
+      <div className={`bg-white rounded-sm shadow-sm border border-red-200 ${className}`}>
         <div className="px-6 py-4 border-b border-red-200 bg-red-50">
           <h2 className="text-lg font-semibold text-red-800">Report Generation Failed</h2>
         </div>
@@ -271,7 +271,7 @@ export default function ReportViewer({
             <p className="text-red-600 mb-4">{result.error}</p>
             <button
               onClick={onEdit}
-              className="px-4 py-2 text-sm font-medium text-white bg-red-600 rounded-lg hover:bg-red-700"
+              className="px-4 py-2 text-sm font-medium text-white bg-red-600 rounded-sm hover:bg-red-700"
             >
               Edit Report Configuration
             </button>
@@ -282,7 +282,7 @@ export default function ReportViewer({
   }
 
   return (
-    <div className={`bg-white rounded-lg shadow-sm border border-gray-200 ${className}`}>
+    <div className={`bg-white rounded-sm shadow-sm border border-gray-200 ${className}`}>
       {/* Header */}
       <div className="px-6 py-4 border-b border-gray-200">
         <div className="flex items-center justify-between">
@@ -299,11 +299,11 @@ export default function ReportViewer({
           
           <div className="flex items-center gap-2">
             <div className="relative">
-              <button className="px-3 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50">
+              <button className="px-3 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-sm hover:bg-gray-50">
                 <ArrowDownTrayIcon className="h-4 w-4 inline mr-1" />
                 Export
               </button>
-              <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg border border-gray-200 hidden group-hover:block">
+              <div className="absolute right-0 mt-2 w-48 bg-white rounded-sm shadow-lg border border-gray-200 hidden group-hover:block">
                 <div className="py-1">
                   <button
                     onClick={() => onExport('csv')}
@@ -329,7 +329,7 @@ export default function ReportViewer({
             
             <button
               onClick={() => window.print()}
-              className="px-3 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50"
+              className="px-3 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-sm hover:bg-gray-50"
             >
               <PrinterIcon className="h-4 w-4 inline mr-1" />
               Print
@@ -337,7 +337,7 @@ export default function ReportViewer({
             
             <button
               onClick={onShare}
-              className="px-3 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50"
+              className="px-3 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-sm hover:bg-gray-50"
             >
               <ShareIcon className="h-4 w-4 inline mr-1" />
               Share
@@ -345,7 +345,7 @@ export default function ReportViewer({
             
             <button
               onClick={onEdit}
-              className="px-3 py-2 text-sm font-medium text-white bg-violet-600 rounded-lg hover:bg-violet-700"
+              className="px-3 py-2 text-sm font-medium text-white bg-violet-600 rounded-sm hover:bg-gold-600"
             >
               <Cog6ToothIcon className="h-4 w-4 inline mr-1" />
               Edit

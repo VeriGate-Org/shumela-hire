@@ -154,7 +154,7 @@ const TemplateEditor: React.FC<TemplateEditorProps> = ({
   const preview = renderPreview();
 
   return (
-    <div className={`bg-white rounded-lg shadow-lg ${className}`}>
+    <div className={`bg-white rounded-sm shadow-lg ${className}`}>
       {/* Header */}
       <div className="px-6 py-4 border-b border-gray-200">
         <div className="flex items-center justify-between">
@@ -178,7 +178,7 @@ const TemplateEditor: React.FC<TemplateEditorProps> = ({
               onClick={() => setShowPreview(!showPreview)}
               className={`inline-flex items-center px-3 py-1 text-sm border rounded transition-colors ${
                 showPreview 
-                  ? 'bg-violet-600 text-white border-violet-600' 
+                  ? 'bg-gold-500 text-violet-950 border-gold-500' 
                   : 'border-gray-300 hover:bg-gray-50'
               }`}
             >
@@ -195,7 +195,7 @@ const TemplateEditor: React.FC<TemplateEditorProps> = ({
           <div className="p-6">
             {/* Error Display */}
             {error && (
-              <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-md">
+              <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-sm">
                 <div className="text-red-800">{error}</div>
               </div>
             )}
@@ -210,7 +210,7 @@ const TemplateEditor: React.FC<TemplateEditorProps> = ({
                   type="text"
                   value={formData.name || ''}
                   onChange={(e) => handleInputChange('name', e.target.value)}
-                  className="w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-violet-500/60 focus:border-violet-400"
+                  className="w-full border border-gray-300 rounded-sm px-3 py-2 focus:ring-2 focus:ring-gold-500/60 focus:border-violet-400"
                   placeholder="e.g., Software Engineer Template"
                 />
               </div>
@@ -223,7 +223,7 @@ const TemplateEditor: React.FC<TemplateEditorProps> = ({
                   type="text"
                   value={formData.description || ''}
                   onChange={(e) => handleInputChange('description', e.target.value)}
-                  className="w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-violet-500/60 focus:border-violet-400"
+                  className="w-full border border-gray-300 rounded-sm px-3 py-2 focus:ring-2 focus:ring-gold-500/60 focus:border-violet-400"
                   placeholder="Brief description of this template"
                 />
               </div>
@@ -236,7 +236,7 @@ const TemplateEditor: React.FC<TemplateEditorProps> = ({
                   <select
                     value={formData.employmentType || 'Full-time'}
                     onChange={(e) => handleInputChange('employmentType', e.target.value)}
-                    className="w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-violet-500/60 focus:border-violet-400"
+                    className="w-full border border-gray-300 rounded-sm px-3 py-2 focus:ring-2 focus:ring-gold-500/60 focus:border-violet-400"
                   >
                     <option value="Full-time">Full-time</option>
                     <option value="Part-time">Part-time</option>
@@ -253,7 +253,7 @@ const TemplateEditor: React.FC<TemplateEditorProps> = ({
                     type="email"
                     value={formData.contactEmail || ''}
                     onChange={(e) => handleInputChange('contactEmail', e.target.value)}
-                    className="w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-violet-500/60 focus:border-violet-400"
+                    className="w-full border border-gray-300 rounded-sm px-3 py-2 focus:ring-2 focus:ring-gold-500/60 focus:border-violet-400"
                     placeholder="careers@company.com"
                   />
                 </div>
@@ -268,7 +268,7 @@ const TemplateEditor: React.FC<TemplateEditorProps> = ({
                   type="text"
                   value={formData.title || ''}
                   onChange={(e) => handleInputChange('title', e.target.value)}
-                  className="w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-violet-500/60 focus:border-violet-400"
+                  className="w-full border border-gray-300 rounded-sm px-3 py-2 focus:ring-2 focus:ring-gold-500/60 focus:border-violet-400"
                   placeholder="{{jobTitle}} - {{department}}"
                 />
               </div>
@@ -282,7 +282,7 @@ const TemplateEditor: React.FC<TemplateEditorProps> = ({
                   type="text"
                   value={formData.location || ''}
                   onChange={(e) => handleInputChange('location', e.target.value)}
-                  className="w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-violet-500/60 focus:border-violet-400"
+                  className="w-full border border-gray-300 rounded-sm px-3 py-2 focus:ring-2 focus:ring-gold-500/60 focus:border-violet-400"
                   placeholder="{{location}}"
                 />
               </div>
@@ -302,7 +302,7 @@ const TemplateEditor: React.FC<TemplateEditorProps> = ({
                     value={(formData[key as keyof JobAdTemplate] as string) || ''}
                     onChange={(e) => handleInputChange(key as keyof JobAdTemplate, e.target.value)}
                     rows={6}
-                    className="w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-violet-500/60 focus:border-violet-400 font-mono text-sm"
+                    className="w-full border border-gray-300 rounded-sm px-3 py-2 focus:ring-2 focus:ring-gold-500/60 focus:border-violet-400 font-mono text-sm"
                     placeholder={placeholder}
                   />
                   <p className="text-xs text-gray-500 mt-1">
@@ -322,7 +322,7 @@ const TemplateEditor: React.FC<TemplateEditorProps> = ({
                       type="number"
                       value={formData.salaryRangeMin || ''}
                       onChange={(e) => handleInputChange('salaryRangeMin', parseInt(e.target.value) || undefined)}
-                      className="w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-violet-500/60 focus:border-violet-400"
+                      className="w-full border border-gray-300 rounded-sm px-3 py-2 focus:ring-2 focus:ring-gold-500/60 focus:border-violet-400"
                       placeholder="Min salary"
                     />
                   </div>
@@ -331,7 +331,7 @@ const TemplateEditor: React.FC<TemplateEditorProps> = ({
                       type="number"
                       value={formData.salaryRangeMax || ''}
                       onChange={(e) => handleInputChange('salaryRangeMax', parseInt(e.target.value) || undefined)}
-                      className="w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-violet-500/60 focus:border-violet-400"
+                      className="w-full border border-gray-300 rounded-sm px-3 py-2 focus:ring-2 focus:ring-gold-500/60 focus:border-violet-400"
                       placeholder="Max salary"
                     />
                   </div>
@@ -347,7 +347,7 @@ const TemplateEditor: React.FC<TemplateEditorProps> = ({
                   type="date"
                   value={formData.closingDate ? formData.closingDate.toISOString().split('T')[0] : ''}
                   onChange={(e) => handleInputChange('closingDate', e.target.value ? new Date(e.target.value) : undefined)}
-                  className="w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-violet-500/60 focus:border-violet-400"
+                  className="w-full border border-gray-300 rounded-sm px-3 py-2 focus:ring-2 focus:ring-gold-500/60 focus:border-violet-400"
                 />
               </div>
             </div>
@@ -357,14 +357,14 @@ const TemplateEditor: React.FC<TemplateEditorProps> = ({
           <div className="px-6 py-4 border-t border-gray-200 flex justify-end space-x-3">
             <button
               onClick={onCancel}
-              className="px-4 py-2 border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50"
+              className="px-4 py-2 border border-gray-300 text-gray-700 rounded-sm hover:bg-gray-50"
             >
               Cancel
             </button>
             <button
               onClick={handleSave}
               disabled={saving}
-              className="px-4 py-2 bg-violet-600 text-white rounded-md hover:bg-violet-700 disabled:opacity-50 flex items-center"
+              className="px-4 py-2 bg-gold-500 text-violet-950 rounded-sm hover:bg-gold-600 disabled:opacity-50 flex items-center"
             >
               {saving ? (
                 <>
@@ -385,7 +385,7 @@ const TemplateEditor: React.FC<TemplateEditorProps> = ({
         {showPreview && (
           <div className="w-1/2 border-l border-gray-200 bg-gray-50">
             <div className="p-6 h-full overflow-y-auto">
-              <div className="bg-white rounded-lg p-6 shadow-sm">
+              <div className="bg-white rounded-sm p-6 shadow-sm">
                 <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
                   <EyeIcon className="w-5 h-5 mr-2" />
                   Preview
@@ -459,7 +459,7 @@ const TemplateEditor: React.FC<TemplateEditorProps> = ({
       {/* Placeholders Panel */}
       {showPlaceholders && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-lg max-w-2xl w-full max-h-[80vh] overflow-y-auto">
+          <div className="bg-white rounded-sm max-w-2xl w-full max-h-[80vh] overflow-y-auto">
             <div className="p-6">
               <div className="flex items-center justify-between mb-4">
                 <h3 className="text-lg font-semibold text-gray-900">Available Placeholders</h3>
@@ -473,7 +473,7 @@ const TemplateEditor: React.FC<TemplateEditorProps> = ({
 
               <div className="space-y-4">
                 {TEMPLATE_PLACEHOLDERS.map((placeholder) => (
-                  <div key={placeholder.key} className="border border-gray-200 rounded-lg p-4">
+                  <div key={placeholder.key} className="border border-gray-200 rounded-sm p-4">
                     <div className="flex items-start justify-between">
                       <div className="flex-1">
                         <div className="flex items-center">
@@ -496,7 +496,7 @@ const TemplateEditor: React.FC<TemplateEditorProps> = ({
                 ))}
               </div>
 
-              <div className="mt-6 p-4 bg-violet-50 rounded-lg">
+              <div className="mt-6 p-4 bg-gold-50 rounded-sm">
                 <div className="flex">
                   <InformationCircleIcon className="w-5 h-5 text-violet-400 mt-0.5" />
                   <div className="ml-3">

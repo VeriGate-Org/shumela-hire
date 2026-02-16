@@ -73,7 +73,7 @@ const ApprovalTimeline: React.FC<ApprovalTimelineProps> = ({ steps, className = 
           
           {/* Role Avatar */}
           <div className={`flex-shrink-0 w-12 h-12 rounded-full flex items-center justify-center text-lg font-semibold ${
-            step.status === 'pending' ? 'bg-gray-100 opacity-60' : 'bg-violet-100'
+            step.status === 'pending' ? 'bg-gray-100 opacity-60' : 'bg-gold-100'
           }`}>
             {getRoleIcon(step.role)}
           </div>
@@ -96,7 +96,7 @@ const ApprovalTimeline: React.FC<ApprovalTimelineProps> = ({ steps, className = 
             )}
 
             {step.comment && (
-              <div className="mt-2 p-2 bg-gray-50 rounded-md">
+              <div className="mt-2 p-2 bg-gray-50 rounded-sm">
                 <p className="text-sm text-gray-700">{step.comment}</p>
               </div>
             )}

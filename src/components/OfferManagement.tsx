@@ -231,7 +231,7 @@ export default function OfferManagement() {
     <div className="space-y-6">
       {/* Dashboard Overview */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+        <div className="bg-yellow-50 border border-yellow-200 rounded-sm p-4">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm font-medium text-yellow-800">Pending Approval</p>
@@ -241,7 +241,7 @@ export default function OfferManagement() {
           </div>
         </div>
         
-        <div className="bg-red-50 border border-red-200 rounded-lg p-4">
+        <div className="bg-red-50 border border-red-200 rounded-sm p-4">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm font-medium text-red-800">Near Expiry</p>
@@ -251,7 +251,7 @@ export default function OfferManagement() {
           </div>
         </div>
         
-        <div className="bg-violet-50 border border-violet-200 rounded-lg p-4">
+        <div className="bg-gold-50 border border-violet-200 rounded-sm p-4">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm font-medium text-violet-800">Active Negotiations</p>
@@ -261,7 +261,7 @@ export default function OfferManagement() {
           </div>
         </div>
         
-        <div className="bg-green-50 border border-green-200 rounded-lg p-4">
+        <div className="bg-green-50 border border-green-200 rounded-sm p-4">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm font-medium text-green-800">Recent Acceptances</p>
@@ -273,7 +273,7 @@ export default function OfferManagement() {
       </div>
 
       {/* Filters */}
-      <div className="bg-white rounded-lg shadow p-6">
+      <div className="bg-white rounded-sm shadow p-6">
         <h3 className="text-lg font-medium text-gray-900 mb-4">Filters</h3>
         
         <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4">
@@ -282,7 +282,7 @@ export default function OfferManagement() {
             <select
               value={filters.status || ''}
               onChange={(e) => setFilters({...filters, status: e.target.value || undefined})}
-              className="w-full p-2 border border-gray-300 rounded-md text-sm"
+              className="w-full p-2 border border-gray-300 rounded-sm text-sm"
             >
               <option value="">All Statuses</option>
               {OFFER_STATUSES.map(status => (
@@ -298,7 +298,7 @@ export default function OfferManagement() {
             <select
               value={filters.offerType || ''}
               onChange={(e) => setFilters({...filters, offerType: e.target.value || undefined})}
-              className="w-full p-2 border border-gray-300 rounded-md text-sm"
+              className="w-full p-2 border border-gray-300 rounded-sm text-sm"
             >
               <option value="">All Types</option>
               {OFFER_TYPES.map(type => (
@@ -316,7 +316,7 @@ export default function OfferManagement() {
               value={filters.department || ''}
               onChange={(e) => setFilters({...filters, department: e.target.value || undefined})}
               placeholder="Filter by department"
-              className="w-full p-2 border border-gray-300 rounded-md text-sm"
+              className="w-full p-2 border border-gray-300 rounded-sm text-sm"
             />
           </div>
           
@@ -327,7 +327,7 @@ export default function OfferManagement() {
               value={filters.minSalary || ''}
               onChange={(e) => setFilters({...filters, minSalary: e.target.value ? Number(e.target.value) : undefined})}
               placeholder="Min salary"
-              className="w-full p-2 border border-gray-300 rounded-md text-sm"
+              className="w-full p-2 border border-gray-300 rounded-sm text-sm"
             />
           </div>
           
@@ -338,7 +338,7 @@ export default function OfferManagement() {
               value={filters.maxSalary || ''}
               onChange={(e) => setFilters({...filters, maxSalary: e.target.value ? Number(e.target.value) : undefined})}
               placeholder="Max salary"
-              className="w-full p-2 border border-gray-300 rounded-md text-sm"
+              className="w-full p-2 border border-gray-300 rounded-sm text-sm"
             />
           </div>
         </div>
@@ -346,13 +346,13 @@ export default function OfferManagement() {
         <div className="mt-4 flex justify-end space-x-2">
           <button
             onClick={() => setFilters({})}
-            className="px-4 py-2 text-sm text-gray-600 border border-gray-300 rounded-md hover:bg-gray-50"
+            className="px-4 py-2 text-sm text-gray-600 border border-gray-300 rounded-sm hover:bg-gray-50"
           >
             Clear Filters
           </button>
           <button
             onClick={() => {setCurrentPage(0); loadOffers();}}
-            className="px-4 py-2 text-sm bg-violet-600 text-white rounded-md hover:bg-violet-700"
+            className="px-4 py-2 text-sm bg-gold-500 text-violet-950 rounded-sm hover:bg-gold-600"
           >
             Apply Filters
           </button>
@@ -360,7 +360,7 @@ export default function OfferManagement() {
       </div>
 
       {/* Offers Table */}
-      <div className="bg-white rounded-lg shadow overflow-hidden">
+      <div className="bg-white rounded-sm shadow overflow-hidden">
         <div className="px-6 py-4 border-b border-gray-200">
           <h3 className="text-lg font-medium text-gray-900">Offers</h3>
         </div>
@@ -368,7 +368,7 @@ export default function OfferManagement() {
         <div className="overflow-x-auto">
           {loading ? (
             <div className="p-8 text-center">
-              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-violet-500 mx-auto"></div>
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gold-500 mx-auto"></div>
             </div>
           ) : offers.length === 0 ? (
             <div className="p-8 text-center text-gray-500">
@@ -491,7 +491,7 @@ export default function OfferManagement() {
                         {canPerformAction(offer, 'send') && (
                           <button
                             onClick={() => handleOfferAction(offer, 'send')}
-                            className="text-violet-600 hover:text-violet-900"
+                            className="text-gold-600 hover:text-violet-900"
                           >
                             Send
                           </button>
@@ -515,7 +515,7 @@ export default function OfferManagement() {
                         {canPerformAction(offer, 'negotiate') && (
                           <button
                             onClick={() => handleOfferAction(offer, 'negotiate')}
-                            className="text-violet-600 hover:text-violet-900"
+                            className="text-gold-600 hover:text-violet-900"
                           >
                             Negotiate
                           </button>
@@ -566,7 +566,7 @@ export default function OfferManagement() {
       {/* Action Modal */}
       {showActionModal && selectedOffer && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-lg shadow-xl max-w-md w-full m-4">
+          <div className="bg-white rounded-sm shadow-xl max-w-md w-full m-4">
             <div className="px-6 py-4 border-b border-gray-200">
               <h3 className="text-lg font-medium text-gray-900">
                 {actionType.charAt(0).toUpperCase() + actionType.slice(1)} Offer
@@ -605,7 +605,7 @@ export default function OfferManagement() {
                       setActionData({...actionData, [field]: e.target.value});
                     }}
                     rows={3}
-                    className="w-full p-3 border border-gray-300 rounded-md"
+                    className="w-full p-3 border border-gray-300 rounded-sm"
                     placeholder={`Enter ${actionType} details...`}
                   />
                 </div>
@@ -615,13 +615,13 @@ export default function OfferManagement() {
             <div className="px-6 py-4 bg-gray-50 flex justify-end space-x-3">
               <button
                 onClick={() => setShowActionModal(false)}
-                className="px-4 py-2 text-gray-700 border border-gray-300 rounded-md hover:bg-gray-50"
+                className="px-4 py-2 text-gray-700 border border-gray-300 rounded-sm hover:bg-gray-50"
               >
                 Cancel
               </button>
               <button
                 onClick={executeAction}
-                className="px-4 py-2 bg-violet-600 text-white rounded-md hover:bg-violet-700"
+                className="px-4 py-2 bg-gold-500 text-violet-950 rounded-sm hover:bg-gold-600"
               >
                 Confirm {actionType.charAt(0).toUpperCase() + actionType.slice(1)}
               </button>

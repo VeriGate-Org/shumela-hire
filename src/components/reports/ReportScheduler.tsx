@@ -113,7 +113,7 @@ export default function ReportScheduler({
       case 'failed':
         return 'text-red-600 bg-red-100';
       case 'running':
-        return 'text-violet-600 bg-violet-100';
+        return 'text-gold-600 bg-gold-100';
       case 'pending':
         return 'text-yellow-600 bg-yellow-100';
       default:
@@ -131,7 +131,7 @@ export default function ReportScheduler({
   };
 
   return (
-    <div className={`bg-white rounded-lg shadow-sm border border-gray-200 ${className}`}>
+    <div className={`bg-white rounded-sm shadow-sm border border-gray-200 ${className}`}>
       {/* Header */}
       <div className="px-6 py-4 border-b border-gray-200">
         <div className="flex items-center justify-between">
@@ -144,7 +144,7 @@ export default function ReportScheduler({
           
           <button
             onClick={() => setShowCreateForm(true)}
-            className="px-4 py-2 text-sm font-medium text-white bg-violet-600 rounded-lg hover:bg-violet-700"
+            className="px-4 py-2 text-sm font-medium text-white bg-violet-600 rounded-sm hover:bg-gold-600"
           >
             Schedule New Report
           </button>
@@ -163,7 +163,7 @@ export default function ReportScheduler({
                 <select
                   value={formData.reportId}
                   onChange={(e) => setFormData(prev => ({ ...prev, reportId: e.target.value }))}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-violet-500/60 focus:border-violet-400"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-sm focus:ring-2 focus:ring-gold-500/60 focus:border-violet-400"
                   required
                 >
                   <option value="">Choose a report...</option>
@@ -182,7 +182,7 @@ export default function ReportScheduler({
                 <select
                   value={formData.frequency}
                   onChange={(e) => setFormData(prev => ({ ...prev, frequency: e.target.value as any }))}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-violet-500/60 focus:border-violet-400"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-sm focus:ring-2 focus:ring-gold-500/60 focus:border-violet-400"
                 >
                   <option value="daily">Daily</option>
                   <option value="weekly">Weekly</option>
@@ -200,7 +200,7 @@ export default function ReportScheduler({
                 onChange={(e) => setFormData(prev => ({ ...prev, recipients: e.target.value }))}
                 placeholder="user1@company.com, user2@company.com"
                 rows={3}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-violet-500/60 focus:border-violet-400"
+                className="w-full px-3 py-2 border border-gray-300 rounded-sm focus:ring-2 focus:ring-gold-500/60 focus:border-violet-400"
                 required
               />
             </div>
@@ -211,7 +211,7 @@ export default function ReportScheduler({
                   type="checkbox"
                   checked={formData.enabled}
                   onChange={(e) => setFormData(prev => ({ ...prev, enabled: e.target.checked }))}
-                  className="h-4 w-4 text-violet-600 border-gray-300 rounded focus:ring-violet-500/60"
+                  className="h-4 w-4 text-gold-600 border-gray-300 rounded focus:ring-gold-500/60"
                 />
                 <span className="ml-2 text-sm text-gray-700">Enable schedule immediately</span>
               </label>
@@ -220,14 +220,14 @@ export default function ReportScheduler({
             <div className="flex items-center gap-2">
               <button
                 type="submit"
-                className="px-4 py-2 text-sm font-medium text-white bg-violet-600 rounded-lg hover:bg-violet-700"
+                className="px-4 py-2 text-sm font-medium text-white bg-violet-600 rounded-sm hover:bg-gold-600"
               >
                 Create Schedule
               </button>
               <button
                 type="button"
                 onClick={() => setShowCreateForm(false)}
-                className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50"
+                className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-sm hover:bg-gray-50"
               >
                 Cancel
               </button>
@@ -247,7 +247,7 @@ export default function ReportScheduler({
             </p>
             <button
               onClick={() => setShowCreateForm(true)}
-              className="px-4 py-2 text-sm font-medium text-violet-600 bg-violet-50 rounded-lg hover:bg-violet-100"
+              className="px-4 py-2 text-sm font-medium text-gold-600 bg-gold-50 rounded-sm hover:bg-gold-100"
             >
               Schedule Your First Report
             </button>
@@ -304,7 +304,7 @@ export default function ReportScheduler({
                   
                   <div className="mt-3">
                     <details className="group">
-                      <summary className="cursor-pointer text-sm text-violet-600 hover:text-violet-700">
+                      <summary className="cursor-pointer text-sm text-gold-600 hover:text-gold-700">
                         View recipients ({schedule.recipients.length})
                       </summary>
                       <div className="mt-2 pl-4 text-sm text-gray-600">
@@ -320,7 +320,7 @@ export default function ReportScheduler({
                   <button
                     onClick={() => onRunNow(schedule.id)}
                     disabled={schedule.lastStatus === 'running'}
-                    className="p-2 text-gray-400 hover:text-violet-600 rounded disabled:opacity-50"
+                    className="p-2 text-gray-400 hover:text-gold-600 rounded disabled:opacity-50"
                     title="Run now"
                   >
                     <PlayIcon className="h-4 w-4" />
@@ -340,7 +340,7 @@ export default function ReportScheduler({
                   
                   <button
                     onClick={() => setEditingSchedule(schedule.id)}
-                    className="p-2 text-gray-400 hover:text-violet-600 rounded"
+                    className="p-2 text-gray-400 hover:text-gold-600 rounded"
                     title="Edit"
                   >
                     <Cog6ToothIcon className="h-4 w-4" />

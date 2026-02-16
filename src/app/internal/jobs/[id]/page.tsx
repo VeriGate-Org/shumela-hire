@@ -196,7 +196,7 @@ export default function InternalJobDetailPage() {
           </span>
         )}
         {isInternal && (
-          <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-violet-100 text-violet-800">
+          <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-gold-100 text-gold-800">
             <UserGroupIcon className="w-4 h-4 mr-1" />
             Internal Opportunity
           </span>
@@ -235,7 +235,7 @@ export default function InternalJobDetailPage() {
             </p>
           </div>
           <Link href="/internal/jobs">
-            <button className="inline-flex items-center px-4 py-2 bg-violet-600 text-white rounded-md hover:bg-violet-700 transition-colors">
+            <button className="inline-flex items-center px-4 py-2 bg-gold-500 text-violet-950 rounded-full hover:bg-gold-600 transition-colors">
               <ArrowLeftIcon className="w-4 h-4 mr-2" />
               Back to Job Board
             </button>
@@ -256,7 +256,7 @@ export default function InternalJobDetailPage() {
           <div className="py-6">
             <div className="flex items-center justify-between">
               <Link href="/internal/jobs">
-                <button className="inline-flex items-center text-violet-600 hover:text-violet-800 transition-colors">
+                <button className="inline-flex items-center text-gold-600 hover:text-gold-800 transition-colors">
                   <ArrowLeftIcon className="w-4 h-4 mr-2" />
                   Back to Job Board
                 </button>
@@ -265,12 +265,12 @@ export default function InternalJobDetailPage() {
               <div className="flex items-center space-x-3">
                 <button
                   onClick={handleShare}
-                  className="inline-flex items-center px-3 py-2 border border-gray-300 rounded-md hover:bg-gray-50 transition-colors"
+                  className="inline-flex items-center px-3 py-2 border border-gray-300 rounded-sm hover:bg-gray-50 transition-colors"
                 >
                   <ShareIcon className="w-4 h-4 mr-2" />
                   Share
                 </button>
-                <button className="inline-flex items-center px-3 py-2 border border-gray-300 rounded-md hover:bg-gray-50 transition-colors">
+                <button className="inline-flex items-center px-3 py-2 border border-gray-300 rounded-sm hover:bg-gray-50 transition-colors">
                   <BookmarkIcon className="w-4 h-4 mr-2" />
                   Save
                 </button>
@@ -282,7 +282,7 @@ export default function InternalJobDetailPage() {
 
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Job Header */}
-        <div className="bg-white rounded-lg shadow-lg mb-8">
+        <div className="bg-white rounded-sm shadow-lg mb-8">
           <div className="p-8">
             <JobBadges job={job} />
             
@@ -341,7 +341,7 @@ export default function InternalJobDetailPage() {
 
             {/* Apply Now Section */}
             {isActive && (
-              <div className="mb-8 p-6 bg-violet-50 rounded-lg border border-violet-200">
+              <div className="mb-8 p-6 bg-gold-50 rounded-sm border border-violet-200">
                 <div className="text-center">
                   <h2 className="text-xl font-semibold text-violet-900 mb-2">Ready to Apply?</h2>
                   <p className="text-violet-700 mb-4">
@@ -349,7 +349,7 @@ export default function InternalJobDetailPage() {
                   </p>
                   <button
                     onClick={handleApply}
-                    className="inline-flex items-center px-6 py-3 bg-violet-600 text-white text-lg font-medium rounded-lg hover:bg-violet-700 transition-colors"
+                    className="inline-flex items-center px-6 py-3 bg-gold-500 text-violet-950 text-lg font-medium rounded-full hover:bg-gold-600 transition-colors"
                   >
                     <PaperAirplaneIcon className="w-5 h-5 mr-2" />
                     Apply Now (Internal)
@@ -360,7 +360,7 @@ export default function InternalJobDetailPage() {
 
             {/* Expired Job Notice */}
             {!isActive && (
-              <div className="mb-8 p-4 bg-red-50 border border-red-200 rounded-md">
+              <div className="mb-8 p-4 bg-red-50 border border-red-200 rounded-sm">
                 <div className="flex">
                   <ExclamationTriangleIcon className="w-5 h-5 text-red-400" />
                   <div className="ml-3">
@@ -381,13 +381,13 @@ export default function InternalJobDetailPage() {
         </div>
 
         {/* Internal Application Benefits */}
-        <div className="bg-white rounded-lg shadow p-6 mb-8">
+        <div className="bg-white rounded-sm shadow p-6 mb-8">
           <h3 className="text-lg font-semibold text-gray-900 mb-4">Internal Application Benefits</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="flex items-start">
               <div className="flex-shrink-0">
-                <div className="w-8 h-8 bg-violet-100 rounded-full flex items-center justify-center">
-                  <UserGroupIcon className="w-4 h-4 text-violet-600" />
+                <div className="w-8 h-8 bg-gold-100 rounded-full flex items-center justify-center">
+                  <UserGroupIcon className="w-4 h-4 text-gold-600" />
                 </div>
               </div>
               <div className="ml-3">
@@ -436,12 +436,12 @@ export default function InternalJobDetailPage() {
 
         {/* Job Stats */}
         {(job.applicationCount !== undefined || job.viewCount !== undefined) && (
-          <div className="bg-white rounded-lg shadow p-6">
+          <div className="bg-white rounded-sm shadow p-6">
             <h3 className="text-lg font-semibold text-gray-900 mb-4">Application Statistics</h3>
             <div className="grid grid-cols-2 gap-4">
               {job.viewCount !== undefined && (
                 <div className="text-center">
-                  <div className="text-2xl font-bold text-violet-600">{job.viewCount}</div>
+                  <div className="text-2xl font-bold text-gold-600">{job.viewCount}</div>
                   <div className="text-sm text-gray-600">Total Views</div>
                 </div>
               )}

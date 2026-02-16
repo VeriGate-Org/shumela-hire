@@ -63,7 +63,7 @@ const RealTimeMetrics: React.FC<RealTimeMetricsProps> = ({
       previousValue: 42,
       format: 'number',
       icon: UserGroupIcon,
-      color: 'text-violet-600 bg-violet-100',
+      color: 'text-gold-600 bg-gold-100',
     },
     {
       id: 'active_sessions',
@@ -125,7 +125,7 @@ const RealTimeMetrics: React.FC<RealTimeMetricsProps> = ({
   };
 
   return (
-    <div className={`bg-white rounded-lg border border-gray-200 ${className}`}>
+    <div className={`bg-white rounded-sm border border-gray-200 ${className}`}>
       {/* Header */}
       <div className="p-6 border-b border-gray-200">
         <div className="flex items-center justify-between">
@@ -161,10 +161,10 @@ const RealTimeMetrics: React.FC<RealTimeMetricsProps> = ({
             
             return (
               <div key={metric.id} className="relative group">
-                <div className="bg-gray-50 rounded-lg p-4 transition-all duration-300 group-hover:shadow-md">
+                <div className="bg-gray-50 rounded-sm p-4 transition-all duration-300 group-hover:shadow-md">
                   {/* Icon and trend indicator */}
                   <div className="flex items-center justify-between mb-2">
-                    <div className={`p-2 rounded-lg ${metric.color}`}>
+                    <div className={`p-2 rounded-sm ${metric.color}`}>
                       <metric.icon className="w-5 h-5" />
                     </div>
                     {change.direction !== 'neutral' && (
@@ -219,7 +219,7 @@ const RealTimeMetrics: React.FC<RealTimeMetricsProps> = ({
             ].map((activity, index) => (
               <div key={index} className="flex items-start gap-3 text-sm">
                 <div className={`w-2 h-2 rounded-full mt-1.5 ${
-                  activity.type === 'application' ? 'bg-violet-500' :
+                  activity.type === 'application' ? 'bg-gold-500' :
                   activity.type === 'interview' ? 'bg-orange-500' : 'bg-green-500'
                 }`} />
                 <div>

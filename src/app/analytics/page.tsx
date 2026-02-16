@@ -127,7 +127,7 @@ export default function AnalyticsPage() {
         <AdvancedAnalyticsDashboard />
 
         {/* Additional Insights Section */}
-        <div className="bg-white rounded-lg border border-gray-200 p-6">
+        <div className="bg-white rounded-sm border border-gray-200 border-t-2 border-t-gold-500 p-6">
           <h3 className="text-lg font-semibold text-gray-900 mb-4">Key Insights & Recommendations</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="space-y-3">

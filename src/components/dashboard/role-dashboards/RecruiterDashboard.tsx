@@ -101,7 +101,7 @@ export default function RecruiterDashboard({ selectedTimeframe, onTimeframeChang
           <select
             value={selectedTimeframe}
             onChange={(e) => onTimeframeChange(e.target.value)}
-            className="border border-gray-300 rounded-lg px-3 py-2 text-sm"
+            className="border border-gray-300 rounded-sm px-3 py-2 text-sm"
           >
             <option value="7days">Last 7 days</option>
             <option value="30days">Last 30 days</option>
@@ -161,7 +161,7 @@ export default function RecruiterDashboard({ selectedTimeframe, onTimeframeChang
                     type: 'outreach',
                     message: 'Contacted 5 developers on LinkedIn',
                     time: '30 minutes ago',
-                    color: 'text-violet-600',
+                    color: 'text-gold-600',
                   },
                   {
                     id: '2',
@@ -185,7 +185,7 @@ export default function RecruiterDashboard({ selectedTimeframe, onTimeframeChang
                     color: 'text-orange-600',
                   },
                 ].map((activity) => (
-                  <div key={activity.id} className="flex items-start gap-3 p-3 hover:bg-gray-50 rounded-lg">
+                  <div key={activity.id} className="flex items-start gap-3 p-3 hover:bg-gray-50 rounded-sm">
                     <div className={`w-2 h-2 rounded-full mt-2 flex-shrink-0 ${activity.color.replace('text-', 'bg-')}`}></div>
                     <div className="flex-1 min-w-0">
                       <p className="text-sm text-gray-900 truncate">{activity.message}</p>
@@ -207,12 +207,12 @@ export default function RecruiterDashboard({ selectedTimeframe, onTimeframeChang
             >
               <div className="space-y-3">
                 {[
-                  { source: 'LinkedIn', candidates: 45, quality: 8.2, color: 'bg-violet-500' },
+                  { source: 'LinkedIn', candidates: 45, quality: 8.2, color: 'bg-gold-500' },
                   { source: 'Referrals', candidates: 23, quality: 9.1, color: 'bg-green-500' },
                   { source: 'Job Boards', candidates: 34, quality: 6.8, color: 'bg-purple-500' },
                   { source: 'GitHub', candidates: 18, quality: 8.7, color: 'bg-gray-600' },
                 ].map((channel) => (
-                  <div key={channel.source} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                  <div key={channel.source} className="flex items-center justify-between p-3 bg-gray-50 rounded-sm">
                     <div className="flex items-center gap-3">
                       <div className={`w-3 h-3 rounded-full ${channel.color}`}></div>
                       <span className="font-medium text-gray-900">{channel.source}</span>
@@ -244,7 +244,7 @@ export default function RecruiterDashboard({ selectedTimeframe, onTimeframeChang
                 ].map((action) => (
                   <button
                     key={action.label}
-                    className={`${action.color} text-white p-3 rounded-lg hover:opacity-90 transition-opacity text-sm font-medium text-center w-full flex items-center justify-center gap-2`}
+                    className={`${action.color} text-white p-3 rounded-sm hover:opacity-90 transition-opacity text-sm font-medium text-center w-full flex items-center justify-center gap-2`}
                   >
                     <span>{action.icon}</span>
                     {action.label}

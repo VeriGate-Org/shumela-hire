@@ -114,7 +114,7 @@ const JobAdPreview: React.FC<JobAdPreviewProps> = ({
 
           {/* Apply button */}
           <div className="ml-6">
-            <button className="bg-violet-600 hover:bg-violet-700 text-white px-6 py-3 rounded-lg font-medium transition-colors">
+            <button className="bg-transparent border-2 border-gold-500 text-violet-900 hover:bg-gold-500 hover:text-violet-950 uppercase tracking-wider px-6 py-3 rounded-sm font-medium transition-colors">
               Apply Now
             </button>
           </div>
@@ -166,7 +166,7 @@ const JobAdPreview: React.FC<JobAdPreviewProps> = ({
 
       {/* Footer */}
       <div className="mt-8 pt-6 border-t border-gray-200">
-        <div className="bg-gray-50 rounded-lg p-6">
+        <div className="bg-gray-50 rounded-sm p-6">
           <h3 className="text-lg font-semibold text-gray-900 mb-3">Ready to Apply?</h3>
           <p className="text-gray-600 mb-4">
             Send your application to join our team and make an impact!
@@ -178,7 +178,7 @@ const JobAdPreview: React.FC<JobAdPreviewProps> = ({
               <span>Send applications to: <strong>{data.contactEmail}</strong></span>
             </div>
             
-            <button className="bg-violet-600 hover:bg-violet-700 text-white px-6 py-2 rounded-md font-medium transition-colors">
+            <button className="bg-transparent border-2 border-gold-500 text-violet-900 hover:bg-gold-500 hover:text-violet-950 uppercase tracking-wider px-6 py-2 rounded-sm font-medium transition-colors">
               Apply Now
             </button>
           </div>
@@ -201,7 +201,7 @@ const JobAdPreview: React.FC<JobAdPreviewProps> = ({
 
       {/* Internal only: Analytics preview */}
       {isInternal && jobAd && (
-        <div className="mt-6 p-4 bg-violet-50 rounded-lg">
+        <div className="mt-6 p-4 bg-gold-50 rounded-sm">
           <h4 className="text-sm font-semibold text-violet-900 mb-2">Performance Metrics</h4>
           <div className="grid grid-cols-2 gap-4 text-sm">
             <div>

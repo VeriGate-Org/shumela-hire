@@ -302,7 +302,7 @@ export default function InterviewScheduler({ interviewId, onSuccess, onCancel }:
     return (
       <div className="flex items-center justify-center p-8">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-violet-500 mx-auto mb-4"></div>
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gold-500 mx-auto mb-4"></div>
           <p className="text-gray-600">Loading interview...</p>
         </div>
       </div>
@@ -310,7 +310,7 @@ export default function InterviewScheduler({ interviewId, onSuccess, onCancel }:
   }
 
   return (
-    <div className="max-w-4xl mx-auto bg-white rounded-lg shadow-lg">
+    <div className="max-w-4xl mx-auto bg-white rounded-sm shadow-lg">
       {/* Header */}
       <div className="px-6 py-4 border-b border-gray-200">
         <h2 className="text-2xl font-bold text-gray-900">
@@ -343,7 +343,7 @@ export default function InterviewScheduler({ interviewId, onSuccess, onCancel }:
                 aria-required="true"
                 aria-invalid={!!errors.applicationId}
                 aria-describedby={errors.applicationId ? 'application-id-error' : undefined}
-                className={`w-full p-3 border rounded-md ${errors.applicationId ? 'border-red-500' : 'border-gray-300'}`}
+                className={`w-full p-3 border rounded-sm ${errors.applicationId ? 'border-red-500' : 'border-gray-300'}`}
               >
                 <option value={0}>Select an application...</option>
                 {applications.map(app => (
@@ -370,7 +370,7 @@ export default function InterviewScheduler({ interviewId, onSuccess, onCancel }:
                 aria-required="true"
                 aria-invalid={!!errors.title}
                 aria-describedby={errors.title ? 'interview-title-error' : undefined}
-                className={`w-full p-3 border rounded-md ${errors.title ? 'border-red-500' : 'border-gray-300'}`}
+                className={`w-full p-3 border rounded-sm ${errors.title ? 'border-red-500' : 'border-gray-300'}`}
                 placeholder="e.g. Technical Interview - Senior Developer"
               />
               {errors.title && <p id="interview-title-error" role="alert" className="text-red-500 text-sm mt-1">{errors.title}</p>}
@@ -385,7 +385,7 @@ export default function InterviewScheduler({ interviewId, onSuccess, onCancel }:
                 value={formData.type}
                 onChange={(e) => handleInputChange('type', e.target.value)}
                 aria-required="true"
-                className="w-full p-3 border border-gray-300 rounded-md"
+                className="w-full p-3 border border-gray-300 rounded-sm"
               >
                 {INTERVIEW_TYPES.map(type => (
                   <option key={type.value} value={type.value}>{type.label}</option>
@@ -402,7 +402,7 @@ export default function InterviewScheduler({ interviewId, onSuccess, onCancel }:
                 value={formData.round}
                 onChange={(e) => handleInputChange('round', e.target.value)}
                 aria-required="true"
-                className="w-full p-3 border border-gray-300 rounded-md"
+                className="w-full p-3 border border-gray-300 rounded-sm"
               >
                 {INTERVIEW_ROUNDS.map(round => (
                   <option key={round.value} value={round.value}>{round.label}</option>
@@ -419,7 +419,7 @@ export default function InterviewScheduler({ interviewId, onSuccess, onCancel }:
                 value={formData.interviewerId}
                 onChange={(e) => handleInputChange('interviewerId', parseInt(e.target.value))}
                 aria-required="true"
-                className="w-full p-3 border border-gray-300 rounded-md"
+                className="w-full p-3 border border-gray-300 rounded-sm"
               >
                 {MOCK_INTERVIEWERS.map(interviewer => (
                   <option key={interviewer.id} value={interviewer.id}>
@@ -446,7 +446,7 @@ export default function InterviewScheduler({ interviewId, onSuccess, onCancel }:
                 aria-required="true"
                 aria-invalid={!!errors.scheduledAt}
                 aria-describedby={errors.scheduledAt ? 'scheduled-at-error' : undefined}
-                className={`w-full p-3 border rounded-md ${errors.scheduledAt ? 'border-red-500' : 'border-gray-300'}`}
+                className={`w-full p-3 border rounded-sm ${errors.scheduledAt ? 'border-red-500' : 'border-gray-300'}`}
               />
               {errors.scheduledAt && <p id="scheduled-at-error" role="alert" className="text-red-500 text-sm mt-1">{errors.scheduledAt}</p>}
               {checkingAvailability && (
@@ -469,7 +469,7 @@ export default function InterviewScheduler({ interviewId, onSuccess, onCancel }:
                 aria-required="true"
                 aria-invalid={!!errors.durationMinutes}
                 aria-describedby={errors.durationMinutes ? 'duration-minutes-error' : undefined}
-                className={`w-full p-3 border rounded-md ${errors.durationMinutes ? 'border-red-500' : 'border-gray-300'}`}
+                className={`w-full p-3 border rounded-sm ${errors.durationMinutes ? 'border-red-500' : 'border-gray-300'}`}
               />
               {errors.durationMinutes && <p id="duration-minutes-error" role="alert" className="text-red-500 text-sm mt-1">{errors.durationMinutes}</p>}
             </div>
@@ -487,7 +487,7 @@ export default function InterviewScheduler({ interviewId, onSuccess, onCancel }:
                     key={index}
                     type="button"
                     onClick={() => handleSuggestedTimeSelect(time)}
-                    className="px-3 py-1 bg-violet-100 text-violet-800 rounded-md hover:bg-violet-200 text-sm"
+                    className="px-3 py-1 bg-gold-100 text-gold-800 rounded-sm hover:bg-gold-200 text-sm"
                   >
                     {new Date(time).toLocaleString()}
                   </button>
@@ -511,7 +511,7 @@ export default function InterviewScheduler({ interviewId, onSuccess, onCancel }:
                   aria-required="true"
                   aria-invalid={!!errors.location}
                   aria-describedby={errors.location ? 'interview-location-error' : undefined}
-                  className={`w-full p-3 border rounded-md ${errors.location ? 'border-red-500' : 'border-gray-300'}`}
+                  className={`w-full p-3 border rounded-sm ${errors.location ? 'border-red-500' : 'border-gray-300'}`}
                   placeholder="e.g. Conference Room A, 2nd Floor"
                 />
                 {errors.location && <p id="interview-location-error" role="alert" className="text-red-500 text-sm mt-1">{errors.location}</p>}
@@ -531,7 +531,7 @@ export default function InterviewScheduler({ interviewId, onSuccess, onCancel }:
                   aria-required="true"
                   aria-invalid={!!errors.meetingLink}
                   aria-describedby={errors.meetingLink ? 'meeting-link-error' : undefined}
-                  className={`w-full p-3 border rounded-md ${errors.meetingLink ? 'border-red-500' : 'border-gray-300'}`}
+                  className={`w-full p-3 border rounded-sm ${errors.meetingLink ? 'border-red-500' : 'border-gray-300'}`}
                   placeholder="e.g. https://zoom.us/j/123456789"
                 />
                 {errors.meetingLink && <p id="meeting-link-error" role="alert" className="text-red-500 text-sm mt-1">{errors.meetingLink}</p>}
@@ -551,7 +551,7 @@ export default function InterviewScheduler({ interviewId, onSuccess, onCancel }:
                   aria-required="true"
                   aria-invalid={!!errors.phoneNumber}
                   aria-describedby={errors.phoneNumber ? 'phone-number-error' : undefined}
-                  className={`w-full p-3 border rounded-md ${errors.phoneNumber ? 'border-red-500' : 'border-gray-300'}`}
+                  className={`w-full p-3 border rounded-sm ${errors.phoneNumber ? 'border-red-500' : 'border-gray-300'}`}
                   placeholder="e.g. +27 11 123 4567"
                 />
                 {errors.phoneNumber && <p id="phone-number-error" role="alert" className="text-red-500 text-sm mt-1">{errors.phoneNumber}</p>}
@@ -567,7 +567,7 @@ export default function InterviewScheduler({ interviewId, onSuccess, onCancel }:
                   type="text"
                   value={formData.meetingRoom}
                   onChange={(e) => handleInputChange('meetingRoom', e.target.value)}
-                  className="w-full p-3 border border-gray-300 rounded-md"
+                  className="w-full p-3 border border-gray-300 rounded-sm"
                   placeholder="e.g. Boardroom 1"
                 />
               </div>
@@ -584,7 +584,7 @@ export default function InterviewScheduler({ interviewId, onSuccess, onCancel }:
                 value={formData.agenda}
                 onChange={(e) => handleInputChange('agenda', e.target.value)}
                 rows={3}
-                className="w-full p-3 border border-gray-300 rounded-md"
+                className="w-full p-3 border border-gray-300 rounded-sm"
                 placeholder="Outline what will be covered in this interview..."
               />
             </div>
@@ -597,7 +597,7 @@ export default function InterviewScheduler({ interviewId, onSuccess, onCancel }:
                 value={formData.instructions}
                 onChange={(e) => handleInputChange('instructions', e.target.value)}
                 rows={3}
-                className="w-full p-3 border border-gray-300 rounded-md"
+                className="w-full p-3 border border-gray-300 rounded-sm"
                 placeholder="Any special instructions, preparation requirements, or what to bring..."
               />
             </div>
@@ -610,7 +610,7 @@ export default function InterviewScheduler({ interviewId, onSuccess, onCancel }:
             <button
               type="button"
               onClick={onCancel}
-              className="px-6 py-2 border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50"
+              className="px-6 py-2 border border-gray-300 text-gray-700 rounded-sm hover:bg-gray-50"
             >
               Cancel
             </button>
@@ -618,7 +618,7 @@ export default function InterviewScheduler({ interviewId, onSuccess, onCancel }:
           <button
             type="submit"
             disabled={loading}
-            className="px-6 py-2 bg-violet-600 text-white rounded-md hover:bg-violet-700 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="px-6 py-2 bg-gold-500 text-violet-950 rounded-sm hover:bg-gold-600 disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {loading ? (
               <span className="flex items-center">

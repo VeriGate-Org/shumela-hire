@@ -131,13 +131,13 @@ export default function InternalApplicationPage() {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="max-w-md mx-auto px-4">
-          <div className="bg-white rounded-lg shadow-lg p-8 text-center">
+          <div className="bg-white rounded-sm shadow-lg p-8 text-center">
             <CheckCircleIcon className="w-16 h-16 text-green-500 mx-auto mb-4" />
             <h1 className="text-2xl font-bold text-gray-900 mb-2">Application Submitted!</h1>
             <p className="text-gray-600 mb-6">
               Your internal application for <strong>{decodeURIComponent(jobTitle)}</strong> has been submitted successfully.
             </p>
-            <div className="bg-violet-50 border border-violet-200 rounded-md p-4 mb-6">
+            <div className="bg-gold-50 border border-violet-200 rounded-sm p-4 mb-6">
               <p className="text-sm text-violet-800">
                 <strong>What happens next?</strong>
                 <br />
@@ -150,12 +150,12 @@ export default function InternalApplicationPage() {
             </div>
             <div className="space-y-3">
               <Link href="/internal/jobs">
-                <button className="w-full bg-violet-600 text-white px-4 py-2 rounded-md hover:bg-violet-700 transition-colors">
+                <button className="w-full bg-gold-500 text-violet-950 px-4 py-2 rounded-full hover:bg-gold-600 transition-colors">
                   Browse More Internal Jobs
                 </button>
               </Link>
               <Link href="/applicant/applications">
-                <button className="w-full border border-gray-300 text-gray-700 px-4 py-2 rounded-md hover:bg-gray-50 transition-colors">
+                <button className="w-full border border-gray-300 text-gray-700 px-4 py-2 rounded-full hover:bg-gray-50 transition-colors">
                   View My Applications
                 </button>
               </Link>
@@ -174,7 +174,7 @@ export default function InternalApplicationPage() {
           <div className="py-6">
             <div className="flex items-center justify-between">
               <Link href="/internal/jobs">
-                <button className="inline-flex items-center text-violet-600 hover:text-violet-800 transition-colors">
+                <button className="inline-flex items-center text-gold-600 hover:text-gold-800 transition-colors">
                   <ArrowLeftIcon className="w-4 h-4 mr-2" />
                   Back to Job Board
                 </button>
@@ -189,7 +189,7 @@ export default function InternalApplicationPage() {
       </div>
 
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="bg-white rounded-lg shadow-lg">
+        <div className="bg-white rounded-sm shadow-lg">
           <div className="px-8 py-6 border-b border-gray-200">
             <h1 className="text-2xl font-bold text-gray-900">Internal Job Application</h1>
             <p className="text-gray-600 mt-2">
@@ -201,12 +201,12 @@ export default function InternalApplicationPage() {
           </div>
 
           {/* Internal Application Benefits */}
-          <div className="px-8 py-6 bg-violet-50 border-b border-gray-200">
+          <div className="px-8 py-6 bg-gold-50 border-b border-gray-200">
             <h2 className="text-lg font-semibold text-violet-900 mb-3">Internal Application Advantages</h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div className="flex items-center">
-                <div className="w-8 h-8 bg-violet-600 rounded-full flex items-center justify-center mr-3">
-                  <UserIcon className="w-4 h-4 text-white" />
+                <div className="w-8 h-8 bg-gold-500 rounded-full flex items-center justify-center mr-3">
+                  <UserIcon className="w-4 h-4 text-violet-950" />
                 </div>
                 <span className="text-sm text-violet-800">Priority Review</span>
               </div>
@@ -256,7 +256,7 @@ export default function InternalApplicationPage() {
                       aria-required="true"
                       value={formData.applicantName}
                       onChange={(e) => handleInputChange('applicantName', e.target.value)}
-                      className="w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-violet-500/60 focus:border-violet-400"
+                      className="w-full border border-gray-300 rounded-sm px-3 py-2 focus:ring-2 focus:ring-gold-500/60 focus:border-violet-400"
                       placeholder="Your full name"
                     />
                   </div>
@@ -272,7 +272,7 @@ export default function InternalApplicationPage() {
                       aria-required="true"
                       value={formData.applicantEmail}
                       onChange={(e) => handleInputChange('applicantEmail', e.target.value)}
-                      className="w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-violet-500/60 focus:border-violet-400"
+                      className="w-full border border-gray-300 rounded-sm px-3 py-2 focus:ring-2 focus:ring-gold-500/60 focus:border-violet-400"
                       placeholder="your.email@company.com"
                     />
                   </div>
@@ -288,7 +288,7 @@ export default function InternalApplicationPage() {
                       aria-required="true"
                       value={formData.employeeId}
                       onChange={(e) => handleInputChange('employeeId', e.target.value)}
-                      className="w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-violet-500/60 focus:border-violet-400"
+                      className="w-full border border-gray-300 rounded-sm px-3 py-2 focus:ring-2 focus:ring-gold-500/60 focus:border-violet-400"
                       placeholder="EMP123456"
                     />
                   </div>
@@ -304,7 +304,7 @@ export default function InternalApplicationPage() {
                       aria-required="true"
                       value={formData.department}
                       onChange={(e) => handleInputChange('department', e.target.value)}
-                      className="w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-violet-500/60 focus:border-violet-400"
+                      className="w-full border border-gray-300 rounded-sm px-3 py-2 focus:ring-2 focus:ring-gold-500/60 focus:border-violet-400"
                       placeholder="Current department"
                     />
                   </div>
@@ -326,7 +326,7 @@ export default function InternalApplicationPage() {
                       aria-required="true"
                       value={formData.currentPosition}
                       onChange={(e) => handleInputChange('currentPosition', e.target.value)}
-                      className="w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-violet-500/60 focus:border-violet-400"
+                      className="w-full border border-gray-300 rounded-sm px-3 py-2 focus:ring-2 focus:ring-gold-500/60 focus:border-violet-400"
                       placeholder="Your current job title"
                     />
                   </div>
@@ -340,7 +340,7 @@ export default function InternalApplicationPage() {
                       id="availability-date"
                       value={formData.availabilityDate}
                       onChange={(e) => handleInputChange('availabilityDate', e.target.value)}
-                      className="w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-violet-500/60 focus:border-violet-400"
+                      className="w-full border border-gray-300 rounded-sm px-3 py-2 focus:ring-2 focus:ring-gold-500/60 focus:border-violet-400"
                     />
                   </div>
                 </div>
@@ -360,7 +360,7 @@ export default function InternalApplicationPage() {
                       id="resume-url"
                       value={formData.resumeUrl}
                       onChange={(e) => handleInputChange('resumeUrl', e.target.value)}
-                      className="w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-violet-500/60 focus:border-violet-400"
+                      className="w-full border border-gray-300 rounded-sm px-3 py-2 focus:ring-2 focus:ring-gold-500/60 focus:border-violet-400"
                       placeholder="https://... (link to your updated resume)"
                     />
                     <p className="text-xs text-gray-500 mt-1">
@@ -379,7 +379,7 @@ export default function InternalApplicationPage() {
                       aria-required="true"
                       value={formData.reasonForApplication}
                       onChange={(e) => handleInputChange('reasonForApplication', e.target.value)}
-                      className="w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-violet-500/60 focus:border-violet-400"
+                      className="w-full border border-gray-300 rounded-sm px-3 py-2 focus:ring-2 focus:ring-gold-500/60 focus:border-violet-400"
                       placeholder="Why are you interested in this position? What motivates you to make this internal move?"
                     />
                   </div>
@@ -393,7 +393,7 @@ export default function InternalApplicationPage() {
                       rows={6}
                       value={formData.coverLetter}
                       onChange={(e) => handleInputChange('coverLetter', e.target.value)}
-                      className="w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-violet-500/60 focus:border-violet-400"
+                      className="w-full border border-gray-300 rounded-sm px-3 py-2 focus:ring-2 focus:ring-gold-500/60 focus:border-violet-400"
                       placeholder="Describe how your current experience and skills make you a great fit for this role..."
                     />
                   </div>
@@ -407,7 +407,7 @@ export default function InternalApplicationPage() {
                       rows={3}
                       value={formData.additionalComments}
                       onChange={(e) => handleInputChange('additionalComments', e.target.value)}
-                      className="w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-violet-500/60 focus:border-violet-400"
+                      className="w-full border border-gray-300 rounded-sm px-3 py-2 focus:ring-2 focus:ring-gold-500/60 focus:border-violet-400"
                       placeholder="Any additional information you'd like to share..."
                     />
                   </div>
@@ -424,7 +424,7 @@ export default function InternalApplicationPage() {
                   <button
                     type="submit"
                     disabled={loading || !formData.applicantName || !formData.applicantEmail || !formData.employeeId || !formData.reasonForApplication}
-                    className="inline-flex items-center px-6 py-3 bg-violet-600 text-white font-medium rounded-md hover:bg-violet-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                    className="inline-flex items-center px-6 py-3 bg-gold-500 text-violet-950 font-medium rounded-full hover:bg-gold-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                   >
                     {loading ? (
                       <>

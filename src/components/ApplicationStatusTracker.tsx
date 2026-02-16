@@ -140,7 +140,7 @@ export default function ApplicationStatusTracker({
   const terminalInfo = getTerminalStatusInfo();
 
   return (
-    <div className="bg-white rounded-lg shadow-lg p-6">
+    <div className="bg-white rounded-sm shadow-lg p-6">
       {/* Header */}
       <div className="mb-6">
         <div className="flex justify-between items-start">
@@ -163,7 +163,7 @@ export default function ApplicationStatusTracker({
 
       {/* Terminal Status Display */}
       {terminalInfo && (
-        <div className={`${terminalInfo.bgColor} border rounded-lg p-4 mb-6`}>
+        <div className={`${terminalInfo.bgColor} border rounded-sm p-4 mb-6`}>
           <div className="flex items-center">
             <span className="text-2xl mr-3">{terminalInfo.icon}</span>
             <div>
@@ -189,7 +189,7 @@ export default function ApplicationStatusTracker({
                 <div className="flex-shrink-0">
                   <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium ${
                     isStepCompleted(index) ? 'bg-green-500 text-white' :
-                    isStepCurrent(index) ? 'bg-violet-500 text-white' :
+                    isStepCurrent(index) ? 'bg-gold-500 text-white' :
                     'bg-gray-200 text-gray-600'
                   }`}>
                     {isStepCompleted(index) ? '✓' : index + 1}
@@ -203,7 +203,7 @@ export default function ApplicationStatusTracker({
                       {step.label}
                     </p>
                     {isStepCurrent(index) && (
-                      <span className="text-xs bg-violet-100 text-violet-800 px-2 py-1 rounded">
+                      <span className="text-xs bg-gold-100 text-gold-800 px-2 py-1 rounded">
                         Current
                       </span>
                     )}
@@ -247,7 +247,7 @@ export default function ApplicationStatusTracker({
                 placeholder="Please provide a reason for withdrawing your application..."
                 rows={3}
                 aria-required="true"
-                className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-violet-500/60 focus:border-violet-400"
+                className="w-full p-2 border border-gray-300 rounded-sm focus:ring-2 focus:ring-gold-500/60 focus:border-violet-400"
               />
             </div>
             <div className="flex justify-end space-x-3">
@@ -256,14 +256,14 @@ export default function ApplicationStatusTracker({
                   setShowWithdrawForm(false);
                   setWithdrawalReason('');
                 }}
-                className="px-3 py-2 text-gray-700 border border-gray-300 rounded-md hover:bg-gray-50"
+                className="px-3 py-2 text-gray-700 border border-gray-300 rounded-sm hover:bg-gray-50"
               >
                 Cancel
               </button>
               <button
                 onClick={handleWithdraw}
                 disabled={withdrawing || !withdrawalReason.trim()}
-                className="px-3 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="px-3 py-2 bg-red-600 text-white rounded-sm hover:bg-red-700 disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {withdrawing ? 'Withdrawing...' : 'Confirm Withdrawal'}
               </button>

@@ -119,7 +119,7 @@ export const AdvancedAnalyticsDashboard: React.FC<AdvancedAnalyticsDashboardProp
   return (
     <div className={`space-y-6 ${className}`}>
       {/* Header with controls */}
-      <div className="bg-white rounded-lg border border-gray-200 p-6">
+      <div className="bg-white rounded-sm border border-gray-200 border-t-2 border-t-gold-500 p-6">
         <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
           <div>
             <h1 className="text-2xl font-bold text-gray-900">Advanced Analytics Dashboard</h1>
@@ -132,9 +132,9 @@ export const AdvancedAnalyticsDashboard: React.FC<AdvancedAnalyticsDashboardProp
               <button
                 key={range.key}
                 onClick={() => setSelectedTimeRange(range.key)}
-                className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+                className={`px-4 py-2 rounded-sm text-sm font-medium transition-colors ${
                   selectedTimeRange === range.key
-                    ? 'bg-violet-100 text-violet-700'
+                    ? 'bg-gold-100 text-violet-700'
                     : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
                 }`}
               >
@@ -155,9 +155,9 @@ export const AdvancedAnalyticsDashboard: React.FC<AdvancedAnalyticsDashboardProp
             <button
               key={key}
               onClick={() => setSelectedView(key as any)}
-              className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+              className={`flex items-center gap-2 px-4 py-2 rounded-sm text-sm font-medium transition-colors ${
                 selectedView === key
-                  ? 'bg-violet-600 text-white'
+                  ? 'bg-gold-500 text-violet-950'
                   : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
               }`}
             >
@@ -175,7 +175,7 @@ export const AdvancedAnalyticsDashboard: React.FC<AdvancedAnalyticsDashboardProp
             title: 'Total Applications',
             value: summaryStats.totalApplications.toLocaleString(),
             icon: DocumentChartBarIcon,
-            color: 'text-violet-600 bg-violet-100',
+            color: 'text-gold-600 bg-gold-100',
             change: '+12.5%',
             changeType: 'positive' as const,
           },
@@ -220,9 +220,9 @@ export const AdvancedAnalyticsDashboard: React.FC<AdvancedAnalyticsDashboardProp
             changeType: 'positive' as const,
           },
         ].map((stat) => (
-          <div key={stat.title} className="bg-white rounded-lg border border-gray-200 p-6">
+          <div key={stat.title} className="bg-white rounded-sm border border-gray-200 border-t-2 border-t-gold-500 p-6">
             <div className="flex items-center justify-between">
-              <div className={`p-2 rounded-lg ${stat.color}`}>
+              <div className={`p-2 rounded-sm ${stat.color}`}>
                 <stat.icon className="w-5 h-5" />
               </div>
               <span

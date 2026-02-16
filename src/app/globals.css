@@ -24,10 +24,21 @@
   --input: #E2E8F0;
   --ring: #05527E;
 
-  /* Brand Radius */
-  --radius: 0.375rem;
-  --radius-control: 6px;
-  --radius-card: 8px;
+  /* Brand Radius — IDC sharp */
+  --radius: 2px;
+  --radius-control: 2px;
+  --radius-card: 2px;
+  --radius-button: 9999px;
+
+  /* IDC CTA & Accent */
+  --cta: #F1C54B;
+  --cta-foreground: #032E49;
+  --cta-hover: #D4A832;
+  --cta-border: #F1C54B;
+  --link: #0693E3;
+  --link-hover: #0571B0;
+  --divider-accent: #F1C54B;
+  --divider-secondary: #008C7F;
 
   /* Stripe Dual-Layer Shadows */
   --shadow-sm: 0 2px 5px rgba(50, 50, 93, 0.09), 0 1px 3px rgba(0, 0, 0, 0.07);
@@ -87,6 +98,14 @@
   --shadow-md: 0 4px 10px rgba(0, 0, 0, 0.25), 0 2px 5px rgba(0, 0, 0, 0.15);
   --shadow-lg: 0 10px 20px rgba(0, 0, 0, 0.3), 0 5px 10px rgba(0, 0, 0, 0.2);
   --shadow-xl: 0 15px 35px rgba(0, 0, 0, 0.35), 0 5px 15px rgba(0, 0, 0, 0.2);
+
+  --cta: #F6CE5E;
+  --cta-foreground: #021F32;
+  --cta-hover: #F1C54B;
+  --link: #4CA6D0;
+  --link-hover: #83C3E2;
+  --divider-accent: #F6CE5E;
+  --divider-secondary: #21D4C4;
 }
 
 .high-contrast {
@@ -118,13 +137,14 @@
     color: var(--foreground);
     font-family: var(--font-manrope), 'Manrope', system-ui, sans-serif;
     font-feature-settings: "rlig" 1, "calt" 1;
+    font-size: 1rem;
     line-height: 1.5;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
 
   h1, h2, h3, h4, h5, h6 {
-    font-weight: 800;
+    font-weight: 700;
     line-height: 1.2;
     letter-spacing: -0.03em;
   }
@@ -192,22 +212,25 @@
     box-shadow: var(--shadow-xl);
   }
 
-  /* TalentGate Button - Flat, no gradients */
+  /* IDC Button — Gold outline pill CTA */
   .btn-primary {
-    background-color: var(--primary);
-    color: var(--primary-foreground);
-    border: 1px solid color-mix(in srgb, var(--primary) 85%, black);
-    border-radius: var(--radius-control);
-    padding: 0.5rem 1rem;
+    background: transparent;
+    color: var(--cta-foreground);
+    border: 2px solid var(--cta);
+    border-radius: var(--radius-button);
+    padding: 0.5rem 1.25rem;
     font-weight: 600;
     font-size: 0.875rem;
     line-height: 1.25rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
     transition: all var(--motion-duration-show) var(--motion-easing);
   }
 
   .btn-primary:hover {
+    background-color: var(--cta);
+    color: var(--cta-foreground);
     box-shadow: var(--shadow-sm);
-    border-color: color-mix(in srgb, var(--primary) 75%, black);
   }
 
   .btn-primary:active {
@@ -218,11 +241,13 @@
     background-color: var(--secondary);
     color: var(--secondary-foreground);
     border: 1px solid var(--border);
-    border-radius: var(--radius-control);
-    padding: 0.5rem 1rem;
+    border-radius: var(--radius-button);
+    padding: 0.5rem 1.25rem;
     font-weight: 600;
     font-size: 0.875rem;
     line-height: 1.25rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
     transition: all var(--motion-duration-show) var(--motion-easing);
   }
 
@@ -233,20 +258,68 @@
 
   .btn-outline {
     background: transparent;
-    color: var(--primary);
-    border: 1px solid var(--primary);
-    border-radius: var(--radius-control);
-    padding: 0.5rem 1rem;
+    color: var(--foreground);
+    border: 2px solid var(--foreground);
+    border-radius: var(--radius-button);
+    padding: 0.5rem 1.25rem;
     font-weight: 600;
     font-size: 0.875rem;
     line-height: 1.25rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
     transition: all var(--motion-duration-show) var(--motion-easing);
   }
 
   .btn-outline:hover {
-    background: var(--primary);
-    color: var(--primary-foreground);
+    background: var(--foreground);
+    color: var(--background);
     box-shadow: var(--shadow-sm);
+  }
+
+  /* IDC Gold CTA button */
+  .btn-cta {
+    background-color: var(--cta);
+    color: var(--cta-foreground);
+    border: 2px solid var(--cta-border);
+    border-radius: var(--radius-button);
+    padding: 0.5rem 1.25rem;
+    font-weight: 700;
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    transition: all var(--motion-duration-show) var(--motion-easing);
+  }
+
+  .btn-cta:hover {
+    background-color: var(--cta-hover);
+    border-color: var(--cta-hover);
+    box-shadow: var(--shadow-sm);
+  }
+
+  /* IDC Accent Dividers */
+  .idc-divider {
+    border: none;
+    border-top: 2px dashed var(--divider-accent);
+    margin: 1.5rem 0;
+  }
+
+  .idc-divider-teal {
+    border: none;
+    border-top: 2px dashed var(--divider-secondary);
+    margin: 1.5rem 0;
+  }
+
+  /* IDC Link */
+  .idc-link {
+    color: var(--link);
+    text-decoration: none;
+    transition: color var(--motion-duration-quick) var(--motion-easing);
+  }
+
+  .idc-link:hover {
+    color: var(--link-hover);
+    text-decoration: underline;
   }
 
   /* Navigation - Solid background, no glassmorphism */

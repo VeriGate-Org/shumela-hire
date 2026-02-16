@@ -197,11 +197,11 @@ const DashboardNavigation: React.FC = () => {
         <div className="flex items-center">
           <Link
             href={item.href}
-            className={`flex-1 flex items-center px-3 py-2 rounded-md text-sm font-medium transition-colors ${
+            className={`flex-1 flex items-center px-3 py-2 rounded-sm text-sm font-medium transition-colors ${
               active
-                ? 'bg-violet-50/80 text-violet-700 border-l-[3px] border-l-violet-600'
+                ? 'bg-gold-50/80 text-violet-700 border-l-[3px] border-l-violet-600'
                 : childActive
-                ? 'bg-violet-50/50 text-violet-600'
+                ? 'bg-gold-50/50 text-gold-600'
                 : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
             } ${level > 0 ? 'ml-6 pl-6 border-l border-gray-200' : ''}`}
           >
@@ -255,7 +255,7 @@ const DashboardNavigation: React.FC = () => {
       {/* Mobile menu button */}
       <button
         onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-        className="md:hidden fixed top-4 left-4 z-50 p-2 bg-white rounded-md shadow-md border"
+        className="md:hidden fixed top-4 left-4 z-50 p-2 bg-white rounded-sm shadow-md border"
       >
         <span className="text-xl">{isMobileMenuOpen ? '✕' : '☰'}</span>
       </button>
@@ -277,7 +277,7 @@ const DashboardNavigation: React.FC = () => {
       `}>
         <div className="p-6 border-b border-gray-200">
           <div className="flex items-center">
-            <div className="w-7 h-7 bg-violet-600 rounded-md flex items-center justify-center">
+            <div className="w-7 h-7 bg-violet-600 rounded-sm flex items-center justify-center">
               <span className="text-white font-bold text-xs">TG</span>
             </div>
             <div className="ml-2.5">
@@ -300,7 +300,7 @@ const DashboardNavigation: React.FC = () => {
         </div>
 
         {/* System Status */}
-        <div className="absolute bottom-4 left-4 right-4 p-3 bg-gray-50 rounded-lg">
+        <div className="absolute bottom-4 left-4 right-4 p-3 bg-gray-50 rounded-sm">
           <div className="flex items-center text-sm">
             <div className="w-2 h-2 bg-green-500 rounded-full mr-2 animate-pulse"></div>
             <span className="text-gray-600">System Status: </span>

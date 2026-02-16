@@ -73,13 +73,13 @@ export default function AiCvScreeningPanel({ applicationId, jobRequirements = []
           <span className="text-[10px] font-medium bg-teal-100 text-teal-700 px-1.5 py-0.5 rounded">AI-generated</span>
         </div>
         <button onClick={handleScreen} disabled={loading}
-          className="px-3 py-1.5 text-xs bg-violet-600 text-white rounded-md hover:bg-violet-700 disabled:opacity-50">
+          className="px-3 py-1.5 text-xs bg-gold-500 text-violet-950 rounded-sm hover:bg-gold-600 disabled:opacity-50">
           {loading ? 'Screening...' : 'Screen Candidate'}
         </button>
       </div>
 
       {result && (
-        <div className="border border-gray-200 rounded-lg p-4 bg-gray-50 space-y-4">
+        <div className="border border-gray-200 rounded-sm p-4 bg-gray-50 space-y-4">
           {/* Scores */}
           <div className="space-y-3">
             <div>
@@ -96,7 +96,7 @@ export default function AiCvScreeningPanel({ applicationId, jobRequirements = []
 
           {/* Explainability section */}
           {(result.scoringMethodology || result.weightBreakdown) && (
-            <div className="border border-gray-200 rounded-md bg-white">
+            <div className="border border-gray-200 rounded-sm bg-white">
               <button
                 onClick={() => setShowMethodology(!showMethodology)}
                 className="w-full flex items-center justify-between px-3 py-2 text-xs font-medium text-gray-700 hover:bg-gray-50 transition-colors"

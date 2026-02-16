@@ -64,7 +64,7 @@ const UserProfile: React.FC<UserProfileProps> = ({ user }) => {
         onClick={() => setIsOpen(!isOpen)}
         aria-expanded={isOpen}
         aria-haspopup="true"
-        className="flex items-center space-x-3 text-left p-2 rounded-lg hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-violet-500/60 focus:ring-offset-2 transition-colors"
+        className="flex items-center space-x-3 text-left p-2 rounded-sm hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gold-500/60 focus:ring-offset-2 transition-colors"
       >
         {/* Avatar */}
         <div className="flex-shrink-0">
@@ -75,7 +75,7 @@ const UserProfile: React.FC<UserProfileProps> = ({ user }) => {
               className="h-8 w-8 rounded-full object-cover"
             />
           ) : (
-            <div className="h-8 w-8 bg-violet-500 rounded-full flex items-center justify-center text-white text-sm font-medium">
+            <div className="h-8 w-8 bg-gold-500 rounded-full flex items-center justify-center text-white text-sm font-medium">
               {getInitials(currentUser.name)}
             </div>
           )}
@@ -111,7 +111,7 @@ const UserProfile: React.FC<UserProfileProps> = ({ user }) => {
           {/* Menu Panel */}
           <div
             role="menu"
-            className="absolute right-0 mt-2 w-80 bg-white rounded-lg shadow-lg border border-gray-200 z-50 overflow-hidden"
+            className="absolute right-0 mt-2 w-80 bg-white rounded-sm shadow-lg border border-gray-200 z-50 overflow-hidden"
           >
             {/* User Info Header */}
             <div className="px-4 py-3 bg-gray-50 border-b border-gray-200">
@@ -123,7 +123,7 @@ const UserProfile: React.FC<UserProfileProps> = ({ user }) => {
                     className="h-10 w-10 rounded-full object-cover"
                   />
                 ) : (
-                  <div className="h-10 w-10 bg-violet-500 rounded-full flex items-center justify-center text-white font-medium">
+                  <div className="h-10 w-10 bg-gold-500 rounded-full flex items-center justify-center text-white font-medium">
                     {getInitials(currentUser.name)}
                   </div>
                 )}

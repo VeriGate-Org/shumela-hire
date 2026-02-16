@@ -105,7 +105,7 @@ const AuditLogViewer: React.FC<AuditLogViewerProps> = ({ requisitionId, classNam
       return 'bg-red-100 text-red-800';
     }
     if (action.includes('updated')) {
-      return 'bg-violet-100 text-violet-800';
+      return 'bg-gold-100 text-gold-800';
     }
     return 'bg-gray-100 text-gray-800';
   };
@@ -130,7 +130,7 @@ const AuditLogViewer: React.FC<AuditLogViewerProps> = ({ requisitionId, classNam
 
   if (error) {
     return (
-      <div className={`p-4 bg-red-50 border border-red-200 rounded-md ${className}`}>
+      <div className={`p-4 bg-red-50 border border-red-200 rounded-sm ${className}`}>
         <div className="text-red-800">Error: {error}</div>
         <button 
           onClick={fetchAuditLogs}
@@ -152,7 +152,7 @@ const AuditLogViewer: React.FC<AuditLogViewerProps> = ({ requisitionId, classNam
 
   return (
     <div className={className}>
-      <div className="bg-white shadow overflow-hidden sm:rounded-md">
+      <div className="bg-white shadow overflow-hidden sm:rounded-sm">
         <div className="overflow-x-auto">
           <table className="min-w-full divide-y divide-gray-200">
             <thead className="bg-gray-50">
@@ -216,14 +216,14 @@ const AuditLogViewer: React.FC<AuditLogViewerProps> = ({ requisitionId, classNam
               <button
                 onClick={() => goToPage(currentPage - 1)}
                 disabled={currentPage === 1}
-                className="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-sm text-gray-700 bg-white hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 Previous
               </button>
               <button
                 onClick={() => goToPage(currentPage + 1)}
                 disabled={currentPage === totalPages}
-                className="ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-sm text-gray-700 bg-white hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 Next
               </button>
@@ -237,7 +237,7 @@ const AuditLogViewer: React.FC<AuditLogViewerProps> = ({ requisitionId, classNam
                 </p>
               </div>
               <div>
-                <nav className="relative z-0 inline-flex rounded-md shadow-sm -space-x-px" aria-label="Pagination">
+                <nav className="relative z-0 inline-flex rounded-sm shadow-sm -space-x-px" aria-label="Pagination">
                   <button
                     onClick={() => goToPage(currentPage - 1)}
                     disabled={currentPage === 1}

@@ -243,8 +243,8 @@ export default function OnboardingWizard({ companyName = 'TalentGate', onComplet
 
   const renderWelcome = () => (
     <div className="text-center py-8">
-      <div className="mx-auto mb-6 h-20 w-20 rounded-2xl bg-violet-100 grid place-items-center">
-        <svg className="h-10 w-10 text-violet-600" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
+      <div className="mx-auto mb-6 h-20 w-20 rounded-2xl bg-gold-100 grid place-items-center">
+        <svg className="h-10 w-10 text-gold-600" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
           <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12c0 1.268-.63 2.39-1.593 3.068a3.745 3.745 0 0 1-1.043 3.296 3.745 3.745 0 0 1-3.296 1.043A3.745 3.745 0 0 1 12 21c-1.268 0-2.39-.63-3.068-1.593a3.746 3.746 0 0 1-3.296-1.043 3.745 3.745 0 0 1-1.043-3.296A3.745 3.745 0 0 1 3 12c0-1.268.63-2.39 1.593-3.068a3.745 3.745 0 0 1 1.043-3.296 3.746 3.746 0 0 1 3.296-1.043A3.746 3.746 0 0 1 12 3c1.268 0 2.39.63 3.068 1.593a3.746 3.746 0 0 1 3.296 1.043 3.745 3.745 0 0 1 1.043 3.296A3.745 3.745 0 0 1 21 12Z" />
         </svg>
       </div>
@@ -274,11 +274,11 @@ export default function OnboardingWizard({ companyName = 'TalentGate', onComplet
         <div className="mb-6">
           <div className="flex items-center justify-between mb-1.5">
             <span className="text-xs font-medium text-gray-500 uppercase tracking-wider">Profile Completion</span>
-            <span className="text-xs font-bold text-violet-600">{completion}%</span>
+            <span className="text-xs font-bold text-gold-600">{completion}%</span>
           </div>
           <div className="h-2 w-full bg-gray-100 rounded-full overflow-hidden">
             <div
-              className="h-full bg-violet-600 rounded-full transition-all duration-500 ease-out"
+              className="h-full bg-gold-500 rounded-full transition-all duration-500 ease-out"
               style={{ width: `${completion}%` }}
             />
           </div>
@@ -293,7 +293,7 @@ export default function OnboardingWizard({ companyName = 'TalentGate', onComplet
               type="text"
               value={profileData.name}
               onChange={(e) => setProfileData({ ...profileData, name: e.target.value })}
-              className="w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-violet-500/40 focus:border-violet-500 transition-colors"
+              className="w-full px-3 py-2 text-sm border border-gray-300 rounded-sm focus:outline-none focus:ring-2 focus:ring-gold-500/40 focus:border-gold-500 transition-colors"
               placeholder="Enter your full name"
             />
           </div>
@@ -305,7 +305,7 @@ export default function OnboardingWizard({ companyName = 'TalentGate', onComplet
               type="email"
               value={profileData.email}
               onChange={(e) => setProfileData({ ...profileData, email: e.target.value })}
-              className="w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-violet-500/40 focus:border-violet-500 transition-colors"
+              className="w-full px-3 py-2 text-sm border border-gray-300 rounded-sm focus:outline-none focus:ring-2 focus:ring-gold-500/40 focus:border-gold-500 transition-colors"
               placeholder="Enter your email"
             />
           </div>
@@ -317,7 +317,7 @@ export default function OnboardingWizard({ companyName = 'TalentGate', onComplet
               type="tel"
               value={profileData.phone}
               onChange={(e) => setProfileData({ ...profileData, phone: e.target.value })}
-              className="w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-violet-500/40 focus:border-violet-500 transition-colors"
+              className="w-full px-3 py-2 text-sm border border-gray-300 rounded-sm focus:outline-none focus:ring-2 focus:ring-gold-500/40 focus:border-gold-500 transition-colors"
               placeholder="Enter your phone number"
             />
           </div>
@@ -334,9 +334,9 @@ export default function OnboardingWizard({ companyName = 'TalentGate', onComplet
       </p>
 
       {/* Role badge */}
-      <div className="flex items-center gap-3 p-4 bg-violet-50 border border-violet-100 rounded-xl mb-6">
-        <div className="h-10 w-10 rounded-lg bg-violet-600 grid place-items-center">
-          <span className="text-white font-bold text-sm">{roleName.charAt(0)}</span>
+      <div className="flex items-center gap-3 p-4 bg-gold-50 border border-violet-100 rounded-sm mb-6">
+        <div className="h-10 w-10 rounded-sm bg-gold-500 grid place-items-center">
+          <span className="text-violet-950 font-bold text-sm">{roleName.charAt(0)}</span>
         </div>
         <div>
           <p className="text-sm font-bold text-gray-900">{roleName}</p>
@@ -362,7 +362,7 @@ export default function OnboardingWizard({ companyName = 'TalentGate', onComplet
       {/* Dashboard preview */}
       <div>
         <h3 className="text-xs font-medium text-gray-500 uppercase tracking-wider mb-3">Dashboard Preview</h3>
-        <div className="border border-gray-200 rounded-xl overflow-hidden">
+        <div className="border border-gray-200 rounded-sm overflow-hidden">
           <div className="bg-gray-50 px-4 py-2 border-b border-gray-200">
             <div className="flex items-center gap-1.5">
               <div className="h-2.5 w-2.5 rounded-full bg-red-400" />
@@ -374,12 +374,12 @@ export default function OnboardingWizard({ companyName = 'TalentGate', onComplet
           <div className="p-4 bg-white">
             <div className="grid grid-cols-3 gap-3 mb-3">
               {[1, 2, 3].map((i) => (
-                <div key={i} className="h-14 rounded-lg bg-gray-100 animate-pulse" />
+                <div key={i} className="h-14 rounded-sm bg-gray-100 animate-pulse" />
               ))}
             </div>
             <div className="grid grid-cols-2 gap-3">
-              <div className="h-24 rounded-lg bg-gray-100 animate-pulse" />
-              <div className="h-24 rounded-lg bg-gray-100 animate-pulse" />
+              <div className="h-24 rounded-sm bg-gray-100 animate-pulse" />
+              <div className="h-24 rounded-sm bg-gray-100 animate-pulse" />
             </div>
             <p className="text-center text-[10px] text-gray-400 mt-3">
               Your personalized dashboard will display widgets relevant to the {roleName} role.
@@ -400,15 +400,15 @@ export default function OnboardingWizard({ companyName = 'TalentGate', onComplet
       {/* Highlighted features */}
       {highlightedFeatures.length > 0 && (
         <div className="mb-6">
-          <h3 className="text-xs font-medium text-violet-600 uppercase tracking-wider mb-3">Key Features</h3>
+          <h3 className="text-xs font-medium text-gold-600 uppercase tracking-wider mb-3">Key Features</h3>
           <div className="space-y-3">
             {highlightedFeatures.map((feature) => (
               <div
                 key={feature.key}
-                className="flex items-start gap-3 p-3 bg-violet-50 border border-violet-100 rounded-xl"
+                className="flex items-start gap-3 p-3 bg-gold-50 border border-violet-100 rounded-sm"
               >
-                <div className="mt-0.5 h-8 w-8 rounded-lg bg-violet-600 grid place-items-center flex-shrink-0">
-                  <svg className="h-4 w-4 text-white" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
+                <div className="mt-0.5 h-8 w-8 rounded-sm bg-gold-500 grid place-items-center flex-shrink-0">
+                  <svg className="h-4 w-4 text-violet-950" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" d="m3.75 13.5 10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75Z" />
                   </svg>
                 </div>
@@ -417,7 +417,7 @@ export default function OnboardingWizard({ companyName = 'TalentGate', onComplet
                   <p className="text-xs text-gray-500 mt-0.5 leading-relaxed">{feature.description}</p>
                   <a
                     href={feature.href}
-                    className="inline-block mt-1.5 text-xs font-medium text-violet-600 hover:text-violet-700 transition-colors"
+                    className="inline-block mt-1.5 text-xs font-medium text-gold-600 hover:text-gold-700 transition-colors"
                   >
                     Go to {feature.title} &rarr;
                   </a>
@@ -436,7 +436,7 @@ export default function OnboardingWizard({ companyName = 'TalentGate', onComplet
             {otherFeatures.map((feature) => (
               <div
                 key={feature.key}
-                className="flex items-center justify-between gap-3 px-3 py-2.5 bg-gray-50 border border-gray-100 rounded-lg"
+                className="flex items-center justify-between gap-3 px-3 py-2.5 bg-gray-50 border border-gray-100 rounded-sm"
               >
                 <div className="min-w-0">
                   <p className="text-sm font-medium text-gray-800">{feature.title}</p>
@@ -444,7 +444,7 @@ export default function OnboardingWizard({ companyName = 'TalentGate', onComplet
                 </div>
                 <a
                   href={feature.href}
-                  className="text-xs font-medium text-gray-400 hover:text-violet-600 transition-colors flex-shrink-0"
+                  className="text-xs font-medium text-gray-400 hover:text-gold-600 transition-colors flex-shrink-0"
                 >
                   Open &rarr;
                 </a>
@@ -472,7 +472,7 @@ export default function OnboardingWizard({ companyName = 'TalentGate', onComplet
       </p>
       <button
         onClick={handleComplete}
-        className="mt-8 inline-flex items-center gap-2 px-6 py-2.5 text-sm font-medium text-white bg-violet-600 hover:bg-violet-700 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-violet-500 transition-colors"
+        className="mt-8 inline-flex items-center gap-2 px-6 py-2.5 text-sm font-medium text-violet-900 bg-transparent border-2 border-gold-500 hover:bg-gold-500 hover:text-violet-950 uppercase tracking-wider rounded-full shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gold-500 transition-colors"
       >
         Go to Dashboard
         <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
@@ -510,9 +510,9 @@ export default function OnboardingWizard({ companyName = 'TalentGate', onComplet
                     className={`
                       h-9 w-9 rounded-full grid place-items-center text-sm font-semibold transition-all duration-300
                       ${isActive
-                        ? 'bg-violet-600 text-white ring-4 ring-violet-100'
+                        ? 'bg-gold-500 text-violet-950 ring-4 ring-violet-100'
                         : isCompleted
-                          ? 'bg-violet-600 text-white'
+                          ? 'bg-gold-500 text-violet-950'
                           : 'bg-gray-100 text-gray-400'
                       }
                     `}
@@ -528,7 +528,7 @@ export default function OnboardingWizard({ companyName = 'TalentGate', onComplet
                   <span
                     className={`
                       mt-1.5 text-[10px] font-medium uppercase tracking-wider
-                      ${isActive ? 'text-violet-600' : isCompleted ? 'text-gray-500' : 'text-gray-300'}
+                      ${isActive ? 'text-gold-600' : isCompleted ? 'text-gray-500' : 'text-gray-300'}
                     `}
                   >
                     {step.label}
@@ -540,7 +540,7 @@ export default function OnboardingWizard({ companyName = 'TalentGate', onComplet
                   <div className="flex-1 mx-2 mt-[-18px]">
                     <div className="h-0.5 w-full rounded-full overflow-hidden bg-gray-100">
                       <div
-                        className={`h-full bg-violet-600 transition-all duration-500 ease-out ${
+                        className={`h-full bg-gold-500 transition-all duration-500 ease-out ${
                           index < currentStep ? 'w-full' : 'w-0'
                         }`}
                       />
@@ -554,7 +554,7 @@ export default function OnboardingWizard({ companyName = 'TalentGate', onComplet
       </div>
 
       {/* Step content card */}
-      <div className="bg-white border border-gray-200 rounded-xl shadow-sm p-6 sm:p-8">
+      <div className="bg-white border border-gray-200 rounded-sm shadow-sm p-6 sm:p-8">
         {stepRenderers[currentStep]()}
       </div>
 
@@ -565,7 +565,7 @@ export default function OnboardingWizard({ companyName = 'TalentGate', onComplet
             {!isFirstStep && (
               <button
                 onClick={handleBack}
-                className="inline-flex items-center gap-1.5 px-4 py-2 text-sm font-medium text-gray-600 bg-white border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-violet-500/40 transition-colors"
+                className="inline-flex items-center gap-1.5 px-4 py-2 text-sm font-medium text-gray-600 bg-white border border-gray-300 rounded-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gold-500/40 transition-colors"
               >
                 <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18" />
@@ -586,7 +586,7 @@ export default function OnboardingWizard({ companyName = 'TalentGate', onComplet
             )}
             <button
               onClick={handleNext}
-              className="inline-flex items-center gap-1.5 px-5 py-2 text-sm font-medium text-white bg-violet-600 hover:bg-violet-700 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-violet-500 transition-colors"
+              className="inline-flex items-center gap-1.5 px-5 py-2 text-sm font-medium text-violet-900 bg-transparent border-2 border-gold-500 hover:bg-gold-500 hover:text-violet-950 uppercase tracking-wider rounded-full shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gold-500 transition-colors"
             >
               Next
               <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">

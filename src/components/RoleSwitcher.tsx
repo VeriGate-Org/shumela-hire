@@ -28,7 +28,7 @@ export default function RoleSwitcher({ compact = false }: RoleSwitcherProps) {
       <div className="relative">
         <button
           onClick={() => setIsOpen(!isOpen)}
-          className="flex items-center w-full px-3 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-violet-500"
+          className="flex items-center w-full px-3 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-sm shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-gold-500"
         >
           <span className="mr-2">{currentRoleConfig.logo}</span>
           <span className="flex-1 text-left truncate">{ROLE_DISPLAY_NAMES[user.role]}</span>
@@ -36,7 +36,7 @@ export default function RoleSwitcher({ compact = false }: RoleSwitcherProps) {
         </button>
 
         {isOpen && (
-          <div className="absolute right-0 z-60 w-48 mt-1 bg-white border border-gray-200 rounded-md shadow-lg">
+          <div className="absolute right-0 z-60 w-48 mt-1 bg-white border border-gray-200 rounded-sm shadow-lg">
             <div className="py-1">
               {roles.map((role) => {
                 const roleConfig = roleConfigurations[role];
@@ -48,12 +48,12 @@ export default function RoleSwitcher({ compact = false }: RoleSwitcherProps) {
                     onClick={() => handleRoleSwitch(role)}
                     className={`
                       flex items-center w-full px-4 py-2 text-sm hover:bg-gray-50
-                      ${isActive ? 'bg-violet-50 text-violet-700' : 'text-gray-700'}
+                      ${isActive ? 'bg-gold-50 text-violet-700' : 'text-gray-700'}
                     `}
                   >
                     <span className="mr-3">{roleConfig.logo}</span>
                     <span className="flex-1 text-left">{ROLE_DISPLAY_NAMES[role]}</span>
-                    {isActive && <CheckIcon className="w-4 h-4 text-violet-600" />}
+                    {isActive && <CheckIcon className="w-4 h-4 text-gold-600" />}
                   </button>
                 );
               })}
@@ -73,7 +73,7 @@ export default function RoleSwitcher({ compact = false }: RoleSwitcherProps) {
       <div className="relative">
         <button
           onClick={() => setIsOpen(!isOpen)}
-          className="flex items-center w-full px-3 py-2 text-sm font-medium text-gray-700 bg-gray-50 border border-gray-200 rounded-lg shadow-sm hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-transparent transition-all duration-200"
+          className="flex items-center w-full px-3 py-2 text-sm font-medium text-gray-700 bg-gray-50 border border-gray-200 rounded-sm shadow-sm hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gold-500 focus:border-transparent transition-all duration-200"
         >
           <span className="mr-3 text-lg">{currentRoleConfig.logo}</span>
           <div className="flex-1 text-left">
@@ -91,7 +91,7 @@ export default function RoleSwitcher({ compact = false }: RoleSwitcherProps) {
               onClick={() => setIsOpen(false)}
             />
             
-            <div className="absolute left-0 right-0 z-60 mt-1 bg-white border border-gray-200 rounded-lg shadow-xl max-h-80 overflow-y-auto">
+            <div className="absolute left-0 right-0 z-60 mt-1 bg-white border border-gray-200 rounded-sm shadow-xl max-h-80 overflow-y-auto">
               <div className="py-2">
                 {roles.map((role) => {
                   const roleConfig = roleConfigurations[role];
@@ -104,7 +104,7 @@ export default function RoleSwitcher({ compact = false }: RoleSwitcherProps) {
                       className={`
                         flex items-start w-full px-4 py-3 text-sm transition-colors duration-150
                         ${isActive 
-                          ? 'bg-gradient-to-r bg-violet-50 text-violet-700 border-l-4 border-violet-500' 
+                          ? 'bg-gradient-to-r bg-gold-50 text-violet-700 border-l-4 border-gold-500' 
                           : 'text-gray-700 hover:bg-gray-50'
                         }
                       `}
@@ -114,12 +114,12 @@ export default function RoleSwitcher({ compact = false }: RoleSwitcherProps) {
                         <p className={`font-medium ${isActive ? 'text-violet-900' : 'text-gray-900'}`}>
                           {ROLE_DISPLAY_NAMES[role]}
                         </p>
-                        <p className={`text-xs mt-1 ${isActive ? 'text-violet-600' : 'text-gray-500'} line-clamp-2`}>
+                        <p className={`text-xs mt-1 ${isActive ? 'text-gold-600' : 'text-gray-500'} line-clamp-2`}>
                           {roleConfig.description}
                         </p>
                       </div>
                       {isActive && (
-                        <CheckIcon className="w-5 h-5 text-violet-600 flex-shrink-0 ml-2" />
+                        <CheckIcon className="w-5 h-5 text-gold-600 flex-shrink-0 ml-2" />
                       )}
                     </button>
                   );

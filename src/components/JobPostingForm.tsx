@@ -218,7 +218,7 @@ export default function JobPostingForm({ jobPostingId, onSuccess, onCancel }: Jo
     return (
       <div className="flex items-center justify-center p-8">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-violet-500 mx-auto mb-4"></div>
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gold-500 mx-auto mb-4"></div>
           <p className="text-gray-600">Loading job posting...</p>
         </div>
       </div>
@@ -226,7 +226,7 @@ export default function JobPostingForm({ jobPostingId, onSuccess, onCancel }: Jo
   }
 
   return (
-    <div className="max-w-4xl mx-auto bg-white rounded-lg shadow-lg">
+    <div className="max-w-4xl mx-auto bg-white rounded-sm shadow-lg">
       {/* Header */}
       <div className="px-6 py-4 border-b border-gray-200">
         <h2 className="text-2xl font-bold text-gray-900">
@@ -247,7 +247,7 @@ export default function JobPostingForm({ jobPostingId, onSuccess, onCancel }: Jo
                 onClick={() => setActiveTab(tab.id)}
                 className={`py-2 px-1 border-b-2 font-medium text-sm flex items-center space-x-2 ${
                   activeTab === tab.id
-                    ? 'border-violet-500 text-violet-600'
+                    ? 'border-gold-500 text-gold-700'
                     : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
                 }`}
               >
@@ -283,7 +283,7 @@ export default function JobPostingForm({ jobPostingId, onSuccess, onCancel }: Jo
                   aria-required="true"
                   aria-invalid={!!errors.title}
                   aria-describedby={errors.title ? 'job-title-error' : undefined}
-                  className={`w-full p-3 border rounded-md ${errors.title ? 'border-red-500' : 'border-gray-300'}`}
+                  className={`w-full p-3 border rounded-sm ${errors.title ? 'border-red-500' : 'border-gray-300'}`}
                   placeholder="e.g. Senior Software Engineer"
                 />
                 {errors.title && <p id="job-title-error" role="alert" className="text-red-500 text-sm mt-1">{errors.title}</p>}
@@ -300,7 +300,7 @@ export default function JobPostingForm({ jobPostingId, onSuccess, onCancel }: Jo
                   aria-required="true"
                   aria-invalid={!!errors.department}
                   aria-describedby={errors.department ? 'job-department-error' : undefined}
-                  className={`w-full p-3 border rounded-md ${errors.department ? 'border-red-500' : 'border-gray-300'}`}
+                  className={`w-full p-3 border rounded-sm ${errors.department ? 'border-red-500' : 'border-gray-300'}`}
                 >
                   <option value="">Select Department</option>
                   {DEPARTMENTS.map(dept => (
@@ -318,7 +318,7 @@ export default function JobPostingForm({ jobPostingId, onSuccess, onCancel }: Jo
                   type="text"
                   value={formData.location}
                   onChange={(e) => handleInputChange('location', e.target.value)}
-                  className="w-full p-3 border border-gray-300 rounded-md"
+                  className="w-full p-3 border border-gray-300 rounded-sm"
                   placeholder="e.g. Cape Town, South Africa"
                 />
               </div>
@@ -336,7 +336,7 @@ export default function JobPostingForm({ jobPostingId, onSuccess, onCancel }: Jo
                   aria-required="true"
                   aria-invalid={!!errors.positionsAvailable}
                   aria-describedby={errors.positionsAvailable ? 'positions-available-error' : undefined}
-                  className={`w-full p-3 border rounded-md ${errors.positionsAvailable ? 'border-red-500' : 'border-gray-300'}`}
+                  className={`w-full p-3 border rounded-sm ${errors.positionsAvailable ? 'border-red-500' : 'border-gray-300'}`}
                 />
                 {errors.positionsAvailable && <p id="positions-available-error" role="alert" className="text-red-500 text-sm mt-1">{errors.positionsAvailable}</p>}
               </div>
@@ -350,7 +350,7 @@ export default function JobPostingForm({ jobPostingId, onSuccess, onCancel }: Jo
                   value={formData.employmentType}
                   onChange={(e) => handleInputChange('employmentType', e.target.value)}
                   aria-required="true"
-                  className="w-full p-3 border border-gray-300 rounded-md"
+                  className="w-full p-3 border border-gray-300 rounded-sm"
                 >
                   {EMPLOYMENT_TYPES.map(type => (
                     <option key={type.value} value={type.value}>{type.label}</option>
@@ -367,7 +367,7 @@ export default function JobPostingForm({ jobPostingId, onSuccess, onCancel }: Jo
                   value={formData.experienceLevel}
                   onChange={(e) => handleInputChange('experienceLevel', e.target.value)}
                   aria-required="true"
-                  className="w-full p-3 border border-gray-300 rounded-md"
+                  className="w-full p-3 border border-gray-300 rounded-sm"
                 >
                   {EXPERIENCE_LEVELS.map(level => (
                     <option key={level.value} value={level.value}>{level.label}</option>
@@ -384,7 +384,7 @@ export default function JobPostingForm({ jobPostingId, onSuccess, onCancel }: Jo
                 type="datetime-local"
                 value={formData.applicationDeadline}
                 onChange={(e) => handleInputChange('applicationDeadline', e.target.value)}
-                className="w-full p-3 border border-gray-300 rounded-md"
+                className="w-full p-3 border border-gray-300 rounded-sm"
               />
               <p className="text-sm text-gray-500 mt-1">Leave empty for no deadline</p>
             </div>
@@ -448,7 +448,7 @@ export default function JobPostingForm({ jobPostingId, onSuccess, onCancel }: Jo
                 aria-required="true"
                 aria-invalid={!!errors.description}
                 aria-describedby={errors.description ? 'job-description-error' : undefined}
-                className={`w-full p-3 border rounded-md ${errors.description ? 'border-red-500' : 'border-gray-300'}`}
+                className={`w-full p-3 border rounded-sm ${errors.description ? 'border-red-500' : 'border-gray-300'}`}
                 placeholder="Provide a detailed description of the role, including key objectives and what the successful candidate will be responsible for..."
               />
               <div className="flex justify-between mt-1">
@@ -467,7 +467,7 @@ export default function JobPostingForm({ jobPostingId, onSuccess, onCancel }: Jo
                 value={formData.responsibilities}
                 onChange={(e) => handleInputChange('responsibilities', e.target.value)}
                 rows={4}
-                className="w-full p-3 border border-gray-300 rounded-md"
+                className="w-full p-3 border border-gray-300 rounded-sm"
                 placeholder="List the main responsibilities and duties for this position..."
               />
             </div>
@@ -480,7 +480,7 @@ export default function JobPostingForm({ jobPostingId, onSuccess, onCancel }: Jo
                 value={formData.requirements}
                 onChange={(e) => handleInputChange('requirements', e.target.value)}
                 rows={4}
-                className="w-full p-3 border border-gray-300 rounded-md"
+                className="w-full p-3 border border-gray-300 rounded-sm"
                 placeholder="List the essential requirements, skills, and experience needed..."
               />
             </div>
@@ -493,7 +493,7 @@ export default function JobPostingForm({ jobPostingId, onSuccess, onCancel }: Jo
                 value={formData.qualifications}
                 onChange={(e) => handleInputChange('qualifications', e.target.value)}
                 rows={3}
-                className="w-full p-3 border border-gray-300 rounded-md"
+                className="w-full p-3 border border-gray-300 rounded-sm"
                 placeholder="Educational qualifications, certifications, or preferred qualifications..."
               />
             </div>
@@ -506,7 +506,7 @@ export default function JobPostingForm({ jobPostingId, onSuccess, onCancel }: Jo
                 value={formData.benefits}
                 onChange={(e) => handleInputChange('benefits', e.target.value)}
                 rows={3}
-                className="w-full p-3 border border-gray-300 rounded-md"
+                className="w-full p-3 border border-gray-300 rounded-sm"
                 placeholder="List the benefits, perks, and what makes this opportunity attractive..."
               />
             </div>
@@ -529,7 +529,7 @@ export default function JobPostingForm({ jobPostingId, onSuccess, onCancel }: Jo
                   step="1000"
                   value={formData.salaryMin || ''}
                   onChange={(e) => handleInputChange('salaryMin', e.target.value ? parseFloat(e.target.value) : undefined)}
-                  className="w-full p-3 border border-gray-300 rounded-md"
+                  className="w-full p-3 border border-gray-300 rounded-sm"
                   placeholder="e.g. 50000"
                 />
               </div>
@@ -547,7 +547,7 @@ export default function JobPostingForm({ jobPostingId, onSuccess, onCancel }: Jo
                   onChange={(e) => handleInputChange('salaryMax', e.target.value ? parseFloat(e.target.value) : undefined)}
                   aria-invalid={!!errors.salaryMax}
                   aria-describedby={errors.salaryMax ? 'salary-max-error' : undefined}
-                  className={`w-full p-3 border rounded-md ${errors.salaryMax ? 'border-red-500' : 'border-gray-300'}`}
+                  className={`w-full p-3 border rounded-sm ${errors.salaryMax ? 'border-red-500' : 'border-gray-300'}`}
                   placeholder="e.g. 80000"
                 />
                 {errors.salaryMax && <p id="salary-max-error" role="alert" className="text-red-500 text-sm mt-1">{errors.salaryMax}</p>}
@@ -561,7 +561,7 @@ export default function JobPostingForm({ jobPostingId, onSuccess, onCancel }: Jo
                   id="salary-currency"
                   value={formData.salaryCurrency}
                   onChange={(e) => handleInputChange('salaryCurrency', e.target.value)}
-                  className="w-full p-3 border border-gray-300 rounded-md"
+                  className="w-full p-3 border border-gray-300 rounded-sm"
                 >
                   <option value="ZAR">ZAR (South African Rand)</option>
                   <option value="ZAR">ZAR (South African Rand)</option>
@@ -571,7 +571,7 @@ export default function JobPostingForm({ jobPostingId, onSuccess, onCancel }: Jo
               </div>
             </fieldset>
 
-            <div className="bg-gray-50 rounded-md p-4">
+            <div className="bg-gray-50 rounded-sm p-4">
               <h4 className="font-medium text-gray-900 mb-2">Salary Range Preview</h4>
               <p className="text-gray-600">
                 {formData.salaryMin || formData.salaryMax ? (
@@ -606,7 +606,7 @@ export default function JobPostingForm({ jobPostingId, onSuccess, onCancel }: Jo
                 onChange={(e) => handleInputChange('seoTitle', e.target.value)}
                 aria-invalid={!!errors.seoTitle}
                 aria-describedby={errors.seoTitle ? 'seo-title-error' : undefined}
-                className={`w-full p-3 border rounded-md ${errors.seoTitle ? 'border-red-500' : 'border-gray-300'}`}
+                className={`w-full p-3 border rounded-sm ${errors.seoTitle ? 'border-red-500' : 'border-gray-300'}`}
                 placeholder="Custom title for search engines (optional)"
               />
               <div className="flex justify-between mt-1">
@@ -629,7 +629,7 @@ export default function JobPostingForm({ jobPostingId, onSuccess, onCancel }: Jo
                 rows={3}
                 aria-invalid={!!errors.seoDescription}
                 aria-describedby={errors.seoDescription ? 'seo-description-error' : undefined}
-                className={`w-full p-3 border rounded-md ${errors.seoDescription ? 'border-red-500' : 'border-gray-300'}`}
+                className={`w-full p-3 border rounded-sm ${errors.seoDescription ? 'border-red-500' : 'border-gray-300'}`}
                 placeholder="Brief description for search engines (optional)"
               />
               <div className="flex justify-between mt-1">
@@ -648,7 +648,7 @@ export default function JobPostingForm({ jobPostingId, onSuccess, onCancel }: Jo
                 type="text"
                 value={formData.seoKeywords}
                 onChange={(e) => handleInputChange('seoKeywords', e.target.value)}
-                className="w-full p-3 border border-gray-300 rounded-md"
+                className="w-full p-3 border border-gray-300 rounded-sm"
                 placeholder="Comma-separated keywords for search optimization"
               />
             </div>
@@ -661,7 +661,7 @@ export default function JobPostingForm({ jobPostingId, onSuccess, onCancel }: Jo
                 value={formData.internalNotes}
                 onChange={(e) => handleInputChange('internalNotes', e.target.value)}
                 rows={3}
-                className="w-full p-3 border border-gray-300 rounded-md"
+                className="w-full p-3 border border-gray-300 rounded-sm"
                 placeholder="Internal notes for hiring team (not visible to applicants)"
               />
             </div>
@@ -674,7 +674,7 @@ export default function JobPostingForm({ jobPostingId, onSuccess, onCancel }: Jo
             <button
               type="button"
               onClick={onCancel}
-              className="px-6 py-2 border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50"
+              className="px-6 py-2 border border-gray-300 text-gray-700 rounded-sm hover:bg-gray-50"
             >
               Cancel
             </button>
@@ -682,7 +682,7 @@ export default function JobPostingForm({ jobPostingId, onSuccess, onCancel }: Jo
           <button
             type="submit"
             disabled={loading}
-            className="px-6 py-2 bg-violet-600 text-white rounded-md hover:bg-violet-700 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="px-6 py-2 bg-gold-500 text-violet-950 rounded-sm hover:bg-gold-600 disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {loading ? (
               <span className="flex items-center">

@@ -290,7 +290,7 @@ export default function MyOffersPage() {
       case 'accepted': return 'bg-green-100 text-green-800 border-green-300';
       case 'declined': return 'bg-red-100 text-red-800 border-red-300';
       case 'expired': return 'bg-gray-100 text-gray-800 border-gray-300';
-      case 'negotiating': return 'bg-violet-100 text-violet-800 border-violet-300';
+      case 'negotiating': return 'bg-gold-100 text-gold-800 border-violet-300';
       default: return 'bg-gray-100 text-gray-800 border-gray-300';
     }
   };
@@ -335,7 +335,7 @@ export default function MyOffersPage() {
       <select
         value={filterStatus}
         onChange={(e) => setFilterStatus(e.target.value as any)}
-        className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-violet-500/60 focus:border-violet-400"
+        className="px-3 py-2 border border-gray-300 rounded-sm focus:ring-2 focus:ring-gold-500/60 focus:border-violet-400"
       >
         <option value="all">All Offers</option>
         <option value="pending">Pending</option>
@@ -351,7 +351,7 @@ export default function MyOffersPage() {
     return (
       <PageWrapper title="My Offers" subtitle="Loading your job offers..." actions={actions}>
         <div className="flex items-center justify-center h-96">
-          <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-violet-500"></div>
+          <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-gold-500"></div>
         </div>
       </PageWrapper>
     );
@@ -366,7 +366,7 @@ export default function MyOffersPage() {
       <div className="space-y-6">
         {/* Summary Cards */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-          <div className="bg-white rounded-lg shadow p-6">
+          <div className="bg-white rounded-sm shadow p-6">
             <div className="flex items-center">
               <CurrencyDollarIcon className="w-8 h-8 text-green-500" />
               <div className="ml-4">
@@ -376,7 +376,7 @@ export default function MyOffersPage() {
             </div>
           </div>
           
-          <div className="bg-white rounded-lg shadow p-6">
+          <div className="bg-white rounded-sm shadow p-6">
             <div className="flex items-center">
               <ClockIcon className="w-8 h-8 text-yellow-500" />
               <div className="ml-4">
@@ -388,7 +388,7 @@ export default function MyOffersPage() {
             </div>
           </div>
           
-          <div className="bg-white rounded-lg shadow p-6">
+          <div className="bg-white rounded-sm shadow p-6">
             <div className="flex items-center">
               <ChatBubbleLeftRightIcon className="w-8 h-8 text-violet-500" />
               <div className="ml-4">
@@ -400,7 +400,7 @@ export default function MyOffersPage() {
             </div>
           </div>
           
-          <div className="bg-white rounded-lg shadow p-6">
+          <div className="bg-white rounded-sm shadow p-6">
             <div className="flex items-center">
               <CheckCircleIcon className="w-8 h-8 text-green-500" />
               <div className="ml-4">
@@ -421,12 +421,12 @@ export default function MyOffersPage() {
             const isExpired = daysUntilExpiry <= 0;
 
             return (
-              <div key={offer.id} className="bg-white rounded-lg shadow border-l-4 border-l-violet-500 overflow-hidden">
+              <div key={offer.id} className="bg-white rounded-sm shadow border-l-4 border-l-violet-500 overflow-hidden">
                 <div className="p-6">
                   <div className="flex items-start justify-between">
                     <div className="flex-1">
                       <div className="flex items-start space-x-4">
-                        <div className="w-16 h-16 bg-gradient-to-br from-violet-500 to-violet-700 rounded-lg flex items-center justify-center">
+                        <div className="w-16 h-16 bg-violet-600 rounded-sm flex items-center justify-center">
                           <BriefcaseIcon className="w-8 h-8 text-white" />
                         </div>
                         
@@ -451,7 +451,7 @@ export default function MyOffersPage() {
                             )}
                           </div>
                           
-                          <p className="text-lg text-violet-600 font-medium">{offer.company}</p>
+                          <p className="text-lg text-gold-600 font-medium">{offer.company}</p>
                           <div className="flex items-center space-x-4 mt-2 text-sm text-gray-600">
                             <span className="flex items-center">
                               <MapPinIcon className="w-4 h-4 mr-1" />
@@ -470,7 +470,7 @@ export default function MyOffersPage() {
                       </div>
 
                       <div className="mt-4 grid grid-cols-1 md:grid-cols-3 gap-4">
-                        <div className="bg-green-50 rounded-lg p-4">
+                        <div className="bg-green-50 rounded-sm p-4">
                           <div className="flex items-center">
                             <CurrencyDollarIcon className="w-5 h-5 text-green-600" />
                             <div className="ml-3">
@@ -481,9 +481,9 @@ export default function MyOffersPage() {
                         </div>
                         
                         {offer.bonus && (
-                          <div className="bg-violet-50 rounded-lg p-4">
+                          <div className="bg-gold-50 rounded-sm p-4">
                             <div className="flex items-center">
-                              <StarIcon className="w-5 h-5 text-violet-600" />
+                              <StarIcon className="w-5 h-5 text-gold-600" />
                               <div className="ml-3">
                                 <p className="text-sm font-medium text-gray-500">Annual Bonus</p>
                                 <p className="text-lg font-semibold text-gray-900">
@@ -494,7 +494,7 @@ export default function MyOffersPage() {
                           </div>
                         )}
                         
-                        <div className="bg-purple-50 rounded-lg p-4">
+                        <div className="bg-purple-50 rounded-sm p-4">
                           <div className="flex items-center">
                             <CalendarIcon className="w-5 h-5 text-purple-600" />
                             <div className="ml-3">
@@ -508,7 +508,7 @@ export default function MyOffersPage() {
                       </div>
 
                       {offer.negotiations.length > 0 && (
-                        <div className="mt-4 bg-yellow-50 border border-yellow-200 rounded-lg p-3">
+                        <div className="mt-4 bg-yellow-50 border border-yellow-200 rounded-sm p-3">
                           <h4 className="text-sm font-medium text-yellow-800 mb-2">Active Negotiations</h4>
                           <div className="space-y-2">
                             {offer.negotiations.filter(n => n.status === 'pending').map((negotiation) => (
@@ -524,7 +524,7 @@ export default function MyOffersPage() {
                     <div className="flex flex-col space-y-2 ml-6">
                       <button
                         onClick={() => setSelectedOffer(offer)}
-                        className="inline-flex items-center px-3 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50"
+                        className="inline-flex items-center px-3 py-2 border border-gray-300 text-sm font-medium rounded-full text-gray-700 bg-white hover:bg-gray-50"
                       >
                         <EyeIcon className="w-4 h-4 mr-2" />
                         View Details
@@ -534,21 +534,21 @@ export default function MyOffersPage() {
                         <>
                           <button
                             onClick={() => handleOfferAction(offer.id, 'accept')}
-                            className="inline-flex items-center px-3 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700"
+                            className="inline-flex items-center px-3 py-2 border border-transparent text-sm font-medium rounded-full text-white bg-green-600 hover:bg-green-700"
                           >
                             <CheckCircleIcon className="w-4 h-4 mr-2" />
                             Accept
                           </button>
                           <button
                             onClick={() => setShowNegotiationModal(true)}
-                            className="inline-flex items-center px-3 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-violet-600 hover:bg-violet-700"
+                            className="inline-flex items-center px-3 py-2 bg-transparent border-2 border-gold-500 text-violet-900 hover:bg-gold-500 hover:text-violet-950 uppercase tracking-wider rounded-full text-sm font-medium"
                           >
                             <ChatBubbleLeftRightIcon className="w-4 h-4 mr-2" />
                             Negotiate
                           </button>
                           <button
                             onClick={() => handleOfferAction(offer.id, 'decline')}
-                            className="inline-flex items-center px-3 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50"
+                            className="inline-flex items-center px-3 py-2 border border-gray-300 text-sm font-medium rounded-full text-gray-700 bg-white hover:bg-gray-50"
                           >
                             <XCircleIcon className="w-4 h-4 mr-2" />
                             Decline
@@ -559,7 +559,7 @@ export default function MyOffersPage() {
                       {offer.status === 'negotiating' && (
                         <button
                           onClick={() => setShowNegotiationModal(true)}
-                          className="inline-flex items-center px-3 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-violet-600 hover:bg-violet-700"
+                          className="inline-flex items-center px-3 py-2 bg-transparent border-2 border-gold-500 text-violet-900 hover:bg-gold-500 hover:text-violet-950 uppercase tracking-wider rounded-full text-sm font-medium"
                         >
                           <ChatBubbleLeftRightIcon className="w-4 h-4 mr-2" />
                           Continue Negotiation
@@ -574,7 +574,7 @@ export default function MyOffersPage() {
         </div>
 
         {filteredOffers.length === 0 && (
-          <div className="bg-white rounded-lg shadow p-12 text-center">
+          <div className="bg-white rounded-sm shadow p-12 text-center">
             <CurrencyDollarIcon className="w-16 h-16 text-gray-400 mx-auto mb-4" />
             <h3 className="text-lg font-medium text-gray-900 mb-2">No offers found</h3>
             <p className="text-gray-600">
@@ -589,12 +589,12 @@ export default function MyOffersPage() {
         {/* Offer Details Modal */}
         {selectedOffer && (
           <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-            <div className="bg-white rounded-lg shadow-xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
+            <div className="bg-white rounded-sm shadow-xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
               <div className="p-6">
                 <div className="flex items-start justify-between mb-6">
                   <div>
                     <h2 className="text-2xl font-bold text-gray-900">{selectedOffer.jobTitle}</h2>
-                    <p className="text-lg text-violet-600 font-medium mt-1">{selectedOffer.company}</p>
+                    <p className="text-lg text-gold-600 font-medium mt-1">{selectedOffer.company}</p>
                   </div>
                   <button
                     onClick={() => setSelectedOffer(null)}
@@ -608,7 +608,7 @@ export default function MyOffersPage() {
                   <div className="space-y-6">
                     <div>
                       <h3 className="text-lg font-semibold text-gray-900 mb-3">Compensation</h3>
-                      <div className="bg-gray-50 rounded-lg p-4 space-y-3">
+                      <div className="bg-gray-50 rounded-sm p-4 space-y-3">
                         <div className="flex justify-between">
                           <span className="font-medium">Base Salary:</span>
                           <span>{formatSalary(selectedOffer.salary)}</span>
@@ -642,7 +642,7 @@ export default function MyOffersPage() {
 
                     <div>
                       <h3 className="text-lg font-semibold text-gray-900 mb-3">Work Details</h3>
-                      <div className="bg-gray-50 rounded-lg p-4 space-y-3">
+                      <div className="bg-gray-50 rounded-sm p-4 space-y-3">
                         <div className="flex justify-between">
                           <span className="font-medium">Schedule:</span>
                           <span className="capitalize">{selectedOffer.workSchedule.type.replace('_', ' ')}</span>
@@ -678,7 +678,7 @@ export default function MyOffersPage() {
 
                     <div>
                       <h3 className="text-lg font-semibold text-gray-900 mb-3">Contact Information</h3>
-                      <div className="bg-gray-50 rounded-lg p-4 space-y-3">
+                      <div className="bg-gray-50 rounded-sm p-4 space-y-3">
                         <div>
                           <p className="font-medium">{selectedOffer.contactPerson.name}</p>
                           <p className="text-sm text-gray-600">{selectedOffer.contactPerson.title}</p>
@@ -698,12 +698,12 @@ export default function MyOffersPage() {
                       <h3 className="text-lg font-semibold text-gray-900 mb-3">Documents</h3>
                       <div className="space-y-2">
                         {selectedOffer.documents.map((doc, index) => (
-                          <div key={index} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                          <div key={index} className="flex items-center justify-between p-3 bg-gray-50 rounded-sm">
                             <div className="flex items-center">
                               <DocumentTextIcon className="w-5 h-5 text-violet-500 mr-3" />
                               <span className="text-sm font-medium">{doc.name}</span>
                             </div>
-                            <button className="text-violet-600 hover:text-violet-800">
+                            <button className="text-gold-600 hover:text-gold-800">
                               <ArrowDownTrayIcon className="w-4 h-4" />
                             </button>
                           </div>
@@ -714,7 +714,7 @@ export default function MyOffersPage() {
                 </div>
 
                 {selectedOffer.additionalNotes && (
-                  <div className="mt-6 p-4 bg-violet-50 rounded-lg">
+                  <div className="mt-6 p-4 bg-gold-50 rounded-sm">
                     <h4 className="font-medium text-violet-900 mb-2">Additional Notes</h4>
                     <p className="text-violet-800 text-sm">{selectedOffer.additionalNotes}</p>
                   </div>
@@ -723,7 +723,7 @@ export default function MyOffersPage() {
                 <div className="flex justify-end mt-6 pt-6 border-t space-x-3">
                   <button
                     onClick={() => setSelectedOffer(null)}
-                    className="px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700"
+                    className="px-4 py-2 bg-gray-600 text-white rounded-full hover:bg-gray-700"
                   >
                     Close
                   </button>

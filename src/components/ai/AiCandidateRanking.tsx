@@ -128,7 +128,7 @@ export default function AiCandidateRanking({ jobId, jobRequirements = [] }: AiCa
           <span className="text-[10px] font-medium bg-teal-100 text-teal-700 px-1.5 py-0.5 rounded">AI-generated</span>
         </div>
         <button onClick={handleRank} disabled={loading}
-          className="px-3 py-1.5 text-xs bg-violet-600 text-white rounded-md hover:bg-violet-700 disabled:opacity-50">
+          className="px-3 py-1.5 text-xs bg-gold-500 text-violet-950 rounded-sm hover:bg-gold-600 disabled:opacity-50">
           {loading ? 'Ranking...' : 'Rank Candidates'}
         </button>
       </div>
@@ -136,7 +136,7 @@ export default function AiCandidateRanking({ jobId, jobRequirements = [] }: AiCa
       {rankings.length > 0 && (
         <div className="space-y-2">
           {/* Adjust weights section */}
-          <div className="border border-gray-200 rounded-lg bg-white">
+          <div className="border border-gray-200 rounded-sm bg-white">
             <button
               onClick={() => setShowWeightAdjust(!showWeightAdjust)}
               className="w-full flex items-center justify-between px-3 py-2 text-xs font-medium text-gray-700 hover:bg-gray-50 transition-colors"
@@ -189,11 +189,11 @@ export default function AiCandidateRanking({ jobId, jobRequirements = [] }: AiCa
           {/* Ranking entries */}
           {displayRankings.map(entry => (
             <div key={entry.applicationId}
-              className="border border-gray-200 rounded-lg bg-gray-50 overflow-hidden">
+              className="border border-gray-200 rounded-sm bg-gray-50 overflow-hidden">
               <div className="flex items-center justify-between p-3 cursor-pointer"
                 onClick={() => toggleExpand(entry.applicationId)}>
                 <div className="flex items-center gap-3">
-                  <span className="w-7 h-7 flex items-center justify-center rounded-full bg-violet-100 text-violet-700 text-xs font-bold">
+                  <span className="w-7 h-7 flex items-center justify-center rounded-full bg-gold-100 text-violet-700 text-xs font-bold">
                     #{entry.rank}
                   </span>
                   <span className="text-sm font-medium text-gray-900">{entry.candidateName}</span>

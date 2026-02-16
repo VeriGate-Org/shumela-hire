@@ -78,17 +78,17 @@ export default function AiJobDescriptionWriter({ onApply, initialTitle, initialD
         <div>
           <label className="block text-xs font-medium text-gray-600 uppercase tracking-wider mb-1">Title</label>
           <input type="text" value={form.title} onChange={e => setForm(prev => ({ ...prev, title: e.target.value }))}
-            className="w-full text-sm p-2 border border-gray-300 rounded-md" placeholder="e.g. Senior Software Engineer" />
+            className="w-full text-sm p-2 border border-gray-300 rounded-sm" placeholder="e.g. Senior Software Engineer" />
         </div>
         <div>
           <label className="block text-xs font-medium text-gray-600 uppercase tracking-wider mb-1">Department</label>
           <input type="text" value={form.department} onChange={e => setForm(prev => ({ ...prev, department: e.target.value }))}
-            className="w-full text-sm p-2 border border-gray-300 rounded-md" placeholder="e.g. Engineering" />
+            className="w-full text-sm p-2 border border-gray-300 rounded-sm" placeholder="e.g. Engineering" />
         </div>
         <div>
           <label className="block text-xs font-medium text-gray-600 uppercase tracking-wider mb-1">Level</label>
           <select value={form.level} onChange={e => setForm(prev => ({ ...prev, level: e.target.value }))}
-            className="w-full text-sm p-2 border border-gray-300 rounded-md">
+            className="w-full text-sm p-2 border border-gray-300 rounded-sm">
             <option value="">Select level</option>
             <option value="Junior">Junior</option>
             <option value="Mid-Level">Mid-Level</option>
@@ -101,7 +101,7 @@ export default function AiJobDescriptionWriter({ onApply, initialTitle, initialD
         <div>
           <label className="block text-xs font-medium text-gray-600 uppercase tracking-wider mb-1">Employment Type</label>
           <select value={form.employmentType} onChange={e => setForm(prev => ({ ...prev, employmentType: e.target.value }))}
-            className="w-full text-sm p-2 border border-gray-300 rounded-md">
+            className="w-full text-sm p-2 border border-gray-300 rounded-sm">
             <option value="Full-time">Full-time</option>
             <option value="Part-time">Part-time</option>
             <option value="Contract">Contract</option>
@@ -111,7 +111,7 @@ export default function AiJobDescriptionWriter({ onApply, initialTitle, initialD
         <div className="col-span-2">
           <label className="block text-xs font-medium text-gray-600 uppercase tracking-wider mb-1">Location</label>
           <input type="text" value={form.location} onChange={e => setForm(prev => ({ ...prev, location: e.target.value }))}
-            className="w-full text-sm p-2 border border-gray-300 rounded-md" placeholder="e.g. Johannesburg, South Africa" />
+            className="w-full text-sm p-2 border border-gray-300 rounded-sm" placeholder="e.g. Johannesburg, South Africa" />
         </div>
       </div>
 
@@ -121,16 +121,16 @@ export default function AiJobDescriptionWriter({ onApply, initialTitle, initialD
         <div className="flex gap-2">
           <input type="text" value={responsibilityInput} onChange={e => setResponsibilityInput(e.target.value)}
             onKeyDown={e => e.key === 'Enter' && addItem('keyResponsibilities', responsibilityInput, setResponsibilityInput)}
-            className="flex-1 text-sm p-2 border border-gray-300 rounded-md" placeholder="Add a responsibility" />
+            className="flex-1 text-sm p-2 border border-gray-300 rounded-sm" placeholder="Add a responsibility" />
           <button onClick={() => addItem('keyResponsibilities', responsibilityInput, setResponsibilityInput)}
-            className="px-3 py-2 text-sm bg-gray-100 text-gray-700 rounded-md hover:bg-gray-200">Add</button>
+            className="px-3 py-2 text-sm bg-gray-100 text-gray-700 rounded-sm hover:bg-gray-200">Add</button>
         </div>
         {form.keyResponsibilities.length > 0 && (
           <div className="flex flex-wrap gap-2 mt-2">
             {form.keyResponsibilities.map((item, i) => (
-              <span key={i} className="inline-flex items-center gap-1 px-2 py-1 bg-violet-50 text-violet-700 text-xs rounded-md">
+              <span key={i} className="inline-flex items-center gap-1 px-2 py-1 bg-gold-50 text-violet-700 text-xs rounded-sm">
                 {item}
-                <button onClick={() => removeItem('keyResponsibilities', i)} className="text-violet-400 hover:text-violet-600">&times;</button>
+                <button onClick={() => removeItem('keyResponsibilities', i)} className="text-violet-400 hover:text-gold-600">&times;</button>
               </span>
             ))}
           </div>
@@ -143,16 +143,16 @@ export default function AiJobDescriptionWriter({ onApply, initialTitle, initialD
         <div className="flex gap-2">
           <input type="text" value={requirementInput} onChange={e => setRequirementInput(e.target.value)}
             onKeyDown={e => e.key === 'Enter' && addItem('keyRequirements', requirementInput, setRequirementInput)}
-            className="flex-1 text-sm p-2 border border-gray-300 rounded-md" placeholder="Add a requirement" />
+            className="flex-1 text-sm p-2 border border-gray-300 rounded-sm" placeholder="Add a requirement" />
           <button onClick={() => addItem('keyRequirements', requirementInput, setRequirementInput)}
-            className="px-3 py-2 text-sm bg-gray-100 text-gray-700 rounded-md hover:bg-gray-200">Add</button>
+            className="px-3 py-2 text-sm bg-gray-100 text-gray-700 rounded-sm hover:bg-gray-200">Add</button>
         </div>
         {form.keyRequirements.length > 0 && (
           <div className="flex flex-wrap gap-2 mt-2">
             {form.keyRequirements.map((item, i) => (
-              <span key={i} className="inline-flex items-center gap-1 px-2 py-1 bg-violet-50 text-violet-700 text-xs rounded-md">
+              <span key={i} className="inline-flex items-center gap-1 px-2 py-1 bg-gold-50 text-violet-700 text-xs rounded-sm">
                 {item}
-                <button onClick={() => removeItem('keyRequirements', i)} className="text-violet-400 hover:text-violet-600">&times;</button>
+                <button onClick={() => removeItem('keyRequirements', i)} className="text-violet-400 hover:text-gold-600">&times;</button>
               </span>
             ))}
           </div>
@@ -160,13 +160,13 @@ export default function AiJobDescriptionWriter({ onApply, initialTitle, initialD
       </div>
 
       <button onClick={handleGenerate} disabled={loading || !form.title}
-        className="px-4 py-2 text-sm bg-violet-600 text-white rounded-md hover:bg-violet-700 disabled:opacity-50 disabled:cursor-not-allowed">
+        className="px-4 py-2 text-sm bg-gold-500 text-violet-950 rounded-sm hover:bg-gold-600 disabled:opacity-50 disabled:cursor-not-allowed">
         {loading ? 'Generating...' : 'Generate Job Description'}
       </button>
 
       {/* Result Preview */}
       {result && (
-        <div className="border border-gray-200 rounded-lg p-4 space-y-4 bg-gray-50">
+        <div className="border border-gray-200 rounded-sm p-4 space-y-4 bg-gray-50">
           <h4 className="text-lg font-bold text-gray-900">{result.title}</h4>
           {result.intro && <p className="text-sm text-gray-700 leading-relaxed">{result.intro}</p>}
 
@@ -210,7 +210,7 @@ export default function AiJobDescriptionWriter({ onApply, initialTitle, initialD
           )}
 
           {result.biasWarnings && result.biasWarnings.length > 0 && (
-            <div className="bg-yellow-50 border border-yellow-200 rounded-md p-3">
+            <div className="bg-yellow-50 border border-yellow-200 rounded-sm p-3">
               <h5 className="text-xs font-semibold text-yellow-800 uppercase tracking-wider mb-1">Bias Warnings</h5>
               {result.biasWarnings.map((w, i) => (
                 <p key={i} className="text-sm text-yellow-700">{w}</p>
@@ -219,7 +219,7 @@ export default function AiJobDescriptionWriter({ onApply, initialTitle, initialD
           )}
 
           {biasResult && (
-            <div className={`border rounded-md p-3 ${biasResult.biasWarnings && biasResult.biasWarnings.length > 0 ? 'bg-yellow-50 border-yellow-200' : 'bg-green-50 border-green-200'}`}>
+            <div className={`border rounded-sm p-3 ${biasResult.biasWarnings && biasResult.biasWarnings.length > 0 ? 'bg-yellow-50 border-yellow-200' : 'bg-green-50 border-green-200'}`}>
               <h5 className="text-xs font-semibold uppercase tracking-wider mb-1 text-gray-700">Bias Analysis</h5>
               <p className="text-sm text-gray-700">{biasResult.overallAssessment}</p>
               {biasResult.biasWarnings && biasResult.biasWarnings.map((w, i) => (
@@ -230,16 +230,16 @@ export default function AiJobDescriptionWriter({ onApply, initialTitle, initialD
 
           <div className="flex gap-2 pt-2">
             <button onClick={handleBiasCheck} disabled={biasLoading}
-              className="px-3 py-1.5 text-xs border border-gray-300 rounded-md text-gray-700 hover:bg-gray-100 disabled:opacity-50">
+              className="px-3 py-1.5 text-xs border border-gray-300 rounded-sm text-gray-700 hover:bg-gray-100 disabled:opacity-50">
               {biasLoading ? 'Checking...' : 'Check for Bias'}
             </button>
             <button onClick={() => navigator.clipboard.writeText(JSON.stringify(result, null, 2))}
-              className="px-3 py-1.5 text-xs border border-gray-300 rounded-md text-gray-700 hover:bg-gray-100">
+              className="px-3 py-1.5 text-xs border border-gray-300 rounded-sm text-gray-700 hover:bg-gray-100">
               Copy JSON
             </button>
             {onApply && (
               <button onClick={() => onApply(result)}
-                className="px-3 py-1.5 text-xs bg-violet-600 text-white rounded-md hover:bg-violet-700">
+                className="px-3 py-1.5 text-xs bg-gold-500 text-violet-950 rounded-sm hover:bg-gold-600">
                 Apply to Job Posting
               </button>
             )}

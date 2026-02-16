@@ -85,7 +85,7 @@ const RequisitionDetailPage: React.FC = () => {
   if (error) {
     return (
       <div className="max-w-4xl mx-auto p-6">
-        <div className="bg-red-50 border border-red-200 rounded-md p-4">
+        <div className="bg-red-50 border border-red-200 rounded-sm p-4">
           <div className="text-red-800 font-medium">Error</div>
           <div className="text-red-700 mt-1">{error}</div>
           <button 
@@ -125,7 +125,7 @@ const RequisitionDetailPage: React.FC = () => {
       </div>
 
       {/* Requisition Details */}
-      <div className="bg-white shadow rounded-lg mb-6">
+      <div className="bg-white shadow rounded-sm mb-6">
         <div className="px-6 py-4 border-b border-gray-200">
           <h2 className="text-lg font-medium text-gray-900">Job Details</h2>
         </div>
@@ -173,14 +173,14 @@ const RequisitionDetailPage: React.FC = () => {
       </div>
 
       {/* Tabs */}
-      <div className="bg-white shadow rounded-lg">
+      <div className="bg-white shadow rounded-sm">
         <div className="border-b border-gray-200">
           <nav className="-mb-px flex">
             <button
               onClick={() => setActiveTab('timeline')}
               className={`py-3 px-6 border-b-2 font-medium text-sm ${
                 activeTab === 'timeline'
-                  ? 'border-violet-500 text-violet-600'
+                  ? 'border-gold-500 text-gold-700'
                   : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
               }`}
             >
@@ -190,7 +190,7 @@ const RequisitionDetailPage: React.FC = () => {
               onClick={() => setActiveTab('audit')}
               className={`py-3 px-6 border-b-2 font-medium text-sm ${
                 activeTab === 'audit'
-                  ? 'border-violet-500 text-violet-600'
+                  ? 'border-gold-500 text-gold-700'
                   : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
               }`}
             >

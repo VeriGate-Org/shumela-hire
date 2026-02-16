@@ -67,13 +67,13 @@ export default function AiScreeningNotesDrafter({ applicationId, candidateName, 
         <div className="flex gap-2">
           <input type="text" value={currentPoint} onChange={e => setCurrentPoint(e.target.value)}
             onKeyDown={e => e.key === 'Enter' && addPoint()}
-            className="flex-1 text-sm p-2 border border-gray-300 rounded-md" placeholder="Add an observation" />
-          <button onClick={addPoint} className="px-3 py-2 text-sm bg-gray-100 text-gray-700 rounded-md hover:bg-gray-200">Add</button>
+            className="flex-1 text-sm p-2 border border-gray-300 rounded-sm" placeholder="Add an observation" />
+          <button onClick={addPoint} className="px-3 py-2 text-sm bg-gray-100 text-gray-700 rounded-sm hover:bg-gray-200">Add</button>
         </div>
         {bulletPoints.length > 0 && (
           <ul className="mt-2 space-y-1">
             {bulletPoints.map((point, i) => (
-              <li key={i} className="flex items-center justify-between text-sm text-gray-700 bg-gray-50 px-3 py-1.5 rounded-md">
+              <li key={i} className="flex items-center justify-between text-sm text-gray-700 bg-gray-50 px-3 py-1.5 rounded-sm">
                 <span>{point}</span>
                 <button onClick={() => removePoint(i)} className="text-gray-400 hover:text-red-500 text-xs ml-2">&times;</button>
               </li>
@@ -88,7 +88,7 @@ export default function AiScreeningNotesDrafter({ applicationId, candidateName, 
         <div className="flex gap-2">
           {(['formal', 'neutral', 'concise'] as const).map(t => (
             <button key={t} onClick={() => setTone(t)}
-              className={`px-3 py-1.5 text-xs rounded-md border ${tone === t ? 'bg-violet-600 text-white border-violet-600' : 'border-gray-300 text-gray-700 hover:bg-gray-100'}`}>
+              className={`px-3 py-1.5 text-xs rounded-sm border ${tone === t ? 'bg-gold-500 text-violet-950 border-gold-500' : 'border-gray-300 text-gray-700 hover:bg-gray-100'}`}>
               {t.charAt(0).toUpperCase() + t.slice(1)}
             </button>
           ))}
@@ -96,23 +96,23 @@ export default function AiScreeningNotesDrafter({ applicationId, candidateName, 
       </div>
 
       <button onClick={handleDraft} disabled={loading || bulletPoints.length === 0}
-        className="px-4 py-2 text-sm bg-violet-600 text-white rounded-md hover:bg-violet-700 disabled:opacity-50 disabled:cursor-not-allowed">
+        className="px-4 py-2 text-sm bg-gold-500 text-violet-950 rounded-sm hover:bg-gold-600 disabled:opacity-50 disabled:cursor-not-allowed">
         {loading ? 'Drafting...' : 'Draft Notes'}
       </button>
 
       {/* Result */}
       {result && (
-        <div className="border border-gray-200 rounded-lg p-4 bg-gray-50 space-y-3">
+        <div className="border border-gray-200 rounded-sm p-4 bg-gray-50 space-y-3">
           <textarea value={editedNotes} onChange={e => setEditedNotes(e.target.value)}
-            rows={8} className="w-full text-sm p-3 border border-gray-300 rounded-md resize-y leading-relaxed" />
+            rows={8} className="w-full text-sm p-3 border border-gray-300 rounded-sm resize-y leading-relaxed" />
           <div className="flex gap-2">
             <button onClick={() => navigator.clipboard.writeText(editedNotes)}
-              className="px-3 py-1.5 text-xs border border-gray-300 rounded-md text-gray-700 hover:bg-gray-100">
+              className="px-3 py-1.5 text-xs border border-gray-300 rounded-sm text-gray-700 hover:bg-gray-100">
               Copy
             </button>
             {onApply && (
               <button onClick={() => onApply(editedNotes)}
-                className="px-3 py-1.5 text-xs bg-violet-600 text-white rounded-md hover:bg-violet-700">
+                className="px-3 py-1.5 text-xs bg-gold-500 text-violet-950 rounded-sm hover:bg-gold-600">
                 Apply to Application
               </button>
             )}

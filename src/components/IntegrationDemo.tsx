@@ -157,7 +157,7 @@ export default function IntegrationDemo() {
       {/* Service Health Dashboard */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Service Status */}
-        <div className="bg-white rounded-lg shadow p-6">
+        <div className="bg-white rounded-sm shadow p-6">
           <h3 className="text-lg font-semibold mb-4">Service Health</h3>
           <div className="space-y-3">
             <div className="flex justify-between items-center">
@@ -185,17 +185,17 @@ export default function IntegrationDemo() {
           
           <button
             onClick={loadServiceHealth}
-            className="mt-4 w-full bg-violet-500 text-white px-4 py-2 rounded hover:bg-violet-600 transition-colors"
+            className="mt-4 w-full bg-gold-500 text-white px-4 py-2 rounded hover:bg-gold-600 transition-colors"
           >
             Refresh Status
           </button>
         </div>
 
         {/* Real-time Notifications */}
-        <div className="bg-white rounded-lg shadow p-6">
+        <div className="bg-white rounded-sm shadow p-6">
           <div className="flex justify-between items-center mb-4">
             <h3 className="text-lg font-semibold">Live Notifications</h3>
-            <span className="bg-violet-100 text-violet-800 px-2 py-1 rounded-full text-sm">
+            <span className="bg-gold-100 text-gold-800 px-2 py-1 rounded-full text-sm">
               {notifications.length}
             </span>
           </div>
@@ -207,7 +207,7 @@ export default function IntegrationDemo() {
               notifications.map((notification, index) => (
                 <div
                   key={index}
-                  className="p-3 bg-gray-50 rounded border-l-4 border-violet-500"
+                  className="p-3 bg-gray-50 rounded border-l-4 border-gold-500"
                 >
                   <div className="flex justify-between items-start">
                     <div>
@@ -232,11 +232,11 @@ export default function IntegrationDemo() {
         </div>
 
         {/* Recent Applications */}
-        <div className="bg-white rounded-lg shadow p-6">
+        <div className="bg-white rounded-sm shadow p-6">
           <div className="flex justify-between items-center mb-4">
             <h3 className="text-lg font-semibold">Recent Applications</h3>
             {isLoading && (
-              <div className="animate-spin h-4 w-4 border-2 border-violet-500 border-t-transparent rounded-full"></div>
+              <div className="animate-spin h-4 w-4 border-2 border-gold-500 border-t-transparent rounded-full"></div>
             )}
           </div>
           
@@ -260,7 +260,7 @@ export default function IntegrationDemo() {
                       <span className={`inline-block px-2 py-1 rounded-full text-xs mt-1 ${
                         application.status === 'new' ? 'bg-green-100 text-green-800' :
                         application.status === 'review' ? 'bg-yellow-100 text-yellow-800' :
-                        application.status === 'interview' ? 'bg-violet-100 text-violet-800' :
+                        application.status === 'interview' ? 'bg-gold-100 text-gold-800' :
                         'bg-gray-100 text-gray-800'
                       }`}>
                         {application.status || 'new'}
@@ -278,7 +278,7 @@ export default function IntegrationDemo() {
           <button
             onClick={loadRecentApplications}
             disabled={isLoading}
-            className="mt-4 w-full bg-violet-500 text-white px-4 py-2 rounded hover:bg-violet-600 transition-colors text-sm disabled:opacity-50"
+            className="mt-4 w-full bg-gold-500 text-white px-4 py-2 rounded hover:bg-gold-600 transition-colors text-sm disabled:opacity-50"
           >
             Refresh Applications
           </button>
@@ -286,11 +286,11 @@ export default function IntegrationDemo() {
       </div>
 
       {/* API Integration Status */}
-      <div className="bg-white rounded-lg shadow p-6">
+      <div className="bg-white rounded-sm shadow p-6">
         <h3 className="text-lg font-semibold mb-4">API Integration Status</h3>
         
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-          <div className="bg-violet-50 p-4 rounded">
+          <div className="bg-gold-50 p-4 rounded">
             <h4 className="font-medium text-violet-900">Application API</h4>
             <p className="text-violet-700 text-sm">CRUD operations, filtering, export</p>
             <span className="text-green-600 text-sm">✅ Active</span>
@@ -318,7 +318,7 @@ export default function IntegrationDemo() {
 
       {/* Service Configuration */}
       {serviceStatus && (
-        <div className="bg-white rounded-lg shadow p-6">
+        <div className="bg-white rounded-sm shadow p-6">
           <h3 className="text-lg font-semibold mb-4">Service Configuration</h3>
           
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">

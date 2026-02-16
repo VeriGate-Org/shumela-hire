@@ -273,7 +273,7 @@ export default function ScreeningQuestions({
               onChange={(e) => handleAnswerChange(question.id, e.target.value)}
               disabled={readonly}
               maxLength={question.maxLength || 500}
-              className={`w-full p-3 border rounded-md ${
+              className={`w-full p-3 border rounded-sm ${
                 hasError ? 'border-red-500' : 'border-gray-300'
               } ${readonly ? 'bg-gray-50' : ''}`}
               placeholder="Enter your answer..."
@@ -301,7 +301,7 @@ export default function ScreeningQuestions({
               value={answer?.answerValue || ''}
               onChange={(e) => handleAnswerChange(question.id, e.target.value)}
               disabled={readonly}
-              className={`w-full p-3 border rounded-md ${
+              className={`w-full p-3 border rounded-sm ${
                 hasError ? 'border-red-500' : 'border-gray-300'
               } ${readonly ? 'bg-gray-50' : ''}`}
             >
@@ -394,7 +394,7 @@ export default function ScreeningQuestions({
                   const file = e.target.files?.[0];
                   if (file) handleFileUpload(question.id, file);
                 }}
-                className="w-full p-2 border border-gray-300 rounded-md"
+                className="w-full p-2 border border-gray-300 rounded-sm"
                 accept=".pdf,.doc,.docx,.txt"
               />
             )}
@@ -418,7 +418,7 @@ export default function ScreeningQuestions({
   if (loading) {
     return (
       <div className="flex justify-center items-center py-8">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-violet-600"></div>
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gold-500"></div>
       </div>
     );
   }
@@ -433,7 +433,7 @@ export default function ScreeningQuestions({
 
   return (
     <div className="space-y-6">
-      <div className="bg-violet-50 border-l-4 border-violet-400 p-4">
+      <div className="bg-gold-50 border-l-4 border-violet-400 p-4">
         <div className="flex">
           <div className="flex-shrink-0">
             <svg className="h-5 w-5 text-violet-400" viewBox="0 0 20 20" fill="currentColor">
@@ -453,7 +453,7 @@ export default function ScreeningQuestions({
 
       <div className="space-y-6">
         {questions.map((question, index) => (
-          <div key={question.id} className="bg-white border border-gray-200 rounded-lg p-6">
+          <div key={question.id} className="bg-white border border-gray-200 rounded-sm p-6">
             <div className="mb-4">
               <h3 className="text-lg font-medium text-gray-900">
                 {index + 1}. {question.questionText}
@@ -481,7 +481,7 @@ export default function ScreeningQuestions({
           <button
             onClick={handleSubmit}
             disabled={submitting}
-            className="bg-violet-600 text-white px-6 py-3 rounded-md hover:bg-violet-700 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+            className="bg-gold-500 text-violet-950 px-6 py-3 rounded-sm hover:bg-gold-600 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
           >
             {submitting && (
               <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>

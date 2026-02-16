@@ -108,7 +108,7 @@ export default function WorkflowManager({
   const getStatusIcon = (status: string) => {
     switch (status) {
       case 'running':
-        return <ClockIcon className="h-4 w-4 text-violet-600" />;
+        return <ClockIcon className="h-4 w-4 text-gold-600" />;
       case 'completed':
         return <CheckCircleIcon className="h-4 w-4 text-green-600" />;
       case 'failed':
@@ -125,7 +125,7 @@ export default function WorkflowManager({
   const getStatusColor = (status: string) => {
     switch (status) {
       case 'running':
-        return 'bg-violet-100 text-violet-700';
+        return 'bg-gold-100 text-violet-700';
       case 'completed':
         return 'bg-green-100 text-green-700';
       case 'failed':
@@ -168,7 +168,7 @@ export default function WorkflowManager({
   };
 
   return (
-    <div className={`bg-white rounded-lg shadow-sm border border-gray-200 ${className}`}>
+    <div className={`bg-white rounded-sm shadow-sm border border-gray-200 ${className}`}>
       {/* Header */}
       <div className="px-6 py-4 border-b border-gray-200">
         <div className="flex items-center justify-between">
@@ -198,7 +198,7 @@ export default function WorkflowManager({
             
             <button
               onClick={onCreateWorkflow}
-              className="px-4 py-2 text-sm font-medium text-white bg-violet-600 rounded-lg hover:bg-violet-700"
+              className="px-4 py-2 text-sm font-medium text-white bg-violet-600 rounded-sm hover:bg-gold-600"
             >
               Create Workflow
             </button>
@@ -218,7 +218,7 @@ export default function WorkflowManager({
               onClick={() => setActiveTab(tab.id)}
               className={`py-4 px-1 border-b-2 font-medium text-sm ${
                 activeTab === tab.id
-                  ? 'border-violet-500 text-violet-600'
+                  ? 'border-gold-500 text-gold-700'
                   : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
               }`}
             >
@@ -240,7 +240,7 @@ export default function WorkflowManager({
               placeholder={`Search ${activeTab}...`}
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full max-w-md px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-violet-500/60 focus:border-violet-400"
+              className="w-full max-w-md px-3 py-2 border border-gray-300 rounded-sm focus:ring-2 focus:ring-gold-500/60 focus:border-violet-400"
             />
           </div>
           
@@ -248,7 +248,7 @@ export default function WorkflowManager({
             <select
               value={statusFilter}
               onChange={(e) => setStatusFilter(e.target.value)}
-              className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-violet-500/60 focus:border-violet-400"
+              className="px-3 py-2 border border-gray-300 rounded-sm focus:ring-2 focus:ring-gold-500/60 focus:border-violet-400"
             >
               <option value="all">All Status</option>
               {activeTab === 'workflows' ? (
@@ -287,7 +287,7 @@ export default function WorkflowManager({
                 </p>
                 <button
                   onClick={onCreateWorkflow}
-                  className="px-4 py-2 text-sm font-medium text-violet-600 bg-violet-50 rounded-lg hover:bg-violet-100"
+                  className="px-4 py-2 text-sm font-medium text-gold-600 bg-gold-50 rounded-sm hover:bg-gold-100"
                 >
                   Create Workflow
                 </button>
@@ -295,7 +295,7 @@ export default function WorkflowManager({
             ) : (
               <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
                 {filteredWorkflows.map((workflow) => (
-                  <div key={workflow.id} className="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow">
+                  <div key={workflow.id} className="border border-gray-200 rounded-sm p-4 hover:shadow-md transition-shadow">
                     {/* Workflow Header */}
                     <div className="flex items-start justify-between mb-3">
                       <div className="flex-1">
@@ -345,7 +345,7 @@ export default function WorkflowManager({
                           {workflow.tags.slice(0, 3).map((tag, index) => (
                             <span
                               key={index}
-                              className="inline-flex items-center px-2 py-1 rounded-full text-xs bg-violet-100 text-violet-700"
+                              className="inline-flex items-center px-2 py-1 rounded-full text-xs bg-gold-100 text-violet-700"
                             >
                               {tag}
                             </span>
@@ -364,7 +364,7 @@ export default function WorkflowManager({
                       <div className="flex items-center gap-1">
                         <button
                           onClick={() => onEditWorkflow(workflow)}
-                          className="p-1.5 text-gray-400 hover:text-violet-600 rounded"
+                          className="p-1.5 text-gray-400 hover:text-gold-600 rounded"
                           title="Edit"
                         >
                           <PencilIcon className="h-4 w-4" />
@@ -388,7 +388,7 @@ export default function WorkflowManager({
                       <div className="flex items-center gap-2">
                         <button
                           onClick={() => onToggleWorkflow(workflow.id!, !workflow.isActive)}
-                          className={`px-3 py-1.5 text-xs font-medium rounded-lg ${
+                          className={`px-3 py-1.5 text-xs font-medium rounded-sm ${
                             workflow.isActive
                               ? 'text-yellow-700 bg-yellow-100 hover:bg-yellow-200'
                               : 'text-green-700 bg-green-100 hover:bg-green-200'
@@ -399,7 +399,7 @@ export default function WorkflowManager({
                         
                         <button
                           onClick={() => onRunWorkflow(workflow.id!)}
-                          className="px-3 py-1.5 text-xs font-medium text-white bg-violet-600 rounded-lg hover:bg-violet-700"
+                          className="px-3 py-1.5 text-xs font-medium text-white bg-violet-600 rounded-sm hover:bg-gold-600"
                         >
                           <PlayIcon className="h-3 w-3 inline mr-1" />
                           Run
@@ -424,7 +424,7 @@ export default function WorkflowManager({
             ) : (
               <div className="space-y-4">
                 {filteredExecutions.map((execution) => (
-                  <div key={execution.id} className="border border-gray-200 rounded-lg p-4">
+                  <div key={execution.id} className="border border-gray-200 rounded-sm p-4">
                     <div className="flex items-start justify-between">
                       <div className="flex-1">
                         <div className="flex items-center gap-3 mb-2">
@@ -468,7 +468,7 @@ export default function WorkflowManager({
                       <div className="flex items-center gap-2 ml-4">
                         <button
                           onClick={() => onViewExecution(execution)}
-                          className="p-2 text-gray-400 hover:text-violet-600 rounded"
+                          className="p-2 text-gray-400 hover:text-gold-600 rounded"
                           title="View Details"
                         >
                           <EyeIcon className="h-4 w-4" />
