@@ -75,10 +75,10 @@ const ModernLayout: React.FC<ModernLayoutProps> = ({
             </button>
 
             <div className="flex items-center gap-2.5">
-              <div className="h-8 w-8 bg-primary rounded-card grid place-items-center ring-2 ring-cta/30">
-                <span className="text-primary-foreground font-bold text-sm">SH</span>
-              </div>
-              <span className="font-bold text-sm tracking-tight text-foreground hidden sm:block">ShumelaHire</span>
+              <img src="/icons/shumelahire-icon.svg" alt="ShumelaHire" className="h-8 w-8" />
+              <span className="font-extrabold text-sm tracking-[-0.03em] hidden sm:block">
+                <span className="text-primary">Shumela</span><span className="text-cta">Hire</span>
+              </span>
             </div>
 
             {title && (

@@ -74,10 +74,10 @@ const MobileNavigation: React.FC<MobileNavigationProps> = ({ isOpen, onClose }) 
         {/* Header */}
         <div className="flex items-center justify-between p-4 border-b border-border">
           <div className="flex items-center space-x-3">
-            <div className="w-7 h-7 bg-primary rounded-card flex items-center justify-center">
-              <span className="text-primary-foreground font-bold text-xs">SH</span>
-            </div>
-            <h2 className="text-sm font-bold tracking-tight">ShumelaHire</h2>
+            <img src="/icons/shumelahire-icon.svg" alt="ShumelaHire" className="w-7 h-7" />
+            <h2 className="text-sm font-extrabold tracking-[-0.03em]">
+              <span className="text-primary">Shumela</span><span className="text-cta">Hire</span>
+            </h2>
           </div>
           <button
             onClick={onClose}

@@ -276,13 +276,11 @@ const DashboardNavigation: React.FC = () => {
         w-60 overflow-y-auto
       `}>
         <div className="p-6 border-b border-gray-200">
-          <div className="flex items-center">
-            <div className="w-7 h-7 bg-violet-600 rounded-sm flex items-center justify-center">
-              <span className="text-white font-bold text-xs">SH</span>
-            </div>
-            <div className="ml-2.5">
-              <h1 className="text-sm font-bold text-gray-900 tracking-tight">ShumelaHire</h1>
-            </div>
+          <div className="flex items-center gap-2.5">
+            <img src="/icons/shumelahire-icon.svg" alt="ShumelaHire" className="w-7 h-7" />
+            <h1 className="text-sm font-extrabold tracking-[-0.03em]">
+              <span className="text-primary">Shumela</span><span className="text-cta">Hire</span>
+            </h1>
           </div>
         </div>
 

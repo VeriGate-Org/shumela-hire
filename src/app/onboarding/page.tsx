@@ -16,10 +16,10 @@ export default function OnboardingPage() {
       {/* Header with logo */}
       <header className="w-full px-6 py-5">
         <div className="flex items-center gap-2.5">
-          <div className="h-8 w-8 bg-gold-500 rounded-sm grid place-items-center">
-            <span className="text-violet-950 font-bold text-sm">SH</span>
-          </div>
-          <span className="font-bold text-sm tracking-tight text-gray-900">ShumelaHire</span>
+          <img src="/icons/shumelahire-icon.svg" alt="ShumelaHire" className="h-8 w-8" />
+          <span className="font-extrabold text-sm tracking-[-0.03em]">
+            <span className="text-primary">Shumela</span><span className="text-cta">Hire</span>
+          </span>
         </div>
       </header>
 
