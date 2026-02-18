@@ -1,5 +1,6 @@
 package com.arthmatic.shumelahire.repository;
 
+import com.arthmatic.shumelahire.config.tenant.TenantContext;
 import com.arthmatic.shumelahire.entity.Application;
 import com.arthmatic.shumelahire.entity.ApplicationStatus;
 import com.arthmatic.shumelahire.entity.Applicant;
@@ -8,6 +9,7 @@ import com.arthmatic.shumelahire.entity.PipelineStage;
 import com.arthmatic.shumelahire.entity.EmploymentType;
 import com.arthmatic.shumelahire.entity.ExperienceLevel;
 
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,6 +43,8 @@ class ApplicationRepositoryTest {
 
     @BeforeEach
     void setUp() {
+        TenantContext.setCurrentTenant("default");
+
         // Create and persist test applicant
         testApplicant = new Applicant();
         testApplicant.setName("John");
@@ -78,6 +82,11 @@ class ApplicationRepositoryTest {
         testApplication = entityManager.persistAndFlush(testApplication);
 
         entityManager.clear();
+    }
+
+    @AfterEach
+    void tearDown() {
+        TenantContext.clear();
     }
 
     @Test

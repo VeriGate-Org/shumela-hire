@@ -6,8 +6,6 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import org.hibernate.annotations.Filter;
-import org.hibernate.annotations.FilterDef;
-import org.hibernate.annotations.ParamDef;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -18,11 +16,11 @@ import java.util.Collections;
 import java.util.Set;
 
 /**
- * User entity with Spring Security integration
+ * User entity with Spring Security integration.
+ * Uses @Filter from TenantAwareEntity's @FilterDef (cannot extend due to UserDetails).
  */
 @Entity
 @Table(name = "users")
-@FilterDef(name = "tenantFilter", parameters = @ParamDef(name = "tenantId", type = String.class))
 @Filter(name = "tenantFilter", condition = "tenant_id = :tenantId")
 public class User implements UserDetails {
 

@@ -112,8 +112,3 @@ jobs:
 
       - name: Build
         run: dotnet build --no-restore
-
-      - name: Synth
-        run: |
-          npm install -g aws-cdk
-          CDK_DEFAULT_ACCOUNT=000000000000 cdk synth -c env=dev

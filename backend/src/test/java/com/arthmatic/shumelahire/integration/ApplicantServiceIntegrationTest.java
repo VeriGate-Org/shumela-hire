@@ -1,10 +1,12 @@
 package com.arthmatic.shumelahire.integration;
 
+import com.arthmatic.shumelahire.config.tenant.TenantContext;
 import com.arthmatic.shumelahire.entity.Applicant;
 import com.arthmatic.shumelahire.repository.ApplicantRepository;
 import com.arthmatic.shumelahire.service.ApplicantService;
 import com.arthmatic.shumelahire.dto.ApplicantCreateRequest;
 import com.arthmatic.shumelahire.dto.ApplicantResponse;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +31,8 @@ class ApplicantServiceIntegrationTest {
 
     @BeforeEach
     void setUp() {
+        TenantContext.setCurrentTenant("default");
+
         // Clean up any existing test data
         applicantRepository.deleteAll();
 
@@ -43,6 +47,11 @@ class ApplicantServiceIntegrationTest {
         testRequest.setEducation("{\"degree\": \"Computer Science\", \"university\": \"Test University\"}");
         testRequest.setExperience("{\"years\": 3, \"companies\": [\"Test Corp\"]}");
         testRequest.setSkills("[\"Java\", \"Spring Boot\", \"Testing\"]");
+    }
+
+    @AfterEach
+    void tearDown() {
+        TenantContext.clear();
     }
 
     @Test
