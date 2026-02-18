@@ -1,71 +1,68 @@
 using Amazon.CDK;
-using Amazon.CDK.AWS.S3;
 using Amazon.CDK.AWS.CloudFront;
 using Amazon.CDK.AWS.CloudFront.Origins;
 using Amazon.CDK.AWS.CertificateManager;
 using Amazon.CDK.AWS.Route53;
 using Amazon.CDK.AWS.Route53.Targets;
 using Constructs;
+using System.Collections.Generic;
 
 namespace ShumelaHire.Infra;
 
 public class ShumelaHireFrontendStack : Stack
 {
     public ShumelaHireFrontendStack(Construct scope, string id, EnvironmentConfig config,
-        ShumelaHireFoundationStack foundation, IStackProps? props = null) : base(scope, id, props)
+        ShumelaHireComputeStack compute, IStackProps? props = null) : base(scope, id, props)
     {
         var prefix = config.Prefix;
-
-        // ── S3 Bucket for Next.js static assets ──────────────────────────────
-        var uiBucket = new Bucket(this, "UiBucket", new BucketProps
-        {
-            Encryption = BucketEncryption.S3_MANAGED,
-            BlockPublicAccess = BlockPublicAccess.BLOCK_ALL,
-            RemovalPolicy = config.IsProduction ? RemovalPolicy.RETAIN : RemovalPolicy.DESTROY,
-            AutoDeleteObjects = !config.IsProduction
-        });
-
-        // ── CloudFront Distribution ──────────────────────────────────────────
-        var originAccessIdentity = new OriginAccessIdentity(this, "OAI");
-        uiBucket.GrantRead(originAccessIdentity);
 
         var frontendDomain = config.EnvironmentName == "prod"
             ? config.DomainName
             : $"{config.EnvironmentName}.{config.DomainName}";
 
+        // ── ALB HTTP Origin ────────────────────────────────────────────────────
+        var albDns = Fn.ImportValue($"{prefix}-AlbDnsName");
+        var albOrigin = new HttpOrigin(albDns, new HttpOriginProps
+        {
+            ProtocolPolicy = OriginProtocolPolicy.HTTP_ONLY
+        });
+
+        // ── CloudFront Distribution ──────────────────────────────────────────
         var distributionProps = new DistributionProps
         {
+            // Default behavior → frontend (dynamic HTML pages, no caching)
             DefaultBehavior = new BehaviorOptions
             {
-                Origin = S3BucketOrigin.WithOriginAccessIdentity(uiBucket, new S3BucketOriginWithOAIProps
-                {
-                    OriginAccessIdentity = originAccessIdentity
-                }),
+                Origin = albOrigin,
                 ViewerProtocolPolicy = ViewerProtocolPolicy.REDIRECT_TO_HTTPS,
                 Compress = true,
-                CachePolicy = CachePolicy.CACHING_OPTIMIZED,
+                CachePolicy = CachePolicy.CACHING_DISABLED,
+                OriginRequestPolicy = OriginRequestPolicy.ALL_VIEWER,
                 AllowedMethods = AllowedMethods.ALLOW_GET_HEAD_OPTIONS
             },
-            DefaultRootObject = "index.html",
-            MinimumProtocolVersion = SecurityPolicyProtocol.TLS_V1_2_2021,
-            HttpVersion = HttpVersion.HTTP2_AND_3,
-            ErrorResponses = new[]
+            AdditionalBehaviors = new Dictionary<string, IBehaviorOptions>
             {
-                new ErrorResponse
+                // Static assets → long cache (immutable JS/CSS)
+                ["/_next/static/*"] = new BehaviorOptions
                 {
-                    HttpStatus = 404,
-                    ResponseHttpStatus = 200,
-                    ResponsePagePath = "/index.html",
-                    Ttl = Duration.Seconds(0)
+                    Origin = albOrigin,
+                    ViewerProtocolPolicy = ViewerProtocolPolicy.REDIRECT_TO_HTTPS,
+                    Compress = true,
+                    CachePolicy = CachePolicy.CACHING_OPTIMIZED,
+                    AllowedMethods = AllowedMethods.ALLOW_GET_HEAD_OPTIONS
                 },
-                new ErrorResponse
+                // API pass-through → no caching, all methods
+                ["/api/*"] = new BehaviorOptions
                 {
-                    HttpStatus = 403,
-                    ResponseHttpStatus = 200,
-                    ResponsePagePath = "/index.html",
-                    Ttl = Duration.Seconds(0)
+                    Origin = albOrigin,
+                    ViewerProtocolPolicy = ViewerProtocolPolicy.REDIRECT_TO_HTTPS,
+                    CachePolicy = CachePolicy.CACHING_DISABLED,
+                    OriginRequestPolicy = OriginRequestPolicy.ALL_VIEWER,
+                    AllowedMethods = AllowedMethods.ALLOW_ALL
                 }
-            }
+            },
+            MinimumProtocolVersion = SecurityPolicyProtocol.TLS_V1_2_2021,
+            HttpVersion = HttpVersion.HTTP2_AND_3
         };
 
         // Add custom domain and certificate if available
@@ -95,11 +92,6 @@ public class ShumelaHireFrontendStack : Stack
         }
 
         // ── CfnOutputs ──────────────────────────────────────────────────────
-        new CfnOutput(this, "UiBucketName", new CfnOutputProps
-        {
-            Value = uiBucket.BucketName,
-            ExportName = $"{prefix}-UiBucketName"
-        });
         new CfnOutput(this, "DistributionId", new CfnOutputProps
         {
             Value = distribution.DistributionId,

@@ -231,6 +231,18 @@ public class ShumelaHireFoundationStack : Stack
             Description = "JWT signing secret"
         });
 
+        new Secret(this, "MicrosoftSecret", new SecretProps
+        {
+            SecretName = $"shumelahire/{config.EnvironmentName}/microsoft",
+            Description = "Microsoft Graph credentials (Teams, Outlook)"
+        });
+
+        new Secret(this, "JobBoardsSecret", new SecretProps
+        {
+            SecretName = $"shumelahire/{config.EnvironmentName}/job-boards",
+            Description = "Job board API credentials (LinkedIn, Indeed, PNet, CareerJunction)"
+        });
+
         // ── Cognito User Pool ────────────────────────────────────────────────
         UserPool = new UserPool(this, "UserPool", new UserPoolProps
         {

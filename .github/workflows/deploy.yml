@@ -40,7 +40,17 @@ jobs:
           role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
           aws-region: ${{ inputs.aws-region }}
 
-      # ── Backend ──────────────────────────────────────────────────────────
+      # ── Set Spring profile ───────────────────────────────────────────────
+      - name: Set Spring profile
+        id: spring-profile
+        run: |
+          if [ "${{ inputs.environment }}" = "dev" ]; then
+            echo "profile=sbx" >> $GITHUB_OUTPUT
+          else
+            echo "profile=${{ inputs.environment }}" >> $GITHUB_OUTPUT
+          fi
+
+      # ── Backend JAR ────────────────────────────────────────────────────
       - uses: actions/setup-java@v4
         with:
           distribution: temurin
@@ -51,25 +61,7 @@ jobs:
         working-directory: backend
         run: mvn clean package -DskipTests -q
 
-      - name: Login to ECR
-        id: ecr-login
-        uses: aws-actions/amazon-ecr-login@v2
-
-      - name: Build and push Docker image
-        working-directory: backend
-        env:
-          ECR_REGISTRY: ${{ steps.ecr-login.outputs.registry }}
-          IMAGE_TAG: ${{ github.sha }}
-        run: |
-          docker build \
-            --build-arg SPRING_PROFILES_ACTIVE=${{ inputs.environment }} \
-            -t $ECR_REGISTRY/shumelahire-backend:$IMAGE_TAG \
-            -t $ECR_REGISTRY/shumelahire-backend:latest \
-            .
-          docker push $ECR_REGISTRY/shumelahire-backend:$IMAGE_TAG
-          docker push $ECR_REGISTRY/shumelahire-backend:latest
-
-      # ── CDK Deploy ────────────────────────────────────────────────────────
+      # ── CDK Deploy (creates ECR repos, ECS services, secrets) ──────────
       - uses: actions/setup-dotnet@v4
         with:
           dotnet-version: "9.0.x"
@@ -91,46 +83,56 @@ jobs:
             -c certificateArn="${CERTIFICATE_ARN}" \
             -c apiCertificateArn="${API_CERTIFICATE_ARN}"
 
-      # ── Force ECS Redeployment ────────────────────────────────────────────
-      - name: Force ECS redeployment
+      # ── Get CDK outputs (Cognito IDs for frontend build) ────────────────
+      - name: Get CDK outputs
+        id: cdk-outputs
         run: |
-          CLUSTER="shumelahire-${{ inputs.environment }}"
-          SERVICE="shumelahire-${{ inputs.environment }}"
-          aws ecs update-service --cluster $CLUSTER --service $SERVICE --force-new-deployment
+          PREFIX="shumelahire-${{ inputs.environment }}"
+          echo "user_pool_id=$(aws cloudformation describe-stacks --stack-name ${PREFIX}-foundation --query 'Stacks[0].Outputs[?OutputKey==`UserPoolId`].OutputValue' --output text)" >> $GITHUB_OUTPUT
+          echo "user_pool_client_id=$(aws cloudformation describe-stacks --stack-name ${PREFIX}-foundation --query 'Stacks[0].Outputs[?OutputKey==`UserPoolClientId`].OutputValue' --output text)" >> $GITHUB_OUTPUT
 
-      # ── Frontend ──────────────────────────────────────────────────────────
+      # ── Docker builds ──────────────────────────────────────────────────
+      - name: Login to ECR
+        id: ecr-login
+        uses: aws-actions/amazon-ecr-login@v2
+
+      - name: Build and push backend Docker image
+        working-directory: backend
+        env:
+          ECR_REGISTRY: ${{ steps.ecr-login.outputs.registry }}
+          IMAGE_TAG: ${{ github.sha }}
+          SPRING_PROFILES_ACTIVE: ${{ steps.spring-profile.outputs.profile }}
+        run: |
+          docker build \
+            --build-arg SPRING_PROFILES_ACTIVE=$SPRING_PROFILES_ACTIVE \
+            -t $ECR_REGISTRY/shumelahire-backend:$IMAGE_TAG \
+            -t $ECR_REGISTRY/shumelahire-backend:latest \
+            .
+          docker push --all-tags $ECR_REGISTRY/shumelahire-backend
+
       - uses: actions/setup-node@v4
         with:
           node-version: "20"
           cache: npm
 
-      - name: Get CDK outputs
-        id: cdk-outputs
-        run: |
-          PREFIX="shumelahire-${{ inputs.environment }}"
-          echo "bucket=$(aws cloudformation describe-stacks --stack-name ${PREFIX}-frontend --query 'Stacks[0].Outputs[?ExportName==`'${PREFIX}-UiBucketName'`].OutputValue' --output text)" >> $GITHUB_OUTPUT
-          echo "distribution=$(aws cloudformation describe-stacks --stack-name ${PREFIX}-frontend --query 'Stacks[0].Outputs[?ExportName==`'${PREFIX}-DistributionId'`].OutputValue' --output text)" >> $GITHUB_OUTPUT
-          echo "api_url=$(aws cloudformation describe-stacks --stack-name ${PREFIX}-compute --query 'Stacks[0].Outputs[?ExportName==`'${PREFIX}-AlbDnsName'`].OutputValue' --output text)" >> $GITHUB_OUTPUT
-          echo "user_pool_id=$(aws cloudformation describe-stacks --stack-name ${PREFIX}-foundation --query 'Stacks[0].Outputs[?OutputKey==`UserPoolId`].OutputValue' --output text)" >> $GITHUB_OUTPUT
-          echo "user_pool_client_id=$(aws cloudformation describe-stacks --stack-name ${PREFIX}-foundation --query 'Stacks[0].Outputs[?OutputKey==`UserPoolClientId`].OutputValue' --output text)" >> $GITHUB_OUTPUT
-
-      - name: Build frontend
+      - name: Build and push frontend Docker image
         env:
-          NEXT_PUBLIC_API_URL: https://${{ steps.cdk-outputs.outputs.api_url }}
-          NEXT_PUBLIC_COGNITO_USER_POOL_ID: ${{ steps.cdk-outputs.outputs.user_pool_id }}
-          NEXT_PUBLIC_COGNITO_CLIENT_ID: ${{ steps.cdk-outputs.outputs.user_pool_client_id }}
-          NEXT_PUBLIC_REGION: ${{ inputs.aws-region }}
+          ECR_REGISTRY: ${{ steps.ecr-login.outputs.registry }}
+          IMAGE_TAG: ${{ github.sha }}
         run: |
-          npm ci
-          npm run build
+          docker build \
+            --build-arg NEXT_PUBLIC_API_URL="" \
+            --build-arg NEXT_PUBLIC_COGNITO_USER_POOL_ID=${{ steps.cdk-outputs.outputs.user_pool_id }} \
+            --build-arg NEXT_PUBLIC_COGNITO_CLIENT_ID=${{ steps.cdk-outputs.outputs.user_pool_client_id }} \
+            --build-arg NEXT_PUBLIC_REGION=${{ inputs.aws-region }} \
+            -t $ECR_REGISTRY/shumelahire-frontend:$IMAGE_TAG \
+            -t $ECR_REGISTRY/shumelahire-frontend:latest \
+            .
+          docker push --all-tags $ECR_REGISTRY/shumelahire-frontend
 
-      - name: Deploy frontend to S3
+      # ── Force ECS Redeployment ──────────────────────────────────────────
+      - name: Force ECS redeployment
         run: |
-          aws s3 sync .next/static s3://${{ steps.cdk-outputs.outputs.bucket }}/_next/static --delete
-          aws s3 sync out/ s3://${{ steps.cdk-outputs.outputs.bucket }}/ --delete --exclude "_next/static/*"
-
-      - name: Invalidate CloudFront cache
-        run: |
-          aws cloudfront create-invalidation \
-            --distribution-id ${{ steps.cdk-outputs.outputs.distribution }} \
-            --paths "/*"
+          CLUSTER="shumelahire-${{ inputs.environment }}"
+          aws ecs update-service --cluster $CLUSTER --service shumelahire-${{ inputs.environment }} --force-new-deployment
+          aws ecs update-service --cluster $CLUSTER --service shumelahire-${{ inputs.environment }}-frontend --force-new-deployment

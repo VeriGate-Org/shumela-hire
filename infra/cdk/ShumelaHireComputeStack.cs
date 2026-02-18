@@ -16,15 +16,31 @@ namespace ShumelaHire.Infra;
 
 public class ShumelaHireComputeStack : Stack
 {
+    public string AlbDnsName { get; }
+
     public ShumelaHireComputeStack(Construct scope, string id, EnvironmentConfig config,
         ShumelaHireFoundationStack foundation, IStackProps? props = null) : base(scope, id, props)
     {
         var prefix = config.Prefix;
 
-        // ── ECR Repository ───────────────────────────────────────────────────
+        // ── ECR Repositories ───────────────────────────────────────────────────
         var ecrRepository = new Repository(this, "BackendRepo", new RepositoryProps
         {
             RepositoryName = "shumelahire-backend",
+            RemovalPolicy = RemovalPolicy.RETAIN,
+            LifecycleRules = new[]
+            {
+                new Amazon.CDK.AWS.ECR.LifecycleRule
+                {
+                    MaxImageCount = 10,
+                    Description = "Keep last 10 images"
+                }
+            }
+        });
+
+        var frontendEcrRepository = new Repository(this, "FrontendRepo", new RepositoryProps
+        {
+            RepositoryName = "shumelahire-frontend",
             RemovalPolicy = RemovalPolicy.RETAIN,
             LifecycleRules = new[]
             {
@@ -126,6 +142,21 @@ public class ShumelaHireComputeStack : Stack
             }
         }));
 
+        // ── Secrets Manager References ─────────────────────────────────────────
+        var dbSecret = foundation.Database.Secret!;
+        var jwtSecret = Amazon.CDK.AWS.SecretsManager.Secret.FromSecretNameV2(
+            this, "JwtSecretRef", $"shumelahire/{config.EnvironmentName}/jwt-secret");
+        var encryptionSecret = Amazon.CDK.AWS.SecretsManager.Secret.FromSecretNameV2(
+            this, "EncryptionSecretRef", $"shumelahire/{config.EnvironmentName}/encryption-key");
+        var aiKeysSecret = Amazon.CDK.AWS.SecretsManager.Secret.FromSecretNameV2(
+            this, "AiKeysSecretRef", $"shumelahire/{config.EnvironmentName}/ai-keys");
+        var docusignSecret = Amazon.CDK.AWS.SecretsManager.Secret.FromSecretNameV2(
+            this, "DocusignSecretRef", $"shumelahire/{config.EnvironmentName}/docusign");
+        var microsoftSecret = Amazon.CDK.AWS.SecretsManager.Secret.FromSecretNameV2(
+            this, "MicrosoftSecretRef", $"shumelahire/{config.EnvironmentName}/microsoft");
+        var jobBoardsSecret = Amazon.CDK.AWS.SecretsManager.Secret.FromSecretNameV2(
+            this, "JobBoardsSecretRef", $"shumelahire/{config.EnvironmentName}/job-boards");
+
         // ── Log Group ────────────────────────────────────────────────────────
         var logGroup = new LogGroup(this, "LogGroup", new LogGroupProps
         {
@@ -134,7 +165,7 @@ public class ShumelaHireComputeStack : Stack
             RemovalPolicy = RemovalPolicy.DESTROY
         });
 
-        // ── Task Definition ──────────────────────────────────────────────────
+        // ── Backend Task Definition ──────────────────────────────────────────
         var taskDef = new FargateTaskDefinition(this, "TaskDef", new FargateTaskDefinitionProps
         {
             Family = prefix,
@@ -180,7 +211,54 @@ public class ShumelaHireComputeStack : Stack
                 ["DATA_RESIDENCY_REGION"] = "ZA",
                 ["COGNITO_USER_POOL_ID"] = foundation.UserPool.UserPoolId,
                 ["COGNITO_CLIENT_ID"] = foundation.AppClient.UserPoolClientId,
-                ["COGNITO_ISSUER_URI"] = $"https://cognito-idp.{config.Region}.amazonaws.com/{foundation.UserPool.UserPoolId}"
+                ["COGNITO_ISSUER_URI"] = $"https://cognito-idp.{config.Region}.amazonaws.com/{foundation.UserPool.UserPoolId}",
+                // SES
+                ["SES_ENABLED"] = "true",
+                ["SES_REGION"] = config.Region,
+                ["SES_FROM_EMAIL"] = $"noreply@{config.DomainName}",
+                ["SES_FROM_NAME"] = "ShumelaHire",
+                // Integration feature flags (enable per-environment after secrets populated)
+                ["MICROSOFT_ENABLED"] = "false",
+                ["LINKEDIN_ENABLED"] = "false",
+                ["INDEED_ENABLED"] = "false",
+                ["PNET_ENABLED"] = "false",
+                ["CAREER_JUNCTION_ENABLED"] = "false",
+                ["AI_ENABLED"] = "false",
+                ["AI_PROVIDER"] = "mock"
+            },
+            Secrets = new Dictionary<string, Amazon.CDK.AWS.ECS.Secret>
+            {
+                // Database
+                ["DATABASE_USER"] = Amazon.CDK.AWS.ECS.Secret.FromSecretsManager(dbSecret, "username"),
+                ["DATABASE_PASS"] = Amazon.CDK.AWS.ECS.Secret.FromSecretsManager(dbSecret, "password"),
+                // Security
+                ["JWT_SECRET"] = Amazon.CDK.AWS.ECS.Secret.FromSecretsManager(jwtSecret),
+                ["ENCRYPTION_KEY"] = Amazon.CDK.AWS.ECS.Secret.FromSecretsManager(encryptionSecret),
+                // AI
+                ["CLAUDE_API_KEY"] = Amazon.CDK.AWS.ECS.Secret.FromSecretsManager(aiKeysSecret, "CLAUDE_API_KEY"),
+                ["OPENAI_API_KEY"] = Amazon.CDK.AWS.ECS.Secret.FromSecretsManager(aiKeysSecret, "OPENAI_API_KEY"),
+                // DocuSign
+                ["DOCUSIGN_ACCOUNT_ID"] = Amazon.CDK.AWS.ECS.Secret.FromSecretsManager(docusignSecret, "ACCOUNT_ID"),
+                ["DOCUSIGN_INTEGRATION_KEY"] = Amazon.CDK.AWS.ECS.Secret.FromSecretsManager(docusignSecret, "INTEGRATION_KEY"),
+                ["DOCUSIGN_SECRET_KEY"] = Amazon.CDK.AWS.ECS.Secret.FromSecretsManager(docusignSecret, "SECRET_KEY"),
+                ["DOCUSIGN_USER_ID"] = Amazon.CDK.AWS.ECS.Secret.FromSecretsManager(docusignSecret, "USER_ID"),
+                ["DOCUSIGN_PRIVATE_KEY"] = Amazon.CDK.AWS.ECS.Secret.FromSecretsManager(docusignSecret, "PRIVATE_KEY"),
+                ["DOCUSIGN_WEBHOOK_HMAC_KEY"] = Amazon.CDK.AWS.ECS.Secret.FromSecretsManager(docusignSecret, "WEBHOOK_HMAC_KEY"),
+                // Microsoft Graph
+                ["MICROSOFT_TENANT_ID"] = Amazon.CDK.AWS.ECS.Secret.FromSecretsManager(microsoftSecret, "TENANT_ID"),
+                ["MICROSOFT_CLIENT_ID"] = Amazon.CDK.AWS.ECS.Secret.FromSecretsManager(microsoftSecret, "CLIENT_ID"),
+                ["MICROSOFT_CLIENT_SECRET"] = Amazon.CDK.AWS.ECS.Secret.FromSecretsManager(microsoftSecret, "CLIENT_SECRET"),
+                ["TEAMS_WEBHOOK_URL"] = Amazon.CDK.AWS.ECS.Secret.FromSecretsManager(microsoftSecret, "TEAMS_WEBHOOK_URL"),
+                ["OUTLOOK_CALENDAR_USER"] = Amazon.CDK.AWS.ECS.Secret.FromSecretsManager(microsoftSecret, "OUTLOOK_CALENDAR_USER"),
+                // Job Boards
+                ["LINKEDIN_API_KEY"] = Amazon.CDK.AWS.ECS.Secret.FromSecretsManager(jobBoardsSecret, "LINKEDIN_API_KEY"),
+                ["LINKEDIN_API_SECRET"] = Amazon.CDK.AWS.ECS.Secret.FromSecretsManager(jobBoardsSecret, "LINKEDIN_API_SECRET"),
+                ["LINKEDIN_ORG_ID"] = Amazon.CDK.AWS.ECS.Secret.FromSecretsManager(jobBoardsSecret, "LINKEDIN_ORG_ID"),
+                ["INDEED_API_TOKEN"] = Amazon.CDK.AWS.ECS.Secret.FromSecretsManager(jobBoardsSecret, "INDEED_API_TOKEN"),
+                ["INDEED_EMPLOYER_ID"] = Amazon.CDK.AWS.ECS.Secret.FromSecretsManager(jobBoardsSecret, "INDEED_EMPLOYER_ID"),
+                ["PNET_API_KEY"] = Amazon.CDK.AWS.ECS.Secret.FromSecretsManager(jobBoardsSecret, "PNET_API_KEY"),
+                ["CAREER_JUNCTION_API_KEY"] = Amazon.CDK.AWS.ECS.Secret.FromSecretsManager(jobBoardsSecret, "CAREER_JUNCTION_API_KEY"),
+                ["CAREER_JUNCTION_PARTNER_ID"] = Amazon.CDK.AWS.ECS.Secret.FromSecretsManager(jobBoardsSecret, "CAREER_JUNCTION_PARTNER_ID")
             }
         });
 
@@ -195,7 +273,9 @@ public class ShumelaHireComputeStack : Stack
             VpcSubnets = new SubnetSelection { SubnetType = SubnetType.PUBLIC }
         });
 
-        // ── Fargate Service ──────────────────────────────────────────────────
+        AlbDnsName = alb.LoadBalancerDnsName;
+
+        // ── Backend Fargate Service ──────────────────────────────────────────
         var service = new FargateService(this, "Service", new FargateServiceProps
         {
             ServiceName = prefix,
@@ -210,6 +290,53 @@ public class ShumelaHireComputeStack : Stack
             MaxHealthyPercent = 200
         });
 
+        // ── Frontend Task Definition ─────────────────────────────────────────
+        var frontendTaskDef = new FargateTaskDefinition(this, "FrontendTaskDef", new FargateTaskDefinitionProps
+        {
+            Family = $"{prefix}-frontend",
+            Cpu = 256,
+            MemoryLimitMiB = 512,
+            TaskRole = taskRole,
+            ExecutionRole = executionRole
+        });
+
+        frontendTaskDef.AddContainer("frontend", new ContainerDefinitionOptions
+        {
+            ContainerName = "frontend",
+            Image = ContainerImage.FromEcrRepository(frontendEcrRepository, "latest"),
+            Logging = LogDrivers.AwsLogs(new AwsLogDriverProps
+            {
+                LogGroup = logGroup,
+                StreamPrefix = "frontend"
+            }),
+            PortMappings = new[]
+            {
+                new PortMapping { ContainerPort = 3000, Protocol = Amazon.CDK.AWS.ECS.Protocol.TCP }
+            },
+            HealthCheck = new Amazon.CDK.AWS.ECS.HealthCheck
+            {
+                Command = new[] { "CMD-SHELL", "wget -qO- http://localhost:3000/ || exit 1" },
+                Interval = Duration.Seconds(30),
+                Timeout = Duration.Seconds(5),
+                Retries = 3,
+                StartPeriod = Duration.Seconds(30)
+            }
+        });
+
+        // ── Frontend Fargate Service ─────────────────────────────────────────
+        var frontendService = new FargateService(this, "FrontendService", new FargateServiceProps
+        {
+            ServiceName = $"{prefix}-frontend",
+            Cluster = cluster,
+            TaskDefinition = frontendTaskDef,
+            DesiredCount = 1,
+            SecurityGroups = new[] { foundation.EcsSecurityGroup },
+            VpcSubnets = new SubnetSelection { SubnetType = SubnetType.PRIVATE_WITH_EGRESS },
+            AssignPublicIp = false,
+            CircuitBreaker = new DeploymentCircuitBreaker { Rollback = true }
+        });
+
+        // ── ALB Listeners & Path-Based Routing ──────────────────────────────
         IApplicationListener primaryListener;
 
         if (!string.IsNullOrEmpty(config.ApiCertificateArn))
@@ -230,12 +357,7 @@ public class ShumelaHireComputeStack : Stack
             {
                 Port = 443,
                 Protocol = ApplicationProtocol.HTTPS,
-                Certificates = new[] { ListenerCertificate.FromArn(config.ApiCertificateArn) },
-                DefaultAction = ListenerAction.FixedResponse(503, new FixedResponseOptions
-                {
-                    ContentType = "application/json",
-                    MessageBody = "{\"error\":\"Service unavailable\"}"
-                })
+                Certificates = new[] { ListenerCertificate.FromArn(config.ApiCertificateArn) }
             });
         }
         else
@@ -243,23 +365,41 @@ public class ShumelaHireComputeStack : Stack
             // HTTP only (dev/local)
             primaryListener = alb.AddListener("Http", new BaseApplicationListenerProps
             {
-                Port = 80,
-                DefaultAction = ListenerAction.FixedResponse(503, new FixedResponseOptions
-                {
-                    ContentType = "application/json",
-                    MessageBody = "{\"error\":\"Service unavailable\"}"
-                })
+                Port = 80
             });
         }
 
+        // API traffic → backend (priority rule)
         primaryListener.AddTargets("BackendTarget", new AddApplicationTargetsProps
         {
             Port = 8080,
             Protocol = ApplicationProtocol.HTTP,
             Targets = new[] { service },
+            Priority = 10,
+            Conditions = new[]
+            {
+                ListenerCondition.PathPatterns(new[] { "/api/*", "/actuator/*", "/v3/api-docs*", "/swagger-ui*" })
+            },
             HealthCheck = new Amazon.CDK.AWS.ElasticLoadBalancingV2.HealthCheck
             {
                 Path = "/actuator/health",
+                HealthyThresholdCount = 2,
+                UnhealthyThresholdCount = 3,
+                Interval = Duration.Seconds(30),
+                Timeout = Duration.Seconds(10)
+            },
+            DeregistrationDelay = Duration.Seconds(30)
+        });
+
+        // Default → frontend
+        primaryListener.AddTargets("FrontendTarget", new AddApplicationTargetsProps
+        {
+            Port = 3000,
+            Protocol = ApplicationProtocol.HTTP,
+            Targets = new[] { frontendService },
+            HealthCheck = new Amazon.CDK.AWS.ElasticLoadBalancingV2.HealthCheck
+            {
+                Path = "/",
                 HealthyThresholdCount = 2,
                 UnhealthyThresholdCount = 3,
                 Interval = Duration.Seconds(30),
@@ -457,6 +597,16 @@ public class ShumelaHireComputeStack : Stack
         {
             Value = ecrRepository.RepositoryUri,
             ExportName = $"{prefix}-EcrRepositoryUri"
+        });
+        new CfnOutput(this, "FrontendEcrRepositoryUri", new CfnOutputProps
+        {
+            Value = frontendEcrRepository.RepositoryUri,
+            ExportName = $"{prefix}-FrontendEcrRepositoryUri"
+        });
+        new CfnOutput(this, "FrontendServiceName", new CfnOutputProps
+        {
+            Value = frontendService.ServiceName,
+            ExportName = $"{prefix}-FrontendServiceName"
         });
     }
 }

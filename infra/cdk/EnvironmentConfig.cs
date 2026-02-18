@@ -18,20 +18,21 @@ public sealed class EnvironmentConfig
         "prod" => new[] { $"https://{DomainName}", $"https://www.{DomainName}" },
         "ppe" => new[] { $"https://ppe.{DomainName}" },
         "sbx" => new[] { $"https://sbx.{DomainName}" },
+        "dev" => new[] { $"https://dev.{DomainName}", "http://localhost:3000" },
         _ => new[] { "http://localhost:3000", "http://localhost:3001" }
     };
 
-    public string UiUrl => EnvironmentName == "prod"
-        ? $"https://{DomainName}"
-        : EnvironmentName == "dev"
-            ? "http://localhost:3000"
-            : $"https://{EnvironmentName}.{DomainName}";
+    public string UiUrl => EnvironmentName switch
+    {
+        "prod" => $"https://{DomainName}",
+        _ => $"https://{EnvironmentName}.{DomainName}"
+    };
 
-    public string ApiUrl => EnvironmentName == "prod"
-        ? $"https://{ApiDomainName}"
-        : EnvironmentName == "dev"
-            ? "http://localhost:8080"
-            : $"https://api.{EnvironmentName}.{DomainName}";
+    public string ApiUrl => EnvironmentName switch
+    {
+        "prod" => $"https://{ApiDomainName}",
+        _ => $"https://api.{EnvironmentName}.{DomainName}"
+    };
 
     public string Prefix => $"shumelahire-{EnvironmentName}";
 

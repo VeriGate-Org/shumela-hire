@@ -24,7 +24,7 @@ public sealed class Program
         var api = new ShumelaHireApiStack(app, $"{config.Prefix}-api", config, compute,
             new StackProps { Env = env });
 
-        var frontend = new ShumelaHireFrontendStack(app, $"{config.Prefix}-frontend", config, foundation,
+        var frontend = new ShumelaHireFrontendStack(app, $"{config.Prefix}-frontend", config, compute,
             new StackProps { Env = env });
 
         app.Synth();
