@@ -1,20 +1,28 @@
 package com.arthmatic.shumelahire.controller;
 
+import com.arthmatic.shumelahire.entity.ApplicationStatus;
+import com.arthmatic.shumelahire.entity.PipelineStage;
 import com.arthmatic.shumelahire.service.ApplicationManagementService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * REST Controller for Application Management Console
+ */
 @RestController
 @RequestMapping("/api/applications/manage")
-@CrossOrigin(origins = "*", maxAge = 3600)
+@CrossOrigin(origins = "*")
 @PreAuthorize("hasAnyRole('ADMIN', 'HR_MANAGER', 'RECRUITER')")
 public class ApplicationManagementController {
 
@@ -22,216 +30,243 @@ public class ApplicationManagementController {
     private ApplicationManagementService applicationManagementService;
 
     /**
-     * Search applications with advanced filtering
+     * Advanced search for applications with filtering
+     * GET /api/applications/manage/search
      */
     @GetMapping("/search")
     public ResponseEntity<?> searchApplications(
-            @RequestParam(required = false) String keyword,
-            @RequestParam(required = false) String status,
-            @RequestParam(required = false) String position,
-            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime fromDate,
-            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime toDate,
+            @RequestParam(required = false) String searchTerm,
+            @RequestParam(required = false) List<ApplicationStatus> statuses,
+            @RequestParam(required = false) List<String> departments,
+            @RequestParam(required = false) String jobTitle,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime dateFrom,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime dateTo,
             @RequestParam(required = false) Integer minRating,
             @RequestParam(required = false) Integer maxRating,
-            @RequestParam(required = false) String experience,
-            @RequestParam(required = false) String location
-    ) {
+            @RequestParam(defaultValue = "submittedAt") String sortBy,
+            @RequestParam(defaultValue = "desc") String sortDirection,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "20") int size) {
+
         try {
-            var applications = applicationManagementService.searchApplications(
-                keyword, status, position, fromDate, toDate, minRating, maxRating, experience, location
+            Sort.Direction direction = Sort.Direction.fromString(sortDirection);
+            Sort sort = Sort.by(direction, sortBy);
+            Pageable pageable = PageRequest.of(page, size, sort);
+
+            var searchResults = applicationManagementService.searchApplications(
+                searchTerm, statuses, departments, jobTitle,
+                dateFrom, dateTo, minRating, maxRating,
+                sortBy, sortDirection, pageable
             );
-            return ResponseEntity.ok(applications);
+
+            Map<String, Object> response = new HashMap<>();
+            response.put("content", searchResults.getContent());
+            response.put("page", searchResults.getNumber());
+            response.put("size", searchResults.getSize());
+            response.put("totalElements", searchResults.getTotalElements());
+            response.put("totalPages", searchResults.getTotalPages());
+            response.put("first", searchResults.isFirst());
+            response.put("last", searchResults.isLast());
+
+            return ResponseEntity.ok(response);
+
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body(Map.of("error", "Failed to search applications: " + e.getMessage()));
+            return ResponseEntity.badRequest()
+                .body(Map.of("error", "Search failed", "message", e.getMessage()));
         }
     }
 
     /**
      * Bulk update application status
+     * PUT /api/applications/manage/bulk/status
      */
-    @PostMapping("/bulk-update-status")
+    @PutMapping("/bulk/status")
     public ResponseEntity<?> bulkUpdateStatus(@RequestBody Map<String, Object> request) {
         try {
             @SuppressWarnings("unchecked")
-            List<Object> applicationIdObjects = (List<Object>) request.get("applicationIds");
-            String newStatus = (String) request.get("status");
+            List<Long> applicationIds = (List<Long>) request.get("applicationIds");
+            String statusName = (String) request.get("status");
             String reason = (String) request.get("reason");
 
-            if (applicationIdObjects == null || applicationIdObjects.isEmpty()) {
-                return ResponseEntity.badRequest()
-                    .body(Map.of("error", "Application IDs are required"));
-            }
-
-            if (newStatus == null || newStatus.trim().isEmpty()) {
-                return ResponseEntity.badRequest()
-                    .body(Map.of("error", "New status is required"));
-            }
-
-            // Convert Integer/Long objects to Long
-            List<Long> applicationIds = applicationIdObjects.stream()
-                .map(obj -> Long.valueOf(obj.toString()))
-                .toList();
-
-            applicationManagementService.bulkUpdateStatus(applicationIds, newStatus, reason);
+            ApplicationStatus status = ApplicationStatus.valueOf(statusName);
             
-            return ResponseEntity.ok(Map.of(
-                "message", "Successfully updated " + applicationIds.size() + " applications",
-                "updatedCount", applicationIds.size()
-            ));
+            var result = applicationManagementService.bulkUpdateStatus(applicationIds, status, reason);
+            return ResponseEntity.ok(result);
+
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest()
+                .body(Map.of("error", "Invalid status", "message", e.getMessage()));
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body(Map.of("error", "Failed to update applications: " + e.getMessage()));
+            return ResponseEntity.badRequest()
+                .body(Map.of("error", "Bulk update failed", "message", e.getMessage()));
+        }
+    }
+
+    /**
+     * Bulk assign pipeline stage
+     * PUT /api/applications/manage/bulk/pipeline-stage
+     */
+    @PutMapping("/bulk/pipeline-stage")
+    public ResponseEntity<?> bulkAssignPipelineStage(@RequestBody Map<String, Object> request) {
+        try {
+            @SuppressWarnings("unchecked")
+            List<Long> applicationIds = (List<Long>) request.get("applicationIds");
+            String stageName = (String) request.get("pipelineStage");
+
+            PipelineStage stage = PipelineStage.valueOf(stageName);
+            
+            var result = applicationManagementService.bulkAssignPipelineStage(applicationIds, stage);
+            return ResponseEntity.ok(result);
+
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest()
+                .body(Map.of("error", "Invalid pipeline stage", "message", e.getMessage()));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest()
+                .body(Map.of("error", "Bulk pipeline stage assignment failed", "message", e.getMessage()));
         }
     }
 
     /**
      * Bulk rate applications
+     * PUT /api/applications/manage/bulk/rating
      */
-    @PutMapping("/bulk-rate")
+    @PutMapping("/bulk/rating")
     public ResponseEntity<?> bulkRateApplications(@RequestBody Map<String, Object> request) {
         try {
             @SuppressWarnings("unchecked")
-            List<Object> applicationIdObjects = (List<Object>) request.get("applicationIds");
-            Integer rating = (Integer) request.get("rating");
-            String feedback = (String) request.get("feedback");
-
-            if (applicationIdObjects == null || applicationIdObjects.isEmpty()) {
-                return ResponseEntity.badRequest()
-                    .body(Map.of("error", "Application IDs are required"));
-            }
-
-            if (rating == null || rating < 1 || rating > 5) {
-                return ResponseEntity.badRequest()
-                    .body(Map.of("error", "Rating must be between 1 and 5"));
-            }
-
-            // Convert Integer/Long objects to Long
-            List<Long> applicationIds = applicationIdObjects.stream()
-                .map(obj -> Long.valueOf(obj.toString()))
-                .toList();
-
-            applicationManagementService.bulkRateApplications(applicationIds, rating, feedback);
+            Map<String, Integer> ratings = (Map<String, Integer>) request.get("ratings");
             
-            return ResponseEntity.ok(Map.of(
-                "message", "Successfully rated " + applicationIds.size() + " applications",
-                "updatedCount", applicationIds.size(),
-                "rating", rating
-            ));
+            // Convert String keys to Long
+            Map<Long, Integer> applicationRatings = new HashMap<>();
+            for (Map.Entry<String, Integer> entry : ratings.entrySet()) {
+                applicationRatings.put(Long.parseLong(entry.getKey()), entry.getValue());
+            }
+            
+            var result = applicationManagementService.bulkRateApplications(applicationRatings);
+            return ResponseEntity.ok(result);
+
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body(Map.of("error", "Failed to rate applications: " + e.getMessage()));
+            return ResponseEntity.badRequest()
+                .body(Map.of("error", "Bulk rating failed", "message", e.getMessage()));
         }
     }
 
     /**
      * Bulk add screening notes
+     * PUT /api/applications/manage/bulk/screening-notes
      */
-    @PutMapping("/bulk-notes")
+    @PutMapping("/bulk/screening-notes")
     public ResponseEntity<?> bulkAddScreeningNotes(@RequestBody Map<String, Object> request) {
         try {
             @SuppressWarnings("unchecked")
-            List<Object> applicationIdObjects = (List<Object>) request.get("applicationIds");
+            List<Long> applicationIds = (List<Long>) request.get("applicationIds");
             String notes = (String) request.get("notes");
-
-            if (applicationIdObjects == null || applicationIdObjects.isEmpty()) {
-                return ResponseEntity.badRequest()
-                    .body(Map.of("error", "Application IDs are required"));
-            }
 
             if (notes == null || notes.trim().isEmpty()) {
                 return ResponseEntity.badRequest()
-                    .body(Map.of("error", "Notes are required"));
+                    .body(Map.of("error", "Notes cannot be empty"));
             }
-
-            // Convert Integer/Long objects to Long
-            List<Long> applicationIds = applicationIdObjects.stream()
-                .map(obj -> Long.valueOf(obj.toString()))
-                .toList();
-
-            applicationManagementService.bulkAddScreeningNotes(applicationIds, notes);
             
-            return ResponseEntity.ok(Map.of(
-                "message", "Successfully added notes to " + applicationIds.size() + " applications",
-                "updatedCount", applicationIds.size()
-            ));
+            var result = applicationManagementService.bulkAddScreeningNotes(applicationIds, notes);
+            return ResponseEntity.ok(result);
+
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body(Map.of("error", "Failed to add notes: " + e.getMessage()));
+            return ResponseEntity.badRequest()
+                .body(Map.of("error", "Bulk screening notes update failed", "message", e.getMessage()));
         }
     }
 
     /**
      * Get application statistics
+     * GET /api/applications/manage/statistics
      */
     @GetMapping("/statistics")
-    public ResponseEntity<?> getStatistics() {
+    public ResponseEntity<?> getApplicationStatistics() {
         try {
-            Map<String, Object> statistics = applicationManagementService.getApplicationStatistics();
-            return ResponseEntity.ok(statistics);
+            var stats = applicationManagementService.getApplicationStatistics();
+            return ResponseEntity.ok(stats);
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body(Map.of("error", "Failed to get statistics: " + e.getMessage()));
+            return ResponseEntity.badRequest()
+                .body(Map.of("error", "Failed to get statistics", "message", e.getMessage()));
+        }
+    }
+
+    /**
+     * Get applications requiring attention
+     * GET /api/applications/manage/attention
+     */
+    @GetMapping("/attention")
+    public ResponseEntity<?> getApplicationsRequiringAttention(
+            @RequestParam(defaultValue = "7") int daysThreshold) {
+        try {
+            var applications = applicationManagementService.getApplicationsRequiringAttention(daysThreshold);
+            return ResponseEntity.ok(applications);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest()
+                .body(Map.of("error", "Failed to get applications requiring attention", "message", e.getMessage()));
         }
     }
 
     /**
      * Export applications data
+     * GET /api/applications/manage/export
      */
     @GetMapping("/export")
     public ResponseEntity<?> exportApplications(
-            @RequestParam(required = false) String keyword,
-            @RequestParam(required = false) String status,
-            @RequestParam(required = false) String position,
-            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime fromDate,
-            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime toDate
-    ) {
+            @RequestParam(required = false) List<Long> applicationIds,
+            @RequestParam(required = false) List<String> fields,
+            @RequestParam(defaultValue = "json") String format) {
         try {
-            var exportData = applicationManagementService.exportApplications(
-                keyword, status, position, fromDate, toDate
-            );
-            return ResponseEntity.ok(Map.of(
-                "data", exportData,
-                "count", exportData.size(),
-                "exportedAt", LocalDateTime.now()
-            ));
+            var data = applicationManagementService.exportApplications(applicationIds, fields);
+            
+            Map<String, Object> response = new HashMap<>();
+            response.put("format", format);
+            response.put("recordCount", data.size());
+            response.put("data", data);
+            response.put("exportedAt", LocalDateTime.now());
+            
+            return ResponseEntity.ok(response);
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body(Map.of("error", "Failed to export applications: " + e.getMessage()));
+            return ResponseEntity.badRequest()
+                .body(Map.of("error", "Export failed", "message", e.getMessage()));
         }
     }
 
     /**
-     * Get applications requiring action
+     * Get available filter options
+     * GET /api/applications/manage/filter-options
      */
-    @GetMapping("/requiring-action")
-    public ResponseEntity<?> getApplicationsRequiringAction() {
+    @GetMapping("/filter-options")
+    public ResponseEntity<?> getFilterOptions() {
         try {
-            var applications = applicationManagementService.getApplicationsRequiringAction();
-            return ResponseEntity.ok(Map.of(
-                "applications", applications,
-                "count", applications.size()
+            Map<String, Object> options = new HashMap<>();
+            
+            // Application statuses
+            options.put("statuses", ApplicationStatus.values());
+            
+            // Pipeline stages
+            options.put("pipelineStages", PipelineStage.values());
+            
+            // Common departments (this could be fetched from database)
+            options.put("departments", List.of(
+                "Engineering", "Marketing", "Sales", "HR", "Finance", 
+                "Operations", "Product", "Customer Support", "Legal", "R&D"
             ));
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body(Map.of("error", "Failed to get applications requiring action: " + e.getMessage()));
-        }
-    }
-
-    /**
-     * Get high-rated applications
-     */
-    @GetMapping("/high-rated")
-    public ResponseEntity<?> getHighRatedApplications() {
-        try {
-            var applications = applicationManagementService.getHighRatedApplications();
-            return ResponseEntity.ok(Map.of(
-                "applications", applications,
-                "count", applications.size()
+            
+            // Rating range
+            options.put("ratingRange", Map.of("min", 1, "max", 5));
+            
+            // Sort fields
+            options.put("sortFields", List.of(
+                "submittedAt", "updatedAt", "rating", "jobTitle", 
+                "department", "status", "applicant.name"
             ));
+            
+            return ResponseEntity.ok(options);
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body(Map.of("error", "Failed to get high-rated applications: " + e.getMessage()));
+            return ResponseEntity.badRequest()
+                .body(Map.of("error", "Failed to get filter options", "message", e.getMessage()));
         }
     }
 }

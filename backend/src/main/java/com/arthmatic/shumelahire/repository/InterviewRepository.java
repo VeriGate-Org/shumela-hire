@@ -1,148 +1,177 @@
 package com.arthmatic.shumelahire.repository;
 
 import com.arthmatic.shumelahire.entity.Interview;
-import com.arthmatic.shumelahire.entity.Application;
+import com.arthmatic.shumelahire.entity.InterviewStatus;
+import com.arthmatic.shumelahire.entity.InterviewType;
+import com.arthmatic.shumelahire.entity.InterviewRound;
+import com.arthmatic.shumelahire.entity.InterviewRecommendation;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
-@Repository("shumelahireInterviewRepository")
-public interface InterviewRepository extends JpaRepository<Interview, Long>, JpaSpecificationExecutor<Interview> {
+@Repository
+public interface InterviewRepository extends JpaRepository<Interview, Long> {
 
-    List<Interview> findByApplication(Application application);
+    // Basic queries
+    List<Interview> findByApplicationId(Long applicationId);
+    
+    List<Interview> findByInterviewerId(Long interviewerId);
+    
+    List<Interview> findByStatus(InterviewStatus status);
+    
+    List<Interview> findByType(InterviewType type);
+    
+    List<Interview> findByRound(InterviewRound round);
 
-    List<Interview> findByStatus(String status);
+    // Date and time queries
+    @Query("SELECT i FROM Interview i WHERE i.scheduledAt >= :startDate AND i.scheduledAt < :endDate")
+    List<Interview> findByScheduledAtBetween(@Param("startDate") LocalDateTime startDate, 
+                                           @Param("endDate") LocalDateTime endDate);
 
-    List<Interview> findByStatusIn(List<String> statuses);
+    @Query("SELECT i FROM Interview i WHERE i.interviewerId = :interviewerId " +
+           "AND i.scheduledAt >= :startDate AND i.scheduledAt < :endDate " +
+           "AND i.status IN ('SCHEDULED', 'RESCHEDULED')")
+    List<Interview> findInterviewerSchedule(@Param("interviewerId") Long interviewerId,
+                                          @Param("startDate") LocalDateTime startDate,
+                                          @Param("endDate") LocalDateTime endDate);
 
-    List<Interview> findByInterviewType(String interviewType);
+    // Conflict checking (native query for H2-compatible DATEADD)
+    @Query(value = "SELECT * FROM interviews i WHERE i.interviewer_id = :interviewerId " +
+           "AND i.status IN ('SCHEDULED', 'RESCHEDULED') " +
+           "AND i.scheduled_at <= :endTime AND DATEADD(MINUTE, i.duration_minutes, i.scheduled_at) >= :startTime",
+           nativeQuery = true)
+    List<Interview> findConflictingInterviews(@Param("interviewerId") Long interviewerId,
+                                             @Param("startTime") LocalDateTime startTime,
+                                             @Param("endTime") LocalDateTime endTime);
 
-    List<Interview> findByInterviewerEmail(String interviewerEmail);
+    @Query(value = "SELECT * FROM interviews i WHERE i.meeting_room = :meetingRoom " +
+           "AND i.status IN ('SCHEDULED', 'RESCHEDULED') " +
+           "AND i.scheduled_at <= :endTime AND DATEADD(MINUTE, i.duration_minutes, i.scheduled_at) >= :startTime",
+           nativeQuery = true)
+    List<Interview> findMeetingRoomConflicts(@Param("meetingRoom") String meetingRoom,
+                                           @Param("startTime") LocalDateTime startTime,
+                                           @Param("endTime") LocalDateTime endTime);
 
-    List<Interview> findByScheduledDateBetween(LocalDateTime start, LocalDateTime end);
+    // Status-based queries
+    @Query("SELECT i FROM Interview i WHERE i.status = 'SCHEDULED' AND i.scheduledAt <= :now")
+    List<Interview> findOverdueInterviews(@Param("now") LocalDateTime now);
 
-    List<Interview> findByScheduledDateAfter(LocalDateTime date);
+    @Query("SELECT i FROM Interview i WHERE i.status = 'SCHEDULED' " +
+           "AND i.scheduledAt BETWEEN :now AND :futureTime")
+    List<Interview> findUpcomingInterviews(@Param("now") LocalDateTime now, 
+                                         @Param("futureTime") LocalDateTime futureTime);
 
-    List<Interview> findByScheduledDateBefore(LocalDateTime date);
+    @Query("SELECT i FROM Interview i WHERE i.status = 'COMPLETED' AND i.feedback IS NULL")
+    List<Interview> findInterviewsRequiringFeedback();
 
-    // Find upcoming interviews
-    @Query("SELECT i FROM TgInterview i WHERE i.scheduledDate > :now AND i.status IN ('SCHEDULED', 'CONFIRMED') ORDER BY i.scheduledDate ASC")
-    List<Interview> findUpcomingInterviews(@Param("now") LocalDateTime now);
+    @Query("SELECT i FROM Interview i WHERE i.status = 'COMPLETED' AND i.recommendation IS NULL")
+    List<Interview> findInterviewsRequiringRecommendation();
 
-    // Find interviews for today
-    @Query("SELECT i FROM TgInterview i WHERE DATE(i.scheduledDate) = DATE(:date) ORDER BY i.scheduledDate ASC")
-    List<Interview> findInterviewsForDate(@Param("date") LocalDateTime date);
+    // Search functionality
+    @Query("SELECT i FROM Interview i JOIN i.application a JOIN a.jobPosting jp " +
+           "WHERE (:searchTerm IS NULL OR " +
+           "LOWER(i.title) LIKE LOWER(CONCAT('%', :searchTerm, '%')) OR " +
+           "LOWER(jp.title) LIKE LOWER(CONCAT('%', :searchTerm, '%')) OR " +
+           "LOWER(jp.department) LIKE LOWER(CONCAT('%', :searchTerm, '%'))) " +
+           "AND (:status IS NULL OR i.status = :status) " +
+           "AND (:type IS NULL OR i.type = :type) " +
+           "AND (:round IS NULL OR i.round = :round) " +
+           "AND (:interviewerId IS NULL OR i.interviewerId = :interviewerId) " +
+           "AND (:startDate IS NULL OR i.scheduledAt >= :startDate) " +
+           "AND (:endDate IS NULL OR i.scheduledAt <= :endDate)")
+    Page<Interview> searchInterviews(@Param("searchTerm") String searchTerm,
+                                   @Param("status") InterviewStatus status,
+                                   @Param("type") InterviewType type,
+                                   @Param("round") InterviewRound round,
+                                   @Param("interviewerId") Long interviewerId,
+                                   @Param("startDate") LocalDateTime startDate,
+                                   @Param("endDate") LocalDateTime endDate,
+                                   Pageable pageable);
 
-    // Find interviews needing reminders
-    @Query("SELECT i FROM TgInterview i WHERE i.scheduledDate > :now AND i.scheduledDate <= :reminderTime " +
-           "AND i.reminderSent = false AND i.status IN ('SCHEDULED', 'CONFIRMED')")
-    List<Interview> findInterviewsNeedingReminders(@Param("now") LocalDateTime now, 
-                                                   @Param("reminderTime") LocalDateTime reminderTime);
+    // Calendar queries
+    @Query("SELECT i FROM Interview i WHERE i.interviewerId = :interviewerId " +
+           "AND YEAR(i.scheduledAt) = :year AND MONTH(i.scheduledAt) = :month")
+    List<Interview> findByInterviewerAndMonth(@Param("interviewerId") Long interviewerId,
+                                            @Param("year") int year,
+                                            @Param("month") int month);
 
-    // Find overdue interviews (should be completed but status is still SCHEDULED/CONFIRMED)
-    @Query("SELECT i FROM TgInterview i WHERE i.scheduledDate < :cutoffTime AND i.status IN ('SCHEDULED', 'CONFIRMED')")
-    List<Interview> findOverdueInterviews(@Param("cutoffTime") LocalDateTime cutoffTime);
+    @Query("SELECT i FROM Interview i WHERE DATE(i.scheduledAt) = DATE(:date)")
+    List<Interview> findByDate(@Param("date") LocalDateTime date);
 
-    // Statistics queries
-    long countByStatus(String status);
+    // Analytics queries
+    @Query("SELECT COUNT(i) FROM Interview i WHERE i.interviewerId = :interviewerId " +
+           "AND i.scheduledAt >= :startDate AND i.scheduledAt < :endDate")
+    Long countInterviewsByInterviewerAndDateRange(@Param("interviewerId") Long interviewerId,
+                                                @Param("startDate") LocalDateTime startDate,
+                                                @Param("endDate") LocalDateTime endDate);
 
-    long countByScheduledDateBetween(LocalDateTime start, LocalDateTime end);
+    @Query("SELECT i.status, COUNT(i) FROM Interview i " +
+           "WHERE i.scheduledAt >= :startDate AND i.scheduledAt < :endDate " +
+           "GROUP BY i.status")
+    List<Object[]> getInterviewStatusStatistics(@Param("startDate") LocalDateTime startDate,
+                                               @Param("endDate") LocalDateTime endDate);
 
-    long countByInterviewType(String interviewType);
+    @Query("SELECT i.round, COUNT(i) FROM Interview i " +
+           "WHERE i.scheduledAt >= :startDate AND i.scheduledAt < :endDate " +
+           "GROUP BY i.round")
+    List<Object[]> getInterviewRoundStatistics(@Param("startDate") LocalDateTime startDate,
+                                             @Param("endDate") LocalDateTime endDate);
 
-    @Query("SELECT AVG(i.rating) FROM TgInterview i WHERE i.rating IS NOT NULL")
-    Double findAverageRating();
+    @Query("SELECT AVG(i.rating) FROM Interview i WHERE i.rating IS NOT NULL " +
+           "AND i.scheduledAt >= :startDate AND i.scheduledAt < :endDate")
+    Optional<Double> getAverageInterviewRating(@Param("startDate") LocalDateTime startDate,
+                                             @Param("endDate") LocalDateTime endDate);
 
-    @Query("SELECT AVG(i.technicalScore) FROM TgInterview i WHERE i.technicalScore IS NOT NULL")
-    Double findAverageTechnicalScore();
+    // Recommendation-based queries
+    List<Interview> findByRecommendation(InterviewRecommendation recommendation);
 
-    @Query("SELECT AVG(i.communicationScore) FROM TgInterview i WHERE i.communicationScore IS NOT NULL")
-    Double findAverageCommunicationScore();
+    @Query("SELECT i FROM Interview i WHERE i.status = 'COMPLETED' " +
+           "AND i.recommendation IN ('HIRE', 'CONSIDER')")
+    List<Interview> findPositiveRecommendations();
 
-    @Query("SELECT AVG(i.culturalFitScore) FROM TgInterview i WHERE i.culturalFitScore IS NOT NULL")
-    Double findAverageCulturalFitScore();
+    @Query("SELECT i FROM Interview i WHERE i.status = 'COMPLETED' " +
+           "AND i.recommendation = 'ANOTHER_ROUND'")
+    List<Interview> findRequiringAdditionalRounds();
 
-    // Grouped statistics
-    @Query("SELECT i.status, COUNT(i) FROM TgInterview i GROUP BY i.status")
-    List<Object[]> findInterviewCountByStatus();
+    // Reminder and notification queries
+    @Query("SELECT i FROM Interview i WHERE i.status = 'SCHEDULED' " +
+           "AND i.scheduledAt BETWEEN :now AND :reminderTime " +
+           "AND i.reminderSentAt IS NULL")
+    List<Interview> findInterviewsNeedingReminders(@Param("now") LocalDateTime now,
+                                                 @Param("reminderTime") LocalDateTime reminderTime);
 
-    @Query("SELECT i.interviewType, COUNT(i) FROM TgInterview i GROUP BY i.interviewType ORDER BY COUNT(i) DESC")
-    List<Object[]> findInterviewCountByType();
+    @Query("SELECT i FROM Interview i WHERE i.status = 'COMPLETED' " +
+           "AND i.feedbackRequestedAt IS NULL " +
+           "AND i.completedAt <= :cutoffTime")
+    List<Interview> findInterviewsNeedingFeedbackRequest(@Param("cutoffTime") LocalDateTime cutoffTime);
 
-    @Query("SELECT i.recommendation, COUNT(i) FROM TgInterview i WHERE i.recommendation != 'PENDING' GROUP BY i.recommendation")
-    List<Object[]> findInterviewCountByRecommendation();
+    // Application-specific queries
+    @Query("SELECT i FROM Interview i WHERE i.application.id = :applicationId " +
+           "ORDER BY i.scheduledAt DESC")
+    List<Interview> findByApplicationIdOrderByScheduledAtDesc(@Param("applicationId") Long applicationId);
 
-    @Query("SELECT DATE(i.scheduledDate), COUNT(i) FROM TgInterview i WHERE i.scheduledDate >= :fromDate " +
-           "GROUP BY DATE(i.scheduledDate) ORDER BY DATE(i.scheduledDate)")
-    List<Object[]> findInterviewCountByDate(@Param("fromDate") LocalDateTime fromDate);
+    @Query("SELECT i FROM Interview i WHERE i.application.id = :applicationId " +
+           "AND i.status = 'COMPLETED' AND i.recommendation = 'HIRE'")
+    List<Interview> findHireRecommendationsByApplication(@Param("applicationId") Long applicationId);
 
-    // Interviewer performance
-    @Query("SELECT i.interviewerEmail, COUNT(i), AVG(i.rating) FROM TgInterview i WHERE i.rating IS NOT NULL " +
-           "GROUP BY i.interviewerEmail ORDER BY COUNT(i) DESC")
-    List<Object[]> findInterviewerPerformance();
+    // Reschedule tracking
+    @Query("SELECT i FROM Interview i WHERE i.rescheduleCount >= :maxReschedules")
+    List<Interview> findExcessivelyRescheduledInterviews(@Param("maxReschedules") int maxReschedules);
 
-    // Find interviews by multiple criteria
-    @Query("SELECT i FROM TgInterview i WHERE " +
-           "(:interviewerEmail IS NULL OR i.interviewerEmail = :interviewerEmail) AND " +
-           "(:status IS NULL OR i.status = :status) AND " +
-           "(:interviewType IS NULL OR i.interviewType = :interviewType) AND " +
-           "(:fromDate IS NULL OR i.scheduledDate >= :fromDate) AND " +
-           "(:toDate IS NULL OR i.scheduledDate <= :toDate) AND " +
-           "(:recommendation IS NULL OR i.recommendation = :recommendation)")
-    List<Interview> findByCriteria(
-            @Param("interviewerEmail") String interviewerEmail,
-            @Param("status") String status,
-            @Param("interviewType") String interviewType,
-            @Param("fromDate") LocalDateTime fromDate,
-            @Param("toDate") LocalDateTime toDate,
-            @Param("recommendation") String recommendation
-    );
-
-    // Find high-performing interviews
-    @Query("SELECT i FROM TgInterview i WHERE i.rating >= :minRating ORDER BY i.rating DESC, i.scheduledDate DESC")
-    List<Interview> findHighRatedInterviews(@Param("minRating") Integer minRating);
-
-    // Find interviews with detailed feedback
-    @Query("SELECT i FROM TgInterview i WHERE i.feedback IS NOT NULL AND LENGTH(TRIM(i.feedback)) > 0 " +
-           "ORDER BY i.scheduledDate DESC")
-    List<Interview> findInterviewsWithFeedback();
-
-    // Calendar view - find interviews in date range
-    @Query("SELECT i FROM TgInterview i WHERE i.scheduledDate BETWEEN :startDate AND :endDate " +
-           "ORDER BY i.scheduledDate ASC")
-    List<Interview> findInterviewsInDateRange(@Param("startDate") LocalDateTime startDate, 
-                                              @Param("endDate") LocalDateTime endDate);
-
-    // Find completed interviews without feedback
-    @Query("SELECT i FROM TgInterview i WHERE i.status = 'COMPLETED' AND " +
-           "(i.feedback IS NULL OR LENGTH(TRIM(i.feedback)) = 0)")
-    List<Interview> findCompletedInterviewsWithoutFeedback();
-
-    // Additional analytics methods for performance dashboard
-    long countByInterviewTypeAndStatus(String interviewType, String status);
-
-    @Query("SELECT i.interviewerName, COUNT(i), AVG(i.rating), AVG(i.technicalScore), " +
-           "AVG(i.communicationScore), AVG(i.culturalFitScore) FROM TgInterview i " +
-           "WHERE i.rating IS NOT NULL GROUP BY i.interviewerName ORDER BY COUNT(i) DESC")
-    List<Object[]> findInterviewerStats();
-
-    @Query("SELECT AVG(i.rating) FROM TgInterview i WHERE i.rating IS NOT NULL")
-    Double getAverageRating();
-
-    @Query("SELECT AVG(i.technicalScore) FROM TgInterview i WHERE i.technicalScore IS NOT NULL")
-    Double getAverageTechnicalScore();
-
-    @Query("SELECT AVG(i.communicationScore) FROM TgInterview i WHERE i.communicationScore IS NOT NULL")
-    Double getAverageCommunicationScore();
-
-    @Query("SELECT AVG(i.culturalFitScore) FROM TgInterview i WHERE i.culturalFitScore IS NOT NULL")
-    Double getAverageCulturalFitScore();
-
-    @Query("SELECT AVG(i.durationMinutes) FROM TgInterview i WHERE i.durationMinutes IS NOT NULL")
-    Double getAverageDurationMinutes();
+    @Query("SELECT AVG(i.rescheduleCount) FROM Interview i WHERE i.rescheduleCount > 0")
+    Optional<Double> getAverageRescheduleCount();
+    
+    // Analytics methods
+    Long countByScheduledAtBetween(LocalDateTime startDate, LocalDateTime endDate);
+    
+    Long countByStatusAndScheduledAtBetween(InterviewStatus status, LocalDateTime startDate, LocalDateTime endDate);
+    
+    List<Interview> findByStatusAndScheduledAtBetween(InterviewStatus status, LocalDateTime startDate, LocalDateTime endDate);
 }

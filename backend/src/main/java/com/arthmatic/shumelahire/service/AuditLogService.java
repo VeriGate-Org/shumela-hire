@@ -133,4 +133,21 @@ public class AuditLogService {
     public long getLogCountByAction(String action) {
         return auditLogRepository.countByAction(action);
     }
+
+    // Convenience methods used by recruitment services
+    public void logApplicantAction(Long applicantId, String action, String entityType, String details) {
+        saveLog(applicantId != null ? applicantId.toString() : "SYSTEM", action, entityType, details);
+    }
+
+    public void logAuthAction(String userId, String action, String entityType, String details) {
+        saveLog(userId, action, entityType, details);
+    }
+
+    public void logDocumentAction(String userId, String action, String entityType, String details) {
+        saveLog(userId, action, entityType, details);
+    }
+
+    public void logJobAdAction(Long userId, String action, String entityType, String details) {
+        saveLog(userId != null ? userId.toString() : "SYSTEM", action, entityType, details);
+    }
 }

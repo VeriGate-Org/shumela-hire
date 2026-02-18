@@ -1,32 +1,38 @@
 package com.arthmatic.shumelahire.repository;
 
 import com.arthmatic.shumelahire.entity.Applicant;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Optional;
 
-@Repository("shumelahireApplicantRepository")
+@Repository
 public interface ApplicantRepository extends JpaRepository<Applicant, Long> {
-
+    
+    // Find by email
     Optional<Applicant> findByEmail(String email);
-
-    List<Applicant> findByFullNameContainingIgnoreCase(String name);
-
-    List<Applicant> findByLocationContainingIgnoreCase(String location);
-
-    List<Applicant> findByExperienceContainingIgnoreCase(String experience);
-
-    List<Applicant> findByCreatedAtBetween(LocalDateTime start, LocalDateTime end);
-
-    @Query("SELECT COUNT(a) FROM TgApplicant a WHERE a.createdAt > :date")
-    long countByCreatedAtAfter(LocalDateTime date);
-
-    @Query("SELECT a FROM TgApplicant a WHERE a.skills LIKE %:skill%")
-    List<Applicant> findBySkillsContaining(String skill);
-
+    
+    // Check if email exists
     boolean existsByEmail(String email);
+    
+    // Find by name patterns
+    @Query("SELECT a FROM Applicant a WHERE " +
+           "LOWER(a.name) LIKE LOWER(CONCAT('%', :searchTerm, '%')) OR " +
+           "LOWER(a.surname) LIKE LOWER(CONCAT('%', :searchTerm, '%')) OR " +
+           "LOWER(a.email) LIKE LOWER(CONCAT('%', :searchTerm, '%'))")
+    Page<Applicant> findBySearchTerm(@Param("searchTerm") String searchTerm, Pageable pageable);
+    
+    // Find by ID/Passport number
+    Optional<Applicant> findByIdPassportNumber(String idPassportNumber);
+    
+    // Count applicants
+    long count();
+    
+    // Find recent applicants
+    @Query("SELECT a FROM Applicant a ORDER BY a.createdAt DESC")
+    Page<Applicant> findRecent(Pageable pageable);
 }
