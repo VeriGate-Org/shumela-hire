@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import { useSecurity } from '@/contexts/SecurityContext';
+import { apiFetch } from '@/lib/api-fetch';
 
 /**
  * Security Dashboard Component
@@ -15,7 +16,7 @@ const SecurityDashboard: React.FC = () => {
   const loadSecurityReport = async () => {
     setLoading(true);
     try {
-      const response = await fetch('/api/security/report', {
+      const response = await apiFetch('/api/security/report', {
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('auth_token')}`,
         },

@@ -10,7 +10,6 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api/recruitment-analytics")
-@CrossOrigin(origins = "*")
 @PreAuthorize("hasAnyRole('ADMIN', 'HR_MANAGER', 'EXECUTIVE')")
 public class PerformanceAnalyticsController {
 

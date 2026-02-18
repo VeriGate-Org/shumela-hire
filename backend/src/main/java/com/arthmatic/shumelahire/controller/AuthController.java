@@ -20,6 +20,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.context.annotation.Profile;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
@@ -29,11 +30,12 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
- * Authentication controller for login, signup, and token management
+ * Authentication controller for local dev login, signup, and token management.
+ * Active only in dev profile — deployed environments use Cognito Hosted UI.
  */
 @RestController
 @RequestMapping("/api/auth")
-@CrossOrigin(origins = "http://localhost:3000")
+@Profile("dev")
 public class AuthController {
 
     private static final Logger logger = LoggerFactory.getLogger(AuthController.class);
@@ -268,15 +270,6 @@ public class AuthController {
             logger.error("Logout error: {}", e.getMessage());
             return ResponseEntity.ok(new MessageResponse("Logged out successfully!"));
         }
-    }
-
-    /**
-     * Get current user info
-     */
-    @GetMapping("/me")
-    public ResponseEntity<?> getCurrentUser() {
-        // This will be implemented with security context
-        return ResponseEntity.ok(new MessageResponse("Current user endpoint"));
     }
 
     /**

@@ -1,17 +1,53 @@
 import { SWRConfiguration } from 'swr';
 
-// Default fetcher function with error handling
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080';
+
+async function getAuthToken(): Promise<string | null> {
+  try {
+    const { fetchAuthSession } = await import('aws-amplify/auth');
+    const session = await fetchAuthSession({ forceRefresh: false });
+    return session.tokens?.accessToken?.toString() || null;
+  } catch {
+    // Cognito not configured or no session
+  }
+  if (typeof window !== 'undefined') {
+    return sessionStorage.getItem('jwt_token');
+  }
+  return null;
+}
+
+// Resolve a URL: relative paths like /api/foo go to the backend base URL
+function resolveUrl(url: string): string {
+  if (url.startsWith('http://') || url.startsWith('https://')) {
+    return url;
+  }
+  return `${API_BASE_URL}${url}`;
+}
+
+// Default fetcher function with auth headers and error handling
 export const fetcher = async (url: string) => {
-  const response = await fetch(url);
-  
+  const headers: Record<string, string> = {
+    'Content-Type': 'application/json',
+  };
+
+  const token = await getAuthToken();
+  if (token) {
+    headers['Authorization'] = `Bearer ${token}`;
+  }
+
+  const response = await fetch(resolveUrl(url), { headers });
+
   if (!response.ok) {
     const error = new Error('Failed to fetch');
-    // Attach extra info to the error object
-    (error as any).info = await response.json();
+    try {
+      (error as any).info = await response.json();
+    } catch {
+      (error as any).info = { message: response.statusText };
+    }
     (error as any).status = response.status;
     throw error;
   }
-  
+
   return response.json();
 };
 

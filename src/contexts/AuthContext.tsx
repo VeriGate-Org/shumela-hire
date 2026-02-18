@@ -1,7 +1,9 @@
 'use client';
 
-import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import React, { createContext, useContext, useState, useEffect, useCallback, ReactNode } from 'react';
+import { signIn, signOut, fetchAuthSession, getCurrentUser, fetchUserAttributes } from 'aws-amplify/auth';
 import { rolePermissions } from '@/config/permissions';
+import { isCognitoConfigured, configureAmplify } from '@/lib/amplify-config';
 
 export type UserRole =
   | 'ADMIN'
@@ -40,11 +42,14 @@ interface User {
 interface AuthContextType {
   user: User | null;
   login: (userData: User) => void;
+  loginWithCredentials: (email: string, password: string) => Promise<void>;
   logout: () => void;
   switchRole: (role: UserRole) => void;
   hasPermission: (permission: string) => boolean;
   isAuthenticated: boolean;
+  isLoading: boolean;
   token: string | null;
+  getAccessToken: () => Promise<string | null>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -61,55 +66,179 @@ interface AuthProviderProps {
   children: ReactNode;
 }
 
+// Initialize Amplify once
+if (isCognitoConfigured) {
+  configureAmplify();
+}
+
+function extractRoleFromGroups(groups: string[]): UserRole {
+  const validRoles = new Set(ALL_ROLES);
+  for (const group of groups) {
+    const upper = group.toUpperCase() as UserRole;
+    if (validRoles.has(upper)) {
+      return upper;
+    }
+  }
+  return 'APPLICANT';
+}
+
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
   const [token, setToken] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
 
-  // Check for existing session on mount
+  // Check for existing Cognito session on mount
   useEffect(() => {
-    const storedToken = sessionStorage.getItem('jwt_token');
-    if (storedToken) {
-      setToken(storedToken);
-      // In a real implementation, you would decode the JWT to get user info
-      // For now, we'll use mock data if a token exists
-      setUser({
-        id: '1',
-        name: 'John Doe',
-        email: 'john.doe@company.com',
-        role: 'ADMIN',
-        permissions: rolePermissions['ADMIN'],
-      });
+    if (isCognitoConfigured) {
+      checkCognitoSession();
+    } else {
+      checkMockSession();
     }
   }, []);
 
-  const login = (userData: User) => {
-    setUser(userData);
-    const storedToken = sessionStorage.getItem('jwt_token');
-    if (storedToken) {
-      setToken(storedToken);
-    }
-  };
+  async function checkCognitoSession() {
+    try {
+      const authUser = await getCurrentUser();
+      const session = await fetchAuthSession();
+      const idToken = session.tokens?.idToken;
 
-  const logout = () => {
+      if (idToken) {
+        const groups = (idToken.payload['cognito:groups'] as string[] | undefined) || [];
+        const role = extractRoleFromGroups(groups);
+        const attrs = await fetchUserAttributes();
+
+        setUser({
+          id: authUser.userId,
+          name: attrs.name || attrs.email || authUser.username,
+          email: attrs.email || '',
+          role,
+          permissions: rolePermissions[role],
+        });
+        setToken(idToken.toString());
+      }
+    } catch {
+      // No active session
+    } finally {
+      setIsLoading(false);
+    }
+  }
+
+  function checkMockSession() {
+    const storedToken = typeof window !== 'undefined' ? sessionStorage.getItem('jwt_token') : null;
+    const storedUser = typeof window !== 'undefined' ? sessionStorage.getItem('mock_user') : null;
+    if (storedToken && storedUser) {
+      try {
+        const parsed = JSON.parse(storedUser);
+        setToken(storedToken);
+        setUser(parsed);
+      } catch {
+        // Invalid stored data
+      }
+    }
+    setIsLoading(false);
+  }
+
+  const loginWithCredentials = useCallback(async (email: string, password: string) => {
+    if (!isCognitoConfigured) {
+      throw new Error('Cognito is not configured. Use mock login in development.');
+    }
+
+    const result = await signIn({ username: email, password });
+    if (result.isSignedIn) {
+      const session = await fetchAuthSession();
+      const idToken = session.tokens?.idToken;
+      const authUser = await getCurrentUser();
+
+      if (idToken) {
+        const groups = (idToken.payload['cognito:groups'] as string[] | undefined) || [];
+        const role = extractRoleFromGroups(groups);
+        const attrs = await fetchUserAttributes();
+
+        const userData: User = {
+          id: authUser.userId,
+          name: attrs.name || attrs.email || authUser.username,
+          email: attrs.email || '',
+          role,
+          permissions: rolePermissions[role],
+        };
+        setUser(userData);
+        setToken(idToken.toString());
+      }
+    }
+  }, []);
+
+  // Mock login for dev
+  const login = useCallback((userData: User) => {
+    setUser(userData);
+    const mockToken = 'mock-jwt-token-' + Date.now();
+    setToken(mockToken);
+    if (typeof window !== 'undefined') {
+      sessionStorage.setItem('jwt_token', mockToken);
+      sessionStorage.setItem('mock_user', JSON.stringify(userData));
+    }
+  }, []);
+
+  const logout = useCallback(async () => {
+    if (isCognitoConfigured) {
+      try {
+        await signOut();
+      } catch {
+        // Ignore sign-out errors
+      }
+    }
     setUser(null);
     setToken(null);
-    sessionStorage.removeItem('jwt_token');
-  };
-
-  const switchRole = (role: UserRole) => {
-    if (user) {
-      setUser({ ...user, role, permissions: rolePermissions[role] });
+    if (typeof window !== 'undefined') {
+      sessionStorage.removeItem('jwt_token');
+      sessionStorage.removeItem('mock_user');
     }
-  };
+  }, []);
 
-  const hasPermission = (permission: string): boolean => {
+  const switchRole = useCallback((role: UserRole) => {
+    if (user) {
+      const updated = { ...user, role, permissions: rolePermissions[role] };
+      setUser(updated);
+      if (!isCognitoConfigured && typeof window !== 'undefined') {
+        sessionStorage.setItem('mock_user', JSON.stringify(updated));
+      }
+    }
+  }, [user]);
+
+  const hasPermission = useCallback((permission: string): boolean => {
     return user?.permissions.includes(permission) ?? false;
-  };
+  }, [user]);
+
+  const getAccessToken = useCallback(async (): Promise<string | null> => {
+    if (isCognitoConfigured) {
+      try {
+        const session = await fetchAuthSession({ forceRefresh: false });
+        const accessToken = session.tokens?.accessToken?.toString() || null;
+        if (accessToken) {
+          setToken(accessToken);
+        }
+        return accessToken;
+      } catch {
+        return null;
+      }
+    }
+    return token;
+  }, [token]);
 
   const isAuthenticated = !!user && !!token;
 
   return (
-    <AuthContext.Provider value={{ user, login, logout, switchRole, hasPermission, isAuthenticated, token }}>
+    <AuthContext.Provider value={{
+      user,
+      login,
+      loginWithCredentials,
+      logout,
+      switchRole,
+      hasPermission,
+      isAuthenticated,
+      isLoading,
+      token,
+      getAccessToken,
+    }}>
       {children}
     </AuthContext.Provider>
   );

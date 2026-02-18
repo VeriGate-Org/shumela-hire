@@ -5,10 +5,9 @@ import com.arthmatic.shumelahire.security.JwtAuthenticationEntryPoint;
 import com.arthmatic.shumelahire.security.RateLimitFilter;
 import com.arthmatic.shumelahire.service.CustomUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.env.Environment;
+import org.springframework.context.annotation.Profile;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
@@ -28,9 +27,14 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * Security configuration for local development.
+ * Uses custom JWT filter with locally issued tokens.
+ */
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity(prePostEnabled = true)
+@Profile("dev")
 public class SecurityConfig {
 
     @Autowired
@@ -44,9 +48,6 @@ public class SecurityConfig {
 
     @Autowired
     private RateLimitFilter rateLimitFilter;
-
-    @Autowired
-    private Environment environment;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -69,7 +70,10 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOriginPatterns(getAllowedOrigins());
+        configuration.setAllowedOriginPatterns(Arrays.asList(
+                "http://localhost:3000",
+                "http://localhost:3001"
+        ));
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
         configuration.setAllowedHeaders(Arrays.asList("*"));
         configuration.setAllowCredentials(true);
@@ -78,30 +82,6 @@ public class SecurityConfig {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
         return source;
-    }
-
-    private List<String> getAllowedOrigins() {
-        List<String> activeProfiles = Arrays.asList(environment.getActiveProfiles());
-
-        if (activeProfiles.contains("prod")) {
-            return Arrays.asList(
-                    "https://shumelahire.co.za",
-                    "https://www.shumelahire.co.za"
-            );
-        } else if (activeProfiles.contains("ppe")) {
-            return Arrays.asList(
-                    "https://ppe.shumelahire.co.za"
-            );
-        } else if (activeProfiles.contains("sbx")) {
-            return Arrays.asList(
-                    "https://sbx.shumelahire.co.za"
-            );
-        } else {
-            return Arrays.asList(
-                    "http://localhost:3000",
-                    "http://localhost:3001"
-            );
-        }
     }
 
     @Bean
@@ -117,6 +97,7 @@ public class SecurityConfig {
             )
             .authorizeHttpRequests(authz -> authz
                 // Public endpoints
+                .requestMatchers("/api/auth/me").authenticated()
                 .requestMatchers("/api/auth/**").permitAll()
                 .requestMatchers("/api/auth/sso/**").permitAll()
                 .requestMatchers("/login/oauth2/**").permitAll()
@@ -125,11 +106,11 @@ public class SecurityConfig {
                 .requestMatchers("/api/health").permitAll()
                 .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
 
-                // Actuator health endpoint
+                // Actuator
                 .requestMatchers("/actuator/health").permitAll()
                 .requestMatchers("/actuator/**").hasRole("ADMIN")
 
-                // Admin only endpoints
+                // Admin endpoints
                 .requestMatchers("/api/admin/**").hasRole("ADMIN")
                 .requestMatchers("/api/audit/**").hasAnyRole("ADMIN", "HR_MANAGER")
                 .requestMatchers("/api/users/manage/**").hasAnyRole("ADMIN", "HR_MANAGER")
@@ -159,7 +140,7 @@ public class SecurityConfig {
                 // Payroll endpoints
                 .requestMatchers("/api/payroll/**").hasAnyRole("ADMIN", "HR_MANAGER")
 
-                // Agency portal endpoints
+                // Agency endpoints
                 .requestMatchers("/api/agencies/register").hasAnyRole("ADMIN", "HR_MANAGER")
                 .requestMatchers("/api/agencies/**").hasAnyRole("ADMIN", "HR_MANAGER", "RECRUITER")
 
@@ -187,11 +168,9 @@ public class SecurityConfig {
                 // General authenticated endpoints
                 .requestMatchers("/api/**").authenticated()
 
-                // Permit all other requests
-                .anyRequest().permitAll()
+                .anyRequest().denyAll()
             );
 
-        // Add rate limit filter before JWT filter
         http.addFilterBefore(rateLimitFilter, UsernamePasswordAuthenticationFilter.class);
         http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
         http.authenticationProvider(authenticationProvider());

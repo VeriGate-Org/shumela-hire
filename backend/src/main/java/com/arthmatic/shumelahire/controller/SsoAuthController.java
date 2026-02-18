@@ -10,7 +10,6 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api/auth/sso")
-@CrossOrigin(origins = "*", maxAge = 3600)
 @ConditionalOnProperty(name = "sso.enabled", havingValue = "true")
 public class SsoAuthController {
 

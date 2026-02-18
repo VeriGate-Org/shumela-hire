@@ -6,16 +6,18 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.context.annotation.Profile;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 
 /**
- * JWT Authentication Entry Point
- * Handles unauthorized access attempts
+ * JWT Authentication Entry Point.
+ * Active only in dev profile — deployed environments use Cognito.
  */
 @Component
+@Profile("dev")
 public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
 
     private static final Logger logger = LoggerFactory.getLogger(JwtAuthenticationEntryPoint.class);

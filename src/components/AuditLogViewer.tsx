@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useCallback } from 'react';
 import { AuditLogEntry } from '../types/workflow';
+import { apiFetch } from '@/lib/api-fetch';
 
 interface AuditLogViewerProps {
   requisitionId: string;
@@ -20,7 +21,7 @@ const AuditLogViewer: React.FC<AuditLogViewerProps> = ({ requisitionId, classNam
       setLoading(true);
       setError(null);
 
-      const response = await fetch(`/api/audit-logs?entityType=REQUISITION&entityId=${requisitionId}`);
+      const response = await apiFetch(`/api/audit-logs?entityType=REQUISITION&entityId=${requisitionId}`);
       
       if (!response.ok) {
         throw new Error('Failed to fetch audit logs');

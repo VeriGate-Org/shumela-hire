@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
+import { apiFetch } from '@/lib/api-fetch';
 
 interface KPI {
   value: number;
@@ -96,7 +97,7 @@ export default function AnalyticsDashboard() {
         params.append('department', selectedDepartment);
       }
 
-      const response = await fetch(`/api/analytics/dashboard?${params}`);
+      const response = await apiFetch(`/api/analytics/dashboard?${params}`);
       if (response.ok) {
         const data = await response.json();
         setDashboardData(data);
@@ -119,7 +120,7 @@ export default function AnalyticsDashboard() {
         params.append('department', selectedDepartment);
       }
 
-      const response = await fetch(`/api/analytics/detailed?${params}`);
+      const response = await apiFetch(`/api/analytics/detailed?${params}`);
       if (response.ok) {
         const data = await response.json();
         setDetailedData(data);
@@ -134,7 +135,7 @@ export default function AnalyticsDashboard() {
 
     try {
       setLoading(true);
-      const response = await fetch(`/api/analytics/reports/${selectedReportType}`, {
+      const response = await apiFetch(`/api/analytics/reports/${selectedReportType}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

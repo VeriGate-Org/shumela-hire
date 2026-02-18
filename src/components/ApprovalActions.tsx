@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import { CheckIcon, XMarkIcon } from '@heroicons/react/24/solid';
+import { apiFetch } from '@/lib/api-fetch';
 
 interface ApprovalActionsProps {
   requisitionId: string;
@@ -42,7 +43,7 @@ const ApprovalActions: React.FC<ApprovalActionsProps> = ({
     setIsSubmitting(true);
     try {
       const endpoint = actionType === 'approve' ? 'approve' : 'reject';
-      const response = await fetch(`/api/requisitions/${requisitionId}/${endpoint}?role=${currentUserRole}`, {
+      const response = await apiFetch(`/api/requisitions/${requisitionId}/${endpoint}?role=${currentUserRole}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

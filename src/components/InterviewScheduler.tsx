@@ -2,6 +2,7 @@
 
 import React, { useCallback, useEffect, useState } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
+import { apiFetch } from '@/lib/api-fetch';
 
 interface InterviewSchedulerProps {
   interviewId?: number;
@@ -118,7 +119,7 @@ export default function InterviewScheduler({ interviewId, onSuccess, onCancel }:
 
   const loadApplications = useCallback(async () => {
     try {
-      const response = await fetch('/api/applications?status=SCREENING,PHONE_INTERVIEW,FIRST_INTERVIEW,SECOND_INTERVIEW,TECHNICAL_ASSESSMENT,FINAL_INTERVIEW');
+      const response = await apiFetch('/api/applications?status=SCREENING,PHONE_INTERVIEW,FIRST_INTERVIEW,SECOND_INTERVIEW,TECHNICAL_ASSESSMENT,FINAL_INTERVIEW');
       if (response.ok) {
         const data = await response.json();
         setApplications(data.content || data);
@@ -133,7 +134,7 @@ export default function InterviewScheduler({ interviewId, onSuccess, onCancel }:
 
     try {
       setLoading(true);
-      const response = await fetch(`/api/interviews/${interviewId}`);
+      const response = await apiFetch(`/api/interviews/${interviewId}`);
       if (response.ok) {
         const data = await response.json();
         setFormData({
@@ -183,7 +184,7 @@ export default function InterviewScheduler({ interviewId, onSuccess, onCancel }:
       setCheckingAvailability(true);
       const startTime = new Date(formData.scheduledAt).toISOString();
 
-      const availabilityResponse = await fetch(
+      const availabilityResponse = await apiFetch(
         `/api/interviews/availability/interviewer/${formData.interviewerId}?startTime=${startTime}&durationMinutes=${formData.durationMinutes}`,
       );
 
@@ -196,7 +197,7 @@ export default function InterviewScheduler({ interviewId, onSuccess, onCancel }:
         }
       }
 
-      const suggestionsResponse = await fetch(
+      const suggestionsResponse = await apiFetch(
         `/api/interviews/suggestions/interviewer/${formData.interviewerId}?preferredDate=${startTime}&durationMinutes=${formData.durationMinutes}&numberOfSuggestions=5`,
       );
 

@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { useSecurity } from '@/contexts/SecurityContext';
+import { apiFetch } from '@/lib/api-fetch';
 
 /**
  * GDPR Compliance Manager Component
@@ -24,10 +25,10 @@ const GDPRComplianceManager: React.FC = () => {
     setLoading(true);
     try {
       const [complianceResponse, requestsResponse] = await Promise.all([
-        fetch('/api/gdpr/compliance-status', {
+        apiFetch('/api/gdpr/compliance-status', {
           headers: { 'Authorization': `Bearer ${localStorage.getItem('auth_token')}` },
         }),
-        fetch('/api/gdpr/requests', {
+        apiFetch('/api/gdpr/requests', {
           headers: { 'Authorization': `Bearer ${localStorage.getItem('auth_token')}` },
         }),
       ]);
@@ -48,7 +49,7 @@ const GDPRComplianceManager: React.FC = () => {
 
   const handleDataRequest = async (requestType: string, details: string) => {
     try {
-      const response = await fetch('/api/gdpr/data-request', {
+      const response = await apiFetch('/api/gdpr/data-request', {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('auth_token')}`,
@@ -74,7 +75,7 @@ const GDPRComplianceManager: React.FC = () => {
 
   const exportUserData = async () => {
     try {
-      const response = await fetch(`/api/gdpr/export-data/${user?.id}`, {
+      const response = await apiFetch(`/api/gdpr/export-data/${user?.id}`, {
         headers: { 'Authorization': `Bearer ${localStorage.getItem('auth_token')}` },
       });
 

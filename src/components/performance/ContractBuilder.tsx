@@ -12,6 +12,7 @@ import {
   getContractStatusColor,
   getGoalTypeColor 
 } from '@/types/performance';
+import { apiFetch } from '@/lib/api-fetch';
 
 interface ContractBuilderProps {
   cycle: PerformanceCycle;
@@ -110,7 +111,7 @@ export default function ContractBuilder({
     setError(null);
 
     try {
-      const response = await fetch('/api/performance/contracts', {
+      const response = await apiFetch('/api/performance/contracts', {
         method: 'POST',
         headers: {
           'X-Tenant-Id': tenantId,

@@ -14,6 +14,7 @@ import {
   ArrowLeftIcon,
 } from '@heroicons/react/24/outline';
 import PageWrapper from '@/components/PageWrapper';
+import { apiFetch } from '@/lib/api-fetch';
 import InterviewScheduler from '@/components/InterviewScheduler';
 import InterviewCalendar, { type Interview as CalendarInterview } from '@/components/InterviewCalendar';
 import InterviewFeedbackForm from '@/components/InterviewFeedbackForm';
@@ -60,7 +61,7 @@ export default function InterviewsPage() {
   const loadInterviews = useCallback(async () => {
     try {
       setLoading(true);
-      const response = await fetch('/api/interviews');
+      const response = await apiFetch('/api/interviews');
       if (response.ok) {
         const data = await response.json();
         setInterviews(data.content || data);

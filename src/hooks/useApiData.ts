@@ -162,11 +162,27 @@ export class ApiMutations {
     method: 'POST' | 'PUT' | 'PATCH' | 'DELETE' = 'POST',
     data?: any
   ): Promise<ApiResponse<T>> {
+    const headers: Record<string, string> = {
+      'Content-Type': 'application/json',
+    };
+
+    // Get auth token
+    try {
+      const { fetchAuthSession } = await import('aws-amplify/auth');
+      const session = await fetchAuthSession({ forceRefresh: false });
+      const token = session.tokens?.accessToken?.toString();
+      if (token) headers['Authorization'] = `Bearer ${token}`;
+    } catch {
+      // Cognito not configured — try session storage
+      if (typeof window !== 'undefined') {
+        const token = sessionStorage.getItem('jwt_token');
+        if (token) headers['Authorization'] = `Bearer ${token}`;
+      }
+    }
+
     const response = await fetch(`/api${endpoint}`, {
       method,
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      headers,
       body: data ? JSON.stringify(data) : undefined,
     });
 

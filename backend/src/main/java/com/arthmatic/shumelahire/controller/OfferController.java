@@ -22,7 +22,6 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/offers")
-@CrossOrigin(origins = "*")
 @PreAuthorize("hasAnyRole('ADMIN', 'HR_MANAGER')")
 public class OfferController {
 

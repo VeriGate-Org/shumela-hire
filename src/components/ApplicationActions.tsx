@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { useFocusTrap } from '@/hooks/useFocusTrap';
+import { apiFetch } from '@/lib/api-fetch';
 
 interface ApplicationActionsProps {
   applicationId: number;
@@ -193,7 +194,7 @@ export default function ApplicationActions({
     setIsWithdrawing(true);
     
     try {
-      const response = await fetch(`/api/applications/${applicationId}/withdraw`, {
+      const response = await apiFetch(`/api/applications/${applicationId}/withdraw`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -228,7 +229,7 @@ export default function ApplicationActions({
     setIsDeleting(true);
     
     try {
-      const response = await fetch(`/api/applications/${applicationId}`, {
+      const response = await apiFetch(`/api/applications/${applicationId}`, {
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${token}`,

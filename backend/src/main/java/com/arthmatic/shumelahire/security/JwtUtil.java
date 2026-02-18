@@ -8,6 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
+import org.springframework.context.annotation.Profile;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
@@ -19,9 +20,11 @@ import java.util.Map;
 import java.util.function.Function;
 
 /**
- * JWT Utility class for token generation, validation, and parsing
+ * JWT Utility class for token generation, validation, and parsing.
+ * Active only in dev profile — deployed environments use Cognito JWTs.
  */
 @Component
+@Profile("dev")
 public class JwtUtil {
 
     private static final Logger logger = LoggerFactory.getLogger(JwtUtil.class);

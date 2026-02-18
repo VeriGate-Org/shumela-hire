@@ -17,7 +17,6 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api/salary-recommendations")
-@CrossOrigin(origins = "*", maxAge = 3600)
 @PreAuthorize("hasAnyRole('ADMIN', 'HR_MANAGER', 'RECRUITER')")
 public class SalaryRecommendationController {
 

@@ -435,9 +435,25 @@ export class ApiInterceptors {
   }
 }
 
-// Authentication interceptor
-ApiInterceptors.addRequestInterceptor((config) => {
-  const token = localStorage.getItem('auth_token');
+// Authentication interceptor — uses Cognito session token when available,
+// falls back to sessionStorage for dev mock auth
+ApiInterceptors.addRequestInterceptor(async (config) => {
+  let token: string | null = null;
+
+  // Try Cognito session first
+  try {
+    const { fetchAuthSession } = await import('aws-amplify/auth');
+    const session = await fetchAuthSession({ forceRefresh: false });
+    token = session.tokens?.accessToken?.toString() || null;
+  } catch {
+    // Cognito not configured or no session — fall back to mock
+  }
+
+  // Fall back to session storage (dev mock auth)
+  if (!token && typeof window !== 'undefined') {
+    token = sessionStorage.getItem('jwt_token');
+  }
+
   if (token) {
     config.headers = {
       ...config.headers,
@@ -450,9 +466,7 @@ ApiInterceptors.addRequestInterceptor((config) => {
 // Error handling interceptor
 ApiInterceptors.addResponseInterceptor(async (response) => {
   if (response.status === 401) {
-    // Handle unauthorized - redirect to login
     if (typeof window !== 'undefined') {
-      localStorage.removeItem('auth_token');
       window.location.href = '/login';
     }
   }

@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
+import { apiFetch } from '@/lib/api-fetch';
 
 interface Offer {
   id: number;
@@ -114,7 +115,7 @@ export default function OfferManagement() {
         )
       });
 
-      const response = await fetch(`/api/offers/search?${queryParams}`);
+      const response = await apiFetch(`/api/offers/search?${queryParams}`);
       if (response.ok) {
         const data = await response.json();
         setOffers(data.content || []);
@@ -129,7 +130,7 @@ export default function OfferManagement() {
 
   const loadDashboardCounts = async () => {
     try {
-      const response = await fetch('/api/offers/dashboard');
+      const response = await apiFetch('/api/offers/dashboard');
       if (response.ok) {
         const counts = await response.json();
         setDashboardCounts(counts);

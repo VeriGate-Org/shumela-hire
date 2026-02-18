@@ -1,4 +1,3 @@
-node_modules
 # Node.js
 node_modules/
 npm-debug.log
@@ -40,9 +39,6 @@ Thumbs.db
 .env.test.local
 .env.production.local
 
-# Mac
-*.DS_Store
-
 # Backup files
 *.bak
 
@@ -52,5 +48,44 @@ backend/.classpath
 backend/.project
 backend/.settings/
 
-# Others
+# .NET / CDK
+*.dll
+*.exe
+*.pdb
+*.obj
+*.suo
+*.user
+bin/
+obj/
+*.nupkg
+infra/cdk/cdk.out/
+
+# Java artifacts
+*.jar
+*.war
+*.class
+*.ear
+
+# Archives
 *.zip
+*.tar.gz
+*.rar
+
+# Docker
+docker-compose.override.yml
+
+# Dependency check
+dependency-check-report.*
+
+# Storybook
+storybook-static/
+
+# Playwright
+test-results/
+playwright-report/
+
+# Temp files
+*.tmp
+*.swp
+*.swo
+*~

@@ -5,6 +5,7 @@ import Link from 'next/link';
 import PageWrapper from '@/components/PageWrapper';
 import ApplicationStatusTracker from '@/components/ApplicationStatusTracker';
 import EmptyState from '@/components/EmptyState';
+import { apiFetch } from '@/lib/api-fetch';
 import {
   MagnifyingGlassIcon,
   FunnelIcon,
@@ -115,7 +116,7 @@ export default function ApplicationsPage() {
   const loadApplications = async () => {
     setLoading(true);
     try {
-      const response = await fetch('/api/applications');
+      const response = await apiFetch('/api/applications');
       if (response.ok) {
         const data = await response.json();
         const list = data.content || data;
@@ -206,7 +207,7 @@ export default function ApplicationsPage() {
 
   const handleWithdraw = async (applicationId: number, reason: string) => {
     try {
-      const response = await fetch(`/api/applications/${applicationId}/withdraw`, {
+      const response = await apiFetch(`/api/applications/${applicationId}/withdraw`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ reason }),

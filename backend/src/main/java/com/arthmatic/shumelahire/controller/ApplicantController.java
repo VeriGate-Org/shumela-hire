@@ -27,7 +27,6 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/applicants")
-@CrossOrigin(origins = "*", maxAge = 3600)
 @PreAuthorize("hasAnyRole('ADMIN', 'HR_MANAGER', 'RECRUITER')")
 public class ApplicantController {
     

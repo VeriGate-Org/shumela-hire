@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import { apiFetch } from '@/lib/api-fetch';
 
 interface RequisitionFormData {
   jobTitle: string;
@@ -140,7 +141,7 @@ const RequisitionForm: React.FC<RequisitionFormProps> = ({
         onSaveDraft(formData);
       } else {
         // Default: save via API
-        const response = await fetch('/api/requisitions', {
+        const response = await apiFetch('/api/requisitions', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
@@ -179,7 +180,7 @@ const RequisitionForm: React.FC<RequisitionFormProps> = ({
         onSubmitForApproval(formData);
       } else {
         // Default: create and submit via API
-        const createResponse = await fetch('/api/requisitions', {
+        const createResponse = await apiFetch('/api/requisitions', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
@@ -197,7 +198,7 @@ const RequisitionForm: React.FC<RequisitionFormProps> = ({
         }
 
         // Submit for approval
-        const submitResponse = await fetch(`/api/requisitions/${createResult.data.id}/submit`, {
+        const submitResponse = await apiFetch(`/api/requisitions/${createResult.data.id}/submit`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ userId: 'demo_user', userRole: 'HR_MANAGER' })

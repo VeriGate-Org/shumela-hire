@@ -1,11 +1,12 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { 
-  TrendingUp, TrendingDown, Clock, DollarSign, Users, Target, 
-  Calendar, Star, BarChart, PieChart, Activity, Award, 
+import {
+  TrendingUp, TrendingDown, Clock, DollarSign, Users, Target,
+  Calendar, Star, BarChart, PieChart, Activity, Award,
   AlertCircle, CheckCircle
 } from 'lucide-react';
+import { apiFetch } from '@/lib/api-fetch';
 
 interface PerformanceMetrics {
   recruitmentMetrics: {
@@ -102,7 +103,7 @@ const PerformanceAnalyticsDashboard: React.FC = () => {
 
   const fetchPerformanceMetrics = async () => {
     try {
-      const response = await fetch('/api/analytics/dashboard');
+      const response = await apiFetch('/api/analytics/dashboard');
       if (response.ok) {
         const data = await response.json();
         setMetrics(data);

@@ -23,7 +23,6 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/job-postings")
-@CrossOrigin(origins = "*", maxAge = 3600)
 @PreAuthorize("hasAnyRole('ADMIN', 'HR_MANAGER')")
 public class JobPostingController {
     

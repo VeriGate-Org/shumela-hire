@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import { apiFetch } from '@/lib/api-fetch';
 
 interface JobPostingWorkflowProps {
   jobPosting: {
@@ -143,7 +144,7 @@ export default function JobPostingWorkflow({ jobPosting, onStatusChange, current
           break;
       }
 
-      const response = await fetch(`/api/job-postings/${jobPosting.id}/${action}`, {
+      const response = await apiFetch(`/api/job-postings/${jobPosting.id}/${action}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded',

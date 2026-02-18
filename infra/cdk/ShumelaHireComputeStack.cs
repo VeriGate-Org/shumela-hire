@@ -1,10 +1,14 @@
 using Amazon.CDK;
+using Amazon.CDK.AWS.CloudWatch;
+using Amazon.CDK.AWS.CloudWatch.Actions;
 using Amazon.CDK.AWS.EC2;
 using Amazon.CDK.AWS.ECR;
 using Amazon.CDK.AWS.ECS;
 using Amazon.CDK.AWS.ElasticLoadBalancingV2;
 using Amazon.CDK.AWS.IAM;
 using Amazon.CDK.AWS.Logs;
+using Amazon.CDK.AWS.SNS;
+using Amazon.CDK.AWS.SNS.Subscriptions;
 using Constructs;
 using System.Collections.Generic;
 
@@ -175,7 +179,8 @@ public class ShumelaHireComputeStack : Stack
                 ["NOTIFICATION_EMAIL_ENABLED"] = "true",
                 ["DATA_RESIDENCY_REGION"] = "ZA",
                 ["COGNITO_USER_POOL_ID"] = foundation.UserPool.UserPoolId,
-                ["COGNITO_CLIENT_ID"] = foundation.AppClient.UserPoolClientId
+                ["COGNITO_CLIENT_ID"] = foundation.AppClient.UserPoolClientId,
+                ["COGNITO_ISSUER_URI"] = $"https://cognito-idp.{config.Region}.amazonaws.com/{foundation.UserPool.UserPoolId}"
             }
         });
 
@@ -284,7 +289,150 @@ public class ShumelaHireComputeStack : Stack
             ScaleOutCooldown = Duration.Seconds(60)
         });
 
+        // ── SNS Alarm Topic ────────────────────────────────────────────────
+        var alarmTopic = new Topic(this, "AlarmTopic", new TopicProps
+        {
+            TopicName = $"{prefix}-alarms",
+            DisplayName = $"ShumelaHire {config.EnvironmentName} Alarms"
+        });
+
+        // ── CloudWatch Alarms ─────────────────────────────────────────────
+        var cpuAlarm = new Alarm(this, "CpuAlarm", new AlarmProps
+        {
+            AlarmName = $"{prefix}-cpu-high",
+            AlarmDescription = "ECS CPU utilization above 80%",
+            Metric = service.MetricCpuUtilization(new Amazon.CDK.AWS.CloudWatch.MetricOptions
+            {
+                Period = Duration.Minutes(5),
+                Statistic = "Average"
+            }),
+            Threshold = 80,
+            EvaluationPeriods = 3,
+            ComparisonOperator = ComparisonOperator.GREATER_THAN_OR_EQUAL_TO_THRESHOLD,
+            TreatMissingData = TreatMissingData.NOT_BREACHING
+        });
+        cpuAlarm.AddAlarmAction(new SnsAction(alarmTopic));
+
+        var memoryAlarm = new Alarm(this, "MemoryAlarm", new AlarmProps
+        {
+            AlarmName = $"{prefix}-memory-high",
+            AlarmDescription = "ECS memory utilization above 85%",
+            Metric = service.MetricMemoryUtilization(new Amazon.CDK.AWS.CloudWatch.MetricOptions
+            {
+                Period = Duration.Minutes(5),
+                Statistic = "Average"
+            }),
+            Threshold = 85,
+            EvaluationPeriods = 3,
+            ComparisonOperator = ComparisonOperator.GREATER_THAN_OR_EQUAL_TO_THRESHOLD,
+            TreatMissingData = TreatMissingData.NOT_BREACHING
+        });
+        memoryAlarm.AddAlarmAction(new SnsAction(alarmTopic));
+
+        var alb5xxAlarm = new Alarm(this, "Alb5xxAlarm", new AlarmProps
+        {
+            AlarmName = $"{prefix}-alb-5xx",
+            AlarmDescription = "ALB 5xx error rate above 1%",
+            Metric = alb.Metrics.HttpCodeElb(HttpCodeElb.ELB_5XX_COUNT, new Amazon.CDK.AWS.CloudWatch.MetricOptions
+            {
+                Period = Duration.Minutes(5),
+                Statistic = "Sum"
+            }),
+            Threshold = 10,
+            EvaluationPeriods = 2,
+            ComparisonOperator = ComparisonOperator.GREATER_THAN_OR_EQUAL_TO_THRESHOLD,
+            TreatMissingData = TreatMissingData.NOT_BREACHING
+        });
+        alb5xxAlarm.AddAlarmAction(new SnsAction(alarmTopic));
+
+        var unhealthyTargetsAlarm = new Alarm(this, "UnhealthyTargetsAlarm", new AlarmProps
+        {
+            AlarmName = $"{prefix}-unhealthy-targets",
+            AlarmDescription = "ALB has unhealthy targets",
+            Metric = new Metric(new MetricProps
+            {
+                Namespace = "AWS/ApplicationELB",
+                MetricName = "UnHealthyHostCount",
+                DimensionsMap = new Dictionary<string, string>
+                {
+                    ["LoadBalancer"] = alb.LoadBalancerFullName
+                },
+                Period = Duration.Minutes(5),
+                Statistic = "Maximum"
+            }),
+            Threshold = 1,
+            EvaluationPeriods = 2,
+            ComparisonOperator = ComparisonOperator.GREATER_THAN_OR_EQUAL_TO_THRESHOLD,
+            TreatMissingData = TreatMissingData.NOT_BREACHING
+        });
+        unhealthyTargetsAlarm.AddAlarmAction(new SnsAction(alarmTopic));
+
+        // ── CloudWatch Dashboard ──────────────────────────────────────────
+        var dashboard = new Dashboard(this, "Dashboard", new DashboardProps
+        {
+            DashboardName = $"{prefix}-dashboard"
+        });
+
+        dashboard.AddWidgets(
+            new TextWidget(new TextWidgetProps
+            {
+                Markdown = $"# ShumelaHire {config.EnvironmentName} Dashboard",
+                Width = 24,
+                Height = 1
+            })
+        );
+
+        dashboard.AddWidgets(
+            new GraphWidget(new GraphWidgetProps
+            {
+                Title = "ECS CPU Utilization",
+                Left = new[] { service.MetricCpuUtilization() },
+                Width = 12,
+                Height = 6
+            }),
+            new GraphWidget(new GraphWidgetProps
+            {
+                Title = "ECS Memory Utilization",
+                Left = new[] { service.MetricMemoryUtilization() },
+                Width = 12,
+                Height = 6
+            })
+        );
+
+        dashboard.AddWidgets(
+            new GraphWidget(new GraphWidgetProps
+            {
+                Title = "ALB Request Count",
+                Left = new[] { alb.Metrics.RequestCount() },
+                Width = 8,
+                Height = 6
+            }),
+            new GraphWidget(new GraphWidgetProps
+            {
+                Title = "ALB Response Time",
+                Left = new[] { alb.Metrics.TargetResponseTime() },
+                Width = 8,
+                Height = 6
+            }),
+            new GraphWidget(new GraphWidgetProps
+            {
+                Title = "ALB HTTP Errors",
+                Left = new IMetric[]
+                {
+                    alb.Metrics.HttpCodeElb(HttpCodeElb.ELB_5XX_COUNT),
+                    alb.Metrics.HttpCodeTarget(HttpCodeTarget.TARGET_4XX_COUNT)
+                },
+                Width = 8,
+                Height = 6
+            })
+        );
+
         // ── CfnOutputs ──────────────────────────────────────────────────────
+        new CfnOutput(this, "AlarmTopicArn", new CfnOutputProps
+        {
+            Value = alarmTopic.TopicArn,
+            ExportName = $"{prefix}-AlarmTopicArn"
+        });
         new CfnOutput(this, "AlbDnsName", new CfnOutputProps
         {
             Value = alb.LoadBalancerDnsName,

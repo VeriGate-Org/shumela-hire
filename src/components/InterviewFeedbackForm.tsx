@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
+import { apiFetch } from '@/lib/api-fetch';
 
 interface Interview {
   id: number;
@@ -150,7 +151,7 @@ export default function InterviewFeedbackForm({ interview, onSuccess, onCancel }
       if (formData.candidateQuestions) params.append('candidateQuestions', formData.candidateQuestions);
       if (formData.interviewerNotes) params.append('interviewerNotes', formData.interviewerNotes);
 
-      const response = await fetch(`/api/interviews/${interview.id}/feedback`, {
+      const response = await apiFetch(`/api/interviews/${interview.id}/feedback`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded',

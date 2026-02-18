@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("ShumelaHireInfra")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+d57888b1b729b995fbbcab2bec95e32e446f2303")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+ec47a4df3852ac6edb6fd88711c449616d675ecc")]
 [assembly: System.Reflection.AssemblyProductAttribute("ShumelaHireInfra")]
 [assembly: System.Reflection.AssemblyTitleAttribute("ShumelaHireInfra")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

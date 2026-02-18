@@ -19,7 +19,6 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/api/performance")
 @Validated
-@CrossOrigin(origins = "*", maxAge = 3600)
 public class PerformanceManagementController {
 
     @Autowired

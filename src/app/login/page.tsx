@@ -3,68 +3,45 @@
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useAuth, ALL_ROLES, ROLE_DISPLAY_NAMES, UserRole } from '../../contexts/AuthContext';
 import { rolePermissions } from '@/config/permissions';
+import { isCognitoConfigured } from '@/lib/amplify-config';
 import { useEffect, useState, Suspense } from 'react';
-const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080';
-
-interface SsoProvider {
-  id: string;
-  name: string;
-  type: string;
-}
 
 function LoginContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const { user, login } = useAuth();
-  const [ssoEnabled, setSsoEnabled] = useState(false);
-  const [ssoProviders, setSsoProviders] = useState<SsoProvider[]>([]);
-  const [ssoError, setSsoError] = useState<string | null>(null);
+  const { user, login, loginWithCredentials } = useAuth();
   const [selectedRole, setSelectedRole] = useState<UserRole>('ADMIN');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
 
-  // Redirect to dashboard if already logged in
   useEffect(() => {
     if (user) {
       router.push('/dashboard');
     }
   }, [user, router]);
 
-  // Check for SSO error in URL params
   useEffect(() => {
-    const error = searchParams.get('error');
-    if (error === 'sso_failed') {
-      setSsoError('SSO authentication failed. Please try again or use demo login.');
-    } else if (error === 'sso_no_email') {
-      setSsoError('No email address found in SSO profile.');
+    const errorParam = searchParams.get('error');
+    if (errorParam) {
+      setError('Authentication failed. Please try again.');
     }
   }, [searchParams]);
 
-  // Check SSO status on mount
-  useEffect(() => {
-    checkSsoStatus();
-  }, []);
+  const handleCognitoLogin = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError(null);
+    setLoading(true);
 
-  const checkSsoStatus = async () => {
     try {
-      const response = await fetch(`${API_BASE}/api/auth/sso/status`);
-      if (response.ok) {
-        const data = await response.json();
-        setSsoEnabled(data.enabled);
-        setSsoProviders(data.providers || []);
-      }
-    } catch {
-      // SSO not available, that's fine
-    }
-  };
-
-  const handleSsoLogin = async (providerId: string) => {
-    try {
-      const response = await fetch(`${API_BASE}/api/auth/sso/initiate?provider=${providerId}`);
-      if (response.ok) {
-        const data = await response.json();
-        window.location.href = `${API_BASE}${data.redirectUrl}`;
-      }
-    } catch {
-      setSsoError('Failed to initiate SSO login');
+      await loginWithCredentials(email, password);
+      router.push('/dashboard');
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : 'Login failed';
+      setError(message);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -77,11 +54,75 @@ function LoginContent() {
       permissions: rolePermissions[role],
     };
 
-    sessionStorage.setItem('jwt_token', 'mock-jwt-token-' + Date.now());
     login(mockUser);
     router.push('/dashboard');
   };
 
+  // Cognito login form
+  if (isCognitoConfigured) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+        <div className="max-w-md w-full space-y-8">
+          <div>
+            <h2 className="mt-6 text-center text-3xl font-bold text-gray-900">
+              Sign in to your account
+            </h2>
+            <p className="mt-2 text-center text-sm font-extrabold tracking-[-0.03em]">
+              <span className="text-primary">Shumela</span><span className="text-cta">Hire</span>
+            </p>
+          </div>
+
+          {error && (
+            <div className="p-3 bg-red-50 border border-red-200 text-red-700 text-sm rounded-sm">
+              {error}
+            </div>
+          )}
+
+          <form onSubmit={handleCognitoLogin} className="space-y-4">
+            <div>
+              <label htmlFor="email" className="block text-xs font-medium text-gray-500 uppercase tracking-wider mb-1">
+                Email
+              </label>
+              <input
+                id="email"
+                type="email"
+                required
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="w-full px-3 py-2 border border-gray-300 rounded-sm text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary"
+                placeholder="you@company.com"
+              />
+            </div>
+
+            <div>
+              <label htmlFor="password" className="block text-xs font-medium text-gray-500 uppercase tracking-wider mb-1">
+                Password
+              </label>
+              <input
+                id="password"
+                type="password"
+                required
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="w-full px-3 py-2 border border-gray-300 rounded-sm text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary"
+                placeholder="Enter your password"
+              />
+            </div>
+
+            <button
+              type="submit"
+              disabled={loading}
+              className="w-full flex justify-center py-2.5 px-4 border-2 border-gold-500 text-sm font-medium rounded-full bg-transparent text-violet-900 hover:bg-gold-500 hover:text-violet-950 uppercase tracking-wider focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gold-500 disabled:opacity-50"
+            >
+              {loading ? 'Signing in...' : 'Sign In'}
+            </button>
+          </form>
+        </div>
+      </div>
+    );
+  }
+
+  // Mock login for development
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 relative">
       <div className="max-w-md w-full space-y-8">
@@ -92,37 +133,10 @@ function LoginContent() {
           <p className="mt-2 text-center text-sm font-extrabold tracking-[-0.03em]">
             <span className="text-primary">Shumela</span><span className="text-cta">Hire</span>
           </p>
+          <p className="mt-1 text-center text-xs text-gray-400 uppercase tracking-wider">
+            Development Mode
+          </p>
         </div>
-
-        {ssoError && (
-          <div className="p-3 bg-red-50 border border-red-200 text-red-700 text-sm rounded-sm">
-            {ssoError}
-          </div>
-        )}
-
-        {/* SSO Buttons */}
-        {ssoEnabled && ssoProviders.length > 0 && (
-          <div className="space-y-3">
-            {ssoProviders.map(provider => (
-              <button
-                key={provider.id}
-                onClick={() => handleSsoLogin(provider.id)}
-                className="group relative w-full flex justify-center py-2 px-4 border border-gray-300 text-sm font-medium rounded-full text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gold-500"
-              >
-                Sign in with {provider.name}
-              </button>
-            ))}
-
-            <div className="relative">
-              <div className="absolute inset-0 flex items-center">
-                <div className="w-full border-t border-gray-300" />
-              </div>
-              <div className="relative flex justify-center text-sm">
-                <span className="px-2 bg-gray-50 text-gray-500">Or</span>
-              </div>
-            </div>
-          </div>
-        )}
 
         <div className="space-y-4">
           <div>

@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
+import { apiFetch } from '@/lib/api-fetch';
 
 interface Education {
   institution: string;
@@ -81,7 +82,7 @@ export default function ApplicantProfile({ applicantId, onSave }: ApplicantProfi
   const loadApplicant = async () => {
     try {
       setLoading(true);
-      const response = await fetch(`/api/applicants/${applicantId}`);
+      const response = await apiFetch(`/api/applicants/${applicantId}`);
       if (response.ok) {
         const data = await response.json();
         setFormData({
@@ -100,7 +101,7 @@ export default function ApplicantProfile({ applicantId, onSave }: ApplicantProfi
   
   const loadDocuments = async () => {
     try {
-      const response = await fetch(`/api/applicants/${applicantId}/documents`);
+      const response = await apiFetch(`/api/applicants/${applicantId}/documents`);
       if (response.ok) {
         const data = await response.json();
         setDocuments(data);
@@ -191,7 +192,7 @@ export default function ApplicantProfile({ applicantId, onSave }: ApplicantProfi
       formData.append('file', file);
       formData.append('type', type);
       
-      const response = await fetch(`/api/applicants/${applicantId}/documents`, {
+      const response = await apiFetch(`/api/applicants/${applicantId}/documents`, {
         method: 'POST',
         body: formData,
       });
@@ -216,7 +217,7 @@ export default function ApplicantProfile({ applicantId, onSave }: ApplicantProfi
     if (!confirm('Are you sure you want to delete this document?')) return;
     
     try {
-      const response = await fetch(`/api/applicants/${applicantId}/documents/${documentId}`, {
+      const response = await apiFetch(`/api/applicants/${applicantId}/documents/${documentId}`, {
         method: 'DELETE',
       });
       

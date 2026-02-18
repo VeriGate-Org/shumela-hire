@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import { apiFetch } from '@/lib/api-fetch';
 
 interface Application {
   id: number;
@@ -89,7 +90,7 @@ export default function ApplicationTimeline({ application, onClose, onStageTrans
   const loadTimeline = async () => {
     try {
       setLoading(true);
-      const response = await fetch(`/api/pipeline/applications/${application.id}/timeline`);
+      const response = await apiFetch(`/api/pipeline/applications/${application.id}/timeline`);
       if (response.ok) {
         const data = await response.json();
         setTimeline(data);
@@ -103,7 +104,7 @@ export default function ApplicationTimeline({ application, onClose, onStageTrans
 
   const loadAvailableStages = async () => {
     try {
-      const response = await fetch(`/api/pipeline/applications/${application.id}/available-transitions`);
+      const response = await apiFetch(`/api/pipeline/applications/${application.id}/available-transitions`);
       if (response.ok) {
         const data = await response.json();
         setAvailableStages(data.map((stage: any) => stage.name || stage));

@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { PerformanceCycle, CycleStatus, CreateCycleRequest, getCycleStatusColor, formatDate } from '@/types/performance';
+import { apiFetch } from '@/lib/api-fetch';
 
 interface CycleManagementProps {
   tenantId: string;
@@ -31,7 +32,7 @@ export default function CycleManagement({ tenantId, userId, onCycleSelect }: Cyc
   const fetchCycles = async () => {
     try {
       setLoading(true);
-      const response = await fetch('/api/performance/cycles', {
+      const response = await apiFetch('/api/performance/cycles', {
         headers: {
           'X-Tenant-Id': tenantId,
           'Content-Type': 'application/json'
@@ -56,7 +57,7 @@ export default function CycleManagement({ tenantId, userId, onCycleSelect }: Cyc
     e.preventDefault();
     
     try {
-      const response = await fetch('/api/performance/cycles', {
+      const response = await apiFetch('/api/performance/cycles', {
         method: 'POST',
         headers: {
           'X-Tenant-Id': tenantId,
@@ -89,7 +90,7 @@ export default function CycleManagement({ tenantId, userId, onCycleSelect }: Cyc
 
   const handleActivateCycle = async (cycleId: string) => {
     try {
-      const response = await fetch(`/api/performance/cycles/${cycleId}/activate`, {
+      const response = await apiFetch(`/api/performance/cycles/${cycleId}/activate`, {
         method: 'POST',
         headers: {
           'X-Tenant-Id': tenantId,

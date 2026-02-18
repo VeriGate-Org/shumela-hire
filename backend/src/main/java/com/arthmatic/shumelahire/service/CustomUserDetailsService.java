@@ -6,13 +6,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
- * Custom User Details Service for Spring Security
+ * Custom User Details Service for Spring Security.
+ * Active only in dev profile — deployed environments use Cognito.
  */
 @Service
+@Profile("dev")
 public class CustomUserDetailsService implements UserDetailsService {
 
     @Autowired

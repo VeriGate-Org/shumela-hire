@@ -20,7 +20,6 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/ads")
-@CrossOrigin(origins = "*") // Configure as needed for your frontend
 @PreAuthorize("hasAnyRole('ADMIN', 'HR_MANAGER')")
 public class JobAdController {
     

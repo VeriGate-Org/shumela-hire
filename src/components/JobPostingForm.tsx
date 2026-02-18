@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
+import { apiFetch } from '@/lib/api-fetch';
 
 interface JobPostingFormProps {
   jobPostingId?: number;
@@ -119,7 +120,7 @@ export default function JobPostingForm({ jobPostingId, currentUserId, onSuccess,
 
     try {
       setLoading(true);
-      const response = await fetch(`/api/job-postings/${jobPostingId}`);
+      const response = await apiFetch(`/api/job-postings/${jobPostingId}`);
       if (response.ok) {
         const data = await response.json();
         setFormData({

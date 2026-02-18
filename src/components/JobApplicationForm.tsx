@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
+import { apiFetch } from '@/lib/api-fetch';
 
 interface JobApplicationFormProps {
   jobAdId: number;
@@ -49,7 +50,7 @@ export default function JobApplicationForm({
 
   const loadApplicantInfo = async () => {
     try {
-      const response = await fetch(`/api/applicants/${applicantId}`);
+      const response = await apiFetch(`/api/applicants/${applicantId}`);
       if (response.ok) {
         const data = await response.json();
         setApplicant({
@@ -68,7 +69,7 @@ export default function JobApplicationForm({
   const checkApplicationEligibility = async () => {
     try {
       setCheckingEligibility(true);
-      const response = await fetch(`/api/applications/can-apply?applicantId=${applicantId}&jobAdId=${jobAdId}`);
+      const response = await apiFetch(`/api/applications/can-apply?applicantId=${applicantId}&jobAdId=${jobAdId}`);
       if (response.ok) {
         const data = await response.json();
         setCanApply(data.canApply);
@@ -115,7 +116,7 @@ export default function JobApplicationForm({
         applicationSource
       };
 
-      const response = await fetch('/api/applications', {
+      const response = await apiFetch('/api/applications', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

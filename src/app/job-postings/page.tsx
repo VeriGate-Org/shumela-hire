@@ -7,6 +7,7 @@ import JobPostingForm from '@/components/JobPostingForm';
 import JobPostingWorkflow from '@/components/JobPostingWorkflow';
 import { useTheme } from '@/contexts/ThemeContext';
 import { useAuth } from '@/contexts/AuthContext';
+import { apiFetch } from '@/lib/api-fetch';
 import { DocumentTextIcon } from '@heroicons/react/24/outline';
 interface JobPosting {
   id: number;
@@ -78,7 +79,7 @@ export default function JobPostingsPage() {
   const loadJobPostings = async () => {
     try {
       setLoading(true);
-      const response = await fetch('/api/job-postings');
+      const response = await apiFetch('/api/job-postings');
       if (response.ok) {
         const data = await response.json();
         setJobPostings(data.content || data);

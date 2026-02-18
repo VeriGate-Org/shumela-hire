@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
+import { apiFetch } from '@/lib/api-fetch';
 
 interface ScreeningQuestion {
   id: number;
@@ -54,7 +55,7 @@ export default function ScreeningQuestions({
 
   const loadQuestions = async () => {
     try {
-      const response = await fetch(`/api/screening/questions/job-posting/${jobPostingId}`, {
+      const response = await apiFetch(`/api/screening/questions/job-posting/${jobPostingId}`, {
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json',
@@ -76,7 +77,7 @@ export default function ScreeningQuestions({
 
   const loadExistingAnswers = async () => {
     try {
-      const response = await fetch(`/api/screening/answers/application/${applicationId}`, {
+      const response = await apiFetch(`/api/screening/answers/application/${applicationId}`, {
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json',
@@ -145,7 +146,7 @@ export default function ScreeningQuestions({
       formData.append('type', 'SCREENING_ANSWER');
 
       // Upload to document service (assuming similar to applicant documents)
-      const response = await fetch(`/api/applicants/${user?.id}/documents`, {
+      const response = await apiFetch(`/api/applicants/${user?.id}/documents`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -182,7 +183,7 @@ export default function ScreeningQuestions({
     if (readonly) return;
 
     try {
-      const response = await fetch('/api/screening/answers', {
+      const response = await apiFetch('/api/screening/answers', {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -231,7 +232,7 @@ export default function ScreeningQuestions({
     try {
       const answersArray = Object.values(answers);
       
-      const response = await fetch('/api/screening/answers/bulk', {
+      const response = await apiFetch('/api/screening/answers/bulk', {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`,

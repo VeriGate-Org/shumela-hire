@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { useApiData } from '@/hooks/useApiData';
 import { LoadingSpinner, CardSkeleton } from '@/components/LoadingComponents';
+import { apiFetch } from '@/lib/api-fetch';
 
 interface PerformanceMetrics {
   responseTime: number;
@@ -31,7 +32,7 @@ export default function PerformanceDashboard() {
   const handleWarmUpCache = async () => {
     setCacheWarming(true);
     try {
-      const response = await fetch('/api/performance/cache/warmup', {
+      const response = await apiFetch('/api/performance/cache/warmup', {
         method: 'POST',
       });
       const result = await response.json();
@@ -46,7 +47,7 @@ export default function PerformanceDashboard() {
   const handleOptimizeMemory = async () => {
     setMemoryOptimizing(true);
     try {
-      const response = await fetch('/api/performance/memory/optimize', {
+      const response = await apiFetch('/api/performance/memory/optimize', {
         method: 'POST',
       });
       const result = await response.json();

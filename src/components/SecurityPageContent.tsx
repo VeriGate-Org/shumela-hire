@@ -4,6 +4,7 @@ import { useState } from 'react';
 import SecurityDashboard from '@/components/SecurityDashboard';
 import GDPRComplianceManager from '@/components/GDPRComplianceManager';
 import { useSecurity } from '@/contexts/SecurityContext';
+import { apiFetch } from '@/lib/api-fetch';
 
 export default function SecurityPageContent() {
   const { user, hasPermission } = useSecurity();
@@ -23,7 +24,7 @@ export default function SecurityPageContent() {
     }
 
     try {
-      const response = await fetch('/api/auth/change-password', {
+      const response = await apiFetch('/api/auth/change-password', {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('auth_token')}`,

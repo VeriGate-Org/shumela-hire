@@ -15,7 +15,6 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api")
-@CrossOrigin(origins = "http://localhost:3000") // Allow requests from Next.js frontend
 @PreAuthorize("hasRole('ADMIN')")
 public class AuditLogController {
 

@@ -8,6 +8,7 @@ import AuditLogViewer from '../../../components/AuditLogViewer';
 import { approvalTimelineService } from '../../../services/approvalTimelineService';
 import { requisitionService } from '../../../services/requisitionService';
 import { formatSalaryRange } from '@/utils/currency';
+import { apiFetch } from '@/lib/api-fetch';
 
 const RequisitionDetailPage: React.FC = () => {
   const params = useParams();
@@ -28,7 +29,7 @@ const RequisitionDetailPage: React.FC = () => {
       await requisitionService.initializeDemoData();
 
       // Fetch requisition data
-      const response = await fetch(`/api/requisitions/${requisitionId}`);
+      const response = await apiFetch(`/api/requisitions/${requisitionId}`);
       
       if (!response.ok) {
         if (response.status === 404) {

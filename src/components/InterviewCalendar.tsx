@@ -2,6 +2,7 @@
 
 import React, { useMemo, useState } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
+import { apiFetch } from '@/lib/api-fetch';
 
 export interface Interview {
   id: number;
@@ -186,7 +187,7 @@ export default function InterviewCalendar({ interviews, onInterviewSelect, onInt
       setActionLoading(true);
       setActionError('');
 
-      const response = await fetch(`/api/interviews/${interviewId}/${action}`, {
+      const response = await apiFetch(`/api/interviews/${interviewId}/${action}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded',

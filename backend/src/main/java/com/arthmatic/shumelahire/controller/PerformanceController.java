@@ -15,7 +15,6 @@ import java.util.concurrent.CompletableFuture;
  */
 @RestController
 @RequestMapping("/api/performance")
-@CrossOrigin(origins = "*")
 @PreAuthorize("hasAnyRole('ADMIN', 'HR_MANAGER')")
 public class PerformanceController {
     

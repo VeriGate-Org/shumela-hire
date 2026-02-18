@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration scan="true" scanPeriod="30 seconds">
+
+    <springProperty scope="context" name="appName" source="spring.application.name" defaultValue="shumelahire-backend"/>
+
+    <!-- Console appender for dev -->
+    <springProfile name="dev">
+        <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+            <encoder>
+                <pattern>%d{HH:mm:ss.SSS} [%thread] [%X{correlationId}] %-5level %logger{36} - %msg%n</pattern>
+            </encoder>
+        </appender>
+
+        <root level="DEBUG">
+            <appender-ref ref="CONSOLE"/>
+        </root>
+
+        <logger name="org.springframework" level="INFO"/>
+        <logger name="org.hibernate" level="WARN"/>
+        <logger name="com.arthmatic.shumelahire" level="DEBUG"/>
+    </springProfile>
+
+    <!-- JSON appender for deployed environments -->
+    <springProfile name="sbx | ppe | prod">
+        <appender name="JSON" class="ch.qos.logback.core.ConsoleAppender">
+            <encoder class="net.logstash.logback.encoder.LogstashEncoder">
+                <includeMdcKeyName>correlationId</includeMdcKeyName>
+                <includeMdcKeyName>userId</includeMdcKeyName>
+                <includeMdcKeyName>requestPath</includeMdcKeyName>
+                <customFields>{"application":"${appName}"}</customFields>
+                <timeZone>UTC</timeZone>
+            </encoder>
+        </appender>
+
+        <root level="INFO">
+            <appender-ref ref="JSON"/>
+        </root>
+
+        <logger name="org.springframework" level="WARN"/>
+        <logger name="org.hibernate" level="WARN"/>
+        <logger name="com.arthmatic.shumelahire" level="INFO"/>
+    </springProfile>
+
+    <!-- Quieter logging for prod specifically -->
+    <springProfile name="prod">
+        <logger name="org.springframework" level="WARN"/>
+        <logger name="org.hibernate.SQL" level="WARN"/>
+        <logger name="com.arthmatic.shumelahire" level="INFO"/>
+    </springProfile>
+
+</configuration>
