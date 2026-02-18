@@ -89,7 +89,7 @@ export default function ReportLibrary({
 
   // Filter and sort reports
   const filteredReports = React.useMemo(() => {
-    let filtered = reports.filter(report => {
+    const filtered = reports.filter(report => {
       // Category filter
       if (selectedCategory !== 'all') {
         switch (selectedCategory) {

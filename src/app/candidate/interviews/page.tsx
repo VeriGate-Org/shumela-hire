@@ -14,10 +14,8 @@ import {
   CheckCircleIcon,
   XCircleIcon,
   ExclamationTriangleIcon,
-  InformationCircleIcon,
   ChatBubbleLeftRightIcon,
   ArrowRightIcon,
-  PlusIcon,
   EnvelopeIcon,
   BriefcaseIcon
 } from '@heroicons/react/24/outline';
@@ -66,7 +64,7 @@ interface Interview {
   }>;
 }
 
-interface CalendarEvent {
+interface _CalendarEvent {
   id: string;
   title: string;
   date: string;

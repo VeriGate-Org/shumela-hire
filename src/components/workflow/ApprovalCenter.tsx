@@ -382,7 +382,7 @@ export default function ApprovalCenter({
                         </div>
                         {getUserApproval(request)?.comment && (
                           <p className="text-sm text-gray-600 mt-1">
-                            "{getUserApproval(request)?.comment}"
+                            &quot;{getUserApproval(request)?.comment}&quot;
                           </p>
                         )}
                       </div>

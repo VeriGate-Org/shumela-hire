@@ -1,0 +1,1836 @@
+{
+ "Resources": {
+  "Vpc8378EB38": {
+   "Type": "AWS::EC2::VPC",
+   "Properties": {
+    "CidrBlock": "10.0.0.0/16",
+    "EnableDnsHostnames": true,
+    "EnableDnsSupport": true,
+    "InstanceTenancy": "default",
+    "Tags": [
+     {
+      "Key": "Name",
+      "Value": "shumelahire-dev-vpc"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "shumelahire-dev-foundation/Vpc/Resource"
+   }
+  },
+  "VpcpublicSubnet1Subnet2BB74ED7": {
+   "Type": "AWS::EC2::Subnet",
+   "Properties": {
+    "AvailabilityZone": "us-east-1a",
+    "CidrBlock": "10.0.0.0/24",
+    "MapPublicIpOnLaunch": true,
+    "Tags": [
+     {
+      "Key": "aws-cdk:subnet-name",
+      "Value": "public"
+     },
+     {
+      "Key": "aws-cdk:subnet-type",
+      "Value": "Public"
+     },
+     {
+      "Key": "Name",
+      "Value": "shumelahire-dev-foundation/Vpc/publicSubnet1"
+     }
+    ],
+    "VpcId": {
+     "Ref": "Vpc8378EB38"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "shumelahire-dev-foundation/Vpc/publicSubnet1/Subnet"
+   }
+  },
+  "VpcpublicSubnet1RouteTable15C15F8E": {
+   "Type": "AWS::EC2::RouteTable",
+   "Properties": {
+    "Tags": [
+     {
+      "Key": "Name",
+      "Value": "shumelahire-dev-foundation/Vpc/publicSubnet1"
+     }
+    ],
+    "VpcId": {
+     "Ref": "Vpc8378EB38"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "shumelahire-dev-foundation/Vpc/publicSubnet1/RouteTable"
+   }
+  },
+  "VpcpublicSubnet1RouteTableAssociation4E83B6E4": {
+   "Type": "AWS::EC2::SubnetRouteTableAssociation",
+   "Properties": {
+    "RouteTableId": {
+     "Ref": "VpcpublicSubnet1RouteTable15C15F8E"
+    },
+    "SubnetId": {
+     "Ref": "VpcpublicSubnet1Subnet2BB74ED7"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "shumelahire-dev-foundation/Vpc/publicSubnet1/RouteTableAssociation"
+   }
+  },
+  "VpcpublicSubnet1DefaultRouteB88F9E93": {
+   "Type": "AWS::EC2::Route",
+   "Properties": {
+    "DestinationCidrBlock": "0.0.0.0/0",
+    "GatewayId": {
+     "Ref": "VpcIGWD7BA715C"
+    },
+    "RouteTableId": {
+     "Ref": "VpcpublicSubnet1RouteTable15C15F8E"
+    }
+   },
+   "DependsOn": [
+    "VpcVPCGWBF912B6E"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "shumelahire-dev-foundation/Vpc/publicSubnet1/DefaultRoute"
+   }
+  },
+  "VpcpublicSubnet1EIP411541E6": {
+   "Type": "AWS::EC2::EIP",
+   "Properties": {
+    "Domain": "vpc",
+    "Tags": [
+     {
+      "Key": "Name",
+      "Value": "shumelahire-dev-foundation/Vpc/publicSubnet1"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "shumelahire-dev-foundation/Vpc/publicSubnet1/EIP"
+   }
+  },
+  "VpcpublicSubnet1NATGatewayA036E8A6": {
+   "Type": "AWS::EC2::NatGateway",
+   "Properties": {
+    "AllocationId": {
+     "Fn::GetAtt": [
+      "VpcpublicSubnet1EIP411541E6",
+      "AllocationId"
+     ]
+    },
+    "SubnetId": {
+     "Ref": "VpcpublicSubnet1Subnet2BB74ED7"
+    },
+    "Tags": [
+     {
+      "Key": "Name",
+      "Value": "shumelahire-dev-foundation/Vpc/publicSubnet1"
+     }
+    ]
+   },
+   "DependsOn": [
+    "VpcpublicSubnet1DefaultRouteB88F9E93",
+    "VpcpublicSubnet1RouteTableAssociation4E83B6E4"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "shumelahire-dev-foundation/Vpc/publicSubnet1/NATGateway"
+   }
+  },
+  "VpcpublicSubnet2SubnetE34B022A": {
+   "Type": "AWS::EC2::Subnet",
+   "Properties": {
+    "AvailabilityZone": "us-east-1b",
+    "CidrBlock": "10.0.1.0/24",
+    "MapPublicIpOnLaunch": true,
+    "Tags": [
+     {
+      "Key": "aws-cdk:subnet-name",
+      "Value": "public"
+     },
+     {
+      "Key": "aws-cdk:subnet-type",
+      "Value": "Public"
+     },
+     {
+      "Key": "Name",
+      "Value": "shumelahire-dev-foundation/Vpc/publicSubnet2"
+     }
+    ],
+    "VpcId": {
+     "Ref": "Vpc8378EB38"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "shumelahire-dev-foundation/Vpc/publicSubnet2/Subnet"
+   }
+  },
+  "VpcpublicSubnet2RouteTableC5A6DF77": {
+   "Type": "AWS::EC2::RouteTable",
+   "Properties": {
+    "Tags": [
+     {
+      "Key": "Name",
+      "Value": "shumelahire-dev-foundation/Vpc/publicSubnet2"
+     }
+    ],
+    "VpcId": {
+     "Ref": "Vpc8378EB38"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "shumelahire-dev-foundation/Vpc/publicSubnet2/RouteTable"
+   }
+  },
+  "VpcpublicSubnet2RouteTableAssociationCCE257FF": {
+   "Type": "AWS::EC2::SubnetRouteTableAssociation",
+   "Properties": {
+    "RouteTableId": {
+     "Ref": "VpcpublicSubnet2RouteTableC5A6DF77"
+    },
+    "SubnetId": {
+     "Ref": "VpcpublicSubnet2SubnetE34B022A"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "shumelahire-dev-foundation/Vpc/publicSubnet2/RouteTableAssociation"
+   }
+  },
+  "VpcpublicSubnet2DefaultRoute732F0BEB": {
+   "Type": "AWS::EC2::Route",
+   "Properties": {
+    "DestinationCidrBlock": "0.0.0.0/0",
+    "GatewayId": {
+     "Ref": "VpcIGWD7BA715C"
+    },
+    "RouteTableId": {
+     "Ref": "VpcpublicSubnet2RouteTableC5A6DF77"
+    }
+   },
+   "DependsOn": [
+    "VpcVPCGWBF912B6E"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "shumelahire-dev-foundation/Vpc/publicSubnet2/DefaultRoute"
+   }
+  },
+  "VpcprivateSubnet1SubnetCEAD3716": {
+   "Type": "AWS::EC2::Subnet",
+   "Properties": {
+    "AvailabilityZone": "us-east-1a",
+    "CidrBlock": "10.0.2.0/24",
+    "MapPublicIpOnLaunch": false,
+    "Tags": [
+     {
+      "Key": "aws-cdk:subnet-name",
+      "Value": "private"
+     },
+     {
+      "Key": "aws-cdk:subnet-type",
+      "Value": "Private"
+     },
+     {
+      "Key": "Name",
+      "Value": "shumelahire-dev-foundation/Vpc/privateSubnet1"
+     }
+    ],
+    "VpcId": {
+     "Ref": "Vpc8378EB38"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "shumelahire-dev-foundation/Vpc/privateSubnet1/Subnet"
+   }
+  },
+  "VpcprivateSubnet1RouteTable1979EACB": {
+   "Type": "AWS::EC2::RouteTable",
+   "Properties": {
+    "Tags": [
+     {
+      "Key": "Name",
+      "Value": "shumelahire-dev-foundation/Vpc/privateSubnet1"
+     }
+    ],
+    "VpcId": {
+     "Ref": "Vpc8378EB38"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "shumelahire-dev-foundation/Vpc/privateSubnet1/RouteTable"
+   }
+  },
+  "VpcprivateSubnet1RouteTableAssociationEEBD93CE": {
+   "Type": "AWS::EC2::SubnetRouteTableAssociation",
+   "Properties": {
+    "RouteTableId": {
+     "Ref": "VpcprivateSubnet1RouteTable1979EACB"
+    },
+    "SubnetId": {
+     "Ref": "VpcprivateSubnet1SubnetCEAD3716"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "shumelahire-dev-foundation/Vpc/privateSubnet1/RouteTableAssociation"
+   }
+  },
+  "VpcprivateSubnet1DefaultRouteB506891A": {
+   "Type": "AWS::EC2::Route",
+   "Properties": {
+    "DestinationCidrBlock": "0.0.0.0/0",
+    "NatGatewayId": {
+     "Ref": "VpcpublicSubnet1NATGatewayA036E8A6"
+    },
+    "RouteTableId": {
+     "Ref": "VpcprivateSubnet1RouteTable1979EACB"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "shumelahire-dev-foundation/Vpc/privateSubnet1/DefaultRoute"
+   }
+  },
+  "VpcprivateSubnet2Subnet2DE7549C": {
+   "Type": "AWS::EC2::Subnet",
+   "Properties": {
+    "AvailabilityZone": "us-east-1b",
+    "CidrBlock": "10.0.3.0/24",
+    "MapPublicIpOnLaunch": false,
+    "Tags": [
+     {
+      "Key": "aws-cdk:subnet-name",
+      "Value": "private"
+     },
+     {
+      "Key": "aws-cdk:subnet-type",
+      "Value": "Private"
+     },
+     {
+      "Key": "Name",
+      "Value": "shumelahire-dev-foundation/Vpc/privateSubnet2"
+     }
+    ],
+    "VpcId": {
+     "Ref": "Vpc8378EB38"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "shumelahire-dev-foundation/Vpc/privateSubnet2/Subnet"
+   }
+  },
+  "VpcprivateSubnet2RouteTable4D0FFC8C": {
+   "Type": "AWS::EC2::RouteTable",
+   "Properties": {
+    "Tags": [
+     {
+      "Key": "Name",
+      "Value": "shumelahire-dev-foundation/Vpc/privateSubnet2"
+     }
+    ],
+    "VpcId": {
+     "Ref": "Vpc8378EB38"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "shumelahire-dev-foundation/Vpc/privateSubnet2/RouteTable"
+   }
+  },
+  "VpcprivateSubnet2RouteTableAssociationB691E645": {
+   "Type": "AWS::EC2::SubnetRouteTableAssociation",
+   "Properties": {
+    "RouteTableId": {
+     "Ref": "VpcprivateSubnet2RouteTable4D0FFC8C"
+    },
+    "SubnetId": {
+     "Ref": "VpcprivateSubnet2Subnet2DE7549C"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "shumelahire-dev-foundation/Vpc/privateSubnet2/RouteTableAssociation"
+   }
+  },
+  "VpcprivateSubnet2DefaultRouteBAC3C1C3": {
+   "Type": "AWS::EC2::Route",
+   "Properties": {
+    "DestinationCidrBlock": "0.0.0.0/0",
+    "NatGatewayId": {
+     "Ref": "VpcpublicSubnet1NATGatewayA036E8A6"
+    },
+    "RouteTableId": {
+     "Ref": "VpcprivateSubnet2RouteTable4D0FFC8C"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "shumelahire-dev-foundation/Vpc/privateSubnet2/DefaultRoute"
+   }
+  },
+  "VpcisolatedSubnet1SubnetE62B1B9B": {
+   "Type": "AWS::EC2::Subnet",
+   "Properties": {
+    "AvailabilityZone": "us-east-1a",
+    "CidrBlock": "10.0.4.0/24",
+    "MapPublicIpOnLaunch": false,
+    "Tags": [
+     {
+      "Key": "aws-cdk:subnet-name",
+      "Value": "isolated"
+     },
+     {
+      "Key": "aws-cdk:subnet-type",
+      "Value": "Isolated"
+     },
+     {
+      "Key": "Name",
+      "Value": "shumelahire-dev-foundation/Vpc/isolatedSubnet1"
+     }
+    ],
+    "VpcId": {
+     "Ref": "Vpc8378EB38"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "shumelahire-dev-foundation/Vpc/isolatedSubnet1/Subnet"
+   }
+  },
+  "VpcisolatedSubnet1RouteTableE442650B": {
+   "Type": "AWS::EC2::RouteTable",
+   "Properties": {
+    "Tags": [
+     {
+      "Key": "Name",
+      "Value": "shumelahire-dev-foundation/Vpc/isolatedSubnet1"
+     }
+    ],
+    "VpcId": {
+     "Ref": "Vpc8378EB38"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "shumelahire-dev-foundation/Vpc/isolatedSubnet1/RouteTable"
+   }
+  },
+  "VpcisolatedSubnet1RouteTableAssociationD259E31A": {
+   "Type": "AWS::EC2::SubnetRouteTableAssociation",
+   "Properties": {
+    "RouteTableId": {
+     "Ref": "VpcisolatedSubnet1RouteTableE442650B"
+    },
+    "SubnetId": {
+     "Ref": "VpcisolatedSubnet1SubnetE62B1B9B"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "shumelahire-dev-foundation/Vpc/isolatedSubnet1/RouteTableAssociation"
+   }
+  },
+  "VpcisolatedSubnet2Subnet39217055": {
+   "Type": "AWS::EC2::Subnet",
+   "Properties": {
+    "AvailabilityZone": "us-east-1b",
+    "CidrBlock": "10.0.5.0/24",
+    "MapPublicIpOnLaunch": false,
+    "Tags": [
+     {
+      "Key": "aws-cdk:subnet-name",
+      "Value": "isolated"
+     },
+     {
+      "Key": "aws-cdk:subnet-type",
+      "Value": "Isolated"
+     },
+     {
+      "Key": "Name",
+      "Value": "shumelahire-dev-foundation/Vpc/isolatedSubnet2"
+     }
+    ],
+    "VpcId": {
+     "Ref": "Vpc8378EB38"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "shumelahire-dev-foundation/Vpc/isolatedSubnet2/Subnet"
+   }
+  },
+  "VpcisolatedSubnet2RouteTable334F9764": {
+   "Type": "AWS::EC2::RouteTable",
+   "Properties": {
+    "Tags": [
+     {
+      "Key": "Name",
+      "Value": "shumelahire-dev-foundation/Vpc/isolatedSubnet2"
+     }
+    ],
+    "VpcId": {
+     "Ref": "Vpc8378EB38"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "shumelahire-dev-foundation/Vpc/isolatedSubnet2/RouteTable"
+   }
+  },
+  "VpcisolatedSubnet2RouteTableAssociation25A4716F": {
+   "Type": "AWS::EC2::SubnetRouteTableAssociation",
+   "Properties": {
+    "RouteTableId": {
+     "Ref": "VpcisolatedSubnet2RouteTable334F9764"
+    },
+    "SubnetId": {
+     "Ref": "VpcisolatedSubnet2Subnet39217055"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "shumelahire-dev-foundation/Vpc/isolatedSubnet2/RouteTableAssociation"
+   }
+  },
+  "VpcIGWD7BA715C": {
+   "Type": "AWS::EC2::InternetGateway",
+   "Properties": {
+    "Tags": [
+     {
+      "Key": "Name",
+      "Value": "shumelahire-dev-vpc"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "shumelahire-dev-foundation/Vpc/IGW"
+   }
+  },
+  "VpcVPCGWBF912B6E": {
+   "Type": "AWS::EC2::VPCGatewayAttachment",
+   "Properties": {
+    "InternetGatewayId": {
+     "Ref": "VpcIGWD7BA715C"
+    },
+    "VpcId": {
+     "Ref": "Vpc8378EB38"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "shumelahire-dev-foundation/Vpc/VPCGW"
+   }
+  },
+  "VpcRestrictDefaultSecurityGroupCustomResourceC73DA2BE": {
+   "Type": "Custom::VpcRestrictDefaultSG",
+   "Properties": {
+    "ServiceToken": {
+     "Fn::GetAtt": [
+      "CustomVpcRestrictDefaultSGCustomResourceProviderHandlerDC833E5E",
+      "Arn"
+     ]
+    },
+    "DefaultSecurityGroupId": {
+     "Fn::GetAtt": [
+      "Vpc8378EB38",
+      "DefaultSecurityGroup"
+     ]
+    },
+    "Account": "420747712978"
+   },
+   "UpdateReplacePolicy": "Delete",
+   "DeletionPolicy": "Delete",
+   "Metadata": {
+    "aws:cdk:path": "shumelahire-dev-foundation/Vpc/RestrictDefaultSecurityGroupCustomResource/Default"
+   }
+  },
+  "CustomVpcRestrictDefaultSGCustomResourceProviderRole26592FE0": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Version": "2012-10-17",
+     "Statement": [
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Principal": {
+        "Service": "lambda.amazonaws.com"
+       }
+      }
+     ]
+    },
+    "ManagedPolicyArns": [
+     {
+      "Fn::Sub": "arn:${AWS::Partition}:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+     }
+    ],
+    "Policies": [
+     {
+      "PolicyName": "Inline",
+      "PolicyDocument": {
+       "Version": "2012-10-17",
+       "Statement": [
+        {
+         "Effect": "Allow",
+         "Action": [
+          "ec2:AuthorizeSecurityGroupIngress",
+          "ec2:AuthorizeSecurityGroupEgress",
+          "ec2:RevokeSecurityGroupIngress",
+          "ec2:RevokeSecurityGroupEgress"
+         ],
+         "Resource": [
+          {
+           "Fn::Join": [
+            "",
+            [
+             "arn:aws:ec2:us-east-1:420747712978:security-group/",
+             {
+              "Fn::GetAtt": [
+               "Vpc8378EB38",
+               "DefaultSecurityGroup"
+              ]
+             }
+            ]
+           ]
+          }
+         ]
+        }
+       ]
+      }
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "shumelahire-dev-foundation/Custom::VpcRestrictDefaultSGCustomResourceProvider/Role"
+   }
+  },
+  "CustomVpcRestrictDefaultSGCustomResourceProviderHandlerDC833E5E": {
+   "Type": "AWS::Lambda::Function",
+   "Properties": {
+    "Code": {
+     "S3Bucket": "cdk-hnb659fds-assets-420747712978-us-east-1",
+     "S3Key": "7fa1e366ee8a9ded01fc355f704cff92bfd179574e6f9cfee800a3541df1b200.zip"
+    },
+    "Timeout": 900,
+    "MemorySize": 128,
+    "Handler": "__entrypoint__.handler",
+    "Role": {
+     "Fn::GetAtt": [
+      "CustomVpcRestrictDefaultSGCustomResourceProviderRole26592FE0",
+      "Arn"
+     ]
+    },
+    "Runtime": "nodejs20.x",
+    "Description": "Lambda function for removing all inbound/outbound rules from the VPC default security group"
+   },
+   "DependsOn": [
+    "CustomVpcRestrictDefaultSGCustomResourceProviderRole26592FE0"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "shumelahire-dev-foundation/Custom::VpcRestrictDefaultSGCustomResourceProvider/Handler",
+    "aws:asset:path": "asset.7fa1e366ee8a9ded01fc355f704cff92bfd179574e6f9cfee800a3541df1b200",
+    "aws:asset:property": "Code"
+   }
+  },
+  "DbSecurityGroupE9D701AD": {
+   "Type": "AWS::EC2::SecurityGroup",
+   "Properties": {
+    "GroupDescription": "Security group for Aurora database",
+    "GroupName": "shumelahire-dev-db-sg",
+    "SecurityGroupEgress": [
+     {
+      "CidrIp": "255.255.255.255/32",
+      "Description": "Disallow all traffic",
+      "FromPort": 252,
+      "IpProtocol": "icmp",
+      "ToPort": 86
+     }
+    ],
+    "VpcId": {
+     "Ref": "Vpc8378EB38"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "shumelahire-dev-foundation/DbSecurityGroup/Resource"
+   }
+  },
+  "DbSecurityGroupfromshumelahiredevfoundationEcsSecurityGroup7EB84E395432421CAD38": {
+   "Type": "AWS::EC2::SecurityGroupIngress",
+   "Properties": {
+    "Description": "Allow ECS to Aurora",
+    "FromPort": 5432,
+    "GroupId": {
+     "Fn::GetAtt": [
+      "DbSecurityGroupE9D701AD",
+      "GroupId"
+     ]
+    },
+    "IpProtocol": "tcp",
+    "SourceSecurityGroupId": {
+     "Fn::GetAtt": [
+      "EcsSecurityGroup44008BF1",
+      "GroupId"
+     ]
+    },
+    "ToPort": 5432
+   },
+   "Metadata": {
+    "aws:cdk:path": "shumelahire-dev-foundation/DbSecurityGroup/from shumelahiredevfoundationEcsSecurityGroup7EB84E39:5432"
+   }
+  },
+  "RedisSecurityGroupB05951F6": {
+   "Type": "AWS::EC2::SecurityGroup",
+   "Properties": {
+    "GroupDescription": "Security group for ElastiCache Redis",
+    "GroupName": "shumelahire-dev-redis-sg",
+    "SecurityGroupEgress": [
+     {
+      "CidrIp": "255.255.255.255/32",
+      "Description": "Disallow all traffic",
+      "FromPort": 252,
+      "IpProtocol": "icmp",
+      "ToPort": 86
+     }
+    ],
+    "VpcId": {
+     "Ref": "Vpc8378EB38"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "shumelahire-dev-foundation/RedisSecurityGroup/Resource"
+   }
+  },
+  "RedisSecurityGroupfromshumelahiredevfoundationEcsSecurityGroup7EB84E396379C2EC1ADD": {
+   "Type": "AWS::EC2::SecurityGroupIngress",
+   "Properties": {
+    "Description": "Allow ECS to Redis",
+    "FromPort": 6379,
+    "GroupId": {
+     "Fn::GetAtt": [
+      "RedisSecurityGroupB05951F6",
+      "GroupId"
+     ]
+    },
+    "IpProtocol": "tcp",
+    "SourceSecurityGroupId": {
+     "Fn::GetAtt": [
+      "EcsSecurityGroup44008BF1",
+      "GroupId"
+     ]
+    },
+    "ToPort": 6379
+   },
+   "Metadata": {
+    "aws:cdk:path": "shumelahire-dev-foundation/RedisSecurityGroup/from shumelahiredevfoundationEcsSecurityGroup7EB84E39:6379"
+   }
+  },
+  "EcsSecurityGroup44008BF1": {
+   "Type": "AWS::EC2::SecurityGroup",
+   "Properties": {
+    "GroupDescription": "Security group for ECS tasks",
+    "GroupName": "shumelahire-dev-ecs-sg",
+    "SecurityGroupEgress": [
+     {
+      "CidrIp": "0.0.0.0/0",
+      "Description": "Allow all outbound traffic by default",
+      "IpProtocol": "-1"
+     }
+    ],
+    "VpcId": {
+     "Ref": "Vpc8378EB38"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "shumelahire-dev-foundation/EcsSecurityGroup/Resource"
+   }
+  },
+  "EcsSecurityGroupfromshumelahiredevfoundationAlbSecurityGroupFC0C8B4E8080AC542592": {
+   "Type": "AWS::EC2::SecurityGroupIngress",
+   "Properties": {
+    "Description": "Load balancer to target",
+    "FromPort": 8080,
+    "GroupId": {
+     "Fn::GetAtt": [
+      "EcsSecurityGroup44008BF1",
+      "GroupId"
+     ]
+    },
+    "IpProtocol": "tcp",
+    "SourceSecurityGroupId": {
+     "Fn::GetAtt": [
+      "AlbSecurityGroup86A59E99",
+      "GroupId"
+     ]
+    },
+    "ToPort": 8080
+   },
+   "Metadata": {
+    "aws:cdk:path": "shumelahire-dev-foundation/EcsSecurityGroup/from shumelahiredevfoundationAlbSecurityGroupFC0C8B4E:8080"
+   }
+  },
+  "AlbSecurityGroup86A59E99": {
+   "Type": "AWS::EC2::SecurityGroup",
+   "Properties": {
+    "GroupDescription": "Security group for ALB",
+    "GroupName": "shumelahire-dev-alb-sg",
+    "SecurityGroupEgress": [
+     {
+      "CidrIp": "0.0.0.0/0",
+      "Description": "Allow all outbound traffic by default",
+      "IpProtocol": "-1"
+     }
+    ],
+    "SecurityGroupIngress": [
+     {
+      "CidrIp": "0.0.0.0/0",
+      "Description": "HTTPS",
+      "FromPort": 443,
+      "IpProtocol": "tcp",
+      "ToPort": 443
+     },
+     {
+      "CidrIp": "0.0.0.0/0",
+      "Description": "HTTP redirect",
+      "FromPort": 80,
+      "IpProtocol": "tcp",
+      "ToPort": 80
+     }
+    ],
+    "VpcId": {
+     "Ref": "Vpc8378EB38"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "shumelahire-dev-foundation/AlbSecurityGroup/Resource"
+   }
+  },
+  "DatabaseSubnets56F17B9A": {
+   "Type": "AWS::RDS::DBSubnetGroup",
+   "Properties": {
+    "DBSubnetGroupDescription": "Subnets for Database database",
+    "SubnetIds": [
+     {
+      "Ref": "VpcisolatedSubnet1SubnetE62B1B9B"
+     },
+     {
+      "Ref": "VpcisolatedSubnet2Subnet39217055"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "shumelahire-dev-foundation/Database/Subnets/Default"
+   }
+  },
+  "shumelahiredevfoundationDatabaseSecretA6EDF0DA3fdaad7efa858a3daf9490cf0a702aeb": {
+   "Type": "AWS::SecretsManager::Secret",
+   "Properties": {
+    "Description": {
+     "Fn::Join": [
+      "",
+      [
+       "Generated by the CDK for stack: ",
+       {
+        "Ref": "AWS::StackName"
+       }
+      ]
+     ]
+    },
+    "GenerateSecretString": {
+     "ExcludeCharacters": " %+~`#$&*()|[]{}:;<>?!'/@\"\\",
+     "GenerateStringKey": "password",
+     "PasswordLength": 30,
+     "SecretStringTemplate": "{\"username\":\"shumelahire_admin\"}"
+    },
+    "Name": "shumelahire-dev/db-credentials"
+   },
+   "UpdateReplacePolicy": "Delete",
+   "DeletionPolicy": "Delete",
+   "Metadata": {
+    "aws:cdk:path": "shumelahire-dev-foundation/Database/Secret/Resource"
+   }
+  },
+  "DatabaseSecretAttachmentE5D1B020": {
+   "Type": "AWS::SecretsManager::SecretTargetAttachment",
+   "Properties": {
+    "SecretId": {
+     "Ref": "shumelahiredevfoundationDatabaseSecretA6EDF0DA3fdaad7efa858a3daf9490cf0a702aeb"
+    },
+    "TargetId": {
+     "Ref": "DatabaseB269D8BB"
+    },
+    "TargetType": "AWS::RDS::DBCluster"
+   },
+   "Metadata": {
+    "aws:cdk:path": "shumelahire-dev-foundation/Database/Secret/Attachment/Resource"
+   }
+  },
+  "DatabaseB269D8BB": {
+   "Type": "AWS::RDS::DBCluster",
+   "Properties": {
+    "CopyTagsToSnapshot": true,
+    "DBClusterIdentifier": "shumelahire-dev-db",
+    "DBClusterParameterGroupName": "default.aurora-postgresql15",
+    "DBSubnetGroupName": {
+     "Ref": "DatabaseSubnets56F17B9A"
+    },
+    "DatabaseName": "shumelahire",
+    "DeletionProtection": false,
+    "Engine": "aurora-postgresql",
+    "EngineVersion": "15.4",
+    "MasterUserPassword": {
+     "Fn::Join": [
+      "",
+      [
+       "{{resolve:secretsmanager:",
+       {
+        "Ref": "shumelahiredevfoundationDatabaseSecretA6EDF0DA3fdaad7efa858a3daf9490cf0a702aeb"
+       },
+       ":SecretString:password::}}"
+      ]
+     ]
+    },
+    "MasterUsername": "shumelahire_admin",
+    "Port": 5432,
+    "ServerlessV2ScalingConfiguration": {
+     "MaxCapacity": 2,
+     "MinCapacity": 0.5
+    },
+    "StorageEncrypted": true,
+    "VpcSecurityGroupIds": [
+     {
+      "Fn::GetAtt": [
+       "DbSecurityGroupE9D701AD",
+       "GroupId"
+      ]
+     }
+    ]
+   },
+   "UpdateReplacePolicy": "Delete",
+   "DeletionPolicy": "Delete",
+   "Metadata": {
+    "aws:cdk:path": "shumelahire-dev-foundation/Database/Resource"
+   }
+  },
+  "Databasewriter2462CC03": {
+   "Type": "AWS::RDS::DBInstance",
+   "Properties": {
+    "DBClusterIdentifier": {
+     "Ref": "DatabaseB269D8BB"
+    },
+    "DBInstanceClass": "db.serverless",
+    "Engine": "aurora-postgresql",
+    "PromotionTier": 0,
+    "PubliclyAccessible": false
+   },
+   "DependsOn": [
+    "VpcisolatedSubnet1RouteTableAssociationD259E31A",
+    "VpcisolatedSubnet2RouteTableAssociation25A4716F"
+   ],
+   "UpdateReplacePolicy": "Delete",
+   "DeletionPolicy": "Delete",
+   "Metadata": {
+    "aws:cdk:path": "shumelahire-dev-foundation/Database/writer/Resource"
+   }
+  },
+  "RedisSubnetGroup": {
+   "Type": "AWS::ElastiCache::SubnetGroup",
+   "Properties": {
+    "CacheSubnetGroupName": "shumelahire-dev-redis-subnet",
+    "Description": "Subnet group for Redis",
+    "SubnetIds": [
+     {
+      "Ref": "VpcisolatedSubnet1SubnetE62B1B9B"
+     },
+     {
+      "Ref": "VpcisolatedSubnet2Subnet39217055"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "shumelahire-dev-foundation/RedisSubnetGroup"
+   }
+  },
+  "Redis": {
+   "Type": "AWS::ElastiCache::CacheCluster",
+   "Properties": {
+    "CacheNodeType": "cache.t4g.micro",
+    "CacheSubnetGroupName": "shumelahire-dev-redis-subnet",
+    "ClusterName": "shumelahire-dev-redis",
+    "Engine": "redis",
+    "EngineVersion": "7.1",
+    "NumCacheNodes": 1,
+    "VpcSecurityGroupIds": [
+     {
+      "Fn::GetAtt": [
+       "RedisSecurityGroupB05951F6",
+       "GroupId"
+      ]
+     }
+    ]
+   },
+   "DependsOn": [
+    "RedisSubnetGroup"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "shumelahire-dev-foundation/Redis"
+   }
+  },
+  "DocumentsBucket9EC9DEB9": {
+   "Type": "AWS::S3::Bucket",
+   "Properties": {
+    "BucketEncryption": {
+     "ServerSideEncryptionConfiguration": [
+      {
+       "ServerSideEncryptionByDefault": {
+        "SSEAlgorithm": "AES256"
+       }
+      }
+     ]
+    },
+    "BucketName": "shumelahire-dev-documents",
+    "CorsConfiguration": {
+     "CorsRules": [
+      {
+       "AllowedHeaders": [
+        "*"
+       ],
+       "AllowedMethods": [
+        "GET",
+        "PUT",
+        "POST"
+       ],
+       "AllowedOrigins": [
+        "http://localhost:3000",
+        "http://localhost:3001"
+       ],
+       "MaxAge": 3600
+      }
+     ]
+    },
+    "PublicAccessBlockConfiguration": {
+     "BlockPublicAcls": true,
+     "BlockPublicPolicy": true,
+     "IgnorePublicAcls": true,
+     "RestrictPublicBuckets": true
+    },
+    "Tags": [
+     {
+      "Key": "aws-cdk:auto-delete-objects",
+      "Value": "true"
+     }
+    ],
+    "VersioningConfiguration": {
+     "Status": "Enabled"
+    }
+   },
+   "UpdateReplacePolicy": "Delete",
+   "DeletionPolicy": "Delete",
+   "Metadata": {
+    "aws:cdk:path": "shumelahire-dev-foundation/DocumentsBucket/Resource"
+   }
+  },
+  "DocumentsBucketPolicy1F991BD4": {
+   "Type": "AWS::S3::BucketPolicy",
+   "Properties": {
+    "Bucket": {
+     "Ref": "DocumentsBucket9EC9DEB9"
+    },
+    "PolicyDocument": {
+     "Statement": [
+      {
+       "Action": [
+        "s3:DeleteObject*",
+        "s3:GetBucket*",
+        "s3:List*",
+        "s3:PutBucketPolicy"
+       ],
+       "Effect": "Allow",
+       "Principal": {
+        "AWS": {
+         "Fn::GetAtt": [
+          "CustomS3AutoDeleteObjectsCustomResourceProviderRole3B1BD092",
+          "Arn"
+         ]
+        }
+       },
+       "Resource": [
+        {
+         "Fn::GetAtt": [
+          "DocumentsBucket9EC9DEB9",
+          "Arn"
+         ]
+        },
+        {
+         "Fn::Join": [
+          "",
+          [
+           {
+            "Fn::GetAtt": [
+             "DocumentsBucket9EC9DEB9",
+             "Arn"
+            ]
+           },
+           "/*"
+          ]
+         ]
+        }
+       ]
+      }
+     ],
+     "Version": "2012-10-17"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "shumelahire-dev-foundation/DocumentsBucket/Policy/Resource"
+   }
+  },
+  "DocumentsBucketAutoDeleteObjectsCustomResourceFE3123FC": {
+   "Type": "Custom::S3AutoDeleteObjects",
+   "Properties": {
+    "ServiceToken": {
+     "Fn::GetAtt": [
+      "CustomS3AutoDeleteObjectsCustomResourceProviderHandler9D90184F",
+      "Arn"
+     ]
+    },
+    "BucketName": {
+     "Ref": "DocumentsBucket9EC9DEB9"
+    }
+   },
+   "DependsOn": [
+    "DocumentsBucketPolicy1F991BD4"
+   ],
+   "UpdateReplacePolicy": "Delete",
+   "DeletionPolicy": "Delete",
+   "Metadata": {
+    "aws:cdk:path": "shumelahire-dev-foundation/DocumentsBucket/AutoDeleteObjectsCustomResource/Default"
+   }
+  },
+  "CustomS3AutoDeleteObjectsCustomResourceProviderRole3B1BD092": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Version": "2012-10-17",
+     "Statement": [
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Principal": {
+        "Service": "lambda.amazonaws.com"
+       }
+      }
+     ]
+    },
+    "ManagedPolicyArns": [
+     {
+      "Fn::Sub": "arn:${AWS::Partition}:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "shumelahire-dev-foundation/Custom::S3AutoDeleteObjectsCustomResourceProvider/Role"
+   }
+  },
+  "CustomS3AutoDeleteObjectsCustomResourceProviderHandler9D90184F": {
+   "Type": "AWS::Lambda::Function",
+   "Properties": {
+    "Code": {
+     "S3Bucket": "cdk-hnb659fds-assets-420747712978-us-east-1",
+     "S3Key": "faa95a81ae7d7373f3e1f242268f904eb748d8d0fdd306e8a6fe515a1905a7d6.zip"
+    },
+    "Timeout": 900,
+    "MemorySize": 128,
+    "Handler": "index.handler",
+    "Role": {
+     "Fn::GetAtt": [
+      "CustomS3AutoDeleteObjectsCustomResourceProviderRole3B1BD092",
+      "Arn"
+     ]
+    },
+    "Runtime": "nodejs20.x",
+    "Description": {
+     "Fn::Join": [
+      "",
+      [
+       "Lambda function for auto-deleting objects in ",
+       {
+        "Ref": "DocumentsBucket9EC9DEB9"
+       },
+       " S3 bucket."
+      ]
+     ]
+    }
+   },
+   "DependsOn": [
+    "CustomS3AutoDeleteObjectsCustomResourceProviderRole3B1BD092"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "shumelahire-dev-foundation/Custom::S3AutoDeleteObjectsCustomResourceProvider/Handler",
+    "aws:asset:path": "asset.faa95a81ae7d7373f3e1f242268f904eb748d8d0fdd306e8a6fe515a1905a7d6",
+    "aws:asset:property": "Code"
+   }
+  },
+  "UploadsBucket5E5E9B64": {
+   "Type": "AWS::S3::Bucket",
+   "Properties": {
+    "BucketEncryption": {
+     "ServerSideEncryptionConfiguration": [
+      {
+       "ServerSideEncryptionByDefault": {
+        "SSEAlgorithm": "AES256"
+       }
+      }
+     ]
+    },
+    "BucketName": "shumelahire-dev-uploads",
+    "LifecycleConfiguration": {
+     "Rules": [
+      {
+       "ExpirationInDays": 7,
+       "Id": "CleanupTempUploads",
+       "Prefix": "temp/",
+       "Status": "Enabled"
+      }
+     ]
+    },
+    "PublicAccessBlockConfiguration": {
+     "BlockPublicAcls": true,
+     "BlockPublicPolicy": true,
+     "IgnorePublicAcls": true,
+     "RestrictPublicBuckets": true
+    },
+    "Tags": [
+     {
+      "Key": "aws-cdk:auto-delete-objects",
+      "Value": "true"
+     }
+    ]
+   },
+   "UpdateReplacePolicy": "Delete",
+   "DeletionPolicy": "Delete",
+   "Metadata": {
+    "aws:cdk:path": "shumelahire-dev-foundation/UploadsBucket/Resource"
+   }
+  },
+  "UploadsBucketPolicy34A32B0B": {
+   "Type": "AWS::S3::BucketPolicy",
+   "Properties": {
+    "Bucket": {
+     "Ref": "UploadsBucket5E5E9B64"
+    },
+    "PolicyDocument": {
+     "Statement": [
+      {
+       "Action": [
+        "s3:DeleteObject*",
+        "s3:GetBucket*",
+        "s3:List*",
+        "s3:PutBucketPolicy"
+       ],
+       "Effect": "Allow",
+       "Principal": {
+        "AWS": {
+         "Fn::GetAtt": [
+          "CustomS3AutoDeleteObjectsCustomResourceProviderRole3B1BD092",
+          "Arn"
+         ]
+        }
+       },
+       "Resource": [
+        {
+         "Fn::GetAtt": [
+          "UploadsBucket5E5E9B64",
+          "Arn"
+         ]
+        },
+        {
+         "Fn::Join": [
+          "",
+          [
+           {
+            "Fn::GetAtt": [
+             "UploadsBucket5E5E9B64",
+             "Arn"
+            ]
+           },
+           "/*"
+          ]
+         ]
+        }
+       ]
+      }
+     ],
+     "Version": "2012-10-17"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "shumelahire-dev-foundation/UploadsBucket/Policy/Resource"
+   }
+  },
+  "UploadsBucketAutoDeleteObjectsCustomResourceFFD11C72": {
+   "Type": "Custom::S3AutoDeleteObjects",
+   "Properties": {
+    "ServiceToken": {
+     "Fn::GetAtt": [
+      "CustomS3AutoDeleteObjectsCustomResourceProviderHandler9D90184F",
+      "Arn"
+     ]
+    },
+    "BucketName": {
+     "Ref": "UploadsBucket5E5E9B64"
+    }
+   },
+   "DependsOn": [
+    "UploadsBucketPolicy34A32B0B"
+   ],
+   "UpdateReplacePolicy": "Delete",
+   "DeletionPolicy": "Delete",
+   "Metadata": {
+    "aws:cdk:path": "shumelahire-dev-foundation/UploadsBucket/AutoDeleteObjectsCustomResource/Default"
+   }
+  },
+  "NotificationDlq467FCAE6": {
+   "Type": "AWS::SQS::Queue",
+   "Properties": {
+    "MessageRetentionPeriod": 1209600,
+    "QueueName": "shumelahire-dev-notification-dlq"
+   },
+   "UpdateReplacePolicy": "Delete",
+   "DeletionPolicy": "Delete",
+   "Metadata": {
+    "aws:cdk:path": "shumelahire-dev-foundation/NotificationDlq/Resource"
+   }
+  },
+  "NotificationQueue36610CC1": {
+   "Type": "AWS::SQS::Queue",
+   "Properties": {
+    "ContentBasedDeduplication": true,
+    "FifoQueue": true,
+    "MessageRetentionPeriod": 345600,
+    "QueueName": "shumelahire-dev-notifications.fifo",
+    "RedrivePolicy": {
+     "deadLetterTargetArn": {
+      "Fn::GetAtt": [
+       "NotificationDlq467FCAE6",
+       "Arn"
+      ]
+     },
+     "maxReceiveCount": 3
+    },
+    "VisibilityTimeout": 120
+   },
+   "UpdateReplacePolicy": "Delete",
+   "DeletionPolicy": "Delete",
+   "Metadata": {
+    "aws:cdk:path": "shumelahire-dev-foundation/NotificationQueue/Resource"
+   }
+  },
+  "AiKeysSecretDA83C826": {
+   "Type": "AWS::SecretsManager::Secret",
+   "Properties": {
+    "Description": "AI service API keys (Claude, OpenAI)",
+    "GenerateSecretString": {},
+    "Name": "shumelahire/dev/ai-keys"
+   },
+   "UpdateReplacePolicy": "Delete",
+   "DeletionPolicy": "Delete",
+   "Metadata": {
+    "aws:cdk:path": "shumelahire-dev-foundation/AiKeysSecret/Resource"
+   }
+  },
+  "DocusignSecretAADF5A87": {
+   "Type": "AWS::SecretsManager::Secret",
+   "Properties": {
+    "Description": "DocuSign API credentials",
+    "GenerateSecretString": {},
+    "Name": "shumelahire/dev/docusign"
+   },
+   "UpdateReplacePolicy": "Delete",
+   "DeletionPolicy": "Delete",
+   "Metadata": {
+    "aws:cdk:path": "shumelahire-dev-foundation/DocusignSecret/Resource"
+   }
+  },
+  "EncryptionKeySecretE7F1DBEA": {
+   "Type": "AWS::SecretsManager::Secret",
+   "Properties": {
+    "Description": "Application encryption key",
+    "GenerateSecretString": {},
+    "Name": "shumelahire/dev/encryption-key"
+   },
+   "UpdateReplacePolicy": "Delete",
+   "DeletionPolicy": "Delete",
+   "Metadata": {
+    "aws:cdk:path": "shumelahire-dev-foundation/EncryptionKeySecret/Resource"
+   }
+  },
+  "JwtSecretB8834B39": {
+   "Type": "AWS::SecretsManager::Secret",
+   "Properties": {
+    "Description": "JWT signing secret",
+    "GenerateSecretString": {},
+    "Name": "shumelahire/dev/jwt-secret"
+   },
+   "UpdateReplacePolicy": "Delete",
+   "DeletionPolicy": "Delete",
+   "Metadata": {
+    "aws:cdk:path": "shumelahire-dev-foundation/JwtSecret/Resource"
+   }
+  },
+  "UserPool6BA7E5F2": {
+   "Type": "AWS::Cognito::UserPool",
+   "Properties": {
+    "AccountRecoverySetting": {
+     "RecoveryMechanisms": [
+      {
+       "Name": "verified_email",
+       "Priority": 1
+      }
+     ]
+    },
+    "AdminCreateUserConfig": {
+     "AllowAdminCreateUserOnly": false
+    },
+    "AutoVerifiedAttributes": [
+     "email"
+    ],
+    "EmailVerificationMessage": "The verification code to your new account is {####}",
+    "EmailVerificationSubject": "Verify your new account",
+    "EnabledMfas": [
+     "SOFTWARE_TOKEN_MFA"
+    ],
+    "MfaConfiguration": "OPTIONAL",
+    "Policies": {
+     "PasswordPolicy": {
+      "MinimumLength": 8,
+      "RequireLowercase": true,
+      "RequireNumbers": true,
+      "RequireSymbols": true,
+      "RequireUppercase": true,
+      "TemporaryPasswordValidityDays": 3
+     }
+    },
+    "Schema": [
+     {
+      "Mutable": true,
+      "Name": "email",
+      "Required": true
+     },
+     {
+      "Mutable": true,
+      "Name": "family_name",
+      "Required": true
+     },
+     {
+      "Mutable": true,
+      "Name": "given_name",
+      "Required": true
+     }
+    ],
+    "SmsVerificationMessage": "The verification code to your new account is {####}",
+    "UserPoolName": "shumelahire-dev-users",
+    "UsernameAttributes": [
+     "email"
+    ],
+    "VerificationMessageTemplate": {
+     "DefaultEmailOption": "CONFIRM_WITH_CODE",
+     "EmailMessage": "The verification code to your new account is {####}",
+     "EmailSubject": "Verify your new account",
+     "SmsMessage": "The verification code to your new account is {####}"
+    }
+   },
+   "UpdateReplacePolicy": "Delete",
+   "DeletionPolicy": "Delete",
+   "Metadata": {
+    "aws:cdk:path": "shumelahire-dev-foundation/UserPool/Resource"
+   }
+  },
+  "UserPoolWebAppClientCD2D5CB1": {
+   "Type": "AWS::Cognito::UserPoolClient",
+   "Properties": {
+    "AccessTokenValidity": 60,
+    "AllowedOAuthFlows": [
+     "implicit",
+     "code"
+    ],
+    "AllowedOAuthFlowsUserPoolClient": true,
+    "AllowedOAuthScopes": [
+     "profile",
+     "phone",
+     "email",
+     "openid",
+     "aws.cognito.signin.user.admin"
+    ],
+    "CallbackURLs": [
+     "https://example.com"
+    ],
+    "ClientName": "shumelahire-dev-web",
+    "ExplicitAuthFlows": [
+     "ALLOW_USER_PASSWORD_AUTH",
+     "ALLOW_USER_SRP_AUTH",
+     "ALLOW_REFRESH_TOKEN_AUTH"
+    ],
+    "GenerateSecret": false,
+    "IdTokenValidity": 60,
+    "PreventUserExistenceErrors": "ENABLED",
+    "RefreshTokenValidity": 43200,
+    "SupportedIdentityProviders": [
+     "COGNITO"
+    ],
+    "TokenValidityUnits": {
+     "AccessToken": "minutes",
+     "IdToken": "minutes",
+     "RefreshToken": "minutes"
+    },
+    "UserPoolId": {
+     "Ref": "UserPool6BA7E5F2"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "shumelahire-dev-foundation/UserPool/WebAppClient/Resource"
+   }
+  },
+  "GroupADMIN": {
+   "Type": "AWS::Cognito::UserPoolGroup",
+   "Properties": {
+    "Description": "ADMIN role group",
+    "GroupName": "ADMIN",
+    "UserPoolId": {
+     "Ref": "UserPool6BA7E5F2"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "shumelahire-dev-foundation/GroupADMIN"
+   }
+  },
+  "GroupEXECUTIVE": {
+   "Type": "AWS::Cognito::UserPoolGroup",
+   "Properties": {
+    "Description": "EXECUTIVE role group",
+    "GroupName": "EXECUTIVE",
+    "UserPoolId": {
+     "Ref": "UserPool6BA7E5F2"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "shumelahire-dev-foundation/GroupEXECUTIVE"
+   }
+  },
+  "GroupHRMANAGER": {
+   "Type": "AWS::Cognito::UserPoolGroup",
+   "Properties": {
+    "Description": "HR_MANAGER role group",
+    "GroupName": "HR_MANAGER",
+    "UserPoolId": {
+     "Ref": "UserPool6BA7E5F2"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "shumelahire-dev-foundation/GroupHR_MANAGER"
+   }
+  },
+  "GroupHIRINGMANAGER": {
+   "Type": "AWS::Cognito::UserPoolGroup",
+   "Properties": {
+    "Description": "HIRING_MANAGER role group",
+    "GroupName": "HIRING_MANAGER",
+    "UserPoolId": {
+     "Ref": "UserPool6BA7E5F2"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "shumelahire-dev-foundation/GroupHIRING_MANAGER"
+   }
+  },
+  "GroupRECRUITER": {
+   "Type": "AWS::Cognito::UserPoolGroup",
+   "Properties": {
+    "Description": "RECRUITER role group",
+    "GroupName": "RECRUITER",
+    "UserPoolId": {
+     "Ref": "UserPool6BA7E5F2"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "shumelahire-dev-foundation/GroupRECRUITER"
+   }
+  },
+  "GroupINTERVIEWER": {
+   "Type": "AWS::Cognito::UserPoolGroup",
+   "Properties": {
+    "Description": "INTERVIEWER role group",
+    "GroupName": "INTERVIEWER",
+    "UserPoolId": {
+     "Ref": "UserPool6BA7E5F2"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "shumelahire-dev-foundation/GroupINTERVIEWER"
+   }
+  },
+  "GroupEMPLOYEE": {
+   "Type": "AWS::Cognito::UserPoolGroup",
+   "Properties": {
+    "Description": "EMPLOYEE role group",
+    "GroupName": "EMPLOYEE",
+    "UserPoolId": {
+     "Ref": "UserPool6BA7E5F2"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "shumelahire-dev-foundation/GroupEMPLOYEE"
+   }
+  },
+  "GroupAPPLICANT": {
+   "Type": "AWS::Cognito::UserPoolGroup",
+   "Properties": {
+    "Description": "APPLICANT role group",
+    "GroupName": "APPLICANT",
+    "UserPoolId": {
+     "Ref": "UserPool6BA7E5F2"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "shumelahire-dev-foundation/GroupAPPLICANT"
+   }
+  },
+  "CDKMetadata": {
+   "Type": "AWS::CDK::Metadata",
+   "Properties": {
+    "Analytics": "v2:deflate64:H4sIAAAAAAAA/31RwU4CMRD9Fu+liJgYDx5gMYYLrixyNbNlXCtLu3amELLpv5vdwi7GaHqYN2/em76mN3J0N5a3V3CggdpsB6XOZZ0xqK2AA73VqG5kva6USN7NOk1E6vNSq8znBrnherS0nnEFeYk933MTIqs0sLamEzfgcZ42ZQH8BIwHOIrU6T0w9ovnhtEZ7AQxyambMIP62KFhkaHyTvPxyVlftRn+JeamcEgUhNuQrGfAkANhUnpidCJe3zln00viLM5QuZhxNj0b22ZuiMEoDIJaCe3AQIFO1jFF44plBa5AvnhFJ/g1iXQQWAKxVqA+MO77GTVpBqc0QdBY1lOvtjHmCcWS2lKrY0/HPgj6Ilm/ePTtB7UgCGULo9nK+pXQpdaWzazDZ5CU+vSGv5k2aAhiiWS9UygST2x3fftu/hilzu71Bt0UCMWECDljKLQpGs+z58pzEDPLC+ThvbyW90O5eFwl1uGkqgZrdKStediP5Wg4ktfNufokrQfOG9Y7lMtYvwES2UCgEwMAAA=="
+   },
+   "Metadata": {
+    "aws:cdk:path": "shumelahire-dev-foundation/CDKMetadata/Default"
+   }
+  }
+ },
+ "Outputs": {
+  "VpcId": {
+   "Value": {
+    "Ref": "Vpc8378EB38"
+   }
+  },
+  "DatabaseEndpoint": {
+   "Value": {
+    "Fn::GetAtt": [
+     "DatabaseB269D8BB",
+     "Endpoint.Address"
+    ]
+   }
+  },
+  "RedisEndpoint": {
+   "Value": {
+    "Fn::GetAtt": [
+     "Redis",
+     "RedisEndpoint.Address"
+    ]
+   }
+  },
+  "DocumentsBucketName": {
+   "Value": {
+    "Ref": "DocumentsBucket9EC9DEB9"
+   }
+  },
+  "UploadsBucketName": {
+   "Value": {
+    "Ref": "UploadsBucket5E5E9B64"
+   }
+  },
+  "NotificationQueueUrl": {
+   "Value": {
+    "Ref": "NotificationQueue36610CC1"
+   }
+  },
+  "UserPoolId": {
+   "Value": {
+    "Ref": "UserPool6BA7E5F2"
+   }
+  },
+  "UserPoolClientId": {
+   "Value": {
+    "Ref": "UserPoolWebAppClientCD2D5CB1"
+   }
+  },
+  "ExportsOutputFnGetAttDocumentsBucket9EC9DEB9ArnEA5095A7": {
+   "Value": {
+    "Fn::GetAtt": [
+     "DocumentsBucket9EC9DEB9",
+     "Arn"
+    ]
+   },
+   "Export": {
+    "Name": "shumelahire-dev-foundation:ExportsOutputFnGetAttDocumentsBucket9EC9DEB9ArnEA5095A7"
+   }
+  },
+  "ExportsOutputFnGetAttUploadsBucket5E5E9B64Arn8603C131": {
+   "Value": {
+    "Fn::GetAtt": [
+     "UploadsBucket5E5E9B64",
+     "Arn"
+    ]
+   },
+   "Export": {
+    "Name": "shumelahire-dev-foundation:ExportsOutputFnGetAttUploadsBucket5E5E9B64Arn8603C131"
+   }
+  },
+  "ExportsOutputFnGetAttNotificationQueue36610CC1ArnA5D241F1": {
+   "Value": {
+    "Fn::GetAtt": [
+     "NotificationQueue36610CC1",
+     "Arn"
+    ]
+   },
+   "Export": {
+    "Name": "shumelahire-dev-foundation:ExportsOutputFnGetAttNotificationQueue36610CC1ArnA5D241F1"
+   }
+  },
+  "ExportsOutputFnGetAttUserPool6BA7E5F2Arn686ACC00": {
+   "Value": {
+    "Fn::GetAtt": [
+     "UserPool6BA7E5F2",
+     "Arn"
+    ]
+   },
+   "Export": {
+    "Name": "shumelahire-dev-foundation:ExportsOutputFnGetAttUserPool6BA7E5F2Arn686ACC00"
+   }
+  },
+  "ExportsOutputFnGetAttDatabaseB269D8BBEndpointAddressA4DBD059": {
+   "Value": {
+    "Fn::GetAtt": [
+     "DatabaseB269D8BB",
+     "Endpoint.Address"
+    ]
+   },
+   "Export": {
+    "Name": "shumelahire-dev-foundation:ExportsOutputFnGetAttDatabaseB269D8BBEndpointAddressA4DBD059"
+   }
+  },
+  "ExportsOutputFnGetAttRedisRedisEndpointAddress0B69B4FF": {
+   "Value": {
+    "Fn::GetAtt": [
+     "Redis",
+     "RedisEndpoint.Address"
+    ]
+   },
+   "Export": {
+    "Name": "shumelahire-dev-foundation:ExportsOutputFnGetAttRedisRedisEndpointAddress0B69B4FF"
+   }
+  },
+  "ExportsOutputRefDocumentsBucket9EC9DEB9131399C0": {
+   "Value": {
+    "Ref": "DocumentsBucket9EC9DEB9"
+   },
+   "Export": {
+    "Name": "shumelahire-dev-foundation:ExportsOutputRefDocumentsBucket9EC9DEB9131399C0"
+   }
+  },
+  "ExportsOutputRefNotificationQueue36610CC1185DED79": {
+   "Value": {
+    "Ref": "NotificationQueue36610CC1"
+   },
+   "Export": {
+    "Name": "shumelahire-dev-foundation:ExportsOutputRefNotificationQueue36610CC1185DED79"
+   }
+  },
+  "ExportsOutputRefUserPool6BA7E5F296FD7236": {
+   "Value": {
+    "Ref": "UserPool6BA7E5F2"
+   },
+   "Export": {
+    "Name": "shumelahire-dev-foundation:ExportsOutputRefUserPool6BA7E5F296FD7236"
+   }
+  },
+  "ExportsOutputRefUserPoolWebAppClientCD2D5CB13BAB4F14": {
+   "Value": {
+    "Ref": "UserPoolWebAppClientCD2D5CB1"
+   },
+   "Export": {
+    "Name": "shumelahire-dev-foundation:ExportsOutputRefUserPoolWebAppClientCD2D5CB13BAB4F14"
+   }
+  },
+  "ExportsOutputFnGetAttAlbSecurityGroup86A59E99GroupIdE3A37BC7": {
+   "Value": {
+    "Fn::GetAtt": [
+     "AlbSecurityGroup86A59E99",
+     "GroupId"
+    ]
+   },
+   "Export": {
+    "Name": "shumelahire-dev-foundation:ExportsOutputFnGetAttAlbSecurityGroup86A59E99GroupIdE3A37BC7"
+   }
+  },
+  "ExportsOutputRefVpcpublicSubnet1Subnet2BB74ED74EB42ADC": {
+   "Value": {
+    "Ref": "VpcpublicSubnet1Subnet2BB74ED7"
+   },
+   "Export": {
+    "Name": "shumelahire-dev-foundation:ExportsOutputRefVpcpublicSubnet1Subnet2BB74ED74EB42ADC"
+   }
+  },
+  "ExportsOutputRefVpcpublicSubnet2SubnetE34B022AC8BB6627": {
+   "Value": {
+    "Ref": "VpcpublicSubnet2SubnetE34B022A"
+   },
+   "Export": {
+    "Name": "shumelahire-dev-foundation:ExportsOutputRefVpcpublicSubnet2SubnetE34B022AC8BB6627"
+   }
+  },
+  "ExportsOutputRefVpc8378EB38272D6E3A": {
+   "Value": {
+    "Ref": "Vpc8378EB38"
+   },
+   "Export": {
+    "Name": "shumelahire-dev-foundation:ExportsOutputRefVpc8378EB38272D6E3A"
+   }
+  },
+  "ExportsOutputRefVpcprivateSubnet1SubnetCEAD37168693D373": {
+   "Value": {
+    "Ref": "VpcprivateSubnet1SubnetCEAD3716"
+   },
+   "Export": {
+    "Name": "shumelahire-dev-foundation:ExportsOutputRefVpcprivateSubnet1SubnetCEAD37168693D373"
+   }
+  },
+  "ExportsOutputRefVpcprivateSubnet2Subnet2DE7549CDF5ACE3D": {
+   "Value": {
+    "Ref": "VpcprivateSubnet2Subnet2DE7549C"
+   },
+   "Export": {
+    "Name": "shumelahire-dev-foundation:ExportsOutputRefVpcprivateSubnet2Subnet2DE7549CDF5ACE3D"
+   }
+  },
+  "ExportsOutputFnGetAttEcsSecurityGroup44008BF1GroupIdDE2CA5C5": {
+   "Value": {
+    "Fn::GetAtt": [
+     "EcsSecurityGroup44008BF1",
+     "GroupId"
+    ]
+   },
+   "Export": {
+    "Name": "shumelahire-dev-foundation:ExportsOutputFnGetAttEcsSecurityGroup44008BF1GroupIdDE2CA5C5"
+   }
+  }
+ },
+ "Parameters": {
+  "BootstrapVersion": {
+   "Type": "AWS::SSM::Parameter::Value<String>",
+   "Default": "/cdk-bootstrap/hnb659fds/version",
+   "Description": "Version of the CDK Bootstrap resources in this environment, automatically retrieved from SSM Parameter Store. [cdk:skip]"
+  }
+ },
+ "Rules": {
+  "CheckBootstrapVersion": {
+   "Assertions": [
+    {
+     "Assert": {
+      "Fn::Not": [
+       {
+        "Fn::Contains": [
+         [
+          "1",
+          "2",
+          "3",
+          "4",
+          "5"
+         ],
+         {
+          "Ref": "BootstrapVersion"
+         }
+        ]
+       }
+      ]
+     },
+     "AssertDescription": "CDK bootstrap stack version 6 required. Please run 'cdk bootstrap' with a recent version of the CDK CLI."
+    }
+   ]
+  }
+ }
+}

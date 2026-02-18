@@ -11,7 +11,6 @@ import {
   FunnelIcon,
   MagnifyingGlassIcon,
   ArrowDownTrayIcon,
-  CalendarIcon,
   ShieldCheckIcon,
   ExclamationTriangleIcon,
   CheckCircleIcon,
@@ -20,10 +19,7 @@ import {
   BoltIcon,
   CogIcon,
   KeyIcon,
-  UsersIcon,
-  ChartBarIcon,
-  BuildingOfficeIcon,
-  PhoneIcon
+  UsersIcon
 } from '@heroicons/react/24/outline';
 import { AuditLogEntry } from '@/types/workflow';
 import { auditLogService } from '@/services/auditLogService';
@@ -381,7 +377,7 @@ export default function AuditLogsPage() {
 
   const uniqueEntityTypes = [...new Set(auditLogs.map(log => log.entityType))];
   const uniqueActions = [...new Set(auditLogs.map(log => log.action))];
-  const uniqueUsers = [...new Set(auditLogs.map(log => log.userId))];
+  const _uniqueUsers = [...new Set(auditLogs.map(log => log.userId))];
   const uniqueRoles = [...new Set(auditLogs.map(log => log.userRole))];
 
   const actions = (

@@ -21,7 +21,7 @@ export default function ApplicantsPage() {
     setView('create');
   };
 
-  const handleEdit = (applicantId: number) => {
+  const _handleEdit = (applicantId: number) => {
     setSelectedApplicantId(applicantId);
     setView('edit');
   };

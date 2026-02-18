@@ -223,6 +223,7 @@ export const RecruitmentBarChart: React.FC<BarChartProps> = ({
 // Pie Chart Component
 interface PieChartProps extends BaseChartProps {
   dataKey: string;
+  nameKey?: string;
   colors?: string[];
   innerRadius?: number;
   showLabels?: boolean;

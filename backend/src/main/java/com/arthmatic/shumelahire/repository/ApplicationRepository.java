@@ -121,4 +121,39 @@ public interface ApplicationRepository extends JpaRepository<Application, Long>,
     
     List<Application> findByStatusInAndUpdatedAtBeforeOrderBySubmittedAtAsc(
         List<ApplicationStatus> statuses, LocalDateTime threshold);
+
+    // Analytics methods for PerformanceAnalyticsService
+    @Query("SELECT a.id, a.submittedAt, a.updatedAt, a.department FROM Application a WHERE a.status = 'HIRED'")
+    List<Object[]> findHiredApplicationsWithDates();
+
+    @Query("SELECT a.applicationSource, a.status FROM Application a WHERE a.applicationSource IS NOT NULL")
+    List<Object[]> findApplicationsBySource();
+
+    @Query("SELECT a.department, COUNT(a) FROM Application a WHERE a.status = 'HIRED' GROUP BY a.department")
+    List<Object[]> findHiresByDepartment();
+
+    @Query("SELECT MONTH(a.submittedAt), YEAR(a.submittedAt), " +
+           "SUM(CASE WHEN a.status = 'HIRED' THEN 1 ELSE 0 END), COUNT(a) " +
+           "FROM Application a GROUP BY YEAR(a.submittedAt), MONTH(a.submittedAt) " +
+           "ORDER BY YEAR(a.submittedAt), MONTH(a.submittedAt)")
+    List<Object[]> findMonthlyHiringTrends();
+
+    @Query("SELECT a.jobTitle, COUNT(a) FROM Application a GROUP BY a.jobTitle ORDER BY COUNT(a) DESC")
+    List<Object[]> findApplicationsByPositionType();
+
+    @Query("SELECT MONTH(a.submittedAt), COUNT(a) FROM Application a GROUP BY MONTH(a.submittedAt)")
+    List<Object[]> findSeasonalHiringTrends();
+
+    // DataVisualizationService methods
+    @Query("SELECT a.status, COUNT(a) FROM Application a GROUP BY a.status")
+    List<Object[]> findApplicationCountByStatus();
+
+    @Query("SELECT CAST(a.submittedAt AS DATE), COUNT(a) FROM Application a WHERE a.submittedAt >= :fromDate GROUP BY CAST(a.submittedAt AS DATE) ORDER BY CAST(a.submittedAt AS DATE)")
+    List<Object[]> findApplicationCountByDate(@Param("fromDate") LocalDateTime fromDate);
+
+    @Query("SELECT a.jobTitle, COUNT(a) FROM Application a GROUP BY a.jobTitle ORDER BY COUNT(a) DESC")
+    List<Object[]> findTopPositionsByApplicationCount();
+
+    // VacancyReportService methods
+    List<Application> findByJobId(String jobId);
 }

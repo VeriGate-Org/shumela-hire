@@ -3,7 +3,7 @@ import { JobBoardPosting, JobBoardType, PostingStatus, AvailableBoard } from '@/
 const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080';
 
 // Mock data store for development
-let mockPostings: JobBoardPosting[] = [];
+const mockPostings: JobBoardPosting[] = [];
 let nextId = 1;
 
 function getAuthHeaders(): Record<string, string> {

@@ -8,7 +8,7 @@ import {
 const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080';
 
 // Mock data store for development
-let mockRecommendations: SalaryRecommendation[] = [
+const mockRecommendations: SalaryRecommendation[] = [
   {
     id: 1,
     recommendationNumber: 'SR-A1B2C3D4',

@@ -163,7 +163,7 @@ export default function ApplicationsPage() {
   };
 
   const filteredApplications = useMemo(() => {
-    let result = applications.filter(app => {
+    const result = applications.filter(app => {
       const matchesSearch = !searchTerm ||
         app.applicantName.toLowerCase().includes(searchTerm.toLowerCase()) ||
         app.jobTitle.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -220,7 +220,7 @@ export default function ApplicationsPage() {
     }
   };
 
-  const activeCount = applications.filter(a => !['WITHDRAWN', 'REJECTED', 'HIRED', 'OFFER_DECLINED'].includes(a.status)).length;
+  const _activeCount = applications.filter(a => !['WITHDRAWN', 'REJECTED', 'HIRED', 'OFFER_DECLINED'].includes(a.status)).length;
   const pendingReview = (statusCounts['SUBMITTED'] || 0) + (statusCounts['SCREENING'] || 0);
   const interviewStage = (statusCounts['INTERVIEW_SCHEDULED'] || 0) + (statusCounts['INTERVIEW_COMPLETED'] || 0);
   const offerStage = (statusCounts['OFFER_PENDING'] || 0) + (statusCounts['OFFERED'] || 0) + (statusCounts['OFFER_ACCEPTED'] || 0);

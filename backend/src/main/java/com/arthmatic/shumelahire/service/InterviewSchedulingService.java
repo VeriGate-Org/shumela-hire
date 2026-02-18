@@ -1,11 +1,14 @@
 package com.arthmatic.shumelahire.service;
 
 import com.arthmatic.shumelahire.entity.Interview;
+import com.arthmatic.shumelahire.entity.InterviewStatus;
+import com.arthmatic.shumelahire.entity.InterviewType;
+import com.arthmatic.shumelahire.entity.ApplicationStatus;
 import com.arthmatic.shumelahire.entity.Application;
+import com.arthmatic.shumelahire.entity.InterviewRecommendation;
 import com.arthmatic.shumelahire.repository.InterviewRepository;
 import com.arthmatic.shumelahire.repository.ApplicationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,11 +23,9 @@ import java.util.stream.Collectors;
 public class InterviewSchedulingService {
 
     @Autowired
-    @Qualifier("shumelahireInterviewRepository")
     private InterviewRepository interviewRepository;
 
     @Autowired
-    @Qualifier("shumelahireApplicationRepository")
     private ApplicationRepository applicationRepository;
 
     @Autowired
@@ -72,8 +73,8 @@ public class InterviewSchedulingService {
         Interview savedInterview = interviewRepository.save(interview);
 
         // Update application status if needed
-        if (!"INTERVIEWING".equals(application.getStatus())) {
-            application.setStatus("INTERVIEWING");
+        if (application.getStatus() != ApplicationStatus.INTERVIEW_SCHEDULED) {
+            application.setStatus(ApplicationStatus.INTERVIEW_SCHEDULED);
             applicationRepository.save(application);
         }
 
@@ -106,7 +107,7 @@ public class InterviewSchedulingService {
 
         LocalDateTime oldDate = interview.getScheduledDate();
         interview.setScheduledDate(newDate);
-        interview.setStatus(Interview.STATUS_RESCHEDULED);
+        interview.setStatus(InterviewStatus.RESCHEDULED);
         interview.setReminderSent(false);
         interview.setConfirmationReceived(false);
 
@@ -139,18 +140,17 @@ public class InterviewSchedulingService {
         Interview interview = interviewRepository.findById(interviewId)
             .orElseThrow(() -> new IllegalArgumentException("Interview not found"));
 
-        interview.setStatus(Interview.STATUS_CANCELLED);
+        interview.setStatus(InterviewStatus.CANCELLED);
         interview.setNotes((interview.getNotes() != null ? interview.getNotes() + "\n" : "") + 
                           "Cancelled: " + (reason != null ? reason : "No reason provided"));
 
         interviewRepository.save(interview);
 
         // Send notifications
-        notificationService.sendNotification(
-            interview.getApplication().getApplicant().getEmail(),
-            "Interview Cancelled",
-            "Your interview scheduled for " + interview.getScheduledDate() + 
-            " has been cancelled." + (reason != null ? " Reason: " + reason : "")
+        notificationService.notifyInterviewScheduled(
+            interview.getApplication(),
+            "Interview cancelled for " + interview.getScheduledDate() +
+            "." + (reason != null ? " Reason: " + reason : "")
         );
 
         // Log audit
@@ -172,14 +172,16 @@ public class InterviewSchedulingService {
         Interview interview = interviewRepository.findById(interviewId)
             .orElseThrow(() -> new IllegalArgumentException("Interview not found"));
 
-        interview.setStatus(Interview.STATUS_COMPLETED);
+        interview.setStatus(InterviewStatus.COMPLETED);
         interview.setCompletedAt(LocalDateTime.now());
         interview.setFeedback(feedback);
         interview.setRating(rating);
         interview.setTechnicalScore(technicalScore);
         interview.setCommunicationScore(communicationScore);
         interview.setCulturalFitScore(culturalFitScore);
-        interview.setRecommendation(recommendation != null ? recommendation : Interview.RECOMMENDATION_PENDING);
+        if (recommendation != null) {
+            interview.setRecommendation(recommendation);
+        }
 
         Interview savedInterview = interviewRepository.save(interview);
 
@@ -217,21 +219,21 @@ public class InterviewSchedulingService {
      * Get upcoming interviews
      */
     public List<Interview> getUpcomingInterviews() {
-        return interviewRepository.findUpcomingInterviews(LocalDateTime.now());
+        return interviewRepository.findUpcomingInterviews(LocalDateTime.now(), LocalDateTime.now().plusDays(7));
     }
 
     /**
      * Get interviews for a specific date
      */
     public List<Interview> getInterviewsForDate(LocalDate date) {
-        return interviewRepository.findInterviewsForDate(date.atStartOfDay());
+        return interviewRepository.findByDate(date.atStartOfDay());
     }
 
     /**
      * Get interviews for date range (calendar view)
      */
     public List<Interview> getInterviewsInDateRange(LocalDate startDate, LocalDate endDate) {
-        return interviewRepository.findInterviewsInDateRange(
+        return interviewRepository.findByScheduledAtBetween(
             startDate.atStartOfDay(),
             endDate.atTime(23, 59, 59)
         );
@@ -242,9 +244,16 @@ public class InterviewSchedulingService {
      */
     public List<Interview> searchInterviews(String interviewerEmail, String status, String interviewType,
                                           LocalDateTime fromDate, LocalDateTime toDate, String recommendation) {
-        return interviewRepository.findByCriteria(
-            interviewerEmail, status, interviewType, fromDate, toDate, recommendation
+        List<Interview> interviews = interviewRepository.findByScheduledAtBetween(
+            fromDate != null ? fromDate : LocalDateTime.now().minusYears(1),
+            toDate != null ? toDate : LocalDateTime.now().plusYears(1)
         );
+        return interviews.stream()
+            .filter(i -> interviewerEmail == null || interviewerEmail.equals(i.getInterviewerEmail()))
+            .filter(i -> status == null || status.equals(i.getStatus().name()))
+            .filter(i -> interviewType == null || interviewType.equals(i.getInterviewType()))
+            .filter(i -> recommendation == null || (i.getRecommendation() != null && recommendation.equals(i.getRecommendation().name())))
+            .collect(Collectors.toList());
     }
 
     /**
@@ -252,50 +261,42 @@ public class InterviewSchedulingService {
      */
     public Map<String, Object> getInterviewStatistics() {
         Map<String, Object> stats = new HashMap<>();
-        
+
         // Total counts
         stats.put("totalInterviews", interviewRepository.count());
-        
-        // Status counts
+
+        // Status counts using existing getInterviewStatusStatistics with wide date range
+        LocalDateTime yearAgo = LocalDateTime.now().minusYears(1);
+        LocalDateTime yearFromNow = LocalDateTime.now().plusYears(1);
+
         Map<String, Long> statusCounts = new HashMap<>();
-        List<Object[]> statusData = interviewRepository.findInterviewCountByStatus();
+        List<Object[]> statusData = interviewRepository.getInterviewStatusStatistics(yearAgo, yearFromNow);
         for (Object[] row : statusData) {
-            statusCounts.put((String) row[0], (Long) row[1]);
+            statusCounts.put(row[0].toString(), (Long) row[1]);
         }
         stats.put("statusCounts", statusCounts);
-        
-        // Type counts
-        Map<String, Long> typeCounts = new HashMap<>();
-        List<Object[]> typeData = interviewRepository.findInterviewCountByType();
-        for (Object[] row : typeData) {
-            typeCounts.put((String) row[0], (Long) row[1]);
+
+        // Type counts using existing getInterviewRoundStatistics as proxy
+        Map<String, Long> roundCounts = new HashMap<>();
+        List<Object[]> roundData = interviewRepository.getInterviewRoundStatistics(yearAgo, yearFromNow);
+        for (Object[] row : roundData) {
+            roundCounts.put(row[0].toString(), (Long) row[1]);
         }
-        stats.put("typeCounts", typeCounts);
-        
-        // Recommendation counts
-        Map<String, Long> recommendationCounts = new HashMap<>();
-        List<Object[]> recommendationData = interviewRepository.findInterviewCountByRecommendation();
-        for (Object[] row : recommendationData) {
-            recommendationCounts.put((String) row[0], (Long) row[1]);
-        }
-        stats.put("recommendationCounts", recommendationCounts);
-        
-        // Averages
-        stats.put("averageRating", interviewRepository.findAverageRating());
-        stats.put("averageTechnicalScore", interviewRepository.findAverageTechnicalScore());
-        stats.put("averageCommunicationScore", interviewRepository.findAverageCommunicationScore());
-        stats.put("averageCulturalFitScore", interviewRepository.findAverageCulturalFitScore());
-        
+        stats.put("typeCounts", roundCounts);
+
+        // Averages using existing getAverageInterviewRating
+        stats.put("averageRating", interviewRepository.getAverageInterviewRating(yearAgo, yearFromNow).orElse(0.0));
+
         // Recent activity
         LocalDateTime oneWeekAgo = LocalDateTime.now().minusDays(7);
-        stats.put("interviewsThisWeek", interviewRepository.countByScheduledDateBetween(oneWeekAgo, LocalDateTime.now()));
-        
+        stats.put("interviewsThisWeek", interviewRepository.countByScheduledAtBetween(oneWeekAgo, LocalDateTime.now()));
+
         // Upcoming interviews
-        stats.put("upcomingInterviews", interviewRepository.findUpcomingInterviews(LocalDateTime.now()).size());
-        
+        stats.put("upcomingInterviews", interviewRepository.findUpcomingInterviews(LocalDateTime.now(), LocalDateTime.now().plusDays(7)).size());
+
         // Interviews needing feedback
-        stats.put("interviewsNeedingFeedback", interviewRepository.findCompletedInterviewsWithoutFeedback().size());
-        
+        stats.put("interviewsNeedingFeedback", interviewRepository.findInterviewsRequiringFeedback().size());
+
         return stats;
     }
 
@@ -303,14 +304,23 @@ public class InterviewSchedulingService {
      * Get interviewer performance metrics
      */
     public List<Map<String, Object>> getInterviewerPerformance() {
-        List<Object[]> performanceData = interviewRepository.findInterviewerPerformance();
-        
-        return performanceData.stream()
-            .map(row -> {
+        // Calculate interviewer performance from all interviews
+        List<Interview> allInterviews = interviewRepository.findAll();
+        Map<String, List<Interview>> byInterviewer = allInterviews.stream()
+            .filter(i -> i.getInterviewerEmail() != null)
+            .collect(Collectors.groupingBy(Interview::getInterviewerEmail));
+
+        return byInterviewer.entrySet().stream()
+            .map(entry -> {
                 Map<String, Object> performance = new HashMap<>();
-                performance.put("interviewerEmail", row[0]);
-                performance.put("totalInterviews", row[1]);
-                performance.put("averageRating", row[2]);
+                performance.put("interviewerEmail", entry.getKey());
+                performance.put("totalInterviews", (long) entry.getValue().size());
+                double avgRating = entry.getValue().stream()
+                    .filter(i -> i.getRating() != null)
+                    .mapToInt(Interview::getRating)
+                    .average()
+                    .orElse(0.0);
+                performance.put("averageRating", Math.round(avgRating * 100.0) / 100.0);
                 return performance;
             })
             .collect(Collectors.toList());
@@ -327,24 +337,14 @@ public class InterviewSchedulingService {
             .findInterviewsNeedingReminders(now, reminderTime);
         
         for (Interview interview : interviewsNeedingReminders) {
-            // Send reminder to applicant
-            notificationService.sendNotification(
-                interview.getApplication().getApplicant().getEmail(),
-                "Interview Reminder",
-                "This is a reminder that you have an interview scheduled for " +
+            // Send reminder to applicant via the interview notification method
+            notificationService.notifyInterviewScheduled(
+                interview.getApplication(),
+                "Reminder: You have an interview scheduled for " +
                 interview.getScheduledDate().format(DateTimeFormatter.ofPattern("MMM dd, yyyy 'at' HH:mm")) +
                 " with " + interview.getInterviewerName() + "."
             );
-            
-            // Send reminder to interviewer
-            notificationService.sendNotification(
-                interview.getInterviewerEmail(),
-                "Interview Reminder",
-                "This is a reminder that you have an interview scheduled for " +
-                interview.getScheduledDate().format(DateTimeFormatter.ofPattern("MMM dd, yyyy 'at' HH:mm")) +
-                " with " + interview.getApplication().getApplicant().getFullName() + "."
-            );
-            
+
             // Mark reminder as sent
             interview.setReminderSent(true);
             interviewRepository.save(interview);
@@ -369,7 +369,7 @@ public class InterviewSchedulingService {
         dashboard.put("upcomingInterviews", getUpcomingInterviews().stream().limit(10).collect(Collectors.toList()));
         
         // Interviews needing feedback
-        dashboard.put("needingFeedback", interviewRepository.findCompletedInterviewsWithoutFeedback());
+        dashboard.put("needingFeedback", interviewRepository.findInterviewsRequiringFeedback());
         
         // Basic statistics
         dashboard.put("statistics", getInterviewStatistics());

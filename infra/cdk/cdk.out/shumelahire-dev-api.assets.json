@@ -1,0 +1,20 @@
+{
+  "version": "38.0.1",
+  "files": {
+    "d63f278a051ed2df32ed2247a5c3236258c568902f0fec7ffaff7e8a5eb321e4": {
+      "source": {
+        "path": "shumelahire-dev-api.template.json",
+        "packaging": "file"
+      },
+      "destinations": {
+        "420747712978-us-east-1": {
+          "bucketName": "cdk-hnb659fds-assets-420747712978-us-east-1",
+          "objectKey": "d63f278a051ed2df32ed2247a5c3236258c568902f0fec7ffaff7e8a5eb321e4.json",
+          "region": "us-east-1",
+          "assumeRoleArn": "arn:${AWS::Partition}:iam::420747712978:role/cdk-hnb659fds-file-publishing-role-420747712978-us-east-1"
+        }
+      }
+    }
+  },
+  "dockerImages": {}
+}

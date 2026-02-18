@@ -3,7 +3,7 @@
 import React, { useMemo, useState } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 
-interface Interview {
+export interface Interview {
   id: number;
   title: string;
   type: string;
@@ -26,6 +26,9 @@ interface Interview {
   requiresFeedback: boolean;
   isOverdue: boolean;
   isUpcoming: boolean;
+  rescheduleCount?: number;
+  createdBy?: number;
+  createdAt?: string;
   application: {
     id: number;
     applicant: {

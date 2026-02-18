@@ -12,13 +12,9 @@ import {
   CheckCircleIcon,
   XCircleIcon,
   EyeIcon,
-  ArrowRightIcon,
   DocumentTextIcon,
   ChatBubbleLeftRightIcon,
-  ExclamationTriangleIcon,
-  InformationCircleIcon,
   MagnifyingGlassIcon,
-  FunnelIcon,
   UserIcon,
   BuildingOfficeIcon
 } from '@heroicons/react/24/outline';
@@ -812,7 +808,7 @@ export default function MyApplicationsPage() {
                     <div>
                       <h3 className="text-lg font-semibold text-gray-900 mb-3">Application Timeline</h3>
                       <div className="space-y-4">
-                        {selectedApplication.timeline.map((event, index) => (
+                        {selectedApplication.timeline.map((event, _index) => (
                           <div key={event.id} className="flex space-x-3">
                             <div className="flex-shrink-0">
                               <div className="w-8 h-8 bg-gold-100 rounded-full flex items-center justify-center">

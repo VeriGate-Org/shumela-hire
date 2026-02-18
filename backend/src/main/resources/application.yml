@@ -77,9 +77,32 @@ job-boards:
     api-secret: ${LINKEDIN_API_SECRET:}
     org-id: ${LINKEDIN_ORG_ID:}
 
-# Management endpoints for monitoring
+# Notification Configuration
+notification:
+  email:
+    enabled: ${NOTIFICATION_EMAIL_ENABLED:true}
+  sms:
+    enabled: ${NOTIFICATION_SMS_ENABLED:false}
+  sqs:
+    enabled: ${NOTIFICATION_SQS_ENABLED:false}
+    queue-url: ${SQS_NOTIFICATION_QUEUE_URL:}
+
+# Management endpoints
 management:
   endpoints:
     web:
       exposure:
-        include: health,info,metrics
+        include: health,info,metrics,prometheus
+  endpoint:
+    health:
+      show-details: when-authorized
+      show-components: when-authorized
+
+# OpenAPI
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+    tags-sorter: alpha
+    operations-sorter: alpha

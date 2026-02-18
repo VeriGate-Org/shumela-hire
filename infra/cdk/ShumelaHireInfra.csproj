@@ -1,0 +1,12 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net9.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <RootNamespace>ShumelaHire.Infra</RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Amazon.CDK.Lib" Version="2.173.4" />
+    <PackageReference Include="Constructs" Version="10.4.2" />
+  </ItemGroup>
+</Project>

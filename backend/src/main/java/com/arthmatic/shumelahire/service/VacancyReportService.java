@@ -2,6 +2,7 @@ package com.arthmatic.shumelahire.service;
 
 import com.arthmatic.shumelahire.entity.Applicant;
 import com.arthmatic.shumelahire.entity.Application;
+import com.arthmatic.shumelahire.entity.ApplicationStatus;
 import com.arthmatic.shumelahire.repository.ApplicationRepository;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
@@ -47,7 +48,7 @@ public class VacancyReportService {
 
         // By status
         Map<String, Long> byStatus = applications.stream()
-                .collect(Collectors.groupingBy(Application::getStatus, Collectors.counting()));
+                .collect(Collectors.groupingBy(a -> a.getStatus().name(), Collectors.counting()));
         summary.put("applicationsByStatus", byStatus);
 
         // By source
@@ -58,7 +59,9 @@ public class VacancyReportService {
 
         // Shortlisted count
         long shortlisted = applications.stream()
-                .filter(a -> "INTERVIEWING".equals(a.getStatus()) || "OFFERED".equals(a.getStatus()) || "ACCEPTED".equals(a.getStatus()))
+                .filter(a -> a.getStatus() == ApplicationStatus.INTERVIEW_SCHEDULED ||
+                             a.getStatus() == ApplicationStatus.OFFERED ||
+                             a.getStatus() == ApplicationStatus.OFFER_ACCEPTED)
                 .count();
         summary.put("shortlistedCount", shortlisted);
 
@@ -192,7 +195,9 @@ public class VacancyReportService {
         String jobTitle = applications.isEmpty() ? "Unknown Position" : applications.get(0).getJobTitle();
 
         List<Application> shortlisted = applications.stream()
-                .filter(a -> "INTERVIEWING".equals(a.getStatus()) || "OFFERED".equals(a.getStatus()) || "ACCEPTED".equals(a.getStatus()))
+                .filter(a -> a.getStatus() == ApplicationStatus.INTERVIEW_SCHEDULED ||
+                             a.getStatus() == ApplicationStatus.OFFERED ||
+                             a.getStatus() == ApplicationStatus.OFFER_ACCEPTED)
                 .collect(Collectors.toList());
 
         try (PDDocument document = new PDDocument()) {
@@ -266,7 +271,7 @@ public class VacancyReportService {
                         {"Phone", applicant != null && applicant.getPhone() != null ? applicant.getPhone() : "N/A"},
                         {"Location", applicant != null && applicant.getLocation() != null ? applicant.getLocation() : "N/A"},
                         {"Experience", applicant != null && applicant.getExperience() != null ? applicant.getExperience() : "N/A"},
-                        {"Status", app.getStatus()},
+                        {"Status", app.getStatus().getDisplayName()},
                         {"Rating", app.getRating() != null ? app.getRating() + "/5" : "Not rated"},
                         {"Applied", app.getSubmittedAt() != null ? app.getSubmittedAt().format(DATE_FORMAT) : "N/A"}
                     };

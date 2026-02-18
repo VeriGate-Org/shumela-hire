@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { jobAdService } from '../../../services/jobAdService';
-import { jobTemplateService } from '../../../services/jobTemplateService';
+// jobTemplateService is available but not needed in current route handlers
 import { JobAdFilters, JobAdStatus, PublishingChannel } from '../../../types/jobAd';
 
 // GET /api/ads - Get all job ads with optional filtering

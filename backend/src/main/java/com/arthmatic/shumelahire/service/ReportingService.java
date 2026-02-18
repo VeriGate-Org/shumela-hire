@@ -1,10 +1,11 @@
 package com.arthmatic.shumelahire.service;
 
+import com.arthmatic.shumelahire.entity.Application;
+import com.arthmatic.shumelahire.entity.Interview;
 import com.arthmatic.shumelahire.repository.ApplicationRepository;
 import com.arthmatic.shumelahire.repository.InterviewRepository;
 import com.arthmatic.shumelahire.repository.ApplicantRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -20,15 +21,12 @@ import java.util.zip.ZipOutputStream;
 public class ReportingService {
 
     @Autowired
-    @Qualifier("shumelahireApplicationRepository")
     private ApplicationRepository applicationRepository;
 
     @Autowired
-    @Qualifier("shumelahireInterviewRepository")
     private InterviewRepository interviewRepository;
 
     @Autowired
-    @Qualifier("shumelahireApplicantRepository")
     private ApplicantRepository applicantRepository;
 
     @Autowired
@@ -43,7 +41,17 @@ public class ReportingService {
         csv.append("ID,Applicant Name,Email,Job Title,Status,Rating,Submitted Date,Updated Date,Experience,Skills\n");
         
         // Get applications data
-        var applications = applicationRepository.findBySearchCriteria(null, status, null, startDate, endDate);
+        List<Application> applications;
+        if (startDate != null && endDate != null) {
+            applications = applicationRepository.findApplicationsSubmittedBetween(startDate, endDate);
+        } else {
+            applications = applicationRepository.findAll();
+        }
+        if (status != null) {
+            applications = applications.stream()
+                .filter(a -> status.equals(a.getStatus().name()))
+                .collect(Collectors.toList());
+        }
         
         for (var app : applications) {
             csv.append(String.format("\"%s\",\"%s\",\"%s\",\"%s\",\"%s\",\"%s\",\"%s\",\"%s\",\"%s\",\"%s\"\n",
@@ -70,9 +78,9 @@ public class ReportingService {
         csv.append("ID,Applicant Name,Job Title,Interview Type,Status,Scheduled Date,Interviewer,Rating,Technical Score,Communication Score,Cultural Score,Recommendation,Feedback\n");
         
         // Get interviews data
-        var interviews = interviewRepository.findInterviewsInDateRange(startDate, endDate);
-        
-        for (var interview : interviews) {
+        List<Interview> interviews = interviewRepository.findByScheduledAtBetween(startDate, endDate);
+
+        for (Interview interview : interviews) {
             csv.append(String.format("\"%s\",\"%s\",\"%s\",\"%s\",\"%s\",\"%s\",\"%s\",\"%s\",\"%s\",\"%s\",\"%s\",\"%s\",\"%s\"\n",
                 interview.getId(),
                 interview.getApplication().getApplicant().getFullName(),
@@ -331,13 +339,27 @@ public class ReportingService {
     }
 
     private String generateCustomApplicationsReport(StringBuilder csv, LocalDateTime startDate, LocalDateTime endDate, List<String> fields, Map<String, String> filters) {
-        var applications = applicationRepository.findBySearchCriteria(
-            filters.get("keyword"),
-            filters.get("status"),
-            filters.get("jobTitle"),
-            startDate,
-            endDate
-        );
+        List<Application> applications = applicationRepository.findApplicationsSubmittedBetween(startDate, endDate);
+        String filterStatus = filters.get("status");
+        String filterKeyword = filters.get("keyword");
+        String filterJobTitle = filters.get("jobTitle");
+        if (filterStatus != null) {
+            applications = applications.stream()
+                .filter(a -> filterStatus.equals(a.getStatus().name()))
+                .collect(Collectors.toList());
+        }
+        if (filterKeyword != null) {
+            String kw = filterKeyword.toLowerCase();
+            applications = applications.stream()
+                .filter(a -> a.getApplicant().getFullName().toLowerCase().contains(kw) ||
+                             (a.getJobTitle() != null && a.getJobTitle().toLowerCase().contains(kw)))
+                .collect(Collectors.toList());
+        }
+        if (filterJobTitle != null) {
+            applications = applications.stream()
+                .filter(a -> filterJobTitle.equals(a.getJobTitle()))
+                .collect(Collectors.toList());
+        }
         
         for (var app : applications) {
             List<String> values = new ArrayList<>();
@@ -356,7 +378,7 @@ public class ReportingService {
                         values.add(app.getJobTitle());
                         break;
                     case "status":
-                        values.add(app.getStatus());
+                        values.add(app.getStatus().name());
                         break;
                     case "rating":
                         values.add(app.getRating() != null ? String.valueOf(app.getRating()) : "");
@@ -379,7 +401,7 @@ public class ReportingService {
     }
 
     private String generateCustomInterviewsReport(StringBuilder csv, LocalDateTime startDate, LocalDateTime endDate, List<String> fields, Map<String, String> filters) {
-        var interviews = interviewRepository.findInterviewsInDateRange(startDate, endDate);
+        List<Interview> interviews = interviewRepository.findByScheduledAtBetween(startDate, endDate);
         
         // Apply additional filters
         if (filters.get("interviewType") != null) {
@@ -405,7 +427,7 @@ public class ReportingService {
                         values.add(interview.getInterviewType());
                         break;
                     case "status":
-                        values.add(interview.getStatus());
+                        values.add(interview.getStatus().name());
                         break;
                     case "scheduled_date":
                         values.add(interview.getScheduledDate().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME));
@@ -417,7 +439,7 @@ public class ReportingService {
                         values.add(interview.getRating() != null ? String.valueOf(interview.getRating()) : "");
                         break;
                     case "recommendation":
-                        values.add(interview.getRecommendation());
+                        values.add(interview.getRecommendation() != null ? interview.getRecommendation().name() : "");
                         break;
                     default:
                         values.add("");

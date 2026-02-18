@@ -503,7 +503,7 @@ export default function WorkflowBuilder({
             <div className="text-center py-8 text-gray-500 border-2 border-dashed border-gray-300 rounded-sm">
               <DocumentTextIcon className="h-12 w-12 mx-auto mb-2 text-gray-400" />
               <p>No steps added yet</p>
-              <p className="text-sm">Click "Add Step" to get started</p>
+              <p className="text-sm">Click &quot;Add Step&quot; to get started</p>
             </div>
           ) : (
             <div className="space-y-4">

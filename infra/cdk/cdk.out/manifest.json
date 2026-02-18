@@ -1,0 +1,1029 @@
+{
+  "version": "38.0.1",
+  "artifacts": {
+    "shumelahire-dev-foundation.assets": {
+      "type": "cdk:asset-manifest",
+      "properties": {
+        "file": "shumelahire-dev-foundation.assets.json",
+        "requiresBootstrapStackVersion": 6,
+        "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version"
+      }
+    },
+    "shumelahire-dev-foundation": {
+      "type": "aws:cloudformation:stack",
+      "environment": "aws://420747712978/us-east-1",
+      "properties": {
+        "templateFile": "shumelahire-dev-foundation.template.json",
+        "terminationProtection": false,
+        "validateOnSynth": false,
+        "assumeRoleArn": "arn:${AWS::Partition}:iam::420747712978:role/cdk-hnb659fds-deploy-role-420747712978-us-east-1",
+        "cloudFormationExecutionRoleArn": "arn:${AWS::Partition}:iam::420747712978:role/cdk-hnb659fds-cfn-exec-role-420747712978-us-east-1",
+        "stackTemplateAssetObjectUrl": "s3://cdk-hnb659fds-assets-420747712978-us-east-1/805361ddd9cfdd5713f9ae73a3e3be28787221043f21b3d2eb6eca99a6c22090.json",
+        "requiresBootstrapStackVersion": 6,
+        "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version",
+        "additionalDependencies": [
+          "shumelahire-dev-foundation.assets"
+        ],
+        "lookupRole": {
+          "arn": "arn:${AWS::Partition}:iam::420747712978:role/cdk-hnb659fds-lookup-role-420747712978-us-east-1",
+          "requiresBootstrapStackVersion": 8,
+          "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version"
+        }
+      },
+      "dependencies": [
+        "shumelahire-dev-foundation.assets"
+      ],
+      "metadata": {
+        "/shumelahire-dev-foundation/Vpc/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "Vpc8378EB38"
+          }
+        ],
+        "/shumelahire-dev-foundation/Vpc/publicSubnet1/Subnet": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VpcpublicSubnet1Subnet2BB74ED7"
+          }
+        ],
+        "/shumelahire-dev-foundation/Vpc/publicSubnet1/RouteTable": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VpcpublicSubnet1RouteTable15C15F8E"
+          }
+        ],
+        "/shumelahire-dev-foundation/Vpc/publicSubnet1/RouteTableAssociation": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VpcpublicSubnet1RouteTableAssociation4E83B6E4"
+          }
+        ],
+        "/shumelahire-dev-foundation/Vpc/publicSubnet1/DefaultRoute": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VpcpublicSubnet1DefaultRouteB88F9E93"
+          }
+        ],
+        "/shumelahire-dev-foundation/Vpc/publicSubnet1/EIP": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VpcpublicSubnet1EIP411541E6"
+          }
+        ],
+        "/shumelahire-dev-foundation/Vpc/publicSubnet1/NATGateway": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VpcpublicSubnet1NATGatewayA036E8A6"
+          }
+        ],
+        "/shumelahire-dev-foundation/Vpc/publicSubnet2/Subnet": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VpcpublicSubnet2SubnetE34B022A"
+          }
+        ],
+        "/shumelahire-dev-foundation/Vpc/publicSubnet2/RouteTable": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VpcpublicSubnet2RouteTableC5A6DF77"
+          }
+        ],
+        "/shumelahire-dev-foundation/Vpc/publicSubnet2/RouteTableAssociation": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VpcpublicSubnet2RouteTableAssociationCCE257FF"
+          }
+        ],
+        "/shumelahire-dev-foundation/Vpc/publicSubnet2/DefaultRoute": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VpcpublicSubnet2DefaultRoute732F0BEB"
+          }
+        ],
+        "/shumelahire-dev-foundation/Vpc/privateSubnet1/Subnet": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VpcprivateSubnet1SubnetCEAD3716"
+          }
+        ],
+        "/shumelahire-dev-foundation/Vpc/privateSubnet1/RouteTable": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VpcprivateSubnet1RouteTable1979EACB"
+          }
+        ],
+        "/shumelahire-dev-foundation/Vpc/privateSubnet1/RouteTableAssociation": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VpcprivateSubnet1RouteTableAssociationEEBD93CE"
+          }
+        ],
+        "/shumelahire-dev-foundation/Vpc/privateSubnet1/DefaultRoute": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VpcprivateSubnet1DefaultRouteB506891A"
+          }
+        ],
+        "/shumelahire-dev-foundation/Vpc/privateSubnet2/Subnet": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VpcprivateSubnet2Subnet2DE7549C"
+          }
+        ],
+        "/shumelahire-dev-foundation/Vpc/privateSubnet2/RouteTable": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VpcprivateSubnet2RouteTable4D0FFC8C"
+          }
+        ],
+        "/shumelahire-dev-foundation/Vpc/privateSubnet2/RouteTableAssociation": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VpcprivateSubnet2RouteTableAssociationB691E645"
+          }
+        ],
+        "/shumelahire-dev-foundation/Vpc/privateSubnet2/DefaultRoute": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VpcprivateSubnet2DefaultRouteBAC3C1C3"
+          }
+        ],
+        "/shumelahire-dev-foundation/Vpc/isolatedSubnet1/Subnet": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VpcisolatedSubnet1SubnetE62B1B9B"
+          }
+        ],
+        "/shumelahire-dev-foundation/Vpc/isolatedSubnet1/RouteTable": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VpcisolatedSubnet1RouteTableE442650B"
+          }
+        ],
+        "/shumelahire-dev-foundation/Vpc/isolatedSubnet1/RouteTableAssociation": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VpcisolatedSubnet1RouteTableAssociationD259E31A"
+          }
+        ],
+        "/shumelahire-dev-foundation/Vpc/isolatedSubnet2/Subnet": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VpcisolatedSubnet2Subnet39217055"
+          }
+        ],
+        "/shumelahire-dev-foundation/Vpc/isolatedSubnet2/RouteTable": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VpcisolatedSubnet2RouteTable334F9764"
+          }
+        ],
+        "/shumelahire-dev-foundation/Vpc/isolatedSubnet2/RouteTableAssociation": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VpcisolatedSubnet2RouteTableAssociation25A4716F"
+          }
+        ],
+        "/shumelahire-dev-foundation/Vpc/IGW": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VpcIGWD7BA715C"
+          }
+        ],
+        "/shumelahire-dev-foundation/Vpc/VPCGW": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VpcVPCGWBF912B6E"
+          }
+        ],
+        "/shumelahire-dev-foundation/Vpc/RestrictDefaultSecurityGroupCustomResource/Default": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VpcRestrictDefaultSecurityGroupCustomResourceC73DA2BE"
+          }
+        ],
+        "/shumelahire-dev-foundation/Custom::VpcRestrictDefaultSGCustomResourceProvider": [
+          {
+            "type": "aws:cdk:is-custom-resource-handler-customResourceProvider",
+            "data": true
+          }
+        ],
+        "/shumelahire-dev-foundation/Custom::VpcRestrictDefaultSGCustomResourceProvider/Role": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CustomVpcRestrictDefaultSGCustomResourceProviderRole26592FE0"
+          }
+        ],
+        "/shumelahire-dev-foundation/Custom::VpcRestrictDefaultSGCustomResourceProvider/Handler": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CustomVpcRestrictDefaultSGCustomResourceProviderHandlerDC833E5E"
+          }
+        ],
+        "/shumelahire-dev-foundation/DbSecurityGroup/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "DbSecurityGroupE9D701AD"
+          }
+        ],
+        "/shumelahire-dev-foundation/DbSecurityGroup/from shumelahiredevfoundationEcsSecurityGroup7EB84E39:5432": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "DbSecurityGroupfromshumelahiredevfoundationEcsSecurityGroup7EB84E395432421CAD38"
+          }
+        ],
+        "/shumelahire-dev-foundation/RedisSecurityGroup/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "RedisSecurityGroupB05951F6"
+          }
+        ],
+        "/shumelahire-dev-foundation/RedisSecurityGroup/from shumelahiredevfoundationEcsSecurityGroup7EB84E39:6379": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "RedisSecurityGroupfromshumelahiredevfoundationEcsSecurityGroup7EB84E396379C2EC1ADD"
+          }
+        ],
+        "/shumelahire-dev-foundation/EcsSecurityGroup/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "EcsSecurityGroup44008BF1"
+          }
+        ],
+        "/shumelahire-dev-foundation/EcsSecurityGroup/from shumelahiredevfoundationAlbSecurityGroupFC0C8B4E:8080": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "EcsSecurityGroupfromshumelahiredevfoundationAlbSecurityGroupFC0C8B4E8080AC542592"
+          }
+        ],
+        "/shumelahire-dev-foundation/AlbSecurityGroup/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "AlbSecurityGroup86A59E99"
+          }
+        ],
+        "/shumelahire-dev-foundation/Database/Subnets/Default": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "DatabaseSubnets56F17B9A"
+          }
+        ],
+        "/shumelahire-dev-foundation/Database/Secret/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "shumelahiredevfoundationDatabaseSecretA6EDF0DA3fdaad7efa858a3daf9490cf0a702aeb"
+          }
+        ],
+        "/shumelahire-dev-foundation/Database/Secret/Attachment/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "DatabaseSecretAttachmentE5D1B020"
+          }
+        ],
+        "/shumelahire-dev-foundation/Database/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "DatabaseB269D8BB"
+          }
+        ],
+        "/shumelahire-dev-foundation/Database/writer/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "Databasewriter2462CC03"
+          }
+        ],
+        "/shumelahire-dev-foundation/RedisSubnetGroup": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "RedisSubnetGroup"
+          }
+        ],
+        "/shumelahire-dev-foundation/Redis": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "Redis"
+          }
+        ],
+        "/shumelahire-dev-foundation/DocumentsBucket/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "DocumentsBucket9EC9DEB9"
+          }
+        ],
+        "/shumelahire-dev-foundation/DocumentsBucket/Policy/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "DocumentsBucketPolicy1F991BD4"
+          }
+        ],
+        "/shumelahire-dev-foundation/DocumentsBucket/AutoDeleteObjectsCustomResource/Default": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "DocumentsBucketAutoDeleteObjectsCustomResourceFE3123FC"
+          }
+        ],
+        "/shumelahire-dev-foundation/Custom::S3AutoDeleteObjectsCustomResourceProvider": [
+          {
+            "type": "aws:cdk:is-custom-resource-handler-customResourceProvider",
+            "data": true
+          }
+        ],
+        "/shumelahire-dev-foundation/Custom::S3AutoDeleteObjectsCustomResourceProvider/Role": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CustomS3AutoDeleteObjectsCustomResourceProviderRole3B1BD092"
+          }
+        ],
+        "/shumelahire-dev-foundation/Custom::S3AutoDeleteObjectsCustomResourceProvider/Handler": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CustomS3AutoDeleteObjectsCustomResourceProviderHandler9D90184F"
+          }
+        ],
+        "/shumelahire-dev-foundation/UploadsBucket/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "UploadsBucket5E5E9B64"
+          }
+        ],
+        "/shumelahire-dev-foundation/UploadsBucket/Policy/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "UploadsBucketPolicy34A32B0B"
+          }
+        ],
+        "/shumelahire-dev-foundation/UploadsBucket/AutoDeleteObjectsCustomResource/Default": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "UploadsBucketAutoDeleteObjectsCustomResourceFFD11C72"
+          }
+        ],
+        "/shumelahire-dev-foundation/NotificationDlq/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "NotificationDlq467FCAE6"
+          }
+        ],
+        "/shumelahire-dev-foundation/NotificationQueue/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "NotificationQueue36610CC1"
+          }
+        ],
+        "/shumelahire-dev-foundation/AiKeysSecret/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "AiKeysSecretDA83C826"
+          }
+        ],
+        "/shumelahire-dev-foundation/DocusignSecret/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "DocusignSecretAADF5A87"
+          }
+        ],
+        "/shumelahire-dev-foundation/EncryptionKeySecret/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "EncryptionKeySecretE7F1DBEA"
+          }
+        ],
+        "/shumelahire-dev-foundation/JwtSecret/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "JwtSecretB8834B39"
+          }
+        ],
+        "/shumelahire-dev-foundation/UserPool/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "UserPool6BA7E5F2"
+          }
+        ],
+        "/shumelahire-dev-foundation/UserPool/WebAppClient/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "UserPoolWebAppClientCD2D5CB1"
+          }
+        ],
+        "/shumelahire-dev-foundation/GroupADMIN": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "GroupADMIN"
+          }
+        ],
+        "/shumelahire-dev-foundation/GroupEXECUTIVE": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "GroupEXECUTIVE"
+          }
+        ],
+        "/shumelahire-dev-foundation/GroupHR_MANAGER": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "GroupHRMANAGER"
+          }
+        ],
+        "/shumelahire-dev-foundation/GroupHIRING_MANAGER": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "GroupHIRINGMANAGER"
+          }
+        ],
+        "/shumelahire-dev-foundation/GroupRECRUITER": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "GroupRECRUITER"
+          }
+        ],
+        "/shumelahire-dev-foundation/GroupINTERVIEWER": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "GroupINTERVIEWER"
+          }
+        ],
+        "/shumelahire-dev-foundation/GroupEMPLOYEE": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "GroupEMPLOYEE"
+          }
+        ],
+        "/shumelahire-dev-foundation/GroupAPPLICANT": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "GroupAPPLICANT"
+          }
+        ],
+        "/shumelahire-dev-foundation/VpcId": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VpcId"
+          }
+        ],
+        "/shumelahire-dev-foundation/DatabaseEndpoint": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "DatabaseEndpoint"
+          }
+        ],
+        "/shumelahire-dev-foundation/RedisEndpoint": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "RedisEndpoint"
+          }
+        ],
+        "/shumelahire-dev-foundation/DocumentsBucketName": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "DocumentsBucketName"
+          }
+        ],
+        "/shumelahire-dev-foundation/UploadsBucketName": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "UploadsBucketName"
+          }
+        ],
+        "/shumelahire-dev-foundation/NotificationQueueUrl": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "NotificationQueueUrl"
+          }
+        ],
+        "/shumelahire-dev-foundation/UserPoolId": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "UserPoolId"
+          }
+        ],
+        "/shumelahire-dev-foundation/UserPoolClientId": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "UserPoolClientId"
+          }
+        ],
+        "/shumelahire-dev-foundation/CDKMetadata/Default": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CDKMetadata"
+          }
+        ],
+        "/shumelahire-dev-foundation/Exports/Output{\"Fn::GetAtt\":[\"DocumentsBucket9EC9DEB9\",\"Arn\"]}": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ExportsOutputFnGetAttDocumentsBucket9EC9DEB9ArnEA5095A7"
+          }
+        ],
+        "/shumelahire-dev-foundation/Exports/Output{\"Fn::GetAtt\":[\"UploadsBucket5E5E9B64\",\"Arn\"]}": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ExportsOutputFnGetAttUploadsBucket5E5E9B64Arn8603C131"
+          }
+        ],
+        "/shumelahire-dev-foundation/Exports/Output{\"Fn::GetAtt\":[\"NotificationQueue36610CC1\",\"Arn\"]}": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ExportsOutputFnGetAttNotificationQueue36610CC1ArnA5D241F1"
+          }
+        ],
+        "/shumelahire-dev-foundation/Exports/Output{\"Fn::GetAtt\":[\"UserPool6BA7E5F2\",\"Arn\"]}": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ExportsOutputFnGetAttUserPool6BA7E5F2Arn686ACC00"
+          }
+        ],
+        "/shumelahire-dev-foundation/Exports/Output{\"Fn::GetAtt\":[\"DatabaseB269D8BB\",\"Endpoint.Address\"]}": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ExportsOutputFnGetAttDatabaseB269D8BBEndpointAddressA4DBD059"
+          }
+        ],
+        "/shumelahire-dev-foundation/Exports/Output{\"Fn::GetAtt\":[\"Redis\",\"RedisEndpoint.Address\"]}": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ExportsOutputFnGetAttRedisRedisEndpointAddress0B69B4FF"
+          }
+        ],
+        "/shumelahire-dev-foundation/Exports/Output{\"Ref\":\"DocumentsBucket9EC9DEB9\"}": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ExportsOutputRefDocumentsBucket9EC9DEB9131399C0"
+          }
+        ],
+        "/shumelahire-dev-foundation/Exports/Output{\"Ref\":\"NotificationQueue36610CC1\"}": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ExportsOutputRefNotificationQueue36610CC1185DED79"
+          }
+        ],
+        "/shumelahire-dev-foundation/Exports/Output{\"Ref\":\"UserPool6BA7E5F2\"}": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ExportsOutputRefUserPool6BA7E5F296FD7236"
+          }
+        ],
+        "/shumelahire-dev-foundation/Exports/Output{\"Ref\":\"UserPoolWebAppClientCD2D5CB1\"}": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ExportsOutputRefUserPoolWebAppClientCD2D5CB13BAB4F14"
+          }
+        ],
+        "/shumelahire-dev-foundation/Exports/Output{\"Fn::GetAtt\":[\"AlbSecurityGroup86A59E99\",\"GroupId\"]}": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ExportsOutputFnGetAttAlbSecurityGroup86A59E99GroupIdE3A37BC7"
+          }
+        ],
+        "/shumelahire-dev-foundation/Exports/Output{\"Ref\":\"VpcpublicSubnet1Subnet2BB74ED7\"}": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ExportsOutputRefVpcpublicSubnet1Subnet2BB74ED74EB42ADC"
+          }
+        ],
+        "/shumelahire-dev-foundation/Exports/Output{\"Ref\":\"VpcpublicSubnet2SubnetE34B022A\"}": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ExportsOutputRefVpcpublicSubnet2SubnetE34B022AC8BB6627"
+          }
+        ],
+        "/shumelahire-dev-foundation/Exports/Output{\"Ref\":\"Vpc8378EB38\"}": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ExportsOutputRefVpc8378EB38272D6E3A"
+          }
+        ],
+        "/shumelahire-dev-foundation/Exports/Output{\"Ref\":\"VpcprivateSubnet1SubnetCEAD3716\"}": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ExportsOutputRefVpcprivateSubnet1SubnetCEAD37168693D373"
+          }
+        ],
+        "/shumelahire-dev-foundation/Exports/Output{\"Ref\":\"VpcprivateSubnet2Subnet2DE7549C\"}": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ExportsOutputRefVpcprivateSubnet2Subnet2DE7549CDF5ACE3D"
+          }
+        ],
+        "/shumelahire-dev-foundation/Exports/Output{\"Fn::GetAtt\":[\"EcsSecurityGroup44008BF1\",\"GroupId\"]}": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ExportsOutputFnGetAttEcsSecurityGroup44008BF1GroupIdDE2CA5C5"
+          }
+        ],
+        "/shumelahire-dev-foundation/BootstrapVersion": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "BootstrapVersion"
+          }
+        ],
+        "/shumelahire-dev-foundation/CheckBootstrapVersion": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CheckBootstrapVersion"
+          }
+        ]
+      },
+      "displayName": "shumelahire-dev-foundation"
+    },
+    "shumelahire-dev-compute.assets": {
+      "type": "cdk:asset-manifest",
+      "properties": {
+        "file": "shumelahire-dev-compute.assets.json",
+        "requiresBootstrapStackVersion": 6,
+        "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version"
+      }
+    },
+    "shumelahire-dev-compute": {
+      "type": "aws:cloudformation:stack",
+      "environment": "aws://420747712978/us-east-1",
+      "properties": {
+        "templateFile": "shumelahire-dev-compute.template.json",
+        "terminationProtection": false,
+        "validateOnSynth": false,
+        "assumeRoleArn": "arn:${AWS::Partition}:iam::420747712978:role/cdk-hnb659fds-deploy-role-420747712978-us-east-1",
+        "cloudFormationExecutionRoleArn": "arn:${AWS::Partition}:iam::420747712978:role/cdk-hnb659fds-cfn-exec-role-420747712978-us-east-1",
+        "stackTemplateAssetObjectUrl": "s3://cdk-hnb659fds-assets-420747712978-us-east-1/df08228b8cc41a7bd07f58b096fbd1d4905e37b165a104d66534d42235cbd9e1.json",
+        "requiresBootstrapStackVersion": 6,
+        "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version",
+        "additionalDependencies": [
+          "shumelahire-dev-compute.assets"
+        ],
+        "lookupRole": {
+          "arn": "arn:${AWS::Partition}:iam::420747712978:role/cdk-hnb659fds-lookup-role-420747712978-us-east-1",
+          "requiresBootstrapStackVersion": 8,
+          "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version"
+        }
+      },
+      "dependencies": [
+        "shumelahire-dev-foundation",
+        "shumelahire-dev-compute.assets"
+      ],
+      "metadata": {
+        "/shumelahire-dev-compute/BackendRepo/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "BackendRepo7FFBAD06"
+          }
+        ],
+        "/shumelahire-dev-compute/Cluster/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ClusterEB0386A7"
+          }
+        ],
+        "/shumelahire-dev-compute/TaskRole/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "TaskRole30FC0FBB"
+          }
+        ],
+        "/shumelahire-dev-compute/TaskRole/DefaultPolicy/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "TaskRoleDefaultPolicy07FC53DE"
+          }
+        ],
+        "/shumelahire-dev-compute/ExecutionRole/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ExecutionRole605A040B"
+          }
+        ],
+        "/shumelahire-dev-compute/ExecutionRole/DefaultPolicy/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ExecutionRoleDefaultPolicyA5B92313"
+          }
+        ],
+        "/shumelahire-dev-compute/LogGroup/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "LogGroupF5B46931"
+          }
+        ],
+        "/shumelahire-dev-compute/TaskDef/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "TaskDef54694570"
+          }
+        ],
+        "/shumelahire-dev-compute/Alb/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "Alb16C2F182"
+          }
+        ],
+        "/shumelahire-dev-compute/Alb/Http": [
+          {
+            "type": "aws:cdk:warning",
+            "data": "A default Action already existed on this Listener and was replaced. Configure exactly one default Action. [ack: @aws-cdk/aws-elbv2:listenerExistingDefaultActionReplaced]",
+            "trace": [
+              "Annotations.addMessage (/var/folders/94/b1l347yn11z20ql_060nzr_m0000gn/T/jsii-kernel-LN8E9T/node_modules/aws-cdk-lib/core/lib/annotations.js:1:1608)",
+              "Annotations.addWarningV2 (/var/folders/94/b1l347yn11z20ql_060nzr_m0000gn/T/jsii-kernel-LN8E9T/node_modules/aws-cdk-lib/core/lib/annotations.js:1:825)",
+              "ApplicationListener._setDefaultAction (/var/folders/94/b1l347yn11z20ql_060nzr_m0000gn/T/jsii-kernel-LN8E9T/node_modules/aws-cdk-lib/aws-elasticloadbalancingv2/lib/shared/base-listener.js:1:2489)",
+              "ApplicationListener.setDefaultAction (/var/folders/94/b1l347yn11z20ql_060nzr_m0000gn/T/jsii-kernel-LN8E9T/node_modules/aws-cdk-lib/aws-elasticloadbalancingv2/lib/alb/application-listener.js:1:9805)",
+              "ApplicationListener.addTargetGroups (/var/folders/94/b1l347yn11z20ql_060nzr_m0000gn/T/jsii-kernel-LN8E9T/node_modules/aws-cdk-lib/aws-elasticloadbalancingv2/lib/alb/application-listener.js:1:6693)",
+              "ApplicationListener.addTargets (/var/folders/94/b1l347yn11z20ql_060nzr_m0000gn/T/jsii-kernel-LN8E9T/node_modules/aws-cdk-lib/aws-elasticloadbalancingv2/lib/alb/application-listener.js:1:7391)",
+              "/private/var/folders/94/b1l347yn11z20ql_060nzr_m0000gn/T/ukekzgit.ekk/lib/program.js:8874:172",
+              "Kernel._Kernel_ensureSync (/private/var/folders/94/b1l347yn11z20ql_060nzr_m0000gn/T/ukekzgit.ekk/lib/program.js:9499:24)",
+              "Kernel.invoke (/private/var/folders/94/b1l347yn11z20ql_060nzr_m0000gn/T/ukekzgit.ekk/lib/program.js:8874:102)",
+              "KernelHost.processRequest (/private/var/folders/94/b1l347yn11z20ql_060nzr_m0000gn/T/ukekzgit.ekk/lib/program.js:10715:36)",
+              "KernelHost.run (/private/var/folders/94/b1l347yn11z20ql_060nzr_m0000gn/T/ukekzgit.ekk/lib/program.js:10675:22)",
+              "Immediate._onImmediate (/private/var/folders/94/b1l347yn11z20ql_060nzr_m0000gn/T/ukekzgit.ekk/lib/program.js:10676:46)",
+              "process.processImmediate (node:internal/timers:485:21)"
+            ]
+          }
+        ],
+        "/shumelahire-dev-compute/Alb/Http/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "AlbHttp7966E42E"
+          }
+        ],
+        "/shumelahire-dev-compute/Alb/Http/BackendTargetGroup/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "AlbHttpBackendTargetGroupF834592E"
+          }
+        ],
+        "/shumelahire-dev-compute/Service/Service": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ServiceD69D759B"
+          }
+        ],
+        "/shumelahire-dev-compute/Service/TaskCount/Target/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ServiceTaskCountTarget23E25614"
+          }
+        ],
+        "/shumelahire-dev-compute/Service/TaskCount/Target/CpuScaling/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ServiceTaskCountTargetCpuScalingCC8A5DF6"
+          }
+        ],
+        "/shumelahire-dev-compute/Service/TaskCount/Target/MemoryScaling/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ServiceTaskCountTargetMemoryScalingEA4B07C8"
+          }
+        ],
+        "/shumelahire-dev-compute/AlbDnsName": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "AlbDnsName"
+          }
+        ],
+        "/shumelahire-dev-compute/AlbArn": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "AlbArn"
+          }
+        ],
+        "/shumelahire-dev-compute/ClusterName": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ClusterName"
+          }
+        ],
+        "/shumelahire-dev-compute/ServiceName": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ServiceName"
+          }
+        ],
+        "/shumelahire-dev-compute/EcrRepositoryUri": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "EcrRepositoryUri"
+          }
+        ],
+        "/shumelahire-dev-compute/CDKMetadata/Default": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CDKMetadata"
+          }
+        ],
+        "/shumelahire-dev-compute/BootstrapVersion": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "BootstrapVersion"
+          }
+        ],
+        "/shumelahire-dev-compute/CheckBootstrapVersion": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CheckBootstrapVersion"
+          }
+        ]
+      },
+      "displayName": "shumelahire-dev-compute"
+    },
+    "shumelahire-dev-api.assets": {
+      "type": "cdk:asset-manifest",
+      "properties": {
+        "file": "shumelahire-dev-api.assets.json",
+        "requiresBootstrapStackVersion": 6,
+        "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version"
+      }
+    },
+    "shumelahire-dev-api": {
+      "type": "aws:cloudformation:stack",
+      "environment": "aws://420747712978/us-east-1",
+      "properties": {
+        "templateFile": "shumelahire-dev-api.template.json",
+        "terminationProtection": false,
+        "validateOnSynth": false,
+        "assumeRoleArn": "arn:${AWS::Partition}:iam::420747712978:role/cdk-hnb659fds-deploy-role-420747712978-us-east-1",
+        "cloudFormationExecutionRoleArn": "arn:${AWS::Partition}:iam::420747712978:role/cdk-hnb659fds-cfn-exec-role-420747712978-us-east-1",
+        "stackTemplateAssetObjectUrl": "s3://cdk-hnb659fds-assets-420747712978-us-east-1/d63f278a051ed2df32ed2247a5c3236258c568902f0fec7ffaff7e8a5eb321e4.json",
+        "requiresBootstrapStackVersion": 6,
+        "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version",
+        "additionalDependencies": [
+          "shumelahire-dev-api.assets"
+        ],
+        "lookupRole": {
+          "arn": "arn:${AWS::Partition}:iam::420747712978:role/cdk-hnb659fds-lookup-role-420747712978-us-east-1",
+          "requiresBootstrapStackVersion": 8,
+          "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version"
+        }
+      },
+      "dependencies": [
+        "shumelahire-dev-api.assets"
+      ],
+      "metadata": {
+        "/shumelahire-dev-api/WebAcl": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "WebAcl"
+          }
+        ],
+        "/shumelahire-dev-api/WafAlbAssociation": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "WafAlbAssociation"
+          }
+        ],
+        "/shumelahire-dev-api/WafWebAclArn": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "WafWebAclArn"
+          }
+        ],
+        "/shumelahire-dev-api/CDKMetadata/Default": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CDKMetadata"
+          }
+        ],
+        "/shumelahire-dev-api/BootstrapVersion": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "BootstrapVersion"
+          }
+        ],
+        "/shumelahire-dev-api/CheckBootstrapVersion": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CheckBootstrapVersion"
+          }
+        ]
+      },
+      "displayName": "shumelahire-dev-api"
+    },
+    "shumelahire-dev-frontend.assets": {
+      "type": "cdk:asset-manifest",
+      "properties": {
+        "file": "shumelahire-dev-frontend.assets.json",
+        "requiresBootstrapStackVersion": 6,
+        "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version"
+      }
+    },
+    "shumelahire-dev-frontend": {
+      "type": "aws:cloudformation:stack",
+      "environment": "aws://420747712978/us-east-1",
+      "properties": {
+        "templateFile": "shumelahire-dev-frontend.template.json",
+        "terminationProtection": false,
+        "validateOnSynth": false,
+        "assumeRoleArn": "arn:${AWS::Partition}:iam::420747712978:role/cdk-hnb659fds-deploy-role-420747712978-us-east-1",
+        "cloudFormationExecutionRoleArn": "arn:${AWS::Partition}:iam::420747712978:role/cdk-hnb659fds-cfn-exec-role-420747712978-us-east-1",
+        "stackTemplateAssetObjectUrl": "s3://cdk-hnb659fds-assets-420747712978-us-east-1/ff67f523a9474a2cbfa83d23a97f87e7888a30cba02dc7a9bb0c0c10b04d59aa.json",
+        "requiresBootstrapStackVersion": 6,
+        "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version",
+        "additionalDependencies": [
+          "shumelahire-dev-frontend.assets"
+        ],
+        "lookupRole": {
+          "arn": "arn:${AWS::Partition}:iam::420747712978:role/cdk-hnb659fds-lookup-role-420747712978-us-east-1",
+          "requiresBootstrapStackVersion": 8,
+          "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version"
+        }
+      },
+      "dependencies": [
+        "shumelahire-dev-frontend.assets"
+      ],
+      "metadata": {
+        "/shumelahire-dev-frontend/UiBucket/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "UiBucket6890E4C3"
+          }
+        ],
+        "/shumelahire-dev-frontend/UiBucket/Policy/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "UiBucketPolicy09DA0D65"
+          }
+        ],
+        "/shumelahire-dev-frontend/UiBucket/AutoDeleteObjectsCustomResource/Default": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "UiBucketAutoDeleteObjectsCustomResourceE3F28A4B"
+          }
+        ],
+        "/shumelahire-dev-frontend/Custom::S3AutoDeleteObjectsCustomResourceProvider": [
+          {
+            "type": "aws:cdk:is-custom-resource-handler-customResourceProvider",
+            "data": true
+          }
+        ],
+        "/shumelahire-dev-frontend/Custom::S3AutoDeleteObjectsCustomResourceProvider/Role": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CustomS3AutoDeleteObjectsCustomResourceProviderRole3B1BD092"
+          }
+        ],
+        "/shumelahire-dev-frontend/Custom::S3AutoDeleteObjectsCustomResourceProvider/Handler": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CustomS3AutoDeleteObjectsCustomResourceProviderHandler9D90184F"
+          }
+        ],
+        "/shumelahire-dev-frontend/OAI/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "OAIE1EFC67F"
+          }
+        ],
+        "/shumelahire-dev-frontend/Distribution/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "Distribution830FAC52"
+          }
+        ],
+        "/shumelahire-dev-frontend/UiBucketName": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "UiBucketName"
+          }
+        ],
+        "/shumelahire-dev-frontend/DistributionId": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "DistributionId"
+          }
+        ],
+        "/shumelahire-dev-frontend/DistributionDomainName": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "DistributionDomainName"
+          }
+        ],
+        "/shumelahire-dev-frontend/FrontendUrl": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "FrontendUrl"
+          }
+        ],
+        "/shumelahire-dev-frontend/CDKMetadata/Default": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CDKMetadata"
+          }
+        ],
+        "/shumelahire-dev-frontend/BootstrapVersion": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "BootstrapVersion"
+          }
+        ],
+        "/shumelahire-dev-frontend/CheckBootstrapVersion": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CheckBootstrapVersion"
+          }
+        ]
+      },
+      "displayName": "shumelahire-dev-frontend"
+    },
+    "Tree": {
+      "type": "cdk:tree",
+      "properties": {
+        "file": "tree.json"
+      }
+    }
+  }
+}

@@ -121,7 +121,7 @@ export default function WorkflowLibrary({
   const getCurrentWorkflows = () => {
     const categoryWorkflows = categories.find(c => c.id === selectedCategory)?.workflows || workflows;
     
-    let filtered = categoryWorkflows.filter(workflow => {
+    const filtered = categoryWorkflows.filter(workflow => {
       if (searchQuery) {
         const query = searchQuery.toLowerCase();
         return (

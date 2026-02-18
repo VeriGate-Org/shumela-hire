@@ -4,6 +4,8 @@ server:
 spring:
   application:
     name: shumelahire-backend
+  profiles:
+    active: dev
   datasource:
     url: jdbc:h2:mem:testdb
     driver-class-name: org.h2.Driver
@@ -17,8 +19,14 @@ spring:
   h2:
     console:
       enabled: false
+  flyway:
+    enabled: false
   cache:
     type: simple
+  autoconfigure:
+    exclude:
+      - org.springframework.boot.autoconfigure.data.redis.RedisAutoConfiguration
+      - org.springframework.boot.autoconfigure.data.redis.RedisRepositoriesAutoConfiguration
 
 # Test-only security keys (NOT for production use)
 jwt:
@@ -52,10 +60,13 @@ app:
   file:
     upload-dir: uploads
 
+notification:
+  sqs:
+    enabled: false
+
 logging:
   level:
     com.arthmatic.shumelahire: DEBUG
-    com.example.recruitment: DEBUG
 
 management:
   endpoints:

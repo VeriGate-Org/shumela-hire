@@ -3,7 +3,6 @@ package com.arthmatic.shumelahire.service;
 import com.arthmatic.shumelahire.repository.ApplicationRepository;
 import com.arthmatic.shumelahire.repository.InterviewRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -15,11 +14,9 @@ import java.util.stream.Collectors;
 public class DataVisualizationService {
 
     @Autowired
-    @Qualifier("shumelahireApplicationRepository")
     private ApplicationRepository applicationRepository;
 
     @Autowired
-    @Qualifier("shumelahireInterviewRepository")
     private InterviewRepository interviewRepository;
 
     @Autowired

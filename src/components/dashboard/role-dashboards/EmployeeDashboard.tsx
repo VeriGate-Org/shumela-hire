@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import Link from 'next/link';
 
 interface EmployeeDashboardProps {
   selectedTimeframe: string;
@@ -50,9 +51,9 @@ const EmployeeDashboard: React.FC<EmployeeDashboardProps> = ({
       <div className="bg-white rounded-sm border border-gray-200 border-t-2 border-t-gold-500 p-6">
         <div className="flex items-center justify-between mb-4">
           <h3 className="text-lg font-semibold text-gray-900">Internal Job Openings</h3>
-          <a href="/internal/jobs" className="text-sm font-medium text-gold-600 hover:text-gold-800">
+          <Link href="/internal/jobs" className="text-sm font-medium text-gold-600 hover:text-gold-800">
             View All
-          </a>
+          </Link>
         </div>
         <div className="space-y-3">
           {internalJobs.map((job) => (
@@ -63,9 +64,9 @@ const EmployeeDashboard: React.FC<EmployeeDashboardProps> = ({
               </div>
               <div className="text-right">
                 <p className="text-sm text-gray-500">Closes in {job.closingIn} days</p>
-                <a href={`/internal/jobs/${job.id}`} className="text-sm font-medium text-gold-600 hover:text-gold-800">
+                <Link href={`/internal/jobs/${job.id}`} className="text-sm font-medium text-gold-600 hover:text-gold-800">
                   View Details
-                </a>
+                </Link>
               </div>
             </div>
           ))}
@@ -76,9 +77,9 @@ const EmployeeDashboard: React.FC<EmployeeDashboardProps> = ({
       <div className="bg-white rounded-sm border border-gray-200 border-t-2 border-t-gold-500 p-6">
         <div className="flex items-center justify-between mb-4">
           <h3 className="text-lg font-semibold text-gray-900">Training Modules</h3>
-          <a href="/training" className="text-sm font-medium text-gold-600 hover:text-gold-800">
+          <Link href="/training" className="text-sm font-medium text-gold-600 hover:text-gold-800">
             View All
-          </a>
+          </Link>
         </div>
         <div className="space-y-3">
           {trainingModules.map((module) => (
@@ -111,18 +112,18 @@ const EmployeeDashboard: React.FC<EmployeeDashboardProps> = ({
       <div className="bg-white rounded-sm border border-gray-200 border-t-2 border-t-gold-500 p-6">
         <h3 className="text-lg font-semibold text-gray-900 mb-4">Quick Links</h3>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <a href="/profile" className="p-4 bg-gold-50 rounded-sm text-center hover:bg-gold-100 transition-colors">
+          <Link href="/profile" className="p-4 bg-gold-50 rounded-sm text-center hover:bg-gold-100 transition-colors">
             <p className="font-medium text-violet-900">My Profile</p>
             <p className="text-sm text-gold-600">Update your information</p>
-          </a>
-          <a href="/internal/jobs" className="p-4 bg-purple-50 rounded-sm text-center hover:bg-purple-100 transition-colors">
+          </Link>
+          <Link href="/internal/jobs" className="p-4 bg-purple-50 rounded-sm text-center hover:bg-purple-100 transition-colors">
             <p className="font-medium text-purple-900">Internal Jobs</p>
             <p className="text-sm text-purple-600">Browse opportunities</p>
-          </a>
-          <a href="/training" className="p-4 bg-green-50 rounded-sm text-center hover:bg-green-100 transition-colors">
+          </Link>
+          <Link href="/training" className="p-4 bg-green-50 rounded-sm text-center hover:bg-green-100 transition-colors">
             <p className="font-medium text-green-900">Training</p>
             <p className="text-sm text-green-600">Continue learning</p>
-          </a>
+          </Link>
         </div>
       </div>
     </div>

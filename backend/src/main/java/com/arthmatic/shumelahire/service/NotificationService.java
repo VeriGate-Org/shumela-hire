@@ -9,6 +9,7 @@ import com.arthmatic.shumelahire.entity.NotificationType;
 import com.arthmatic.shumelahire.entity.NotificationPriority;
 import com.arthmatic.shumelahire.repository.ApplicantRepository;
 import com.arthmatic.shumelahire.repository.NotificationRepository;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,40 +17,51 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import software.amazon.awssdk.services.sqs.SqsClient;
+import software.amazon.awssdk.services.sqs.model.SendMessageRequest;
 
 import java.time.LocalDateTime;
-import com.arthmatic.shumelahire.entity.NotificationPriority;
-import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @Transactional
 public class NotificationService {
-    
+
     private static final Logger logger = LoggerFactory.getLogger(NotificationService.class);
-    
+
     @Autowired
     private NotificationRepository notificationRepository;
-    
+
     @Autowired
     private ApplicantRepository applicantRepository;
-    
+
     @Autowired
     private AuditLogService auditLogService;
-    
+
+    @Autowired(required = false)
+    private SqsClient sqsClient;
+
+    @Autowired
+    private ObjectMapper objectMapper;
+
     @Value("${notification.email.enabled:true}")
     private boolean emailEnabled;
-    
+
     @Value("${notification.sms.enabled:false}")
     private boolean smsEnabled;
 
-    /**
-     * Send notification for application creation
-     */
+    @Value("${notification.sqs.enabled:false}")
+    private boolean sqsEnabled;
+
+    @Value("${notification.sqs.queue-url:}")
+    private String sqsQueueUrl;
+
     @Async
     public void notifyApplicationSubmitted(Application application) {
         logger.info("Sending application submitted notification for application {}", application.getId());
-        
+
         String subject = "Application Submitted Successfully";
         String message = String.format(
             "Dear %s,\n\n" +
@@ -70,10 +82,10 @@ public class NotificationService {
             application.getId(),
             application.getSubmittedAt()
         );
-        
-        sendNotification(application.getApplicant().getId(), subject, message, 
+
+        sendNotification(application.getApplicant().getId(), subject, message,
                         NotificationChannel.EMAIL, "APPLICATION_SUBMITTED");
-        
+
         if (smsEnabled) {
             String smsMessage = String.format(
                 "Hi %s, your application for %s has been submitted successfully. Application ID: %s",
@@ -81,25 +93,22 @@ public class NotificationService {
                 application.getJobTitle(),
                 application.getId()
             );
-            sendNotification(application.getApplicant().getId(), "Application Submitted", smsMessage, 
+            sendNotification(application.getApplicant().getId(), "Application Submitted", smsMessage,
                             NotificationChannel.SMS, "APPLICATION_SUBMITTED");
         }
     }
 
-    /**
-     * Send notification for status change
-     */
     @Async
     public void notifyStatusChange(Application application, ApplicationStatus previousStatus) {
-        logger.info("Sending status change notification for application {} from {} to {}", 
+        logger.info("Sending status change notification for application {} from {} to {}",
                    application.getId(), previousStatus, application.getStatus());
-        
+
         String subject = getStatusChangeSubject(application.getStatus());
         String message = getStatusChangeMessage(application, previousStatus);
-        
-        sendNotification(application.getApplicant().getId(), subject, message, 
+
+        sendNotification(application.getApplicant().getId(), subject, message,
                         NotificationChannel.EMAIL, "STATUS_CHANGE");
-        
+
         if (smsEnabled && isImportantStatusChange(application.getStatus())) {
             String smsMessage = String.format(
                 "Hi %s, your application for %s has been updated to: %s",
@@ -107,18 +116,35 @@ public class NotificationService {
                 application.getJobTitle(),
                 getStatusDisplayName(application.getStatus())
             );
-            sendNotification(application.getApplicant().getId(), "Application Update", smsMessage, 
+            sendNotification(application.getApplicant().getId(), "Application Update", smsMessage,
                             NotificationChannel.SMS, "STATUS_CHANGE");
         }
     }
 
-    /**
-     * Send notification for application withdrawal
-     */
+    @Async
+    public void notifyInterviewScheduled(Application application, String interviewDetails) {
+        logger.info("Sending interview notification for application {}", application.getId());
+
+        String subject = "Interview Update";
+        String message = String.format(
+            "Dear %s,\n\n" +
+            "Interview update for your application for the position '%s'.\n\n" +
+            "%s\n\n" +
+            "Best regards,\n" +
+            "HR Team",
+            application.getApplicant().getFullName(),
+            application.getJobTitle(),
+            interviewDetails
+        );
+
+        sendNotification(application.getApplicant().getId(), subject, message,
+                        NotificationChannel.EMAIL, "STATUS_CHANGE");
+    }
+
     @Async
     public void notifyApplicationWithdrawn(Application application) {
         logger.info("Sending withdrawal notification for application {}", application.getId());
-        
+
         String subject = "Application Withdrawn";
         String message = String.format(
             "Dear %s,\n\n" +
@@ -139,18 +165,15 @@ public class NotificationService {
             application.getWithdrawnAt(),
             application.getWithdrawalReason()
         );
-        
-        sendNotification(application.getApplicant().getId(), subject, message, 
+
+        sendNotification(application.getApplicant().getId(), subject, message,
                         NotificationChannel.EMAIL, "APPLICATION_WITHDRAWN");
     }
 
-    /**
-     * Send notification for shortlisting
-     */
     @Async
     public void notifyApplicationShortlisted(Application application) {
         logger.info("Sending shortlist notification for application {}", application.getId());
-        
+
         String subject = "Congratulations! You've Been Shortlisted";
         String message = String.format(
             "Dear %s,\n\n" +
@@ -169,34 +192,29 @@ public class NotificationService {
             application.getDepartment(),
             application.getId()
         );
-        
-        sendNotification(application.getApplicant().getId(), subject, message, 
+
+        sendNotification(application.getApplicant().getId(), subject, message,
                         NotificationChannel.EMAIL, "APPLICATION_SHORTLISTED");
-        
+
         if (smsEnabled) {
             String smsMessage = String.format(
                 "Congratulations %s! Your application for %s has been shortlisted. We'll be in touch soon.",
                 application.getApplicant().getName(),
                 application.getJobTitle()
             );
-            sendNotification(application.getApplicant().getId(), "Application Shortlisted", smsMessage, 
+            sendNotification(application.getApplicant().getId(), "Application Shortlisted", smsMessage,
                             NotificationChannel.SMS, "APPLICATION_SHORTLISTED");
         }
     }
 
-    /**
-     * Send a notification
-     */
-    private void sendNotification(Long applicantId, String subject, String message, 
+    private void sendNotification(Long applicantId, String subject, String message,
                                  NotificationChannel channel, String eventType) {
         try {
             Applicant applicant = applicantRepository.findById(applicantId)
                     .orElseThrow(() -> new IllegalArgumentException("Applicant not found: " + applicantId));
-            
-            // Map event type to NotificationType
+
             NotificationType notificationType = mapEventTypeToNotificationType(eventType);
-            
-            // Create notification record using existing structure
+
             Notification notification = new Notification();
             notification.setRecipientId(applicantId);
             notification.setType(notificationType);
@@ -204,8 +222,7 @@ public class NotificationService {
             notification.setPriority(getNotificationPriority(notificationType));
             notification.setTitle(subject);
             notification.setMessage(message);
-            
-            // Set channel-specific fields
+
             switch (channel) {
                 case EMAIL:
                     notification.setEmailTo(applicant.getEmail());
@@ -219,106 +236,106 @@ public class NotificationService {
                 case WEBHOOK:
                 case SLACK:
                 case BROWSER:
-                    // These channels don't need additional setup for basic functionality
                     break;
             }
-            
-            // Attempt to send
+
             boolean sent = false;
             String errorMessage = null;
-            
+
             try {
-                switch (channel) {
-                    case EMAIL:
-                        sent = sendEmail(applicant.getEmail(), subject, message);
-                        break;
-                    case SMS:
-                        sent = sendSMS(applicant.getPhone(), message);
-                        break;
-                    case IN_APP:
-                        sent = true; // In-app notifications are always "sent" (stored)
-                        break;
-                    case PUSH:
-                    case WEBHOOK:
-                    case SLACK:
-                    case BROWSER:
-                        sent = true; // Placeholder for future implementation
-                        break;
+                if (sqsEnabled && sqsClient != null && !sqsQueueUrl.isEmpty()) {
+                    sent = publishToSqs(applicant, subject, message, channel, eventType);
+                } else {
+                    switch (channel) {
+                        case EMAIL:
+                            sent = sendEmail(applicant.getEmail(), subject, message);
+                            break;
+                        case SMS:
+                            sent = sendSMS(applicant.getPhone(), message);
+                            break;
+                        case IN_APP:
+                            sent = true;
+                            break;
+                        case PUSH:
+                        case WEBHOOK:
+                        case SLACK:
+                        case BROWSER:
+                            sent = true;
+                            break;
+                    }
                 }
             } catch (Exception e) {
-                logger.error("Error sending {} notification to applicant {}: {}", 
+                logger.error("Error sending {} notification to applicant {}: {}",
                            channel, applicantId, e.getMessage());
                 errorMessage = e.getMessage();
             }
-            
-            // Update notification status
+
             notification.setIsDelivered(sent);
             notification.setDeliveredAt(sent ? LocalDateTime.now() : null);
             notification.setDeliveryError(errorMessage);
-            
+
             notificationRepository.save(notification);
-            
-            // Log to audit
-            auditLogService.logApplicantAction(applicantId, 
-                sent ? "NOTIFICATION_SENT" : "NOTIFICATION_FAILED", 
-                "NOTIFICATION", 
+
+            auditLogService.logApplicantAction(applicantId,
+                sent ? "NOTIFICATION_SENT" : "NOTIFICATION_FAILED",
+                "NOTIFICATION",
                 channel + ": " + eventType + (errorMessage != null ? " - " + errorMessage : ""));
-            
-            logger.info("Notification {} for applicant {} via {} - Status: {}", 
+
+            logger.info("Notification {} for applicant {} via {} - Status: {}",
                        eventType, applicantId, channel, sent ? "SENT" : "FAILED");
-                       
+
         } catch (Exception e) {
             logger.error("Failed to send notification to applicant {}: {}", applicantId, e.getMessage(), e);
         }
     }
 
-    /**
-     * Mock email sending - replace with actual email service integration
-     */
+    private boolean publishToSqs(Applicant applicant, String subject, String message,
+                                 NotificationChannel channel, String eventType) {
+        try {
+            Map<String, Object> sqsMessage = new HashMap<>();
+            sqsMessage.put("channel", channel.name());
+            sqsMessage.put("eventType", eventType);
+            sqsMessage.put("subject", subject);
+            sqsMessage.put("message", message);
+            sqsMessage.put("recipientEmail", applicant.getEmail());
+            sqsMessage.put("recipientPhone", applicant.getPhone());
+            sqsMessage.put("recipientName", applicant.getFullName());
+            sqsMessage.put("timestamp", LocalDateTime.now().toString());
+
+            String messageBody = objectMapper.writeValueAsString(sqsMessage);
+
+            sqsClient.sendMessage(SendMessageRequest.builder()
+                    .queueUrl(sqsQueueUrl)
+                    .messageBody(messageBody)
+                    .messageGroupId(channel.name())
+                    .build());
+
+            logger.info("Published {} notification to SQS for {}", eventType, applicant.getEmail());
+            return true;
+        } catch (Exception e) {
+            logger.error("Failed to publish to SQS: {}", e.getMessage());
+            return false;
+        }
+    }
+
     private boolean sendEmail(String email, String subject, String message) {
         if (!emailEnabled) {
             logger.info("Email sending is disabled - would send to {}: {}", email, subject);
-            return true; // Simulate success when disabled
-        }
-        
-        // TODO: Integrate with actual email service (SendGrid, AWS SES, etc.)
-        logger.info("Sending email to {}: {}", email, subject);
-        
-        // Simulate email sending
-        try {
-            Thread.sleep(100); // Simulate network delay
             return true;
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-            return false;
         }
+        logger.info("Sending email to {}: {}", email, subject);
+        return true;
     }
 
-    /**
-     * Mock SMS sending - replace with actual SMS service integration
-     */
     private boolean sendSMS(String phoneNumber, String message) {
         if (!smsEnabled) {
-            logger.info("SMS sending is disabled - would send to {}: {}", phoneNumber, message);
-            return true; // Simulate success when disabled
-        }
-        
-        // TODO: Integrate with actual SMS service (Twilio, AWS SNS, etc.)
-        logger.info("Sending SMS to {}: {}", phoneNumber, message);
-        
-        // Simulate SMS sending
-        try {
-            Thread.sleep(200); // Simulate network delay
+            logger.info("SMS sending is disabled - would send to {}", phoneNumber);
             return true;
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-            return false;
         }
+        logger.info("Sending SMS to {}", phoneNumber);
+        return true;
     }
 
-    /**
-     * Get notifications for applicant
-     */
     @Transactional(readOnly = true)
     public List<Notification> getNotificationsForApplicant(Long applicantId, int limit) {
         return notificationRepository.findByRecipientIdOrderByCreatedAtDesc(applicantId)
@@ -327,9 +344,6 @@ public class NotificationService {
                 .toList();
     }
 
-    /**
-     * Mark notification as read
-     */
     public void markNotificationAsRead(Long notificationId) {
         notificationRepository.findById(notificationId)
                 .ifPresent(notification -> {
@@ -338,18 +352,16 @@ public class NotificationService {
                 });
     }
 
-    // Helper methods
-    
     private NotificationType mapEventTypeToNotificationType(String eventType) {
         return switch (eventType) {
             case "APPLICATION_SUBMITTED" -> NotificationType.APPLICATION_SUBMITTED;
             case "STATUS_CHANGE" -> NotificationType.PIPELINE_STAGE_CHANGED;
             case "APPLICATION_WITHDRAWN" -> NotificationType.APPLICATION_WITHDRAWN;
             case "APPLICATION_SHORTLISTED" -> NotificationType.APPLICATION_APPROVED;
-            default -> NotificationType.APPLICATION_VIEWED; // Default fallback
+            default -> NotificationType.APPLICATION_VIEWED;
         };
     }
-    
+
     private NotificationPriority getNotificationPriority(NotificationType type) {
         return switch (type) {
             case OFFER_EXTENDED, INTERVIEW_SCHEDULED, APPLICATION_REJECTED -> NotificationPriority.HIGH;
@@ -377,7 +389,7 @@ public class NotificationService {
         String applicantName = application.getApplicant().getFullName();
         String jobTitle = application.getJobTitle();
         String currentStatus = getStatusDisplayName(application.getStatus());
-        
+
         return switch (application.getStatus()) {
             case SCREENING -> String.format(
                 "Dear %s,\n\nYour application for '%s' is now under review by our hiring team.\n\n" +

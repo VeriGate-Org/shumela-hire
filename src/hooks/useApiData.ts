@@ -67,7 +67,7 @@ export function usePaginatedData<T>(
     data,
     error,
     isLoading,
-    isValidating,
+    isValidating: _isValidating,
     mutate: mutateFn,
     size,
     setSize,
@@ -275,23 +275,39 @@ export function useOptimisticUpdate<T>() {
   return { update };
 }
 
-// Hook for managing loading states across multiple requests
+// Utility for managing loading states across multiple endpoints using SWR directly.
+// Note: This is not a hook that calls other hooks dynamically — it uses SWR's mutate
+// to refresh endpoints and fetches data independently.
 export function useMultipleRequests(endpoints: string[]) {
-  const requests = endpoints.map(endpoint => useApiData(endpoint));
-  
-  const isLoading = requests.some(req => req.isLoading);
-  const isError = requests.some(req => req.isError);
-  const errors = requests.map(req => req.error).filter(Boolean);
-  
+  const key = endpoints.join(',');
+
+  const { data, error, isLoading, mutate: mutateFn } = useSWR<Record<string, ApiResponse<unknown>>>(
+    key ? `multi:${key}` : null,
+    async () => {
+      const results: Record<string, ApiResponse<unknown>> = {};
+      await Promise.all(
+        endpoints.map(async (endpoint) => {
+          try {
+            results[endpoint] = await fetcher(`/api${endpoint}`);
+          } catch (err) {
+            results[endpoint] = { data: null, success: false, error: String(err) };
+          }
+        })
+      );
+      return results;
+    },
+    swrConfig
+  );
+
   const refresh = useCallback(() => {
-    requests.forEach(req => req.refresh());
-  }, [requests]);
+    mutateFn();
+  }, [mutateFn]);
 
   return {
-    requests,
+    data,
     isLoading,
-    isError,
-    errors,
+    isError: !!error,
+    errors: error ? [error] : [],
     refresh,
   };
 }

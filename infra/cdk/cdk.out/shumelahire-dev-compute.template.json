@@ -1,0 +1,812 @@
+{
+ "Resources": {
+  "BackendRepo7FFBAD06": {
+   "Type": "AWS::ECR::Repository",
+   "Properties": {
+    "LifecyclePolicy": {
+     "LifecyclePolicyText": "{\"rules\":[{\"rulePriority\":1,\"description\":\"Keep last 10 images\",\"selection\":{\"tagStatus\":\"any\",\"countType\":\"imageCountMoreThan\",\"countNumber\":10},\"action\":{\"type\":\"expire\"}}]}"
+    },
+    "RepositoryName": "shumelahire-backend"
+   },
+   "UpdateReplacePolicy": "Retain",
+   "DeletionPolicy": "Retain",
+   "Metadata": {
+    "aws:cdk:path": "shumelahire-dev-compute/BackendRepo/Resource"
+   }
+  },
+  "ClusterEB0386A7": {
+   "Type": "AWS::ECS::Cluster",
+   "Properties": {
+    "ClusterName": "shumelahire-dev",
+    "ClusterSettings": [
+     {
+      "Name": "containerInsights",
+      "Value": "disabled"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "shumelahire-dev-compute/Cluster/Resource"
+   }
+  },
+  "TaskRole30FC0FBB": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Statement": [
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Principal": {
+        "Service": "ecs-tasks.amazonaws.com"
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "Description": "ECS task role with S3, SQS, SES, Secrets Manager, CloudWatch permissions",
+    "RoleName": "shumelahire-dev-task-role"
+   },
+   "Metadata": {
+    "aws:cdk:path": "shumelahire-dev-compute/TaskRole/Resource"
+   }
+  },
+  "TaskRoleDefaultPolicy07FC53DE": {
+   "Type": "AWS::IAM::Policy",
+   "Properties": {
+    "PolicyDocument": {
+     "Statement": [
+      {
+       "Action": [
+        "s3:DeleteObject",
+        "s3:GetBucketLocation",
+        "s3:GetObject",
+        "s3:ListBucket",
+        "s3:PutObject"
+       ],
+       "Effect": "Allow",
+       "Resource": [
+        {
+         "Fn::ImportValue": "shumelahire-dev-foundation:ExportsOutputFnGetAttDocumentsBucket9EC9DEB9ArnEA5095A7"
+        },
+        {
+         "Fn::ImportValue": "shumelahire-dev-foundation:ExportsOutputFnGetAttUploadsBucket5E5E9B64Arn8603C131"
+        },
+        {
+         "Fn::Join": [
+          "",
+          [
+           {
+            "Fn::ImportValue": "shumelahire-dev-foundation:ExportsOutputFnGetAttDocumentsBucket9EC9DEB9ArnEA5095A7"
+           },
+           "/*"
+          ]
+         ]
+        },
+        {
+         "Fn::Join": [
+          "",
+          [
+           {
+            "Fn::ImportValue": "shumelahire-dev-foundation:ExportsOutputFnGetAttUploadsBucket5E5E9B64Arn8603C131"
+           },
+           "/*"
+          ]
+         ]
+        }
+       ]
+      },
+      {
+       "Action": [
+        "sqs:DeleteMessage",
+        "sqs:GetQueueAttributes",
+        "sqs:ReceiveMessage",
+        "sqs:SendMessage"
+       ],
+       "Effect": "Allow",
+       "Resource": {
+        "Fn::ImportValue": "shumelahire-dev-foundation:ExportsOutputFnGetAttNotificationQueue36610CC1ArnA5D241F1"
+       }
+      },
+      {
+       "Action": [
+        "ses:SendEmail",
+        "ses:SendRawEmail"
+       ],
+       "Effect": "Allow",
+       "Resource": "arn:aws:ses:us-east-1:420747712978:identity/*"
+      },
+      {
+       "Action": "secretsmanager:GetSecretValue",
+       "Effect": "Allow",
+       "Resource": [
+        "arn:aws:secretsmanager:us-east-1:420747712978:secret:shumelahire-dev/db-credentials*",
+        "arn:aws:secretsmanager:us-east-1:420747712978:secret:shumelahire/dev/*"
+       ]
+      },
+      {
+       "Action": [
+        "logs:CreateLogGroup",
+        "logs:CreateLogStream",
+        "logs:PutLogEvents"
+       ],
+       "Effect": "Allow",
+       "Resource": "arn:aws:logs:us-east-1:420747712978:log-group:/ecs/shumelahire-dev*"
+      },
+      {
+       "Action": [
+        "cognito-idp:AdminGetUser",
+        "cognito-idp:GetUser",
+        "cognito-idp:ListUsers"
+       ],
+       "Effect": "Allow",
+       "Resource": {
+        "Fn::ImportValue": "shumelahire-dev-foundation:ExportsOutputFnGetAttUserPool6BA7E5F2Arn686ACC00"
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "PolicyName": "TaskRoleDefaultPolicy07FC53DE",
+    "Roles": [
+     {
+      "Ref": "TaskRole30FC0FBB"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "shumelahire-dev-compute/TaskRole/DefaultPolicy/Resource"
+   }
+  },
+  "ExecutionRole605A040B": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Statement": [
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Principal": {
+        "Service": "ecs-tasks.amazonaws.com"
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "ManagedPolicyArns": [
+     {
+      "Fn::Join": [
+       "",
+       [
+        "arn:",
+        {
+         "Ref": "AWS::Partition"
+        },
+        ":iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"
+       ]
+      ]
+     }
+    ],
+    "RoleName": "shumelahire-dev-execution-role"
+   },
+   "Metadata": {
+    "aws:cdk:path": "shumelahire-dev-compute/ExecutionRole/Resource"
+   }
+  },
+  "ExecutionRoleDefaultPolicyA5B92313": {
+   "Type": "AWS::IAM::Policy",
+   "Properties": {
+    "PolicyDocument": {
+     "Statement": [
+      {
+       "Action": "secretsmanager:GetSecretValue",
+       "Effect": "Allow",
+       "Resource": [
+        "arn:aws:secretsmanager:us-east-1:420747712978:secret:shumelahire-dev/db-credentials*",
+        "arn:aws:secretsmanager:us-east-1:420747712978:secret:shumelahire/dev/*"
+       ]
+      },
+      {
+       "Action": [
+        "ecr:BatchCheckLayerAvailability",
+        "ecr:BatchGetImage",
+        "ecr:GetDownloadUrlForLayer"
+       ],
+       "Effect": "Allow",
+       "Resource": {
+        "Fn::GetAtt": [
+         "BackendRepo7FFBAD06",
+         "Arn"
+        ]
+       }
+      },
+      {
+       "Action": "ecr:GetAuthorizationToken",
+       "Effect": "Allow",
+       "Resource": "*"
+      },
+      {
+       "Action": [
+        "logs:CreateLogStream",
+        "logs:PutLogEvents"
+       ],
+       "Effect": "Allow",
+       "Resource": {
+        "Fn::GetAtt": [
+         "LogGroupF5B46931",
+         "Arn"
+        ]
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "PolicyName": "ExecutionRoleDefaultPolicyA5B92313",
+    "Roles": [
+     {
+      "Ref": "ExecutionRole605A040B"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "shumelahire-dev-compute/ExecutionRole/DefaultPolicy/Resource"
+   }
+  },
+  "LogGroupF5B46931": {
+   "Type": "AWS::Logs::LogGroup",
+   "Properties": {
+    "LogGroupName": "/ecs/shumelahire-dev",
+    "RetentionInDays": 7
+   },
+   "UpdateReplacePolicy": "Delete",
+   "DeletionPolicy": "Delete",
+   "Metadata": {
+    "aws:cdk:path": "shumelahire-dev-compute/LogGroup/Resource"
+   }
+  },
+  "TaskDef54694570": {
+   "Type": "AWS::ECS::TaskDefinition",
+   "Properties": {
+    "ContainerDefinitions": [
+     {
+      "Environment": [
+       {
+        "Name": "SPRING_PROFILES_ACTIVE",
+        "Value": "dev"
+       },
+       {
+        "Name": "DATABASE_URL",
+        "Value": {
+         "Fn::Join": [
+          "",
+          [
+           "jdbc:postgresql://",
+           {
+            "Fn::ImportValue": "shumelahire-dev-foundation:ExportsOutputFnGetAttDatabaseB269D8BBEndpointAddressA4DBD059"
+           },
+           ":5432/shumelahire"
+          ]
+         ]
+        }
+       },
+       {
+        "Name": "REDIS_HOST",
+        "Value": {
+         "Fn::ImportValue": "shumelahire-dev-foundation:ExportsOutputFnGetAttRedisRedisEndpointAddress0B69B4FF"
+        }
+       },
+       {
+        "Name": "REDIS_PORT",
+        "Value": "6379"
+       },
+       {
+        "Name": "S3_BUCKET",
+        "Value": {
+         "Fn::ImportValue": "shumelahire-dev-foundation:ExportsOutputRefDocumentsBucket9EC9DEB9131399C0"
+        }
+       },
+       {
+        "Name": "S3_REGION",
+        "Value": "us-east-1"
+       },
+       {
+        "Name": "STORAGE_PROVIDER",
+        "Value": "s3"
+       },
+       {
+        "Name": "SQS_NOTIFICATION_QUEUE_URL",
+        "Value": {
+         "Fn::ImportValue": "shumelahire-dev-foundation:ExportsOutputRefNotificationQueue36610CC1185DED79"
+        }
+       },
+       {
+        "Name": "NOTIFICATION_SQS_ENABLED",
+        "Value": "true"
+       },
+       {
+        "Name": "NOTIFICATION_EMAIL_ENABLED",
+        "Value": "true"
+       },
+       {
+        "Name": "DATA_RESIDENCY_REGION",
+        "Value": "ZA"
+       },
+       {
+        "Name": "COGNITO_USER_POOL_ID",
+        "Value": {
+         "Fn::ImportValue": "shumelahire-dev-foundation:ExportsOutputRefUserPool6BA7E5F296FD7236"
+        }
+       },
+       {
+        "Name": "COGNITO_CLIENT_ID",
+        "Value": {
+         "Fn::ImportValue": "shumelahire-dev-foundation:ExportsOutputRefUserPoolWebAppClientCD2D5CB13BAB4F14"
+        }
+       }
+      ],
+      "Essential": true,
+      "HealthCheck": {
+       "Command": [
+        "CMD-SHELL",
+        "wget -qO- http://localhost:8080/actuator/health || exit 1"
+       ],
+       "Interval": 30,
+       "Retries": 3,
+       "StartPeriod": 60,
+       "Timeout": 5
+      },
+      "Image": {
+       "Fn::Join": [
+        "",
+        [
+         {
+          "Fn::Select": [
+           4,
+           {
+            "Fn::Split": [
+             ":",
+             {
+              "Fn::GetAtt": [
+               "BackendRepo7FFBAD06",
+               "Arn"
+              ]
+             }
+            ]
+           }
+          ]
+         },
+         ".dkr.ecr.",
+         {
+          "Fn::Select": [
+           3,
+           {
+            "Fn::Split": [
+             ":",
+             {
+              "Fn::GetAtt": [
+               "BackendRepo7FFBAD06",
+               "Arn"
+              ]
+             }
+            ]
+           }
+          ]
+         },
+         ".",
+         {
+          "Ref": "AWS::URLSuffix"
+         },
+         "/",
+         {
+          "Ref": "BackendRepo7FFBAD06"
+         },
+         ":latest"
+        ]
+       ]
+      },
+      "LogConfiguration": {
+       "LogDriver": "awslogs",
+       "Options": {
+        "awslogs-group": {
+         "Ref": "LogGroupF5B46931"
+        },
+        "awslogs-stream-prefix": "backend",
+        "awslogs-region": "us-east-1"
+       }
+      },
+      "Name": "backend",
+      "PortMappings": [
+       {
+        "ContainerPort": 8080,
+        "Protocol": "tcp"
+       }
+      ]
+     }
+    ],
+    "Cpu": "512",
+    "ExecutionRoleArn": {
+     "Fn::GetAtt": [
+      "ExecutionRole605A040B",
+      "Arn"
+     ]
+    },
+    "Family": "shumelahire-dev",
+    "Memory": "1024",
+    "NetworkMode": "awsvpc",
+    "RequiresCompatibilities": [
+     "FARGATE"
+    ],
+    "TaskRoleArn": {
+     "Fn::GetAtt": [
+      "TaskRole30FC0FBB",
+      "Arn"
+     ]
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "shumelahire-dev-compute/TaskDef/Resource"
+   }
+  },
+  "Alb16C2F182": {
+   "Type": "AWS::ElasticLoadBalancingV2::LoadBalancer",
+   "Properties": {
+    "LoadBalancerAttributes": [
+     {
+      "Key": "deletion_protection.enabled",
+      "Value": "false"
+     }
+    ],
+    "Name": "shumelahire-dev",
+    "Scheme": "internet-facing",
+    "SecurityGroups": [
+     {
+      "Fn::ImportValue": "shumelahire-dev-foundation:ExportsOutputFnGetAttAlbSecurityGroup86A59E99GroupIdE3A37BC7"
+     }
+    ],
+    "Subnets": [
+     {
+      "Fn::ImportValue": "shumelahire-dev-foundation:ExportsOutputRefVpcpublicSubnet1Subnet2BB74ED74EB42ADC"
+     },
+     {
+      "Fn::ImportValue": "shumelahire-dev-foundation:ExportsOutputRefVpcpublicSubnet2SubnetE34B022AC8BB6627"
+     }
+    ],
+    "Type": "application"
+   },
+   "Metadata": {
+    "aws:cdk:path": "shumelahire-dev-compute/Alb/Resource"
+   }
+  },
+  "AlbHttp7966E42E": {
+   "Type": "AWS::ElasticLoadBalancingV2::Listener",
+   "Properties": {
+    "DefaultActions": [
+     {
+      "TargetGroupArn": {
+       "Ref": "AlbHttpBackendTargetGroupF834592E"
+      },
+      "Type": "forward"
+     }
+    ],
+    "LoadBalancerArn": {
+     "Ref": "Alb16C2F182"
+    },
+    "Port": 80,
+    "Protocol": "HTTP"
+   },
+   "Metadata": {
+    "aws:cdk:path": "shumelahire-dev-compute/Alb/Http/Resource"
+   }
+  },
+  "AlbHttpBackendTargetGroupF834592E": {
+   "Type": "AWS::ElasticLoadBalancingV2::TargetGroup",
+   "Properties": {
+    "HealthCheckIntervalSeconds": 30,
+    "HealthCheckPath": "/actuator/health",
+    "HealthCheckTimeoutSeconds": 10,
+    "HealthyThresholdCount": 2,
+    "Port": 8080,
+    "Protocol": "HTTP",
+    "TargetGroupAttributes": [
+     {
+      "Key": "deregistration_delay.timeout_seconds",
+      "Value": "30"
+     },
+     {
+      "Key": "stickiness.enabled",
+      "Value": "false"
+     }
+    ],
+    "TargetType": "ip",
+    "UnhealthyThresholdCount": 3,
+    "VpcId": {
+     "Fn::ImportValue": "shumelahire-dev-foundation:ExportsOutputRefVpc8378EB38272D6E3A"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "shumelahire-dev-compute/Alb/Http/BackendTargetGroup/Resource"
+   }
+  },
+  "ServiceD69D759B": {
+   "Type": "AWS::ECS::Service",
+   "Properties": {
+    "Cluster": {
+     "Ref": "ClusterEB0386A7"
+    },
+    "DeploymentConfiguration": {
+     "DeploymentCircuitBreaker": {
+      "Enable": true,
+      "Rollback": true
+     },
+     "MaximumPercent": 200,
+     "MinimumHealthyPercent": 100
+    },
+    "DesiredCount": 1,
+    "EnableECSManagedTags": false,
+    "HealthCheckGracePeriodSeconds": 60,
+    "LaunchType": "FARGATE",
+    "LoadBalancers": [
+     {
+      "ContainerName": "backend",
+      "ContainerPort": 8080,
+      "TargetGroupArn": {
+       "Ref": "AlbHttpBackendTargetGroupF834592E"
+      }
+     }
+    ],
+    "NetworkConfiguration": {
+     "AwsvpcConfiguration": {
+      "AssignPublicIp": "DISABLED",
+      "SecurityGroups": [
+       {
+        "Fn::ImportValue": "shumelahire-dev-foundation:ExportsOutputFnGetAttEcsSecurityGroup44008BF1GroupIdDE2CA5C5"
+       }
+      ],
+      "Subnets": [
+       {
+        "Fn::ImportValue": "shumelahire-dev-foundation:ExportsOutputRefVpcprivateSubnet1SubnetCEAD37168693D373"
+       },
+       {
+        "Fn::ImportValue": "shumelahire-dev-foundation:ExportsOutputRefVpcprivateSubnet2Subnet2DE7549CDF5ACE3D"
+       }
+      ]
+     }
+    },
+    "ServiceName": "shumelahire-dev",
+    "TaskDefinition": {
+     "Ref": "TaskDef54694570"
+    }
+   },
+   "DependsOn": [
+    "AlbHttpBackendTargetGroupF834592E",
+    "AlbHttp7966E42E",
+    "TaskRoleDefaultPolicy07FC53DE",
+    "TaskRole30FC0FBB"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "shumelahire-dev-compute/Service/Service"
+   }
+  },
+  "ServiceTaskCountTarget23E25614": {
+   "Type": "AWS::ApplicationAutoScaling::ScalableTarget",
+   "Properties": {
+    "MaxCapacity": 4,
+    "MinCapacity": 1,
+    "ResourceId": {
+     "Fn::Join": [
+      "",
+      [
+       "service/",
+       {
+        "Ref": "ClusterEB0386A7"
+       },
+       "/",
+       {
+        "Fn::GetAtt": [
+         "ServiceD69D759B",
+         "Name"
+        ]
+       }
+      ]
+     ]
+    },
+    "RoleARN": "arn:aws:iam::420747712978:role/aws-service-role/ecs.application-autoscaling.amazonaws.com/AWSServiceRoleForApplicationAutoScaling_ECSService",
+    "ScalableDimension": "ecs:service:DesiredCount",
+    "ServiceNamespace": "ecs"
+   },
+   "DependsOn": [
+    "TaskRoleDefaultPolicy07FC53DE",
+    "TaskRole30FC0FBB"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "shumelahire-dev-compute/Service/TaskCount/Target/Resource"
+   }
+  },
+  "ServiceTaskCountTargetCpuScalingCC8A5DF6": {
+   "Type": "AWS::ApplicationAutoScaling::ScalingPolicy",
+   "Properties": {
+    "PolicyName": "shumelahiredevcomputeServiceTaskCountTargetCpuScaling6D49E5DB",
+    "PolicyType": "TargetTrackingScaling",
+    "ScalingTargetId": {
+     "Ref": "ServiceTaskCountTarget23E25614"
+    },
+    "TargetTrackingScalingPolicyConfiguration": {
+     "PredefinedMetricSpecification": {
+      "PredefinedMetricType": "ECSServiceAverageCPUUtilization"
+     },
+     "ScaleInCooldown": 300,
+     "ScaleOutCooldown": 60,
+     "TargetValue": 70
+    }
+   },
+   "DependsOn": [
+    "TaskRoleDefaultPolicy07FC53DE",
+    "TaskRole30FC0FBB"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "shumelahire-dev-compute/Service/TaskCount/Target/CpuScaling/Resource"
+   }
+  },
+  "ServiceTaskCountTargetMemoryScalingEA4B07C8": {
+   "Type": "AWS::ApplicationAutoScaling::ScalingPolicy",
+   "Properties": {
+    "PolicyName": "shumelahiredevcomputeServiceTaskCountTargetMemoryScaling094F25F0",
+    "PolicyType": "TargetTrackingScaling",
+    "ScalingTargetId": {
+     "Ref": "ServiceTaskCountTarget23E25614"
+    },
+    "TargetTrackingScalingPolicyConfiguration": {
+     "PredefinedMetricSpecification": {
+      "PredefinedMetricType": "ECSServiceAverageMemoryUtilization"
+     },
+     "ScaleInCooldown": 300,
+     "ScaleOutCooldown": 60,
+     "TargetValue": 80
+    }
+   },
+   "DependsOn": [
+    "TaskRoleDefaultPolicy07FC53DE",
+    "TaskRole30FC0FBB"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "shumelahire-dev-compute/Service/TaskCount/Target/MemoryScaling/Resource"
+   }
+  },
+  "CDKMetadata": {
+   "Type": "AWS::CDK::Metadata",
+   "Properties": {
+    "Analytics": "v2:deflate64:H4sIAAAAAAAA/11RTU/DMAz9Lbun2RcS2oHD6IDLNFBbcUVe5lWmWVwl6SZU5b+jNivdUA5+fu/Zsp2FnD8u5cMELi5RhyrRtJdt7kFVAi7uq0VlZZthzY482x+RHs2YBYHKyTbVjfNoO22Ar2BL8FiAqzZ4JEOe2HSG/wwbD2TQ3nDX2hztmRR2RQPMFWjY675tyo3xQRCcZJux7n19/GBNqh80oiA0l062Wy7fLDd1pww4CNTgPCnNcNiDBqPIlOeFbNd1rUlBN9CW4fDca3HHu/zWR86juXoGfKMXYEv0fzPcpEHAaIPGs1OgyZSyHTfuzP0t7pkYCguqIlPmsW48wR0RgsjQcWPjVd8bXzc+/mhkg9iw36GfruRMrqZy91KkbHFd18knWkdsns5LOZ/O5ax7k29HlNjGeDqhzGL8BW3XxopRAgAA"
+   },
+   "Metadata": {
+    "aws:cdk:path": "shumelahire-dev-compute/CDKMetadata/Default"
+   }
+  }
+ },
+ "Outputs": {
+  "AlbDnsName": {
+   "Value": {
+    "Fn::GetAtt": [
+     "Alb16C2F182",
+     "DNSName"
+    ]
+   },
+   "Export": {
+    "Name": "shumelahire-dev-AlbDnsName"
+   }
+  },
+  "AlbArn": {
+   "Value": {
+    "Ref": "Alb16C2F182"
+   },
+   "Export": {
+    "Name": "shumelahire-dev-AlbArn"
+   }
+  },
+  "ClusterName": {
+   "Value": {
+    "Ref": "ClusterEB0386A7"
+   },
+   "Export": {
+    "Name": "shumelahire-dev-ClusterName"
+   }
+  },
+  "ServiceName": {
+   "Value": {
+    "Fn::GetAtt": [
+     "ServiceD69D759B",
+     "Name"
+    ]
+   },
+   "Export": {
+    "Name": "shumelahire-dev-ServiceName"
+   }
+  },
+  "EcrRepositoryUri": {
+   "Value": {
+    "Fn::Join": [
+     "",
+     [
+      {
+       "Fn::Select": [
+        4,
+        {
+         "Fn::Split": [
+          ":",
+          {
+           "Fn::GetAtt": [
+            "BackendRepo7FFBAD06",
+            "Arn"
+           ]
+          }
+         ]
+        }
+       ]
+      },
+      ".dkr.ecr.",
+      {
+       "Fn::Select": [
+        3,
+        {
+         "Fn::Split": [
+          ":",
+          {
+           "Fn::GetAtt": [
+            "BackendRepo7FFBAD06",
+            "Arn"
+           ]
+          }
+         ]
+        }
+       ]
+      },
+      ".",
+      {
+       "Ref": "AWS::URLSuffix"
+      },
+      "/",
+      {
+       "Ref": "BackendRepo7FFBAD06"
+      }
+     ]
+    ]
+   },
+   "Export": {
+    "Name": "shumelahire-dev-EcrRepositoryUri"
+   }
+  }
+ },
+ "Parameters": {
+  "BootstrapVersion": {
+   "Type": "AWS::SSM::Parameter::Value<String>",
+   "Default": "/cdk-bootstrap/hnb659fds/version",
+   "Description": "Version of the CDK Bootstrap resources in this environment, automatically retrieved from SSM Parameter Store. [cdk:skip]"
+  }
+ },
+ "Rules": {
+  "CheckBootstrapVersion": {
+   "Assertions": [
+    {
+     "Assert": {
+      "Fn::Not": [
+       {
+        "Fn::Contains": [
+         [
+          "1",
+          "2",
+          "3",
+          "4",
+          "5"
+         ],
+         {
+          "Ref": "BootstrapVersion"
+         }
+        ]
+       }
+      ]
+     },
+     "AssertDescription": "CDK bootstrap stack version 6 required. Please run 'cdk bootstrap' with a recent version of the CDK CLI."
+    }
+   ]
+  }
+ }
+}

@@ -17,12 +17,14 @@ interface ApplicationMetrics {
   interviews: number;
   offers: number;
   hires: number;
+  [key: string]: unknown;
 }
 
 interface PipelineStageData {
   stage: string;
   count: number;
   color?: string;
+  [key: string]: unknown;
 }
 
 interface SourceEffectivenessData {
@@ -30,12 +32,14 @@ interface SourceEffectivenessData {
   applications: number;
   hires: number;
   conversionRate: number;
+  [key: string]: unknown;
 }
 
 interface TimeToHireData {
   position: string;
   timeToHire: number;
   target: number;
+  [key: string]: unknown;
 }
 
 interface PerformanceMetrics {
@@ -43,6 +47,7 @@ interface PerformanceMetrics {
   current: number;
   target: number;
   percentage: number;
+  [key: string]: unknown;
 }
 
 // Application Volume Trend Chart
@@ -267,6 +272,7 @@ interface HiringManagerData {
   positions: number;
   timeToFill: number;
   satisfaction: number;
+  [key: string]: unknown;
 }
 
 interface HiringManagerPerformanceProps {
@@ -309,6 +315,7 @@ interface MonthlyTrendsData {
   offers: number;
   hires: number;
   rejections: number;
+  [key: string]: unknown;
 }
 
 interface MonthlyTrendsProps {

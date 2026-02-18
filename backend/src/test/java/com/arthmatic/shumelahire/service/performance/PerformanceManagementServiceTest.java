@@ -15,7 +15,9 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -44,16 +46,17 @@ class PerformanceManagementServiceTest {
     
     @BeforeEach
     void setUp() {
+        LocalDate now = LocalDate.now();
         testCycle = new PerformanceCycle();
         testCycle.setId(1L);
-        testCycle.setName("2024 Performance Cycle");
-        testCycle.setStartDate(LocalDate.of(2024, 1, 1));
-        testCycle.setEndDate(LocalDate.of(2024, 12, 31));
-        testCycle.setMidYearDeadline(LocalDate.of(2024, 7, 31));
-        testCycle.setFinalReviewDeadline(LocalDate.of(2025, 1, 31));
+        testCycle.setName("Performance Cycle");
+        testCycle.setStartDate(now.minusMonths(6));
+        testCycle.setEndDate(now.plusMonths(6));
+        testCycle.setMidYearDeadline(now.plusMonths(1));
+        testCycle.setFinalReviewDeadline(now.plusMonths(5));
         testCycle.setStatus(CycleStatus.ACTIVE);
         testCycle.setTenantId(tenantId);
-        
+
         testContract = new PerformanceContract();
         testContract.setId(1L);
         testContract.setCycle(testCycle);
@@ -63,43 +66,49 @@ class PerformanceManagementServiceTest {
         testContract.setManagerName("Jane Smith");
         testContract.setTenantId(tenantId);
         testContract.setStatus(ContractStatus.DRAFT);
+        PerformanceGoal goal = new PerformanceGoal();
+        goal.setTitle("Deliver project on time");
+        goal.setContract(testContract);
+        testContract.setGoals(new ArrayList<>(List.of(goal)));
     }
 
     @Test
     void createCycle_ShouldCreateValidCycle() {
         // Given
+        LocalDate now = LocalDate.now();
         PerformanceManagementService.CreateCycleRequest request = new PerformanceManagementService.CreateCycleRequest();
-        request.setName("2024 Performance Cycle");
-        request.setDescription("Annual performance cycle for 2024");
-        request.setStartDate(LocalDate.of(2024, 1, 1));
-        request.setEndDate(LocalDate.of(2024, 12, 31));
-        request.setMidYearDeadline(LocalDate.of(2024, 7, 31));
-        request.setFinalReviewDeadline(LocalDate.of(2025, 1, 31));
-        
+        request.setName("Performance Cycle");
+        request.setDescription("Annual performance cycle");
+        request.setStartDate(now.minusMonths(6));
+        request.setEndDate(now.plusMonths(6));
+        request.setMidYearDeadline(now.plusMonths(1));
+        request.setFinalReviewDeadline(now.plusMonths(5));
+
         when(cycleRepository.save(any(PerformanceCycle.class))).thenReturn(testCycle);
-        
+
         // When
         PerformanceCycle result = performanceService.createCycle(request, tenantId, userId);
-        
+
         // Then
         assertNotNull(result);
-        assertEquals("2024 Performance Cycle", result.getName());
+        assertEquals("Performance Cycle", result.getName());
         assertEquals(tenantId, result.getTenantId());
         verify(cycleRepository).save(any(PerformanceCycle.class));
     }
     
     @Test
     void createCycle_ShouldThrowException_WhenDatesInvalid() {
-        // Given
+        // Given — start after end
+        LocalDate now = LocalDate.now();
         PerformanceManagementService.CreateCycleRequest request = new PerformanceManagementService.CreateCycleRequest();
         request.setName("Invalid Cycle");
-        request.setStartDate(LocalDate.of(2024, 12, 31));  // Start after end
-        request.setEndDate(LocalDate.of(2024, 1, 1));
-        request.setMidYearDeadline(LocalDate.of(2024, 7, 31));
-        request.setFinalReviewDeadline(LocalDate.of(2025, 1, 31));
-        
+        request.setStartDate(now.plusMonths(6));
+        request.setEndDate(now.minusMonths(6));
+        request.setMidYearDeadline(now);
+        request.setFinalReviewDeadline(now.plusMonths(3));
+
         // When & Then
-        assertThrows(IllegalArgumentException.class, 
+        assertThrows(IllegalArgumentException.class,
             () -> performanceService.createCycle(request, tenantId, userId));
         verify(cycleRepository, never()).save(any());
     }

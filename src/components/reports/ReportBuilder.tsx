@@ -373,7 +373,7 @@ export default function ReportBuilder({
 
             {config.filters.length === 0 ? (
               <div className="text-center py-8 text-gray-500">
-                No filters added yet. Click "Add Filter" to get started.
+                No filters added yet. Click &quot;Add Filter&quot; to get started.
               </div>
             ) : (
               <div className="space-y-4">

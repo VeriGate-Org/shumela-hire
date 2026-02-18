@@ -1,0 +1,21 @@
+name: Deploy to Sandbox
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  ci:
+    uses: ./.github/workflows/ci.yml
+
+  deploy:
+    needs: ci
+    uses: ./.github/workflows/deploy.yml
+    with:
+      environment: sbx
+      aws-region: af-south-1
+      domain-name: shumelahire.co.za
+    secrets:
+      AWS_ROLE_ARN: ${{ secrets.AWS_ROLE_ARN }}
+      CERTIFICATE_ARN: ${{ secrets.CERTIFICATE_ARN }}
+      API_CERTIFICATE_ARN: ${{ secrets.API_CERTIFICATE_ARN }}

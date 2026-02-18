@@ -74,7 +74,7 @@ const AdvancedReportBuilder: React.FC<AdvancedReportBuilderProps> = ({
   const handleDatePresetChange = (preset: string) => {
     const now = new Date();
     let startDate: Date;
-    let endDate = now;
+    const endDate = now;
 
     switch (preset) {
       case 'last-7-days':

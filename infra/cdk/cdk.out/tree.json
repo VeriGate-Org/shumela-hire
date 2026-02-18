@@ -1,0 +1,3932 @@
+{
+  "version": "tree-0.1",
+  "tree": {
+    "id": "App",
+    "path": "",
+    "children": {
+      "shumelahire-dev-foundation": {
+        "id": "shumelahire-dev-foundation",
+        "path": "shumelahire-dev-foundation",
+        "children": {
+          "Vpc": {
+            "id": "Vpc",
+            "path": "shumelahire-dev-foundation/Vpc",
+            "children": {
+              "Resource": {
+                "id": "Resource",
+                "path": "shumelahire-dev-foundation/Vpc/Resource",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::EC2::VPC",
+                  "aws:cdk:cloudformation:props": {
+                    "cidrBlock": "10.0.0.0/16",
+                    "enableDnsHostnames": true,
+                    "enableDnsSupport": true,
+                    "instanceTenancy": "default",
+                    "tags": [
+                      {
+                        "key": "Name",
+                        "value": "shumelahire-dev-vpc"
+                      }
+                    ]
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_ec2.CfnVPC",
+                  "version": "2.173.4"
+                }
+              },
+              "publicSubnet1": {
+                "id": "publicSubnet1",
+                "path": "shumelahire-dev-foundation/Vpc/publicSubnet1",
+                "children": {
+                  "Subnet": {
+                    "id": "Subnet",
+                    "path": "shumelahire-dev-foundation/Vpc/publicSubnet1/Subnet",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::EC2::Subnet",
+                      "aws:cdk:cloudformation:props": {
+                        "availabilityZone": "us-east-1a",
+                        "cidrBlock": "10.0.0.0/24",
+                        "mapPublicIpOnLaunch": true,
+                        "tags": [
+                          {
+                            "key": "aws-cdk:subnet-name",
+                            "value": "public"
+                          },
+                          {
+                            "key": "aws-cdk:subnet-type",
+                            "value": "Public"
+                          },
+                          {
+                            "key": "Name",
+                            "value": "shumelahire-dev-foundation/Vpc/publicSubnet1"
+                          }
+                        ],
+                        "vpcId": {
+                          "Ref": "Vpc8378EB38"
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_ec2.CfnSubnet",
+                      "version": "2.173.4"
+                    }
+                  },
+                  "Acl": {
+                    "id": "Acl",
+                    "path": "shumelahire-dev-foundation/Vpc/publicSubnet1/Acl",
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.Resource",
+                      "version": "2.173.4"
+                    }
+                  },
+                  "RouteTable": {
+                    "id": "RouteTable",
+                    "path": "shumelahire-dev-foundation/Vpc/publicSubnet1/RouteTable",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::EC2::RouteTable",
+                      "aws:cdk:cloudformation:props": {
+                        "tags": [
+                          {
+                            "key": "Name",
+                            "value": "shumelahire-dev-foundation/Vpc/publicSubnet1"
+                          }
+                        ],
+                        "vpcId": {
+                          "Ref": "Vpc8378EB38"
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_ec2.CfnRouteTable",
+                      "version": "2.173.4"
+                    }
+                  },
+                  "RouteTableAssociation": {
+                    "id": "RouteTableAssociation",
+                    "path": "shumelahire-dev-foundation/Vpc/publicSubnet1/RouteTableAssociation",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::EC2::SubnetRouteTableAssociation",
+                      "aws:cdk:cloudformation:props": {
+                        "routeTableId": {
+                          "Ref": "VpcpublicSubnet1RouteTable15C15F8E"
+                        },
+                        "subnetId": {
+                          "Ref": "VpcpublicSubnet1Subnet2BB74ED7"
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_ec2.CfnSubnetRouteTableAssociation",
+                      "version": "2.173.4"
+                    }
+                  },
+                  "DefaultRoute": {
+                    "id": "DefaultRoute",
+                    "path": "shumelahire-dev-foundation/Vpc/publicSubnet1/DefaultRoute",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::EC2::Route",
+                      "aws:cdk:cloudformation:props": {
+                        "destinationCidrBlock": "0.0.0.0/0",
+                        "gatewayId": {
+                          "Ref": "VpcIGWD7BA715C"
+                        },
+                        "routeTableId": {
+                          "Ref": "VpcpublicSubnet1RouteTable15C15F8E"
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_ec2.CfnRoute",
+                      "version": "2.173.4"
+                    }
+                  },
+                  "EIP": {
+                    "id": "EIP",
+                    "path": "shumelahire-dev-foundation/Vpc/publicSubnet1/EIP",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::EC2::EIP",
+                      "aws:cdk:cloudformation:props": {
+                        "domain": "vpc",
+                        "tags": [
+                          {
+                            "key": "Name",
+                            "value": "shumelahire-dev-foundation/Vpc/publicSubnet1"
+                          }
+                        ]
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_ec2.CfnEIP",
+                      "version": "2.173.4"
+                    }
+                  },
+                  "NATGateway": {
+                    "id": "NATGateway",
+                    "path": "shumelahire-dev-foundation/Vpc/publicSubnet1/NATGateway",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::EC2::NatGateway",
+                      "aws:cdk:cloudformation:props": {
+                        "allocationId": {
+                          "Fn::GetAtt": [
+                            "VpcpublicSubnet1EIP411541E6",
+                            "AllocationId"
+                          ]
+                        },
+                        "subnetId": {
+                          "Ref": "VpcpublicSubnet1Subnet2BB74ED7"
+                        },
+                        "tags": [
+                          {
+                            "key": "Name",
+                            "value": "shumelahire-dev-foundation/Vpc/publicSubnet1"
+                          }
+                        ]
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_ec2.CfnNatGateway",
+                      "version": "2.173.4"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_ec2.PublicSubnet",
+                  "version": "2.173.4"
+                }
+              },
+              "publicSubnet2": {
+                "id": "publicSubnet2",
+                "path": "shumelahire-dev-foundation/Vpc/publicSubnet2",
+                "children": {
+                  "Subnet": {
+                    "id": "Subnet",
+                    "path": "shumelahire-dev-foundation/Vpc/publicSubnet2/Subnet",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::EC2::Subnet",
+                      "aws:cdk:cloudformation:props": {
+                        "availabilityZone": "us-east-1b",
+                        "cidrBlock": "10.0.1.0/24",
+                        "mapPublicIpOnLaunch": true,
+                        "tags": [
+                          {
+                            "key": "aws-cdk:subnet-name",
+                            "value": "public"
+                          },
+                          {
+                            "key": "aws-cdk:subnet-type",
+                            "value": "Public"
+                          },
+                          {
+                            "key": "Name",
+                            "value": "shumelahire-dev-foundation/Vpc/publicSubnet2"
+                          }
+                        ],
+                        "vpcId": {
+                          "Ref": "Vpc8378EB38"
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_ec2.CfnSubnet",
+                      "version": "2.173.4"
+                    }
+                  },
+                  "Acl": {
+                    "id": "Acl",
+                    "path": "shumelahire-dev-foundation/Vpc/publicSubnet2/Acl",
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.Resource",
+                      "version": "2.173.4"
+                    }
+                  },
+                  "RouteTable": {
+                    "id": "RouteTable",
+                    "path": "shumelahire-dev-foundation/Vpc/publicSubnet2/RouteTable",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::EC2::RouteTable",
+                      "aws:cdk:cloudformation:props": {
+                        "tags": [
+                          {
+                            "key": "Name",
+                            "value": "shumelahire-dev-foundation/Vpc/publicSubnet2"
+                          }
+                        ],
+                        "vpcId": {
+                          "Ref": "Vpc8378EB38"
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_ec2.CfnRouteTable",
+                      "version": "2.173.4"
+                    }
+                  },
+                  "RouteTableAssociation": {
+                    "id": "RouteTableAssociation",
+                    "path": "shumelahire-dev-foundation/Vpc/publicSubnet2/RouteTableAssociation",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::EC2::SubnetRouteTableAssociation",
+                      "aws:cdk:cloudformation:props": {
+                        "routeTableId": {
+                          "Ref": "VpcpublicSubnet2RouteTableC5A6DF77"
+                        },
+                        "subnetId": {
+                          "Ref": "VpcpublicSubnet2SubnetE34B022A"
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_ec2.CfnSubnetRouteTableAssociation",
+                      "version": "2.173.4"
+                    }
+                  },
+                  "DefaultRoute": {
+                    "id": "DefaultRoute",
+                    "path": "shumelahire-dev-foundation/Vpc/publicSubnet2/DefaultRoute",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::EC2::Route",
+                      "aws:cdk:cloudformation:props": {
+                        "destinationCidrBlock": "0.0.0.0/0",
+                        "gatewayId": {
+                          "Ref": "VpcIGWD7BA715C"
+                        },
+                        "routeTableId": {
+                          "Ref": "VpcpublicSubnet2RouteTableC5A6DF77"
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_ec2.CfnRoute",
+                      "version": "2.173.4"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_ec2.PublicSubnet",
+                  "version": "2.173.4"
+                }
+              },
+              "privateSubnet1": {
+                "id": "privateSubnet1",
+                "path": "shumelahire-dev-foundation/Vpc/privateSubnet1",
+                "children": {
+                  "Subnet": {
+                    "id": "Subnet",
+                    "path": "shumelahire-dev-foundation/Vpc/privateSubnet1/Subnet",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::EC2::Subnet",
+                      "aws:cdk:cloudformation:props": {
+                        "availabilityZone": "us-east-1a",
+                        "cidrBlock": "10.0.2.0/24",
+                        "mapPublicIpOnLaunch": false,
+                        "tags": [
+                          {
+                            "key": "aws-cdk:subnet-name",
+                            "value": "private"
+                          },
+                          {
+                            "key": "aws-cdk:subnet-type",
+                            "value": "Private"
+                          },
+                          {
+                            "key": "Name",
+                            "value": "shumelahire-dev-foundation/Vpc/privateSubnet1"
+                          }
+                        ],
+                        "vpcId": {
+                          "Ref": "Vpc8378EB38"
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_ec2.CfnSubnet",
+                      "version": "2.173.4"
+                    }
+                  },
+                  "Acl": {
+                    "id": "Acl",
+                    "path": "shumelahire-dev-foundation/Vpc/privateSubnet1/Acl",
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.Resource",
+                      "version": "2.173.4"
+                    }
+                  },
+                  "RouteTable": {
+                    "id": "RouteTable",
+                    "path": "shumelahire-dev-foundation/Vpc/privateSubnet1/RouteTable",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::EC2::RouteTable",
+                      "aws:cdk:cloudformation:props": {
+                        "tags": [
+                          {
+                            "key": "Name",
+                            "value": "shumelahire-dev-foundation/Vpc/privateSubnet1"
+                          }
+                        ],
+                        "vpcId": {
+                          "Ref": "Vpc8378EB38"
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_ec2.CfnRouteTable",
+                      "version": "2.173.4"
+                    }
+                  },
+                  "RouteTableAssociation": {
+                    "id": "RouteTableAssociation",
+                    "path": "shumelahire-dev-foundation/Vpc/privateSubnet1/RouteTableAssociation",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::EC2::SubnetRouteTableAssociation",
+                      "aws:cdk:cloudformation:props": {
+                        "routeTableId": {
+                          "Ref": "VpcprivateSubnet1RouteTable1979EACB"
+                        },
+                        "subnetId": {
+                          "Ref": "VpcprivateSubnet1SubnetCEAD3716"
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_ec2.CfnSubnetRouteTableAssociation",
+                      "version": "2.173.4"
+                    }
+                  },
+                  "DefaultRoute": {
+                    "id": "DefaultRoute",
+                    "path": "shumelahire-dev-foundation/Vpc/privateSubnet1/DefaultRoute",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::EC2::Route",
+                      "aws:cdk:cloudformation:props": {
+                        "destinationCidrBlock": "0.0.0.0/0",
+                        "natGatewayId": {
+                          "Ref": "VpcpublicSubnet1NATGatewayA036E8A6"
+                        },
+                        "routeTableId": {
+                          "Ref": "VpcprivateSubnet1RouteTable1979EACB"
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_ec2.CfnRoute",
+                      "version": "2.173.4"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_ec2.PrivateSubnet",
+                  "version": "2.173.4"
+                }
+              },
+              "privateSubnet2": {
+                "id": "privateSubnet2",
+                "path": "shumelahire-dev-foundation/Vpc/privateSubnet2",
+                "children": {
+                  "Subnet": {
+                    "id": "Subnet",
+                    "path": "shumelahire-dev-foundation/Vpc/privateSubnet2/Subnet",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::EC2::Subnet",
+                      "aws:cdk:cloudformation:props": {
+                        "availabilityZone": "us-east-1b",
+                        "cidrBlock": "10.0.3.0/24",
+                        "mapPublicIpOnLaunch": false,
+                        "tags": [
+                          {
+                            "key": "aws-cdk:subnet-name",
+                            "value": "private"
+                          },
+                          {
+                            "key": "aws-cdk:subnet-type",
+                            "value": "Private"
+                          },
+                          {
+                            "key": "Name",
+                            "value": "shumelahire-dev-foundation/Vpc/privateSubnet2"
+                          }
+                        ],
+                        "vpcId": {
+                          "Ref": "Vpc8378EB38"
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_ec2.CfnSubnet",
+                      "version": "2.173.4"
+                    }
+                  },
+                  "Acl": {
+                    "id": "Acl",
+                    "path": "shumelahire-dev-foundation/Vpc/privateSubnet2/Acl",
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.Resource",
+                      "version": "2.173.4"
+                    }
+                  },
+                  "RouteTable": {
+                    "id": "RouteTable",
+                    "path": "shumelahire-dev-foundation/Vpc/privateSubnet2/RouteTable",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::EC2::RouteTable",
+                      "aws:cdk:cloudformation:props": {
+                        "tags": [
+                          {
+                            "key": "Name",
+                            "value": "shumelahire-dev-foundation/Vpc/privateSubnet2"
+                          }
+                        ],
+                        "vpcId": {
+                          "Ref": "Vpc8378EB38"
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_ec2.CfnRouteTable",
+                      "version": "2.173.4"
+                    }
+                  },
+                  "RouteTableAssociation": {
+                    "id": "RouteTableAssociation",
+                    "path": "shumelahire-dev-foundation/Vpc/privateSubnet2/RouteTableAssociation",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::EC2::SubnetRouteTableAssociation",
+                      "aws:cdk:cloudformation:props": {
+                        "routeTableId": {
+                          "Ref": "VpcprivateSubnet2RouteTable4D0FFC8C"
+                        },
+                        "subnetId": {
+                          "Ref": "VpcprivateSubnet2Subnet2DE7549C"
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_ec2.CfnSubnetRouteTableAssociation",
+                      "version": "2.173.4"
+                    }
+                  },
+                  "DefaultRoute": {
+                    "id": "DefaultRoute",
+                    "path": "shumelahire-dev-foundation/Vpc/privateSubnet2/DefaultRoute",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::EC2::Route",
+                      "aws:cdk:cloudformation:props": {
+                        "destinationCidrBlock": "0.0.0.0/0",
+                        "natGatewayId": {
+                          "Ref": "VpcpublicSubnet1NATGatewayA036E8A6"
+                        },
+                        "routeTableId": {
+                          "Ref": "VpcprivateSubnet2RouteTable4D0FFC8C"
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_ec2.CfnRoute",
+                      "version": "2.173.4"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_ec2.PrivateSubnet",
+                  "version": "2.173.4"
+                }
+              },
+              "isolatedSubnet1": {
+                "id": "isolatedSubnet1",
+                "path": "shumelahire-dev-foundation/Vpc/isolatedSubnet1",
+                "children": {
+                  "Subnet": {
+                    "id": "Subnet",
+                    "path": "shumelahire-dev-foundation/Vpc/isolatedSubnet1/Subnet",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::EC2::Subnet",
+                      "aws:cdk:cloudformation:props": {
+                        "availabilityZone": "us-east-1a",
+                        "cidrBlock": "10.0.4.0/24",
+                        "mapPublicIpOnLaunch": false,
+                        "tags": [
+                          {
+                            "key": "aws-cdk:subnet-name",
+                            "value": "isolated"
+                          },
+                          {
+                            "key": "aws-cdk:subnet-type",
+                            "value": "Isolated"
+                          },
+                          {
+                            "key": "Name",
+                            "value": "shumelahire-dev-foundation/Vpc/isolatedSubnet1"
+                          }
+                        ],
+                        "vpcId": {
+                          "Ref": "Vpc8378EB38"
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_ec2.CfnSubnet",
+                      "version": "2.173.4"
+                    }
+                  },
+                  "Acl": {
+                    "id": "Acl",
+                    "path": "shumelahire-dev-foundation/Vpc/isolatedSubnet1/Acl",
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.Resource",
+                      "version": "2.173.4"
+                    }
+                  },
+                  "RouteTable": {
+                    "id": "RouteTable",
+                    "path": "shumelahire-dev-foundation/Vpc/isolatedSubnet1/RouteTable",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::EC2::RouteTable",
+                      "aws:cdk:cloudformation:props": {
+                        "tags": [
+                          {
+                            "key": "Name",
+                            "value": "shumelahire-dev-foundation/Vpc/isolatedSubnet1"
+                          }
+                        ],
+                        "vpcId": {
+                          "Ref": "Vpc8378EB38"
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_ec2.CfnRouteTable",
+                      "version": "2.173.4"
+                    }
+                  },
+                  "RouteTableAssociation": {
+                    "id": "RouteTableAssociation",
+                    "path": "shumelahire-dev-foundation/Vpc/isolatedSubnet1/RouteTableAssociation",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::EC2::SubnetRouteTableAssociation",
+                      "aws:cdk:cloudformation:props": {
+                        "routeTableId": {
+                          "Ref": "VpcisolatedSubnet1RouteTableE442650B"
+                        },
+                        "subnetId": {
+                          "Ref": "VpcisolatedSubnet1SubnetE62B1B9B"
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_ec2.CfnSubnetRouteTableAssociation",
+                      "version": "2.173.4"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_ec2.PrivateSubnet",
+                  "version": "2.173.4"
+                }
+              },
+              "isolatedSubnet2": {
+                "id": "isolatedSubnet2",
+                "path": "shumelahire-dev-foundation/Vpc/isolatedSubnet2",
+                "children": {
+                  "Subnet": {
+                    "id": "Subnet",
+                    "path": "shumelahire-dev-foundation/Vpc/isolatedSubnet2/Subnet",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::EC2::Subnet",
+                      "aws:cdk:cloudformation:props": {
+                        "availabilityZone": "us-east-1b",
+                        "cidrBlock": "10.0.5.0/24",
+                        "mapPublicIpOnLaunch": false,
+                        "tags": [
+                          {
+                            "key": "aws-cdk:subnet-name",
+                            "value": "isolated"
+                          },
+                          {
+                            "key": "aws-cdk:subnet-type",
+                            "value": "Isolated"
+                          },
+                          {
+                            "key": "Name",
+                            "value": "shumelahire-dev-foundation/Vpc/isolatedSubnet2"
+                          }
+                        ],
+                        "vpcId": {
+                          "Ref": "Vpc8378EB38"
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_ec2.CfnSubnet",
+                      "version": "2.173.4"
+                    }
+                  },
+                  "Acl": {
+                    "id": "Acl",
+                    "path": "shumelahire-dev-foundation/Vpc/isolatedSubnet2/Acl",
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.Resource",
+                      "version": "2.173.4"
+                    }
+                  },
+                  "RouteTable": {
+                    "id": "RouteTable",
+                    "path": "shumelahire-dev-foundation/Vpc/isolatedSubnet2/RouteTable",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::EC2::RouteTable",
+                      "aws:cdk:cloudformation:props": {
+                        "tags": [
+                          {
+                            "key": "Name",
+                            "value": "shumelahire-dev-foundation/Vpc/isolatedSubnet2"
+                          }
+                        ],
+                        "vpcId": {
+                          "Ref": "Vpc8378EB38"
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_ec2.CfnRouteTable",
+                      "version": "2.173.4"
+                    }
+                  },
+                  "RouteTableAssociation": {
+                    "id": "RouteTableAssociation",
+                    "path": "shumelahire-dev-foundation/Vpc/isolatedSubnet2/RouteTableAssociation",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::EC2::SubnetRouteTableAssociation",
+                      "aws:cdk:cloudformation:props": {
+                        "routeTableId": {
+                          "Ref": "VpcisolatedSubnet2RouteTable334F9764"
+                        },
+                        "subnetId": {
+                          "Ref": "VpcisolatedSubnet2Subnet39217055"
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_ec2.CfnSubnetRouteTableAssociation",
+                      "version": "2.173.4"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_ec2.PrivateSubnet",
+                  "version": "2.173.4"
+                }
+              },
+              "IGW": {
+                "id": "IGW",
+                "path": "shumelahire-dev-foundation/Vpc/IGW",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::EC2::InternetGateway",
+                  "aws:cdk:cloudformation:props": {
+                    "tags": [
+                      {
+                        "key": "Name",
+                        "value": "shumelahire-dev-vpc"
+                      }
+                    ]
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_ec2.CfnInternetGateway",
+                  "version": "2.173.4"
+                }
+              },
+              "VPCGW": {
+                "id": "VPCGW",
+                "path": "shumelahire-dev-foundation/Vpc/VPCGW",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::EC2::VPCGatewayAttachment",
+                  "aws:cdk:cloudformation:props": {
+                    "internetGatewayId": {
+                      "Ref": "VpcIGWD7BA715C"
+                    },
+                    "vpcId": {
+                      "Ref": "Vpc8378EB38"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_ec2.CfnVPCGatewayAttachment",
+                  "version": "2.173.4"
+                }
+              },
+              "RestrictDefaultSecurityGroupCustomResource": {
+                "id": "RestrictDefaultSecurityGroupCustomResource",
+                "path": "shumelahire-dev-foundation/Vpc/RestrictDefaultSecurityGroupCustomResource",
+                "children": {
+                  "Default": {
+                    "id": "Default",
+                    "path": "shumelahire-dev-foundation/Vpc/RestrictDefaultSecurityGroupCustomResource/Default",
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.CfnResource",
+                      "version": "2.173.4"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.CustomResource",
+                  "version": "2.173.4"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.aws_ec2.Vpc",
+              "version": "2.173.4"
+            }
+          },
+          "Custom::VpcRestrictDefaultSGCustomResourceProvider": {
+            "id": "Custom::VpcRestrictDefaultSGCustomResourceProvider",
+            "path": "shumelahire-dev-foundation/Custom::VpcRestrictDefaultSGCustomResourceProvider",
+            "children": {
+              "Staging": {
+                "id": "Staging",
+                "path": "shumelahire-dev-foundation/Custom::VpcRestrictDefaultSGCustomResourceProvider/Staging",
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.AssetStaging",
+                  "version": "2.173.4"
+                }
+              },
+              "Role": {
+                "id": "Role",
+                "path": "shumelahire-dev-foundation/Custom::VpcRestrictDefaultSGCustomResourceProvider/Role",
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.CfnResource",
+                  "version": "2.173.4"
+                }
+              },
+              "Handler": {
+                "id": "Handler",
+                "path": "shumelahire-dev-foundation/Custom::VpcRestrictDefaultSGCustomResourceProvider/Handler",
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.CfnResource",
+                  "version": "2.173.4"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.CustomResourceProviderBase",
+              "version": "2.173.4"
+            }
+          },
+          "DbSecurityGroup": {
+            "id": "DbSecurityGroup",
+            "path": "shumelahire-dev-foundation/DbSecurityGroup",
+            "children": {
+              "Resource": {
+                "id": "Resource",
+                "path": "shumelahire-dev-foundation/DbSecurityGroup/Resource",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::EC2::SecurityGroup",
+                  "aws:cdk:cloudformation:props": {
+                    "groupDescription": "Security group for Aurora database",
+                    "groupName": "shumelahire-dev-db-sg",
+                    "securityGroupEgress": [
+                      {
+                        "cidrIp": "255.255.255.255/32",
+                        "description": "Disallow all traffic",
+                        "ipProtocol": "icmp",
+                        "fromPort": 252,
+                        "toPort": 86
+                      }
+                    ],
+                    "vpcId": {
+                      "Ref": "Vpc8378EB38"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_ec2.CfnSecurityGroup",
+                  "version": "2.173.4"
+                }
+              },
+              "from shumelahiredevfoundationEcsSecurityGroup7EB84E39:5432": {
+                "id": "from shumelahiredevfoundationEcsSecurityGroup7EB84E39:5432",
+                "path": "shumelahire-dev-foundation/DbSecurityGroup/from shumelahiredevfoundationEcsSecurityGroup7EB84E39:5432",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::EC2::SecurityGroupIngress",
+                  "aws:cdk:cloudformation:props": {
+                    "description": "Allow ECS to Aurora",
+                    "fromPort": 5432,
+                    "groupId": {
+                      "Fn::GetAtt": [
+                        "DbSecurityGroupE9D701AD",
+                        "GroupId"
+                      ]
+                    },
+                    "ipProtocol": "tcp",
+                    "sourceSecurityGroupId": {
+                      "Fn::GetAtt": [
+                        "EcsSecurityGroup44008BF1",
+                        "GroupId"
+                      ]
+                    },
+                    "toPort": 5432
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_ec2.CfnSecurityGroupIngress",
+                  "version": "2.173.4"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.aws_ec2.SecurityGroup",
+              "version": "2.173.4"
+            }
+          },
+          "RedisSecurityGroup": {
+            "id": "RedisSecurityGroup",
+            "path": "shumelahire-dev-foundation/RedisSecurityGroup",
+            "children": {
+              "Resource": {
+                "id": "Resource",
+                "path": "shumelahire-dev-foundation/RedisSecurityGroup/Resource",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::EC2::SecurityGroup",
+                  "aws:cdk:cloudformation:props": {
+                    "groupDescription": "Security group for ElastiCache Redis",
+                    "groupName": "shumelahire-dev-redis-sg",
+                    "securityGroupEgress": [
+                      {
+                        "cidrIp": "255.255.255.255/32",
+                        "description": "Disallow all traffic",
+                        "ipProtocol": "icmp",
+                        "fromPort": 252,
+                        "toPort": 86
+                      }
+                    ],
+                    "vpcId": {
+                      "Ref": "Vpc8378EB38"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_ec2.CfnSecurityGroup",
+                  "version": "2.173.4"
+                }
+              },
+              "from shumelahiredevfoundationEcsSecurityGroup7EB84E39:6379": {
+                "id": "from shumelahiredevfoundationEcsSecurityGroup7EB84E39:6379",
+                "path": "shumelahire-dev-foundation/RedisSecurityGroup/from shumelahiredevfoundationEcsSecurityGroup7EB84E39:6379",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::EC2::SecurityGroupIngress",
+                  "aws:cdk:cloudformation:props": {
+                    "description": "Allow ECS to Redis",
+                    "fromPort": 6379,
+                    "groupId": {
+                      "Fn::GetAtt": [
+                        "RedisSecurityGroupB05951F6",
+                        "GroupId"
+                      ]
+                    },
+                    "ipProtocol": "tcp",
+                    "sourceSecurityGroupId": {
+                      "Fn::GetAtt": [
+                        "EcsSecurityGroup44008BF1",
+                        "GroupId"
+                      ]
+                    },
+                    "toPort": 6379
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_ec2.CfnSecurityGroupIngress",
+                  "version": "2.173.4"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.aws_ec2.SecurityGroup",
+              "version": "2.173.4"
+            }
+          },
+          "EcsSecurityGroup": {
+            "id": "EcsSecurityGroup",
+            "path": "shumelahire-dev-foundation/EcsSecurityGroup",
+            "children": {
+              "Resource": {
+                "id": "Resource",
+                "path": "shumelahire-dev-foundation/EcsSecurityGroup/Resource",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::EC2::SecurityGroup",
+                  "aws:cdk:cloudformation:props": {
+                    "groupDescription": "Security group for ECS tasks",
+                    "groupName": "shumelahire-dev-ecs-sg",
+                    "securityGroupEgress": [
+                      {
+                        "cidrIp": "0.0.0.0/0",
+                        "description": "Allow all outbound traffic by default",
+                        "ipProtocol": "-1"
+                      }
+                    ],
+                    "vpcId": {
+                      "Ref": "Vpc8378EB38"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_ec2.CfnSecurityGroup",
+                  "version": "2.173.4"
+                }
+              },
+              "from shumelahiredevfoundationAlbSecurityGroupFC0C8B4E:8080": {
+                "id": "from shumelahiredevfoundationAlbSecurityGroupFC0C8B4E:8080",
+                "path": "shumelahire-dev-foundation/EcsSecurityGroup/from shumelahiredevfoundationAlbSecurityGroupFC0C8B4E:8080",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::EC2::SecurityGroupIngress",
+                  "aws:cdk:cloudformation:props": {
+                    "description": "Load balancer to target",
+                    "fromPort": 8080,
+                    "groupId": {
+                      "Fn::GetAtt": [
+                        "EcsSecurityGroup44008BF1",
+                        "GroupId"
+                      ]
+                    },
+                    "ipProtocol": "tcp",
+                    "sourceSecurityGroupId": {
+                      "Fn::GetAtt": [
+                        "AlbSecurityGroup86A59E99",
+                        "GroupId"
+                      ]
+                    },
+                    "toPort": 8080
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_ec2.CfnSecurityGroupIngress",
+                  "version": "2.173.4"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.aws_ec2.SecurityGroup",
+              "version": "2.173.4"
+            }
+          },
+          "AlbSecurityGroup": {
+            "id": "AlbSecurityGroup",
+            "path": "shumelahire-dev-foundation/AlbSecurityGroup",
+            "children": {
+              "Resource": {
+                "id": "Resource",
+                "path": "shumelahire-dev-foundation/AlbSecurityGroup/Resource",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::EC2::SecurityGroup",
+                  "aws:cdk:cloudformation:props": {
+                    "groupDescription": "Security group for ALB",
+                    "groupName": "shumelahire-dev-alb-sg",
+                    "securityGroupEgress": [
+                      {
+                        "cidrIp": "0.0.0.0/0",
+                        "description": "Allow all outbound traffic by default",
+                        "ipProtocol": "-1"
+                      }
+                    ],
+                    "securityGroupIngress": [
+                      {
+                        "cidrIp": "0.0.0.0/0",
+                        "ipProtocol": "tcp",
+                        "fromPort": 443,
+                        "toPort": 443,
+                        "description": "HTTPS"
+                      },
+                      {
+                        "cidrIp": "0.0.0.0/0",
+                        "ipProtocol": "tcp",
+                        "fromPort": 80,
+                        "toPort": 80,
+                        "description": "HTTP redirect"
+                      }
+                    ],
+                    "vpcId": {
+                      "Ref": "Vpc8378EB38"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_ec2.CfnSecurityGroup",
+                  "version": "2.173.4"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.aws_ec2.SecurityGroup",
+              "version": "2.173.4"
+            }
+          },
+          "Database": {
+            "id": "Database",
+            "path": "shumelahire-dev-foundation/Database",
+            "children": {
+              "Subnets": {
+                "id": "Subnets",
+                "path": "shumelahire-dev-foundation/Database/Subnets",
+                "children": {
+                  "Default": {
+                    "id": "Default",
+                    "path": "shumelahire-dev-foundation/Database/Subnets/Default",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::RDS::DBSubnetGroup",
+                      "aws:cdk:cloudformation:props": {
+                        "dbSubnetGroupDescription": "Subnets for Database database",
+                        "subnetIds": [
+                          {
+                            "Ref": "VpcisolatedSubnet1SubnetE62B1B9B"
+                          },
+                          {
+                            "Ref": "VpcisolatedSubnet2Subnet39217055"
+                          }
+                        ]
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_rds.CfnDBSubnetGroup",
+                      "version": "2.173.4"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_rds.SubnetGroup",
+                  "version": "2.173.4"
+                }
+              },
+              "AuroraPostgreSqlDatabaseClusterEngineDefaultParameterGroup": {
+                "id": "AuroraPostgreSqlDatabaseClusterEngineDefaultParameterGroup",
+                "path": "shumelahire-dev-foundation/Database/AuroraPostgreSqlDatabaseClusterEngineDefaultParameterGroup",
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.Resource",
+                  "version": "2.173.4"
+                }
+              },
+              "Secret": {
+                "id": "Secret",
+                "path": "shumelahire-dev-foundation/Database/Secret",
+                "children": {
+                  "Resource": {
+                    "id": "Resource",
+                    "path": "shumelahire-dev-foundation/Database/Secret/Resource",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::SecretsManager::Secret",
+                      "aws:cdk:cloudformation:props": {
+                        "description": {
+                          "Fn::Join": [
+                            "",
+                            [
+                              "Generated by the CDK for stack: ",
+                              {
+                                "Ref": "AWS::StackName"
+                              }
+                            ]
+                          ]
+                        },
+                        "generateSecretString": {
+                          "passwordLength": 30,
+                          "secretStringTemplate": "{\"username\":\"shumelahire_admin\"}",
+                          "generateStringKey": "password",
+                          "excludeCharacters": " %+~`#$&*()|[]{}:;<>?!'/@\"\\"
+                        },
+                        "name": "shumelahire-dev/db-credentials"
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_secretsmanager.CfnSecret",
+                      "version": "2.173.4"
+                    }
+                  },
+                  "Attachment": {
+                    "id": "Attachment",
+                    "path": "shumelahire-dev-foundation/Database/Secret/Attachment",
+                    "children": {
+                      "Resource": {
+                        "id": "Resource",
+                        "path": "shumelahire-dev-foundation/Database/Secret/Attachment/Resource",
+                        "attributes": {
+                          "aws:cdk:cloudformation:type": "AWS::SecretsManager::SecretTargetAttachment",
+                          "aws:cdk:cloudformation:props": {
+                            "secretId": {
+                              "Ref": "shumelahiredevfoundationDatabaseSecretA6EDF0DA3fdaad7efa858a3daf9490cf0a702aeb"
+                            },
+                            "targetId": {
+                              "Ref": "DatabaseB269D8BB"
+                            },
+                            "targetType": "AWS::RDS::DBCluster"
+                          }
+                        },
+                        "constructInfo": {
+                          "fqn": "aws-cdk-lib.aws_secretsmanager.CfnSecretTargetAttachment",
+                          "version": "2.173.4"
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_secretsmanager.SecretTargetAttachment",
+                      "version": "2.173.4"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_rds.DatabaseSecret",
+                  "version": "2.173.4"
+                }
+              },
+              "Resource": {
+                "id": "Resource",
+                "path": "shumelahire-dev-foundation/Database/Resource",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::RDS::DBCluster",
+                  "aws:cdk:cloudformation:props": {
+                    "copyTagsToSnapshot": true,
+                    "databaseName": "shumelahire",
+                    "dbClusterIdentifier": "shumelahire-dev-db",
+                    "dbClusterParameterGroupName": "default.aurora-postgresql15",
+                    "dbSubnetGroupName": {
+                      "Ref": "DatabaseSubnets56F17B9A"
+                    },
+                    "deletionProtection": false,
+                    "engine": "aurora-postgresql",
+                    "engineVersion": "15.4",
+                    "masterUsername": "shumelahire_admin",
+                    "masterUserPassword": {
+                      "Fn::Join": [
+                        "",
+                        [
+                          "{{resolve:secretsmanager:",
+                          {
+                            "Ref": "shumelahiredevfoundationDatabaseSecretA6EDF0DA3fdaad7efa858a3daf9490cf0a702aeb"
+                          },
+                          ":SecretString:password::}}"
+                        ]
+                      ]
+                    },
+                    "port": 5432,
+                    "serverlessV2ScalingConfiguration": {
+                      "minCapacity": 0.5,
+                      "maxCapacity": 2
+                    },
+                    "storageEncrypted": true,
+                    "vpcSecurityGroupIds": [
+                      {
+                        "Fn::GetAtt": [
+                          "DbSecurityGroupE9D701AD",
+                          "GroupId"
+                        ]
+                      }
+                    ]
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_rds.CfnDBCluster",
+                  "version": "2.173.4"
+                }
+              },
+              "writer": {
+                "id": "writer",
+                "path": "shumelahire-dev-foundation/Database/writer",
+                "children": {
+                  "Resource": {
+                    "id": "Resource",
+                    "path": "shumelahire-dev-foundation/Database/writer/Resource",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::RDS::DBInstance",
+                      "aws:cdk:cloudformation:props": {
+                        "dbClusterIdentifier": {
+                          "Ref": "DatabaseB269D8BB"
+                        },
+                        "dbInstanceClass": "db.serverless",
+                        "engine": "aurora-postgresql",
+                        "promotionTier": 0,
+                        "publiclyAccessible": false
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_rds.CfnDBInstance",
+                      "version": "2.173.4"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.Resource",
+                  "version": "2.173.4"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.aws_rds.DatabaseCluster",
+              "version": "2.173.4"
+            }
+          },
+          "RedisSubnetGroup": {
+            "id": "RedisSubnetGroup",
+            "path": "shumelahire-dev-foundation/RedisSubnetGroup",
+            "attributes": {
+              "aws:cdk:cloudformation:type": "AWS::ElastiCache::SubnetGroup",
+              "aws:cdk:cloudformation:props": {
+                "cacheSubnetGroupName": "shumelahire-dev-redis-subnet",
+                "description": "Subnet group for Redis",
+                "subnetIds": [
+                  {
+                    "Ref": "VpcisolatedSubnet1SubnetE62B1B9B"
+                  },
+                  {
+                    "Ref": "VpcisolatedSubnet2Subnet39217055"
+                  }
+                ]
+              }
+            },
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.aws_elasticache.CfnSubnetGroup",
+              "version": "2.173.4"
+            }
+          },
+          "Redis": {
+            "id": "Redis",
+            "path": "shumelahire-dev-foundation/Redis",
+            "attributes": {
+              "aws:cdk:cloudformation:type": "AWS::ElastiCache::CacheCluster",
+              "aws:cdk:cloudformation:props": {
+                "cacheNodeType": "cache.t4g.micro",
+                "cacheSubnetGroupName": "shumelahire-dev-redis-subnet",
+                "clusterName": "shumelahire-dev-redis",
+                "engine": "redis",
+                "engineVersion": "7.1",
+                "numCacheNodes": 1,
+                "vpcSecurityGroupIds": [
+                  {
+                    "Fn::GetAtt": [
+                      "RedisSecurityGroupB05951F6",
+                      "GroupId"
+                    ]
+                  }
+                ]
+              }
+            },
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.aws_elasticache.CfnCacheCluster",
+              "version": "2.173.4"
+            }
+          },
+          "DocumentsBucket": {
+            "id": "DocumentsBucket",
+            "path": "shumelahire-dev-foundation/DocumentsBucket",
+            "children": {
+              "Resource": {
+                "id": "Resource",
+                "path": "shumelahire-dev-foundation/DocumentsBucket/Resource",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::S3::Bucket",
+                  "aws:cdk:cloudformation:props": {
+                    "bucketEncryption": {
+                      "serverSideEncryptionConfiguration": [
+                        {
+                          "serverSideEncryptionByDefault": {
+                            "sseAlgorithm": "AES256"
+                          }
+                        }
+                      ]
+                    },
+                    "bucketName": "shumelahire-dev-documents",
+                    "corsConfiguration": {
+                      "corsRules": [
+                        {
+                          "maxAge": 3600,
+                          "allowedHeaders": [
+                            "*"
+                          ],
+                          "allowedMethods": [
+                            "GET",
+                            "PUT",
+                            "POST"
+                          ],
+                          "allowedOrigins": [
+                            "http://localhost:3000",
+                            "http://localhost:3001"
+                          ]
+                        }
+                      ]
+                    },
+                    "publicAccessBlockConfiguration": {
+                      "blockPublicAcls": true,
+                      "blockPublicPolicy": true,
+                      "ignorePublicAcls": true,
+                      "restrictPublicBuckets": true
+                    },
+                    "tags": [
+                      {
+                        "key": "aws-cdk:auto-delete-objects",
+                        "value": "true"
+                      }
+                    ],
+                    "versioningConfiguration": {
+                      "status": "Enabled"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_s3.CfnBucket",
+                  "version": "2.173.4"
+                }
+              },
+              "Policy": {
+                "id": "Policy",
+                "path": "shumelahire-dev-foundation/DocumentsBucket/Policy",
+                "children": {
+                  "Resource": {
+                    "id": "Resource",
+                    "path": "shumelahire-dev-foundation/DocumentsBucket/Policy/Resource",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::S3::BucketPolicy",
+                      "aws:cdk:cloudformation:props": {
+                        "bucket": {
+                          "Ref": "DocumentsBucket9EC9DEB9"
+                        },
+                        "policyDocument": {
+                          "Statement": [
+                            {
+                              "Action": [
+                                "s3:DeleteObject*",
+                                "s3:GetBucket*",
+                                "s3:List*",
+                                "s3:PutBucketPolicy"
+                              ],
+                              "Effect": "Allow",
+                              "Principal": {
+                                "AWS": {
+                                  "Fn::GetAtt": [
+                                    "CustomS3AutoDeleteObjectsCustomResourceProviderRole3B1BD092",
+                                    "Arn"
+                                  ]
+                                }
+                              },
+                              "Resource": [
+                                {
+                                  "Fn::GetAtt": [
+                                    "DocumentsBucket9EC9DEB9",
+                                    "Arn"
+                                  ]
+                                },
+                                {
+                                  "Fn::Join": [
+                                    "",
+                                    [
+                                      {
+                                        "Fn::GetAtt": [
+                                          "DocumentsBucket9EC9DEB9",
+                                          "Arn"
+                                        ]
+                                      },
+                                      "/*"
+                                    ]
+                                  ]
+                                }
+                              ]
+                            }
+                          ],
+                          "Version": "2012-10-17"
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_s3.CfnBucketPolicy",
+                      "version": "2.173.4"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_s3.BucketPolicy",
+                  "version": "2.173.4"
+                }
+              },
+              "AutoDeleteObjectsCustomResource": {
+                "id": "AutoDeleteObjectsCustomResource",
+                "path": "shumelahire-dev-foundation/DocumentsBucket/AutoDeleteObjectsCustomResource",
+                "children": {
+                  "Default": {
+                    "id": "Default",
+                    "path": "shumelahire-dev-foundation/DocumentsBucket/AutoDeleteObjectsCustomResource/Default",
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.CfnResource",
+                      "version": "2.173.4"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.CustomResource",
+                  "version": "2.173.4"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.aws_s3.Bucket",
+              "version": "2.173.4"
+            }
+          },
+          "Custom::S3AutoDeleteObjectsCustomResourceProvider": {
+            "id": "Custom::S3AutoDeleteObjectsCustomResourceProvider",
+            "path": "shumelahire-dev-foundation/Custom::S3AutoDeleteObjectsCustomResourceProvider",
+            "children": {
+              "Staging": {
+                "id": "Staging",
+                "path": "shumelahire-dev-foundation/Custom::S3AutoDeleteObjectsCustomResourceProvider/Staging",
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.AssetStaging",
+                  "version": "2.173.4"
+                }
+              },
+              "Role": {
+                "id": "Role",
+                "path": "shumelahire-dev-foundation/Custom::S3AutoDeleteObjectsCustomResourceProvider/Role",
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.CfnResource",
+                  "version": "2.173.4"
+                }
+              },
+              "Handler": {
+                "id": "Handler",
+                "path": "shumelahire-dev-foundation/Custom::S3AutoDeleteObjectsCustomResourceProvider/Handler",
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.CfnResource",
+                  "version": "2.173.4"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.CustomResourceProviderBase",
+              "version": "2.173.4"
+            }
+          },
+          "UploadsBucket": {
+            "id": "UploadsBucket",
+            "path": "shumelahire-dev-foundation/UploadsBucket",
+            "children": {
+              "Resource": {
+                "id": "Resource",
+                "path": "shumelahire-dev-foundation/UploadsBucket/Resource",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::S3::Bucket",
+                  "aws:cdk:cloudformation:props": {
+                    "bucketEncryption": {
+                      "serverSideEncryptionConfiguration": [
+                        {
+                          "serverSideEncryptionByDefault": {
+                            "sseAlgorithm": "AES256"
+                          }
+                        }
+                      ]
+                    },
+                    "bucketName": "shumelahire-dev-uploads",
+                    "lifecycleConfiguration": {
+                      "rules": [
+                        {
+                          "expirationInDays": 7,
+                          "id": "CleanupTempUploads",
+                          "prefix": "temp/",
+                          "status": "Enabled"
+                        }
+                      ]
+                    },
+                    "publicAccessBlockConfiguration": {
+                      "blockPublicAcls": true,
+                      "blockPublicPolicy": true,
+                      "ignorePublicAcls": true,
+                      "restrictPublicBuckets": true
+                    },
+                    "tags": [
+                      {
+                        "key": "aws-cdk:auto-delete-objects",
+                        "value": "true"
+                      }
+                    ]
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_s3.CfnBucket",
+                  "version": "2.173.4"
+                }
+              },
+              "Policy": {
+                "id": "Policy",
+                "path": "shumelahire-dev-foundation/UploadsBucket/Policy",
+                "children": {
+                  "Resource": {
+                    "id": "Resource",
+                    "path": "shumelahire-dev-foundation/UploadsBucket/Policy/Resource",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::S3::BucketPolicy",
+                      "aws:cdk:cloudformation:props": {
+                        "bucket": {
+                          "Ref": "UploadsBucket5E5E9B64"
+                        },
+                        "policyDocument": {
+                          "Statement": [
+                            {
+                              "Action": [
+                                "s3:DeleteObject*",
+                                "s3:GetBucket*",
+                                "s3:List*",
+                                "s3:PutBucketPolicy"
+                              ],
+                              "Effect": "Allow",
+                              "Principal": {
+                                "AWS": {
+                                  "Fn::GetAtt": [
+                                    "CustomS3AutoDeleteObjectsCustomResourceProviderRole3B1BD092",
+                                    "Arn"
+                                  ]
+                                }
+                              },
+                              "Resource": [
+                                {
+                                  "Fn::GetAtt": [
+                                    "UploadsBucket5E5E9B64",
+                                    "Arn"
+                                  ]
+                                },
+                                {
+                                  "Fn::Join": [
+                                    "",
+                                    [
+                                      {
+                                        "Fn::GetAtt": [
+                                          "UploadsBucket5E5E9B64",
+                                          "Arn"
+                                        ]
+                                      },
+                                      "/*"
+                                    ]
+                                  ]
+                                }
+                              ]
+                            }
+                          ],
+                          "Version": "2012-10-17"
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_s3.CfnBucketPolicy",
+                      "version": "2.173.4"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_s3.BucketPolicy",
+                  "version": "2.173.4"
+                }
+              },
+              "AutoDeleteObjectsCustomResource": {
+                "id": "AutoDeleteObjectsCustomResource",
+                "path": "shumelahire-dev-foundation/UploadsBucket/AutoDeleteObjectsCustomResource",
+                "children": {
+                  "Default": {
+                    "id": "Default",
+                    "path": "shumelahire-dev-foundation/UploadsBucket/AutoDeleteObjectsCustomResource/Default",
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.CfnResource",
+                      "version": "2.173.4"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.CustomResource",
+                  "version": "2.173.4"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.aws_s3.Bucket",
+              "version": "2.173.4"
+            }
+          },
+          "NotificationDlq": {
+            "id": "NotificationDlq",
+            "path": "shumelahire-dev-foundation/NotificationDlq",
+            "children": {
+              "Resource": {
+                "id": "Resource",
+                "path": "shumelahire-dev-foundation/NotificationDlq/Resource",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::SQS::Queue",
+                  "aws:cdk:cloudformation:props": {
+                    "messageRetentionPeriod": 1209600,
+                    "queueName": "shumelahire-dev-notification-dlq"
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_sqs.CfnQueue",
+                  "version": "2.173.4"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.aws_sqs.Queue",
+              "version": "2.173.4"
+            }
+          },
+          "NotificationQueue": {
+            "id": "NotificationQueue",
+            "path": "shumelahire-dev-foundation/NotificationQueue",
+            "children": {
+              "Resource": {
+                "id": "Resource",
+                "path": "shumelahire-dev-foundation/NotificationQueue/Resource",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::SQS::Queue",
+                  "aws:cdk:cloudformation:props": {
+                    "contentBasedDeduplication": true,
+                    "fifoQueue": true,
+                    "messageRetentionPeriod": 345600,
+                    "queueName": "shumelahire-dev-notifications.fifo",
+                    "redrivePolicy": {
+                      "deadLetterTargetArn": {
+                        "Fn::GetAtt": [
+                          "NotificationDlq467FCAE6",
+                          "Arn"
+                        ]
+                      },
+                      "maxReceiveCount": 3
+                    },
+                    "visibilityTimeout": 120
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_sqs.CfnQueue",
+                  "version": "2.173.4"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.aws_sqs.Queue",
+              "version": "2.173.4"
+            }
+          },
+          "AiKeysSecret": {
+            "id": "AiKeysSecret",
+            "path": "shumelahire-dev-foundation/AiKeysSecret",
+            "children": {
+              "Resource": {
+                "id": "Resource",
+                "path": "shumelahire-dev-foundation/AiKeysSecret/Resource",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::SecretsManager::Secret",
+                  "aws:cdk:cloudformation:props": {
+                    "description": "AI service API keys (Claude, OpenAI)",
+                    "generateSecretString": {},
+                    "name": "shumelahire/dev/ai-keys"
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_secretsmanager.CfnSecret",
+                  "version": "2.173.4"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.aws_secretsmanager.Secret",
+              "version": "2.173.4"
+            }
+          },
+          "DocusignSecret": {
+            "id": "DocusignSecret",
+            "path": "shumelahire-dev-foundation/DocusignSecret",
+            "children": {
+              "Resource": {
+                "id": "Resource",
+                "path": "shumelahire-dev-foundation/DocusignSecret/Resource",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::SecretsManager::Secret",
+                  "aws:cdk:cloudformation:props": {
+                    "description": "DocuSign API credentials",
+                    "generateSecretString": {},
+                    "name": "shumelahire/dev/docusign"
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_secretsmanager.CfnSecret",
+                  "version": "2.173.4"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.aws_secretsmanager.Secret",
+              "version": "2.173.4"
+            }
+          },
+          "EncryptionKeySecret": {
+            "id": "EncryptionKeySecret",
+            "path": "shumelahire-dev-foundation/EncryptionKeySecret",
+            "children": {
+              "Resource": {
+                "id": "Resource",
+                "path": "shumelahire-dev-foundation/EncryptionKeySecret/Resource",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::SecretsManager::Secret",
+                  "aws:cdk:cloudformation:props": {
+                    "description": "Application encryption key",
+                    "generateSecretString": {},
+                    "name": "shumelahire/dev/encryption-key"
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_secretsmanager.CfnSecret",
+                  "version": "2.173.4"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.aws_secretsmanager.Secret",
+              "version": "2.173.4"
+            }
+          },
+          "JwtSecret": {
+            "id": "JwtSecret",
+            "path": "shumelahire-dev-foundation/JwtSecret",
+            "children": {
+              "Resource": {
+                "id": "Resource",
+                "path": "shumelahire-dev-foundation/JwtSecret/Resource",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::SecretsManager::Secret",
+                  "aws:cdk:cloudformation:props": {
+                    "description": "JWT signing secret",
+                    "generateSecretString": {},
+                    "name": "shumelahire/dev/jwt-secret"
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_secretsmanager.CfnSecret",
+                  "version": "2.173.4"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.aws_secretsmanager.Secret",
+              "version": "2.173.4"
+            }
+          },
+          "UserPool": {
+            "id": "UserPool",
+            "path": "shumelahire-dev-foundation/UserPool",
+            "children": {
+              "Resource": {
+                "id": "Resource",
+                "path": "shumelahire-dev-foundation/UserPool/Resource",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::Cognito::UserPool",
+                  "aws:cdk:cloudformation:props": {
+                    "accountRecoverySetting": {
+                      "recoveryMechanisms": [
+                        {
+                          "name": "verified_email",
+                          "priority": 1
+                        }
+                      ]
+                    },
+                    "adminCreateUserConfig": {
+                      "allowAdminCreateUserOnly": false
+                    },
+                    "autoVerifiedAttributes": [
+                      "email"
+                    ],
+                    "emailVerificationMessage": "The verification code to your new account is {####}",
+                    "emailVerificationSubject": "Verify your new account",
+                    "enabledMfas": [
+                      "SOFTWARE_TOKEN_MFA"
+                    ],
+                    "mfaConfiguration": "OPTIONAL",
+                    "policies": {
+                      "passwordPolicy": {
+                        "temporaryPasswordValidityDays": 3,
+                        "minimumLength": 8,
+                        "requireLowercase": true,
+                        "requireUppercase": true,
+                        "requireNumbers": true,
+                        "requireSymbols": true
+                      }
+                    },
+                    "schema": [
+                      {
+                        "name": "email",
+                        "mutable": true,
+                        "required": true
+                      },
+                      {
+                        "name": "family_name",
+                        "mutable": true,
+                        "required": true
+                      },
+                      {
+                        "name": "given_name",
+                        "mutable": true,
+                        "required": true
+                      }
+                    ],
+                    "smsVerificationMessage": "The verification code to your new account is {####}",
+                    "usernameAttributes": [
+                      "email"
+                    ],
+                    "userPoolName": "shumelahire-dev-users",
+                    "verificationMessageTemplate": {
+                      "defaultEmailOption": "CONFIRM_WITH_CODE",
+                      "emailMessage": "The verification code to your new account is {####}",
+                      "emailSubject": "Verify your new account",
+                      "smsMessage": "The verification code to your new account is {####}"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_cognito.CfnUserPool",
+                  "version": "2.173.4"
+                }
+              },
+              "WebAppClient": {
+                "id": "WebAppClient",
+                "path": "shumelahire-dev-foundation/UserPool/WebAppClient",
+                "children": {
+                  "Resource": {
+                    "id": "Resource",
+                    "path": "shumelahire-dev-foundation/UserPool/WebAppClient/Resource",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::Cognito::UserPoolClient",
+                      "aws:cdk:cloudformation:props": {
+                        "accessTokenValidity": 60,
+                        "allowedOAuthFlows": [
+                          "implicit",
+                          "code"
+                        ],
+                        "allowedOAuthFlowsUserPoolClient": true,
+                        "allowedOAuthScopes": [
+                          "profile",
+                          "phone",
+                          "email",
+                          "openid",
+                          "aws.cognito.signin.user.admin"
+                        ],
+                        "callbackUrLs": [
+                          "https://example.com"
+                        ],
+                        "clientName": "shumelahire-dev-web",
+                        "explicitAuthFlows": [
+                          "ALLOW_USER_PASSWORD_AUTH",
+                          "ALLOW_USER_SRP_AUTH",
+                          "ALLOW_REFRESH_TOKEN_AUTH"
+                        ],
+                        "generateSecret": false,
+                        "idTokenValidity": 60,
+                        "preventUserExistenceErrors": "ENABLED",
+                        "refreshTokenValidity": 43200,
+                        "supportedIdentityProviders": [
+                          "COGNITO"
+                        ],
+                        "tokenValidityUnits": {
+                          "idToken": "minutes",
+                          "accessToken": "minutes",
+                          "refreshToken": "minutes"
+                        },
+                        "userPoolId": {
+                          "Ref": "UserPool6BA7E5F2"
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_cognito.CfnUserPoolClient",
+                      "version": "2.173.4"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_cognito.UserPoolClient",
+                  "version": "2.173.4"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.aws_cognito.UserPool",
+              "version": "2.173.4"
+            }
+          },
+          "GroupADMIN": {
+            "id": "GroupADMIN",
+            "path": "shumelahire-dev-foundation/GroupADMIN",
+            "attributes": {
+              "aws:cdk:cloudformation:type": "AWS::Cognito::UserPoolGroup",
+              "aws:cdk:cloudformation:props": {
+                "description": "ADMIN role group",
+                "groupName": "ADMIN",
+                "userPoolId": {
+                  "Ref": "UserPool6BA7E5F2"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.aws_cognito.CfnUserPoolGroup",
+              "version": "2.173.4"
+            }
+          },
+          "GroupEXECUTIVE": {
+            "id": "GroupEXECUTIVE",
+            "path": "shumelahire-dev-foundation/GroupEXECUTIVE",
+            "attributes": {
+              "aws:cdk:cloudformation:type": "AWS::Cognito::UserPoolGroup",
+              "aws:cdk:cloudformation:props": {
+                "description": "EXECUTIVE role group",
+                "groupName": "EXECUTIVE",
+                "userPoolId": {
+                  "Ref": "UserPool6BA7E5F2"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.aws_cognito.CfnUserPoolGroup",
+              "version": "2.173.4"
+            }
+          },
+          "GroupHR_MANAGER": {
+            "id": "GroupHR_MANAGER",
+            "path": "shumelahire-dev-foundation/GroupHR_MANAGER",
+            "attributes": {
+              "aws:cdk:cloudformation:type": "AWS::Cognito::UserPoolGroup",
+              "aws:cdk:cloudformation:props": {
+                "description": "HR_MANAGER role group",
+                "groupName": "HR_MANAGER",
+                "userPoolId": {
+                  "Ref": "UserPool6BA7E5F2"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.aws_cognito.CfnUserPoolGroup",
+              "version": "2.173.4"
+            }
+          },
+          "GroupHIRING_MANAGER": {
+            "id": "GroupHIRING_MANAGER",
+            "path": "shumelahire-dev-foundation/GroupHIRING_MANAGER",
+            "attributes": {
+              "aws:cdk:cloudformation:type": "AWS::Cognito::UserPoolGroup",
+              "aws:cdk:cloudformation:props": {
+                "description": "HIRING_MANAGER role group",
+                "groupName": "HIRING_MANAGER",
+                "userPoolId": {
+                  "Ref": "UserPool6BA7E5F2"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.aws_cognito.CfnUserPoolGroup",
+              "version": "2.173.4"
+            }
+          },
+          "GroupRECRUITER": {
+            "id": "GroupRECRUITER",
+            "path": "shumelahire-dev-foundation/GroupRECRUITER",
+            "attributes": {
+              "aws:cdk:cloudformation:type": "AWS::Cognito::UserPoolGroup",
+              "aws:cdk:cloudformation:props": {
+                "description": "RECRUITER role group",
+                "groupName": "RECRUITER",
+                "userPoolId": {
+                  "Ref": "UserPool6BA7E5F2"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.aws_cognito.CfnUserPoolGroup",
+              "version": "2.173.4"
+            }
+          },
+          "GroupINTERVIEWER": {
+            "id": "GroupINTERVIEWER",
+            "path": "shumelahire-dev-foundation/GroupINTERVIEWER",
+            "attributes": {
+              "aws:cdk:cloudformation:type": "AWS::Cognito::UserPoolGroup",
+              "aws:cdk:cloudformation:props": {
+                "description": "INTERVIEWER role group",
+                "groupName": "INTERVIEWER",
+                "userPoolId": {
+                  "Ref": "UserPool6BA7E5F2"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.aws_cognito.CfnUserPoolGroup",
+              "version": "2.173.4"
+            }
+          },
+          "GroupEMPLOYEE": {
+            "id": "GroupEMPLOYEE",
+            "path": "shumelahire-dev-foundation/GroupEMPLOYEE",
+            "attributes": {
+              "aws:cdk:cloudformation:type": "AWS::Cognito::UserPoolGroup",
+              "aws:cdk:cloudformation:props": {
+                "description": "EMPLOYEE role group",
+                "groupName": "EMPLOYEE",
+                "userPoolId": {
+                  "Ref": "UserPool6BA7E5F2"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.aws_cognito.CfnUserPoolGroup",
+              "version": "2.173.4"
+            }
+          },
+          "GroupAPPLICANT": {
+            "id": "GroupAPPLICANT",
+            "path": "shumelahire-dev-foundation/GroupAPPLICANT",
+            "attributes": {
+              "aws:cdk:cloudformation:type": "AWS::Cognito::UserPoolGroup",
+              "aws:cdk:cloudformation:props": {
+                "description": "APPLICANT role group",
+                "groupName": "APPLICANT",
+                "userPoolId": {
+                  "Ref": "UserPool6BA7E5F2"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.aws_cognito.CfnUserPoolGroup",
+              "version": "2.173.4"
+            }
+          },
+          "VpcId": {
+            "id": "VpcId",
+            "path": "shumelahire-dev-foundation/VpcId",
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.CfnOutput",
+              "version": "2.173.4"
+            }
+          },
+          "DatabaseEndpoint": {
+            "id": "DatabaseEndpoint",
+            "path": "shumelahire-dev-foundation/DatabaseEndpoint",
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.CfnOutput",
+              "version": "2.173.4"
+            }
+          },
+          "RedisEndpoint": {
+            "id": "RedisEndpoint",
+            "path": "shumelahire-dev-foundation/RedisEndpoint",
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.CfnOutput",
+              "version": "2.173.4"
+            }
+          },
+          "DocumentsBucketName": {
+            "id": "DocumentsBucketName",
+            "path": "shumelahire-dev-foundation/DocumentsBucketName",
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.CfnOutput",
+              "version": "2.173.4"
+            }
+          },
+          "UploadsBucketName": {
+            "id": "UploadsBucketName",
+            "path": "shumelahire-dev-foundation/UploadsBucketName",
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.CfnOutput",
+              "version": "2.173.4"
+            }
+          },
+          "NotificationQueueUrl": {
+            "id": "NotificationQueueUrl",
+            "path": "shumelahire-dev-foundation/NotificationQueueUrl",
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.CfnOutput",
+              "version": "2.173.4"
+            }
+          },
+          "UserPoolId": {
+            "id": "UserPoolId",
+            "path": "shumelahire-dev-foundation/UserPoolId",
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.CfnOutput",
+              "version": "2.173.4"
+            }
+          },
+          "UserPoolClientId": {
+            "id": "UserPoolClientId",
+            "path": "shumelahire-dev-foundation/UserPoolClientId",
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.CfnOutput",
+              "version": "2.173.4"
+            }
+          },
+          "CDKMetadata": {
+            "id": "CDKMetadata",
+            "path": "shumelahire-dev-foundation/CDKMetadata",
+            "children": {
+              "Default": {
+                "id": "Default",
+                "path": "shumelahire-dev-foundation/CDKMetadata/Default",
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.CfnResource",
+                  "version": "2.173.4"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "constructs.Construct",
+              "version": "10.4.2"
+            }
+          },
+          "Exports": {
+            "id": "Exports",
+            "path": "shumelahire-dev-foundation/Exports",
+            "children": {
+              "Output{\"Fn::GetAtt\":[\"DocumentsBucket9EC9DEB9\",\"Arn\"]}": {
+                "id": "Output{\"Fn::GetAtt\":[\"DocumentsBucket9EC9DEB9\",\"Arn\"]}",
+                "path": "shumelahire-dev-foundation/Exports/Output{\"Fn::GetAtt\":[\"DocumentsBucket9EC9DEB9\",\"Arn\"]}",
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.CfnOutput",
+                  "version": "2.173.4"
+                }
+              },
+              "Output{\"Fn::GetAtt\":[\"UploadsBucket5E5E9B64\",\"Arn\"]}": {
+                "id": "Output{\"Fn::GetAtt\":[\"UploadsBucket5E5E9B64\",\"Arn\"]}",
+                "path": "shumelahire-dev-foundation/Exports/Output{\"Fn::GetAtt\":[\"UploadsBucket5E5E9B64\",\"Arn\"]}",
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.CfnOutput",
+                  "version": "2.173.4"
+                }
+              },
+              "Output{\"Fn::GetAtt\":[\"NotificationQueue36610CC1\",\"Arn\"]}": {
+                "id": "Output{\"Fn::GetAtt\":[\"NotificationQueue36610CC1\",\"Arn\"]}",
+                "path": "shumelahire-dev-foundation/Exports/Output{\"Fn::GetAtt\":[\"NotificationQueue36610CC1\",\"Arn\"]}",
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.CfnOutput",
+                  "version": "2.173.4"
+                }
+              },
+              "Output{\"Fn::GetAtt\":[\"UserPool6BA7E5F2\",\"Arn\"]}": {
+                "id": "Output{\"Fn::GetAtt\":[\"UserPool6BA7E5F2\",\"Arn\"]}",
+                "path": "shumelahire-dev-foundation/Exports/Output{\"Fn::GetAtt\":[\"UserPool6BA7E5F2\",\"Arn\"]}",
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.CfnOutput",
+                  "version": "2.173.4"
+                }
+              },
+              "Output{\"Fn::GetAtt\":[\"DatabaseB269D8BB\",\"Endpoint.Address\"]}": {
+                "id": "Output{\"Fn::GetAtt\":[\"DatabaseB269D8BB\",\"Endpoint.Address\"]}",
+                "path": "shumelahire-dev-foundation/Exports/Output{\"Fn::GetAtt\":[\"DatabaseB269D8BB\",\"Endpoint.Address\"]}",
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.CfnOutput",
+                  "version": "2.173.4"
+                }
+              },
+              "Output{\"Fn::GetAtt\":[\"Redis\",\"RedisEndpoint.Address\"]}": {
+                "id": "Output{\"Fn::GetAtt\":[\"Redis\",\"RedisEndpoint.Address\"]}",
+                "path": "shumelahire-dev-foundation/Exports/Output{\"Fn::GetAtt\":[\"Redis\",\"RedisEndpoint.Address\"]}",
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.CfnOutput",
+                  "version": "2.173.4"
+                }
+              },
+              "Output{\"Ref\":\"DocumentsBucket9EC9DEB9\"}": {
+                "id": "Output{\"Ref\":\"DocumentsBucket9EC9DEB9\"}",
+                "path": "shumelahire-dev-foundation/Exports/Output{\"Ref\":\"DocumentsBucket9EC9DEB9\"}",
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.CfnOutput",
+                  "version": "2.173.4"
+                }
+              },
+              "Output{\"Ref\":\"NotificationQueue36610CC1\"}": {
+                "id": "Output{\"Ref\":\"NotificationQueue36610CC1\"}",
+                "path": "shumelahire-dev-foundation/Exports/Output{\"Ref\":\"NotificationQueue36610CC1\"}",
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.CfnOutput",
+                  "version": "2.173.4"
+                }
+              },
+              "Output{\"Ref\":\"UserPool6BA7E5F2\"}": {
+                "id": "Output{\"Ref\":\"UserPool6BA7E5F2\"}",
+                "path": "shumelahire-dev-foundation/Exports/Output{\"Ref\":\"UserPool6BA7E5F2\"}",
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.CfnOutput",
+                  "version": "2.173.4"
+                }
+              },
+              "Output{\"Ref\":\"UserPoolWebAppClientCD2D5CB1\"}": {
+                "id": "Output{\"Ref\":\"UserPoolWebAppClientCD2D5CB1\"}",
+                "path": "shumelahire-dev-foundation/Exports/Output{\"Ref\":\"UserPoolWebAppClientCD2D5CB1\"}",
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.CfnOutput",
+                  "version": "2.173.4"
+                }
+              },
+              "Output{\"Fn::GetAtt\":[\"AlbSecurityGroup86A59E99\",\"GroupId\"]}": {
+                "id": "Output{\"Fn::GetAtt\":[\"AlbSecurityGroup86A59E99\",\"GroupId\"]}",
+                "path": "shumelahire-dev-foundation/Exports/Output{\"Fn::GetAtt\":[\"AlbSecurityGroup86A59E99\",\"GroupId\"]}",
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.CfnOutput",
+                  "version": "2.173.4"
+                }
+              },
+              "Output{\"Ref\":\"VpcpublicSubnet1Subnet2BB74ED7\"}": {
+                "id": "Output{\"Ref\":\"VpcpublicSubnet1Subnet2BB74ED7\"}",
+                "path": "shumelahire-dev-foundation/Exports/Output{\"Ref\":\"VpcpublicSubnet1Subnet2BB74ED7\"}",
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.CfnOutput",
+                  "version": "2.173.4"
+                }
+              },
+              "Output{\"Ref\":\"VpcpublicSubnet2SubnetE34B022A\"}": {
+                "id": "Output{\"Ref\":\"VpcpublicSubnet2SubnetE34B022A\"}",
+                "path": "shumelahire-dev-foundation/Exports/Output{\"Ref\":\"VpcpublicSubnet2SubnetE34B022A\"}",
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.CfnOutput",
+                  "version": "2.173.4"
+                }
+              },
+              "Output{\"Ref\":\"Vpc8378EB38\"}": {
+                "id": "Output{\"Ref\":\"Vpc8378EB38\"}",
+                "path": "shumelahire-dev-foundation/Exports/Output{\"Ref\":\"Vpc8378EB38\"}",
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.CfnOutput",
+                  "version": "2.173.4"
+                }
+              },
+              "Output{\"Ref\":\"VpcprivateSubnet1SubnetCEAD3716\"}": {
+                "id": "Output{\"Ref\":\"VpcprivateSubnet1SubnetCEAD3716\"}",
+                "path": "shumelahire-dev-foundation/Exports/Output{\"Ref\":\"VpcprivateSubnet1SubnetCEAD3716\"}",
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.CfnOutput",
+                  "version": "2.173.4"
+                }
+              },
+              "Output{\"Ref\":\"VpcprivateSubnet2Subnet2DE7549C\"}": {
+                "id": "Output{\"Ref\":\"VpcprivateSubnet2Subnet2DE7549C\"}",
+                "path": "shumelahire-dev-foundation/Exports/Output{\"Ref\":\"VpcprivateSubnet2Subnet2DE7549C\"}",
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.CfnOutput",
+                  "version": "2.173.4"
+                }
+              },
+              "Output{\"Fn::GetAtt\":[\"EcsSecurityGroup44008BF1\",\"GroupId\"]}": {
+                "id": "Output{\"Fn::GetAtt\":[\"EcsSecurityGroup44008BF1\",\"GroupId\"]}",
+                "path": "shumelahire-dev-foundation/Exports/Output{\"Fn::GetAtt\":[\"EcsSecurityGroup44008BF1\",\"GroupId\"]}",
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.CfnOutput",
+                  "version": "2.173.4"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "constructs.Construct",
+              "version": "10.4.2"
+            }
+          },
+          "BootstrapVersion": {
+            "id": "BootstrapVersion",
+            "path": "shumelahire-dev-foundation/BootstrapVersion",
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.CfnParameter",
+              "version": "2.173.4"
+            }
+          },
+          "CheckBootstrapVersion": {
+            "id": "CheckBootstrapVersion",
+            "path": "shumelahire-dev-foundation/CheckBootstrapVersion",
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.CfnRule",
+              "version": "2.173.4"
+            }
+          }
+        },
+        "constructInfo": {
+          "fqn": "aws-cdk-lib.Stack",
+          "version": "2.173.4"
+        }
+      },
+      "shumelahire-dev-compute": {
+        "id": "shumelahire-dev-compute",
+        "path": "shumelahire-dev-compute",
+        "children": {
+          "BackendRepo": {
+            "id": "BackendRepo",
+            "path": "shumelahire-dev-compute/BackendRepo",
+            "children": {
+              "Resource": {
+                "id": "Resource",
+                "path": "shumelahire-dev-compute/BackendRepo/Resource",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::ECR::Repository",
+                  "aws:cdk:cloudformation:props": {
+                    "lifecyclePolicy": {
+                      "lifecyclePolicyText": "{\"rules\":[{\"rulePriority\":1,\"description\":\"Keep last 10 images\",\"selection\":{\"tagStatus\":\"any\",\"countType\":\"imageCountMoreThan\",\"countNumber\":10},\"action\":{\"type\":\"expire\"}}]}"
+                    },
+                    "repositoryName": "shumelahire-backend"
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_ecr.CfnRepository",
+                  "version": "2.173.4"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.aws_ecr.Repository",
+              "version": "2.173.4"
+            }
+          },
+          "Cluster": {
+            "id": "Cluster",
+            "path": "shumelahire-dev-compute/Cluster",
+            "children": {
+              "Resource": {
+                "id": "Resource",
+                "path": "shumelahire-dev-compute/Cluster/Resource",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::ECS::Cluster",
+                  "aws:cdk:cloudformation:props": {
+                    "clusterName": "shumelahire-dev",
+                    "clusterSettings": [
+                      {
+                        "name": "containerInsights",
+                        "value": "disabled"
+                      }
+                    ]
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_ecs.CfnCluster",
+                  "version": "2.173.4"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.aws_ecs.Cluster",
+              "version": "2.173.4"
+            }
+          },
+          "TaskRole": {
+            "id": "TaskRole",
+            "path": "shumelahire-dev-compute/TaskRole",
+            "children": {
+              "ImportTaskRole": {
+                "id": "ImportTaskRole",
+                "path": "shumelahire-dev-compute/TaskRole/ImportTaskRole",
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.Resource",
+                  "version": "2.173.4"
+                }
+              },
+              "Resource": {
+                "id": "Resource",
+                "path": "shumelahire-dev-compute/TaskRole/Resource",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::IAM::Role",
+                  "aws:cdk:cloudformation:props": {
+                    "assumeRolePolicyDocument": {
+                      "Statement": [
+                        {
+                          "Action": "sts:AssumeRole",
+                          "Effect": "Allow",
+                          "Principal": {
+                            "Service": "ecs-tasks.amazonaws.com"
+                          }
+                        }
+                      ],
+                      "Version": "2012-10-17"
+                    },
+                    "description": "ECS task role with S3, SQS, SES, Secrets Manager, CloudWatch permissions",
+                    "roleName": "shumelahire-dev-task-role"
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_iam.CfnRole",
+                  "version": "2.173.4"
+                }
+              },
+              "DefaultPolicy": {
+                "id": "DefaultPolicy",
+                "path": "shumelahire-dev-compute/TaskRole/DefaultPolicy",
+                "children": {
+                  "Resource": {
+                    "id": "Resource",
+                    "path": "shumelahire-dev-compute/TaskRole/DefaultPolicy/Resource",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::IAM::Policy",
+                      "aws:cdk:cloudformation:props": {
+                        "policyDocument": {
+                          "Statement": [
+                            {
+                              "Action": [
+                                "s3:DeleteObject",
+                                "s3:GetBucketLocation",
+                                "s3:GetObject",
+                                "s3:ListBucket",
+                                "s3:PutObject"
+                              ],
+                              "Effect": "Allow",
+                              "Resource": [
+                                {
+                                  "Fn::ImportValue": "shumelahire-dev-foundation:ExportsOutputFnGetAttDocumentsBucket9EC9DEB9ArnEA5095A7"
+                                },
+                                {
+                                  "Fn::ImportValue": "shumelahire-dev-foundation:ExportsOutputFnGetAttUploadsBucket5E5E9B64Arn8603C131"
+                                },
+                                {
+                                  "Fn::Join": [
+                                    "",
+                                    [
+                                      {
+                                        "Fn::ImportValue": "shumelahire-dev-foundation:ExportsOutputFnGetAttDocumentsBucket9EC9DEB9ArnEA5095A7"
+                                      },
+                                      "/*"
+                                    ]
+                                  ]
+                                },
+                                {
+                                  "Fn::Join": [
+                                    "",
+                                    [
+                                      {
+                                        "Fn::ImportValue": "shumelahire-dev-foundation:ExportsOutputFnGetAttUploadsBucket5E5E9B64Arn8603C131"
+                                      },
+                                      "/*"
+                                    ]
+                                  ]
+                                }
+                              ]
+                            },
+                            {
+                              "Action": [
+                                "sqs:DeleteMessage",
+                                "sqs:GetQueueAttributes",
+                                "sqs:ReceiveMessage",
+                                "sqs:SendMessage"
+                              ],
+                              "Effect": "Allow",
+                              "Resource": {
+                                "Fn::ImportValue": "shumelahire-dev-foundation:ExportsOutputFnGetAttNotificationQueue36610CC1ArnA5D241F1"
+                              }
+                            },
+                            {
+                              "Action": [
+                                "ses:SendEmail",
+                                "ses:SendRawEmail"
+                              ],
+                              "Effect": "Allow",
+                              "Resource": "arn:aws:ses:us-east-1:420747712978:identity/*"
+                            },
+                            {
+                              "Action": "secretsmanager:GetSecretValue",
+                              "Effect": "Allow",
+                              "Resource": [
+                                "arn:aws:secretsmanager:us-east-1:420747712978:secret:shumelahire-dev/db-credentials*",
+                                "arn:aws:secretsmanager:us-east-1:420747712978:secret:shumelahire/dev/*"
+                              ]
+                            },
+                            {
+                              "Action": [
+                                "logs:CreateLogGroup",
+                                "logs:CreateLogStream",
+                                "logs:PutLogEvents"
+                              ],
+                              "Effect": "Allow",
+                              "Resource": "arn:aws:logs:us-east-1:420747712978:log-group:/ecs/shumelahire-dev*"
+                            },
+                            {
+                              "Action": [
+                                "cognito-idp:AdminGetUser",
+                                "cognito-idp:GetUser",
+                                "cognito-idp:ListUsers"
+                              ],
+                              "Effect": "Allow",
+                              "Resource": {
+                                "Fn::ImportValue": "shumelahire-dev-foundation:ExportsOutputFnGetAttUserPool6BA7E5F2Arn686ACC00"
+                              }
+                            }
+                          ],
+                          "Version": "2012-10-17"
+                        },
+                        "policyName": "TaskRoleDefaultPolicy07FC53DE",
+                        "roles": [
+                          {
+                            "Ref": "TaskRole30FC0FBB"
+                          }
+                        ]
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_iam.CfnPolicy",
+                      "version": "2.173.4"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_iam.Policy",
+                  "version": "2.173.4"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.aws_iam.Role",
+              "version": "2.173.4"
+            }
+          },
+          "ExecutionRole": {
+            "id": "ExecutionRole",
+            "path": "shumelahire-dev-compute/ExecutionRole",
+            "children": {
+              "ImportExecutionRole": {
+                "id": "ImportExecutionRole",
+                "path": "shumelahire-dev-compute/ExecutionRole/ImportExecutionRole",
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.Resource",
+                  "version": "2.173.4"
+                }
+              },
+              "Resource": {
+                "id": "Resource",
+                "path": "shumelahire-dev-compute/ExecutionRole/Resource",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::IAM::Role",
+                  "aws:cdk:cloudformation:props": {
+                    "assumeRolePolicyDocument": {
+                      "Statement": [
+                        {
+                          "Action": "sts:AssumeRole",
+                          "Effect": "Allow",
+                          "Principal": {
+                            "Service": "ecs-tasks.amazonaws.com"
+                          }
+                        }
+                      ],
+                      "Version": "2012-10-17"
+                    },
+                    "managedPolicyArns": [
+                      {
+                        "Fn::Join": [
+                          "",
+                          [
+                            "arn:",
+                            {
+                              "Ref": "AWS::Partition"
+                            },
+                            ":iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"
+                          ]
+                        ]
+                      }
+                    ],
+                    "roleName": "shumelahire-dev-execution-role"
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_iam.CfnRole",
+                  "version": "2.173.4"
+                }
+              },
+              "DefaultPolicy": {
+                "id": "DefaultPolicy",
+                "path": "shumelahire-dev-compute/ExecutionRole/DefaultPolicy",
+                "children": {
+                  "Resource": {
+                    "id": "Resource",
+                    "path": "shumelahire-dev-compute/ExecutionRole/DefaultPolicy/Resource",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::IAM::Policy",
+                      "aws:cdk:cloudformation:props": {
+                        "policyDocument": {
+                          "Statement": [
+                            {
+                              "Action": "secretsmanager:GetSecretValue",
+                              "Effect": "Allow",
+                              "Resource": [
+                                "arn:aws:secretsmanager:us-east-1:420747712978:secret:shumelahire-dev/db-credentials*",
+                                "arn:aws:secretsmanager:us-east-1:420747712978:secret:shumelahire/dev/*"
+                              ]
+                            },
+                            {
+                              "Action": [
+                                "ecr:BatchCheckLayerAvailability",
+                                "ecr:BatchGetImage",
+                                "ecr:GetDownloadUrlForLayer"
+                              ],
+                              "Effect": "Allow",
+                              "Resource": {
+                                "Fn::GetAtt": [
+                                  "BackendRepo7FFBAD06",
+                                  "Arn"
+                                ]
+                              }
+                            },
+                            {
+                              "Action": "ecr:GetAuthorizationToken",
+                              "Effect": "Allow",
+                              "Resource": "*"
+                            },
+                            {
+                              "Action": [
+                                "logs:CreateLogStream",
+                                "logs:PutLogEvents"
+                              ],
+                              "Effect": "Allow",
+                              "Resource": {
+                                "Fn::GetAtt": [
+                                  "LogGroupF5B46931",
+                                  "Arn"
+                                ]
+                              }
+                            }
+                          ],
+                          "Version": "2012-10-17"
+                        },
+                        "policyName": "ExecutionRoleDefaultPolicyA5B92313",
+                        "roles": [
+                          {
+                            "Ref": "ExecutionRole605A040B"
+                          }
+                        ]
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_iam.CfnPolicy",
+                      "version": "2.173.4"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_iam.Policy",
+                  "version": "2.173.4"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.aws_iam.Role",
+              "version": "2.173.4"
+            }
+          },
+          "LogGroup": {
+            "id": "LogGroup",
+            "path": "shumelahire-dev-compute/LogGroup",
+            "children": {
+              "Resource": {
+                "id": "Resource",
+                "path": "shumelahire-dev-compute/LogGroup/Resource",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::Logs::LogGroup",
+                  "aws:cdk:cloudformation:props": {
+                    "logGroupName": "/ecs/shumelahire-dev",
+                    "retentionInDays": 7
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_logs.CfnLogGroup",
+                  "version": "2.173.4"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.aws_logs.LogGroup",
+              "version": "2.173.4"
+            }
+          },
+          "TaskDef": {
+            "id": "TaskDef",
+            "path": "shumelahire-dev-compute/TaskDef",
+            "children": {
+              "Resource": {
+                "id": "Resource",
+                "path": "shumelahire-dev-compute/TaskDef/Resource",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::ECS::TaskDefinition",
+                  "aws:cdk:cloudformation:props": {
+                    "containerDefinitions": [
+                      {
+                        "essential": true,
+                        "image": {
+                          "Fn::Join": [
+                            "",
+                            [
+                              {
+                                "Fn::Select": [
+                                  4,
+                                  {
+                                    "Fn::Split": [
+                                      ":",
+                                      {
+                                        "Fn::GetAtt": [
+                                          "BackendRepo7FFBAD06",
+                                          "Arn"
+                                        ]
+                                      }
+                                    ]
+                                  }
+                                ]
+                              },
+                              ".dkr.ecr.",
+                              {
+                                "Fn::Select": [
+                                  3,
+                                  {
+                                    "Fn::Split": [
+                                      ":",
+                                      {
+                                        "Fn::GetAtt": [
+                                          "BackendRepo7FFBAD06",
+                                          "Arn"
+                                        ]
+                                      }
+                                    ]
+                                  }
+                                ]
+                              },
+                              ".",
+                              {
+                                "Ref": "AWS::URLSuffix"
+                              },
+                              "/",
+                              {
+                                "Ref": "BackendRepo7FFBAD06"
+                              },
+                              ":latest"
+                            ]
+                          ]
+                        },
+                        "name": "backend",
+                        "portMappings": [
+                          {
+                            "containerPort": 8080,
+                            "protocol": "tcp"
+                          }
+                        ],
+                        "logConfiguration": {
+                          "logDriver": "awslogs",
+                          "options": {
+                            "awslogs-group": {
+                              "Ref": "LogGroupF5B46931"
+                            },
+                            "awslogs-stream-prefix": "backend",
+                            "awslogs-region": "us-east-1"
+                          }
+                        },
+                        "environment": [
+                          {
+                            "name": "SPRING_PROFILES_ACTIVE",
+                            "value": "dev"
+                          },
+                          {
+                            "name": "DATABASE_URL",
+                            "value": {
+                              "Fn::Join": [
+                                "",
+                                [
+                                  "jdbc:postgresql://",
+                                  {
+                                    "Fn::ImportValue": "shumelahire-dev-foundation:ExportsOutputFnGetAttDatabaseB269D8BBEndpointAddressA4DBD059"
+                                  },
+                                  ":5432/shumelahire"
+                                ]
+                              ]
+                            }
+                          },
+                          {
+                            "name": "REDIS_HOST",
+                            "value": {
+                              "Fn::ImportValue": "shumelahire-dev-foundation:ExportsOutputFnGetAttRedisRedisEndpointAddress0B69B4FF"
+                            }
+                          },
+                          {
+                            "name": "REDIS_PORT",
+                            "value": "6379"
+                          },
+                          {
+                            "name": "S3_BUCKET",
+                            "value": {
+                              "Fn::ImportValue": "shumelahire-dev-foundation:ExportsOutputRefDocumentsBucket9EC9DEB9131399C0"
+                            }
+                          },
+                          {
+                            "name": "S3_REGION",
+                            "value": "us-east-1"
+                          },
+                          {
+                            "name": "STORAGE_PROVIDER",
+                            "value": "s3"
+                          },
+                          {
+                            "name": "SQS_NOTIFICATION_QUEUE_URL",
+                            "value": {
+                              "Fn::ImportValue": "shumelahire-dev-foundation:ExportsOutputRefNotificationQueue36610CC1185DED79"
+                            }
+                          },
+                          {
+                            "name": "NOTIFICATION_SQS_ENABLED",
+                            "value": "true"
+                          },
+                          {
+                            "name": "NOTIFICATION_EMAIL_ENABLED",
+                            "value": "true"
+                          },
+                          {
+                            "name": "DATA_RESIDENCY_REGION",
+                            "value": "ZA"
+                          },
+                          {
+                            "name": "COGNITO_USER_POOL_ID",
+                            "value": {
+                              "Fn::ImportValue": "shumelahire-dev-foundation:ExportsOutputRefUserPool6BA7E5F296FD7236"
+                            }
+                          },
+                          {
+                            "name": "COGNITO_CLIENT_ID",
+                            "value": {
+                              "Fn::ImportValue": "shumelahire-dev-foundation:ExportsOutputRefUserPoolWebAppClientCD2D5CB13BAB4F14"
+                            }
+                          }
+                        ],
+                        "healthCheck": {
+                          "command": [
+                            "CMD-SHELL",
+                            "wget -qO- http://localhost:8080/actuator/health || exit 1"
+                          ],
+                          "interval": 30,
+                          "retries": 3,
+                          "startPeriod": 60,
+                          "timeout": 5
+                        }
+                      }
+                    ],
+                    "cpu": "512",
+                    "executionRoleArn": {
+                      "Fn::GetAtt": [
+                        "ExecutionRole605A040B",
+                        "Arn"
+                      ]
+                    },
+                    "family": "shumelahire-dev",
+                    "memory": "1024",
+                    "networkMode": "awsvpc",
+                    "requiresCompatibilities": [
+                      "FARGATE"
+                    ],
+                    "taskRoleArn": {
+                      "Fn::GetAtt": [
+                        "TaskRole30FC0FBB",
+                        "Arn"
+                      ]
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_ecs.CfnTaskDefinition",
+                  "version": "2.173.4"
+                }
+              },
+              "backend": {
+                "id": "backend",
+                "path": "shumelahire-dev-compute/TaskDef/backend",
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_ecs.ContainerDefinition",
+                  "version": "2.173.4"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.aws_ecs.FargateTaskDefinition",
+              "version": "2.173.4"
+            }
+          },
+          "Alb": {
+            "id": "Alb",
+            "path": "shumelahire-dev-compute/Alb",
+            "children": {
+              "Resource": {
+                "id": "Resource",
+                "path": "shumelahire-dev-compute/Alb/Resource",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::ElasticLoadBalancingV2::LoadBalancer",
+                  "aws:cdk:cloudformation:props": {
+                    "loadBalancerAttributes": [
+                      {
+                        "key": "deletion_protection.enabled",
+                        "value": "false"
+                      }
+                    ],
+                    "name": "shumelahire-dev",
+                    "scheme": "internet-facing",
+                    "securityGroups": [
+                      {
+                        "Fn::ImportValue": "shumelahire-dev-foundation:ExportsOutputFnGetAttAlbSecurityGroup86A59E99GroupIdE3A37BC7"
+                      }
+                    ],
+                    "subnets": [
+                      {
+                        "Fn::ImportValue": "shumelahire-dev-foundation:ExportsOutputRefVpcpublicSubnet1Subnet2BB74ED74EB42ADC"
+                      },
+                      {
+                        "Fn::ImportValue": "shumelahire-dev-foundation:ExportsOutputRefVpcpublicSubnet2SubnetE34B022AC8BB6627"
+                      }
+                    ],
+                    "type": "application"
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_elasticloadbalancingv2.CfnLoadBalancer",
+                  "version": "2.173.4"
+                }
+              },
+              "Http": {
+                "id": "Http",
+                "path": "shumelahire-dev-compute/Alb/Http",
+                "children": {
+                  "Resource": {
+                    "id": "Resource",
+                    "path": "shumelahire-dev-compute/Alb/Http/Resource",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::ElasticLoadBalancingV2::Listener",
+                      "aws:cdk:cloudformation:props": {
+                        "defaultActions": [
+                          {
+                            "type": "forward",
+                            "targetGroupArn": {
+                              "Ref": "AlbHttpBackendTargetGroupF834592E"
+                            }
+                          }
+                        ],
+                        "loadBalancerArn": {
+                          "Ref": "Alb16C2F182"
+                        },
+                        "port": 80,
+                        "protocol": "HTTP"
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_elasticloadbalancingv2.CfnListener",
+                      "version": "2.173.4"
+                    }
+                  },
+                  "BackendTargetGroup": {
+                    "id": "BackendTargetGroup",
+                    "path": "shumelahire-dev-compute/Alb/Http/BackendTargetGroup",
+                    "children": {
+                      "Resource": {
+                        "id": "Resource",
+                        "path": "shumelahire-dev-compute/Alb/Http/BackendTargetGroup/Resource",
+                        "attributes": {
+                          "aws:cdk:cloudformation:type": "AWS::ElasticLoadBalancingV2::TargetGroup",
+                          "aws:cdk:cloudformation:props": {
+                            "healthCheckIntervalSeconds": 30,
+                            "healthCheckPath": "/actuator/health",
+                            "healthCheckTimeoutSeconds": 10,
+                            "healthyThresholdCount": 2,
+                            "port": 8080,
+                            "protocol": "HTTP",
+                            "targetGroupAttributes": [
+                              {
+                                "key": "deregistration_delay.timeout_seconds",
+                                "value": "30"
+                              },
+                              {
+                                "key": "stickiness.enabled",
+                                "value": "false"
+                              }
+                            ],
+                            "targetType": "ip",
+                            "unhealthyThresholdCount": 3,
+                            "vpcId": {
+                              "Fn::ImportValue": "shumelahire-dev-foundation:ExportsOutputRefVpc8378EB38272D6E3A"
+                            }
+                          }
+                        },
+                        "constructInfo": {
+                          "fqn": "aws-cdk-lib.aws_elasticloadbalancingv2.CfnTargetGroup",
+                          "version": "2.173.4"
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_elasticloadbalancingv2.ApplicationTargetGroup",
+                      "version": "2.173.4"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_elasticloadbalancingv2.ApplicationListener",
+                  "version": "2.173.4"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.aws_elasticloadbalancingv2.ApplicationLoadBalancer",
+              "version": "2.173.4"
+            }
+          },
+          "Service": {
+            "id": "Service",
+            "path": "shumelahire-dev-compute/Service",
+            "children": {
+              "Service": {
+                "id": "Service",
+                "path": "shumelahire-dev-compute/Service/Service",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::ECS::Service",
+                  "aws:cdk:cloudformation:props": {
+                    "cluster": {
+                      "Ref": "ClusterEB0386A7"
+                    },
+                    "deploymentConfiguration": {
+                      "maximumPercent": 200,
+                      "minimumHealthyPercent": 100,
+                      "deploymentCircuitBreaker": {
+                        "enable": true,
+                        "rollback": true
+                      }
+                    },
+                    "desiredCount": 1,
+                    "enableEcsManagedTags": false,
+                    "healthCheckGracePeriodSeconds": 60,
+                    "launchType": "FARGATE",
+                    "loadBalancers": [
+                      {
+                        "targetGroupArn": {
+                          "Ref": "AlbHttpBackendTargetGroupF834592E"
+                        },
+                        "containerName": "backend",
+                        "containerPort": 8080
+                      }
+                    ],
+                    "networkConfiguration": {
+                      "awsvpcConfiguration": {
+                        "assignPublicIp": "DISABLED",
+                        "subnets": [
+                          {
+                            "Fn::ImportValue": "shumelahire-dev-foundation:ExportsOutputRefVpcprivateSubnet1SubnetCEAD37168693D373"
+                          },
+                          {
+                            "Fn::ImportValue": "shumelahire-dev-foundation:ExportsOutputRefVpcprivateSubnet2Subnet2DE7549CDF5ACE3D"
+                          }
+                        ],
+                        "securityGroups": [
+                          {
+                            "Fn::ImportValue": "shumelahire-dev-foundation:ExportsOutputFnGetAttEcsSecurityGroup44008BF1GroupIdDE2CA5C5"
+                          }
+                        ]
+                      }
+                    },
+                    "serviceName": "shumelahire-dev",
+                    "taskDefinition": {
+                      "Ref": "TaskDef54694570"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_ecs.CfnService",
+                  "version": "2.173.4"
+                }
+              },
+              "ScalingRole": {
+                "id": "ScalingRole",
+                "path": "shumelahire-dev-compute/Service/ScalingRole",
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.Resource",
+                  "version": "2.173.4"
+                }
+              },
+              "TaskCount": {
+                "id": "TaskCount",
+                "path": "shumelahire-dev-compute/Service/TaskCount",
+                "children": {
+                  "Target": {
+                    "id": "Target",
+                    "path": "shumelahire-dev-compute/Service/TaskCount/Target",
+                    "children": {
+                      "Resource": {
+                        "id": "Resource",
+                        "path": "shumelahire-dev-compute/Service/TaskCount/Target/Resource",
+                        "attributes": {
+                          "aws:cdk:cloudformation:type": "AWS::ApplicationAutoScaling::ScalableTarget",
+                          "aws:cdk:cloudformation:props": {
+                            "maxCapacity": 4,
+                            "minCapacity": 1,
+                            "resourceId": {
+                              "Fn::Join": [
+                                "",
+                                [
+                                  "service/",
+                                  {
+                                    "Ref": "ClusterEB0386A7"
+                                  },
+                                  "/",
+                                  {
+                                    "Fn::GetAtt": [
+                                      "ServiceD69D759B",
+                                      "Name"
+                                    ]
+                                  }
+                                ]
+                              ]
+                            },
+                            "roleArn": "arn:aws:iam::420747712978:role/aws-service-role/ecs.application-autoscaling.amazonaws.com/AWSServiceRoleForApplicationAutoScaling_ECSService",
+                            "scalableDimension": "ecs:service:DesiredCount",
+                            "serviceNamespace": "ecs"
+                          }
+                        },
+                        "constructInfo": {
+                          "fqn": "aws-cdk-lib.aws_applicationautoscaling.CfnScalableTarget",
+                          "version": "2.173.4"
+                        }
+                      },
+                      "CpuScaling": {
+                        "id": "CpuScaling",
+                        "path": "shumelahire-dev-compute/Service/TaskCount/Target/CpuScaling",
+                        "children": {
+                          "Resource": {
+                            "id": "Resource",
+                            "path": "shumelahire-dev-compute/Service/TaskCount/Target/CpuScaling/Resource",
+                            "attributes": {
+                              "aws:cdk:cloudformation:type": "AWS::ApplicationAutoScaling::ScalingPolicy",
+                              "aws:cdk:cloudformation:props": {
+                                "policyName": "shumelahiredevcomputeServiceTaskCountTargetCpuScaling6D49E5DB",
+                                "policyType": "TargetTrackingScaling",
+                                "scalingTargetId": {
+                                  "Ref": "ServiceTaskCountTarget23E25614"
+                                },
+                                "targetTrackingScalingPolicyConfiguration": {
+                                  "predefinedMetricSpecification": {
+                                    "predefinedMetricType": "ECSServiceAverageCPUUtilization"
+                                  },
+                                  "scaleInCooldown": 300,
+                                  "scaleOutCooldown": 60,
+                                  "targetValue": 70
+                                }
+                              }
+                            },
+                            "constructInfo": {
+                              "fqn": "aws-cdk-lib.aws_applicationautoscaling.CfnScalingPolicy",
+                              "version": "2.173.4"
+                            }
+                          }
+                        },
+                        "constructInfo": {
+                          "fqn": "aws-cdk-lib.aws_applicationautoscaling.TargetTrackingScalingPolicy",
+                          "version": "2.173.4"
+                        }
+                      },
+                      "MemoryScaling": {
+                        "id": "MemoryScaling",
+                        "path": "shumelahire-dev-compute/Service/TaskCount/Target/MemoryScaling",
+                        "children": {
+                          "Resource": {
+                            "id": "Resource",
+                            "path": "shumelahire-dev-compute/Service/TaskCount/Target/MemoryScaling/Resource",
+                            "attributes": {
+                              "aws:cdk:cloudformation:type": "AWS::ApplicationAutoScaling::ScalingPolicy",
+                              "aws:cdk:cloudformation:props": {
+                                "policyName": "shumelahiredevcomputeServiceTaskCountTargetMemoryScaling094F25F0",
+                                "policyType": "TargetTrackingScaling",
+                                "scalingTargetId": {
+                                  "Ref": "ServiceTaskCountTarget23E25614"
+                                },
+                                "targetTrackingScalingPolicyConfiguration": {
+                                  "predefinedMetricSpecification": {
+                                    "predefinedMetricType": "ECSServiceAverageMemoryUtilization"
+                                  },
+                                  "scaleInCooldown": 300,
+                                  "scaleOutCooldown": 60,
+                                  "targetValue": 80
+                                }
+                              }
+                            },
+                            "constructInfo": {
+                              "fqn": "aws-cdk-lib.aws_applicationautoscaling.CfnScalingPolicy",
+                              "version": "2.173.4"
+                            }
+                          }
+                        },
+                        "constructInfo": {
+                          "fqn": "aws-cdk-lib.aws_applicationautoscaling.TargetTrackingScalingPolicy",
+                          "version": "2.173.4"
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_applicationautoscaling.ScalableTarget",
+                      "version": "2.173.4"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_ecs.ScalableTaskCount",
+                  "version": "2.173.4"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.aws_ecs.FargateService",
+              "version": "2.173.4"
+            }
+          },
+          "AlbDnsName": {
+            "id": "AlbDnsName",
+            "path": "shumelahire-dev-compute/AlbDnsName",
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.CfnOutput",
+              "version": "2.173.4"
+            }
+          },
+          "AlbArn": {
+            "id": "AlbArn",
+            "path": "shumelahire-dev-compute/AlbArn",
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.CfnOutput",
+              "version": "2.173.4"
+            }
+          },
+          "ClusterName": {
+            "id": "ClusterName",
+            "path": "shumelahire-dev-compute/ClusterName",
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.CfnOutput",
+              "version": "2.173.4"
+            }
+          },
+          "ServiceName": {
+            "id": "ServiceName",
+            "path": "shumelahire-dev-compute/ServiceName",
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.CfnOutput",
+              "version": "2.173.4"
+            }
+          },
+          "EcrRepositoryUri": {
+            "id": "EcrRepositoryUri",
+            "path": "shumelahire-dev-compute/EcrRepositoryUri",
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.CfnOutput",
+              "version": "2.173.4"
+            }
+          },
+          "CDKMetadata": {
+            "id": "CDKMetadata",
+            "path": "shumelahire-dev-compute/CDKMetadata",
+            "children": {
+              "Default": {
+                "id": "Default",
+                "path": "shumelahire-dev-compute/CDKMetadata/Default",
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.CfnResource",
+                  "version": "2.173.4"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "constructs.Construct",
+              "version": "10.4.2"
+            }
+          },
+          "BootstrapVersion": {
+            "id": "BootstrapVersion",
+            "path": "shumelahire-dev-compute/BootstrapVersion",
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.CfnParameter",
+              "version": "2.173.4"
+            }
+          },
+          "CheckBootstrapVersion": {
+            "id": "CheckBootstrapVersion",
+            "path": "shumelahire-dev-compute/CheckBootstrapVersion",
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.CfnRule",
+              "version": "2.173.4"
+            }
+          }
+        },
+        "constructInfo": {
+          "fqn": "aws-cdk-lib.Stack",
+          "version": "2.173.4"
+        }
+      },
+      "shumelahire-dev-api": {
+        "id": "shumelahire-dev-api",
+        "path": "shumelahire-dev-api",
+        "children": {
+          "WebAcl": {
+            "id": "WebAcl",
+            "path": "shumelahire-dev-api/WebAcl",
+            "attributes": {
+              "aws:cdk:cloudformation:type": "AWS::WAFv2::WebACL",
+              "aws:cdk:cloudformation:props": {
+                "defaultAction": {
+                  "allow": {}
+                },
+                "name": "shumelahire-dev-waf",
+                "rules": [
+                  {
+                    "name": "AWSManagedRulesCommonRuleSet",
+                    "priority": 1,
+                    "statement": {
+                      "managedRuleGroupStatement": {
+                        "name": "AWSManagedRulesCommonRuleSet",
+                        "vendorName": "AWS"
+                      }
+                    },
+                    "visibilityConfig": {
+                      "cloudWatchMetricsEnabled": true,
+                      "metricName": "AWSManagedRulesCommonRuleSet",
+                      "sampledRequestsEnabled": true
+                    },
+                    "overrideAction": {
+                      "none": {}
+                    }
+                  },
+                  {
+                    "name": "AWSManagedRulesSQLiRuleSet",
+                    "priority": 2,
+                    "statement": {
+                      "managedRuleGroupStatement": {
+                        "name": "AWSManagedRulesSQLiRuleSet",
+                        "vendorName": "AWS"
+                      }
+                    },
+                    "visibilityConfig": {
+                      "cloudWatchMetricsEnabled": true,
+                      "metricName": "AWSManagedRulesSQLiRuleSet",
+                      "sampledRequestsEnabled": true
+                    },
+                    "overrideAction": {
+                      "none": {}
+                    }
+                  },
+                  {
+                    "name": "RateLimitRule",
+                    "priority": 3,
+                    "statement": {
+                      "rateBasedStatement": {
+                        "aggregateKeyType": "IP",
+                        "limit": 2000
+                      }
+                    },
+                    "visibilityConfig": {
+                      "cloudWatchMetricsEnabled": true,
+                      "metricName": "RateLimitRule",
+                      "sampledRequestsEnabled": true
+                    },
+                    "action": {
+                      "block": {}
+                    }
+                  }
+                ],
+                "scope": "REGIONAL",
+                "visibilityConfig": {
+                  "cloudWatchMetricsEnabled": true,
+                  "metricName": "shumelahire-dev-waf",
+                  "sampledRequestsEnabled": true
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.aws_wafv2.CfnWebACL",
+              "version": "2.173.4"
+            }
+          },
+          "WafAlbAssociation": {
+            "id": "WafAlbAssociation",
+            "path": "shumelahire-dev-api/WafAlbAssociation",
+            "attributes": {
+              "aws:cdk:cloudformation:type": "AWS::WAFv2::WebACLAssociation",
+              "aws:cdk:cloudformation:props": {
+                "resourceArn": {
+                  "Fn::ImportValue": "shumelahire-dev-AlbArn"
+                },
+                "webAclArn": {
+                  "Fn::GetAtt": [
+                    "WebAcl",
+                    "Arn"
+                  ]
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.aws_wafv2.CfnWebACLAssociation",
+              "version": "2.173.4"
+            }
+          },
+          "WafWebAclArn": {
+            "id": "WafWebAclArn",
+            "path": "shumelahire-dev-api/WafWebAclArn",
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.CfnOutput",
+              "version": "2.173.4"
+            }
+          },
+          "CDKMetadata": {
+            "id": "CDKMetadata",
+            "path": "shumelahire-dev-api/CDKMetadata",
+            "children": {
+              "Default": {
+                "id": "Default",
+                "path": "shumelahire-dev-api/CDKMetadata/Default",
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.CfnResource",
+                  "version": "2.173.4"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "constructs.Construct",
+              "version": "10.4.2"
+            }
+          },
+          "BootstrapVersion": {
+            "id": "BootstrapVersion",
+            "path": "shumelahire-dev-api/BootstrapVersion",
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.CfnParameter",
+              "version": "2.173.4"
+            }
+          },
+          "CheckBootstrapVersion": {
+            "id": "CheckBootstrapVersion",
+            "path": "shumelahire-dev-api/CheckBootstrapVersion",
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.CfnRule",
+              "version": "2.173.4"
+            }
+          }
+        },
+        "constructInfo": {
+          "fqn": "aws-cdk-lib.Stack",
+          "version": "2.173.4"
+        }
+      },
+      "shumelahire-dev-frontend": {
+        "id": "shumelahire-dev-frontend",
+        "path": "shumelahire-dev-frontend",
+        "children": {
+          "UiBucket": {
+            "id": "UiBucket",
+            "path": "shumelahire-dev-frontend/UiBucket",
+            "children": {
+              "Resource": {
+                "id": "Resource",
+                "path": "shumelahire-dev-frontend/UiBucket/Resource",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::S3::Bucket",
+                  "aws:cdk:cloudformation:props": {
+                    "bucketEncryption": {
+                      "serverSideEncryptionConfiguration": [
+                        {
+                          "serverSideEncryptionByDefault": {
+                            "sseAlgorithm": "AES256"
+                          }
+                        }
+                      ]
+                    },
+                    "publicAccessBlockConfiguration": {
+                      "blockPublicAcls": true,
+                      "blockPublicPolicy": true,
+                      "ignorePublicAcls": true,
+                      "restrictPublicBuckets": true
+                    },
+                    "tags": [
+                      {
+                        "key": "aws-cdk:auto-delete-objects",
+                        "value": "true"
+                      }
+                    ]
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_s3.CfnBucket",
+                  "version": "2.173.4"
+                }
+              },
+              "Policy": {
+                "id": "Policy",
+                "path": "shumelahire-dev-frontend/UiBucket/Policy",
+                "children": {
+                  "Resource": {
+                    "id": "Resource",
+                    "path": "shumelahire-dev-frontend/UiBucket/Policy/Resource",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::S3::BucketPolicy",
+                      "aws:cdk:cloudformation:props": {
+                        "bucket": {
+                          "Ref": "UiBucket6890E4C3"
+                        },
+                        "policyDocument": {
+                          "Statement": [
+                            {
+                              "Action": [
+                                "s3:DeleteObject*",
+                                "s3:GetBucket*",
+                                "s3:List*",
+                                "s3:PutBucketPolicy"
+                              ],
+                              "Effect": "Allow",
+                              "Principal": {
+                                "AWS": {
+                                  "Fn::GetAtt": [
+                                    "CustomS3AutoDeleteObjectsCustomResourceProviderRole3B1BD092",
+                                    "Arn"
+                                  ]
+                                }
+                              },
+                              "Resource": [
+                                {
+                                  "Fn::GetAtt": [
+                                    "UiBucket6890E4C3",
+                                    "Arn"
+                                  ]
+                                },
+                                {
+                                  "Fn::Join": [
+                                    "",
+                                    [
+                                      {
+                                        "Fn::GetAtt": [
+                                          "UiBucket6890E4C3",
+                                          "Arn"
+                                        ]
+                                      },
+                                      "/*"
+                                    ]
+                                  ]
+                                }
+                              ]
+                            },
+                            {
+                              "Action": [
+                                "s3:GetBucket*",
+                                "s3:GetObject*",
+                                "s3:List*"
+                              ],
+                              "Effect": "Allow",
+                              "Principal": {
+                                "CanonicalUser": {
+                                  "Fn::GetAtt": [
+                                    "OAIE1EFC67F",
+                                    "S3CanonicalUserId"
+                                  ]
+                                }
+                              },
+                              "Resource": [
+                                {
+                                  "Fn::GetAtt": [
+                                    "UiBucket6890E4C3",
+                                    "Arn"
+                                  ]
+                                },
+                                {
+                                  "Fn::Join": [
+                                    "",
+                                    [
+                                      {
+                                        "Fn::GetAtt": [
+                                          "UiBucket6890E4C3",
+                                          "Arn"
+                                        ]
+                                      },
+                                      "/*"
+                                    ]
+                                  ]
+                                }
+                              ]
+                            },
+                            {
+                              "Action": "s3:GetObject",
+                              "Effect": "Allow",
+                              "Principal": {
+                                "CanonicalUser": {
+                                  "Fn::GetAtt": [
+                                    "OAIE1EFC67F",
+                                    "S3CanonicalUserId"
+                                  ]
+                                }
+                              },
+                              "Resource": {
+                                "Fn::Join": [
+                                  "",
+                                  [
+                                    {
+                                      "Fn::GetAtt": [
+                                        "UiBucket6890E4C3",
+                                        "Arn"
+                                      ]
+                                    },
+                                    "/*"
+                                  ]
+                                ]
+                              }
+                            }
+                          ],
+                          "Version": "2012-10-17"
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_s3.CfnBucketPolicy",
+                      "version": "2.173.4"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_s3.BucketPolicy",
+                  "version": "2.173.4"
+                }
+              },
+              "AutoDeleteObjectsCustomResource": {
+                "id": "AutoDeleteObjectsCustomResource",
+                "path": "shumelahire-dev-frontend/UiBucket/AutoDeleteObjectsCustomResource",
+                "children": {
+                  "Default": {
+                    "id": "Default",
+                    "path": "shumelahire-dev-frontend/UiBucket/AutoDeleteObjectsCustomResource/Default",
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.CfnResource",
+                      "version": "2.173.4"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.CustomResource",
+                  "version": "2.173.4"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.aws_s3.Bucket",
+              "version": "2.173.4"
+            }
+          },
+          "Custom::S3AutoDeleteObjectsCustomResourceProvider": {
+            "id": "Custom::S3AutoDeleteObjectsCustomResourceProvider",
+            "path": "shumelahire-dev-frontend/Custom::S3AutoDeleteObjectsCustomResourceProvider",
+            "children": {
+              "Staging": {
+                "id": "Staging",
+                "path": "shumelahire-dev-frontend/Custom::S3AutoDeleteObjectsCustomResourceProvider/Staging",
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.AssetStaging",
+                  "version": "2.173.4"
+                }
+              },
+              "Role": {
+                "id": "Role",
+                "path": "shumelahire-dev-frontend/Custom::S3AutoDeleteObjectsCustomResourceProvider/Role",
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.CfnResource",
+                  "version": "2.173.4"
+                }
+              },
+              "Handler": {
+                "id": "Handler",
+                "path": "shumelahire-dev-frontend/Custom::S3AutoDeleteObjectsCustomResourceProvider/Handler",
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.CfnResource",
+                  "version": "2.173.4"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.CustomResourceProviderBase",
+              "version": "2.173.4"
+            }
+          },
+          "OAI": {
+            "id": "OAI",
+            "path": "shumelahire-dev-frontend/OAI",
+            "children": {
+              "Resource": {
+                "id": "Resource",
+                "path": "shumelahire-dev-frontend/OAI/Resource",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::CloudFront::CloudFrontOriginAccessIdentity",
+                  "aws:cdk:cloudformation:props": {
+                    "cloudFrontOriginAccessIdentityConfig": {
+                      "comment": "Allows CloudFront to reach the bucket"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_cloudfront.CfnCloudFrontOriginAccessIdentity",
+                  "version": "2.173.4"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.aws_cloudfront.OriginAccessIdentity",
+              "version": "2.173.4"
+            }
+          },
+          "Distribution": {
+            "id": "Distribution",
+            "path": "shumelahire-dev-frontend/Distribution",
+            "children": {
+              "Origin1": {
+                "id": "Origin1",
+                "path": "shumelahire-dev-frontend/Distribution/Origin1",
+                "constructInfo": {
+                  "fqn": "constructs.Construct",
+                  "version": "10.4.2"
+                }
+              },
+              "Resource": {
+                "id": "Resource",
+                "path": "shumelahire-dev-frontend/Distribution/Resource",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::CloudFront::Distribution",
+                  "aws:cdk:cloudformation:props": {
+                    "distributionConfig": {
+                      "enabled": true,
+                      "origins": [
+                        {
+                          "domainName": {
+                            "Fn::GetAtt": [
+                              "UiBucket6890E4C3",
+                              "RegionalDomainName"
+                            ]
+                          },
+                          "id": "shumelahiredevfrontendDistributionOrigin186D95325",
+                          "s3OriginConfig": {
+                            "originAccessIdentity": {
+                              "Fn::Join": [
+                                "",
+                                [
+                                  "origin-access-identity/cloudfront/",
+                                  {
+                                    "Ref": "OAIE1EFC67F"
+                                  }
+                                ]
+                              ]
+                            }
+                          }
+                        }
+                      ],
+                      "defaultCacheBehavior": {
+                        "pathPattern": "*",
+                        "targetOriginId": "shumelahiredevfrontendDistributionOrigin186D95325",
+                        "allowedMethods": [
+                          "GET",
+                          "HEAD",
+                          "OPTIONS"
+                        ],
+                        "cachePolicyId": "658327ea-f89d-4fab-a63d-7e88639e58f6",
+                        "compress": true,
+                        "viewerProtocolPolicy": "redirect-to-https"
+                      },
+                      "customErrorResponses": [
+                        {
+                          "errorCachingMinTtl": 0,
+                          "errorCode": 404,
+                          "responseCode": 200,
+                          "responsePagePath": "/index.html"
+                        },
+                        {
+                          "errorCachingMinTtl": 0,
+                          "errorCode": 403,
+                          "responseCode": 200,
+                          "responsePagePath": "/index.html"
+                        }
+                      ],
+                      "defaultRootObject": "index.html",
+                      "httpVersion": "http2and3",
+                      "ipv6Enabled": true
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_cloudfront.CfnDistribution",
+                  "version": "2.173.4"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.aws_cloudfront.Distribution",
+              "version": "2.173.4"
+            }
+          },
+          "UiBucketName": {
+            "id": "UiBucketName",
+            "path": "shumelahire-dev-frontend/UiBucketName",
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.CfnOutput",
+              "version": "2.173.4"
+            }
+          },
+          "DistributionId": {
+            "id": "DistributionId",
+            "path": "shumelahire-dev-frontend/DistributionId",
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.CfnOutput",
+              "version": "2.173.4"
+            }
+          },
+          "DistributionDomainName": {
+            "id": "DistributionDomainName",
+            "path": "shumelahire-dev-frontend/DistributionDomainName",
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.CfnOutput",
+              "version": "2.173.4"
+            }
+          },
+          "FrontendUrl": {
+            "id": "FrontendUrl",
+            "path": "shumelahire-dev-frontend/FrontendUrl",
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.CfnOutput",
+              "version": "2.173.4"
+            }
+          },
+          "CDKMetadata": {
+            "id": "CDKMetadata",
+            "path": "shumelahire-dev-frontend/CDKMetadata",
+            "children": {
+              "Default": {
+                "id": "Default",
+                "path": "shumelahire-dev-frontend/CDKMetadata/Default",
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.CfnResource",
+                  "version": "2.173.4"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "constructs.Construct",
+              "version": "10.4.2"
+            }
+          },
+          "BootstrapVersion": {
+            "id": "BootstrapVersion",
+            "path": "shumelahire-dev-frontend/BootstrapVersion",
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.CfnParameter",
+              "version": "2.173.4"
+            }
+          },
+          "CheckBootstrapVersion": {
+            "id": "CheckBootstrapVersion",
+            "path": "shumelahire-dev-frontend/CheckBootstrapVersion",
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.CfnRule",
+              "version": "2.173.4"
+            }
+          }
+        },
+        "constructInfo": {
+          "fqn": "aws-cdk-lib.Stack",
+          "version": "2.173.4"
+        }
+      },
+      "Tree": {
+        "id": "Tree",
+        "path": "Tree",
+        "constructInfo": {
+          "fqn": "constructs.Construct",
+          "version": "10.4.2"
+        }
+      }
+    },
+    "constructInfo": {
+      "fqn": "aws-cdk-lib.App",
+      "version": "2.173.4"
+    }
+  }
+}

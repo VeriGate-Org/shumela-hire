@@ -14,9 +14,26 @@ spring:
       hibernate:
         format_sql: false
 
+  flyway:
+    enabled: true
+    baseline-on-migrate: true
+    locations: classpath:db/migration
+
   h2:
     console:
       enabled: false
+
+  data:
+    redis:
+      host: ${REDIS_HOST:localhost}
+      port: ${REDIS_PORT:6379}
+
+# Disable Swagger in production
+springdoc:
+  api-docs:
+    enabled: false
+  swagger-ui:
+    enabled: false
 
 storage:
   provider: ${STORAGE_PROVIDER:s3}

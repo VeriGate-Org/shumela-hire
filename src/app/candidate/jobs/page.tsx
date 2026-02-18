@@ -9,24 +9,19 @@ import {
   CalendarIcon,
   ClockIcon,
   CurrencyDollarIcon,
-  HeartIcon,
   BookmarkIcon,
   MagnifyingGlassIcon,
   FunnelIcon,
   StarIcon,
   BuildingOfficeIcon,
   UserGroupIcon,
-  AcademicCapIcon,
   CheckCircleIcon,
   XMarkIcon,
-  PlusIcon,
   ArrowRightIcon,
   EyeIcon,
-  ShareIcon,
-  TagIcon
+  ShareIcon
 } from '@heroicons/react/24/outline';
-import { 
-  HeartIcon as HeartIconSolid,
+import {
   BookmarkIcon as BookmarkIconSolid,
   StarIcon as StarIconSolid
 } from '@heroicons/react/24/solid';
@@ -531,7 +526,7 @@ export default function BrowseJobsPage() {
   };
 
   const filterJobs = () => {
-    let filtered = jobs.filter(job => {
+    const filtered = jobs.filter(job => {
       const matchesSearch = searchTerm === '' || 
         job.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
         job.company.toLowerCase().includes(searchTerm.toLowerCase()) ||

@@ -17,16 +17,22 @@ const eslintConfig = [
   ...storybook.configs["flat/recommended"],
   {
     rules: {
-      // Relax rules for production build
-      "@typescript-eslint/no-explicit-any": "warn",
-      "@typescript-eslint/no-unused-vars": "warn", 
+      // Allow explicit any — the API layer and service code use any intentionally
+      "@typescript-eslint/no-explicit-any": "off",
+      // Warn on unused variables — does not block build
+      "@typescript-eslint/no-unused-vars": ["warn", { argsIgnorePattern: "^_", varsIgnorePattern: "^_" }],
+      // Enforce hooks dependency arrays
       "react-hooks/exhaustive-deps": "warn",
-      "react/no-unescaped-entities": "warn",
-      "@next/next/no-img-element": "warn",
-      "prefer-const": "warn",
-      "storybook/no-renderer-packages": "warn",
-      // Disable problematic rules during development
-      "react-hooks/rules-of-hooks": "warn",
+      // Enforce escaped entities in JSX
+      "react/no-unescaped-entities": "error",
+      // Allow img elements — Next.js Image is not always appropriate
+      "@next/next/no-img-element": "off",
+      // Enforce const for never-reassigned variables
+      "prefer-const": "error",
+      // Allow storybook renderer imports — pending migration to framework packages
+      "storybook/no-renderer-packages": "off",
+      // Enforce hooks rules
+      "react-hooks/rules-of-hooks": "error",
     },
   },
 ];

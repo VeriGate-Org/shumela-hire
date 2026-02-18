@@ -17,7 +17,6 @@ import {
   EyeIcon,
   ArrowDownTrayIcon,
   ExclamationTriangleIcon,
-  InformationCircleIcon,
   StarIcon,
   EnvelopeIcon
 } from '@heroicons/react/24/outline';
@@ -83,7 +82,7 @@ export default function MyOffersPage() {
   const [selectedOffer, setSelectedOffer] = useState<Offer | null>(null);
   const [filterStatus, setFilterStatus] = useState<'all' | 'pending' | 'accepted' | 'declined' | 'expired' | 'negotiating'>('all');
   const [loading, setLoading] = useState(true);
-  const [showNegotiationModal, setShowNegotiationModal] = useState(false);
+  const [_showNegotiationModal, setShowNegotiationModal] = useState(false);
 
   useEffect(() => {
     loadOffers();

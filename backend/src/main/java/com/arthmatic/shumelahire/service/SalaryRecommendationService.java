@@ -10,7 +10,6 @@ import com.arthmatic.shumelahire.repository.SalaryRecommendationRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -33,7 +32,7 @@ public class SalaryRecommendationService {
     @Autowired
     public SalaryRecommendationService(
             SalaryRecommendationRepository repository,
-            @Qualifier("shumelahireApplicationRepository") ApplicationRepository applicationRepository,
+            ApplicationRepository applicationRepository,
             AuditLogService auditLogService) {
         this.repository = repository;
         this.applicationRepository = applicationRepository;

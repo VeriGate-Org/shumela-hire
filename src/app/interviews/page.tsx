@@ -15,27 +15,12 @@ import {
 } from '@heroicons/react/24/outline';
 import PageWrapper from '@/components/PageWrapper';
 import InterviewScheduler from '@/components/InterviewScheduler';
-import InterviewCalendar from '@/components/InterviewCalendar';
+import InterviewCalendar, { type Interview as CalendarInterview } from '@/components/InterviewCalendar';
 import InterviewFeedbackForm from '@/components/InterviewFeedbackForm';
 
-interface Interview {
-  id: number;
-  title: string;
-  type: string;
-  typeDisplayName: string;
-  round: string;
-  roundDisplayName: string;
-  status: string;
-  statusDisplayName: string;
-  scheduledAt: string;
-  durationMinutes: number;
-  location?: string;
-  meetingLink?: string;
-  phoneNumber?: string;
-  meetingRoom?: string;
+interface Interview extends CalendarInterview {
   instructions?: string;
   agenda?: string;
-  interviewerId: number;
   additionalInterviewers?: string;
   feedback?: string;
   rating?: number;
@@ -51,38 +36,14 @@ interface Interview {
   interviewerNotes?: string;
   rescheduledFrom?: string;
   rescheduleReason?: string;
-  rescheduleCount: number;
   reminderSentAt?: string;
   feedbackRequestedAt?: string;
   feedbackSubmittedAt?: string;
-  createdBy: number;
-  createdAt: string;
   updatedAt?: string;
   startedAt?: string;
   completedAt?: string;
   cancelledAt?: string;
   cancellationReason?: string;
-  canBeRescheduled: boolean;
-  canBeCancelled: boolean;
-  canBeStarted: boolean;
-  canBeCompleted: boolean;
-  requiresFeedback: boolean;
-  isOverdue: boolean;
-  isUpcoming: boolean;
-  application: {
-    id: number;
-    applicant: {
-      id: number;
-      firstName: string;
-      lastName: string;
-      email: string;
-    };
-    jobPosting: {
-      id: number;
-      title: string;
-      department: string;
-    };
-  };
 }
 
 type InterviewView = 'calendar' | 'schedule' | 'feedback' | 'list';
@@ -117,7 +78,7 @@ export default function InterviewsPage() {
     }
   }, [view, loadInterviews]);
 
-  const handleInterviewScheduled = useCallback((interview: Interview) => {
+  const handleInterviewScheduled = useCallback((interview: { id: number; title: string }) => {
     console.log('Interview saved:', interview);
     setSelectedInterview(null);
     setView('calendar');

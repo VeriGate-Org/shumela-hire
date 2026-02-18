@@ -12,9 +12,9 @@ export async function POST(
     const {
       applicantName,
       applicantEmail,
-      resumeUrl,
-      coverLetter,
-      source = 'external'
+      resumeUrl: _resumeUrl,
+      coverLetter: _coverLetter,
+      source: _source = 'external'
     } = body;
 
     if (!applicantName || !applicantEmail) {

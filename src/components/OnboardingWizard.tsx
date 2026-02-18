@@ -200,7 +200,7 @@ export default function OnboardingWizard({ companyName = 'ShumelaHire', onComple
   // Compute profile completion percentage
   const computeCompletion = (): number => {
     let filled = 0;
-    let total = 3;
+    const total = 3;
     if (profileData.name.trim()) filled++;
     if (profileData.email.trim()) filled++;
     if (profileData.phone.trim()) filled++;

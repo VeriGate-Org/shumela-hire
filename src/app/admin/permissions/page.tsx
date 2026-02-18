@@ -56,9 +56,9 @@ export default function AdminPermissionsPage() {
   const [users, setUsers] = useState<User[]>([]);
   const [selectedRole, setSelectedRole] = useState<Role | null>(null);
   const [selectedView, setSelectedView] = useState<'roles' | 'permissions' | 'users'>('roles');
-  const [showRoleModal, setShowRoleModal] = useState(false);
-  const [editingRole, setEditingRole] = useState<Role | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [_showRoleModal, setShowRoleModal] = useState(false);
+  const [_editingRole, setEditingRole] = useState<Role | null>(null);
+  const [_loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
 
   useEffect(() => {

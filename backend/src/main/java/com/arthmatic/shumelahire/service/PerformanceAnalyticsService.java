@@ -1,8 +1,13 @@
 package com.arthmatic.shumelahire.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
+
 import org.springframework.stereotype.Service;
+import com.arthmatic.shumelahire.entity.Application;
+import com.arthmatic.shumelahire.entity.ApplicationStatus;
+import com.arthmatic.shumelahire.entity.Interview;
+import com.arthmatic.shumelahire.entity.InterviewStatus;
+import com.arthmatic.shumelahire.entity.InterviewType;
 import com.arthmatic.shumelahire.repository.ApplicationRepository;
 import com.arthmatic.shumelahire.repository.InterviewRepository;
 import com.arthmatic.shumelahire.repository.ApplicantRepository;
@@ -16,15 +21,15 @@ import java.util.stream.Collectors;
 public class PerformanceAnalyticsService {
 
     @Autowired
-    @Qualifier("shumelahireApplicationRepository")
+
     private ApplicationRepository applicationRepository;
 
     @Autowired
-    @Qualifier("shumelahireInterviewRepository")
+
     private InterviewRepository interviewRepository;
 
     @Autowired
-    @Qualifier("shumelahireApplicantRepository")
+
     private ApplicantRepository applicantRepository;
 
     public Map<String, Object> getRecruitmentMetrics() {
@@ -192,10 +197,10 @@ public class PerformanceAnalyticsService {
         Map<String, Object> rates = new HashMap<>();
         
         long totalApplications = applicationRepository.count();
-        long screenedApplications = applicationRepository.countByStatus("UNDER_REVIEW");
-        long interviewedApplications = applicationRepository.countByStatus("INTERVIEWING");
-        long offeredApplications = applicationRepository.countByStatus("OFFER_MADE");
-        long hiredApplications = applicationRepository.countByStatus("HIRED");
+        long screenedApplications = applicationRepository.countByStatus(ApplicationStatus.SCREENING);
+        long interviewedApplications = applicationRepository.countByStatus(ApplicationStatus.INTERVIEW_SCHEDULED);
+        long offeredApplications = applicationRepository.countByStatus(ApplicationStatus.OFFERED);
+        long hiredApplications = applicationRepository.countByStatus(ApplicationStatus.HIRED);
         
         if (totalApplications == 0) {
             rates.put("applicationToScreening", 0.0);
@@ -260,7 +265,7 @@ public class PerformanceAnalyticsService {
         Map<String, Object> cost = new HashMap<>();
         
         // Simulated cost data (in real scenario, this would come from financial system)
-        long totalHires = applicationRepository.countByStatus("HIRED");
+        long totalHires = applicationRepository.countByStatus(ApplicationStatus.HIRED);
         double estimatedCostPerHire = 3500.0; // Average industry cost
         double totalRecruitmentCost = totalHires * estimatedCostPerHire;
         
@@ -297,73 +302,91 @@ public class PerformanceAnalyticsService {
 
     private Map<String, Double> calculatePassRatesByStage() {
         Map<String, Double> passRates = new HashMap<>();
-        
-        long phoneInterviews = interviewRepository.countByInterviewType("PHONE");
-        long videoInterviews = interviewRepository.countByInterviewType("VIDEO");
-        long onsiteInterviews = interviewRepository.countByInterviewType("ON_SITE");
-        
-        long phoneCompleted = interviewRepository.countByInterviewTypeAndStatus("PHONE", "COMPLETED");
-        long videoCompleted = interviewRepository.countByInterviewTypeAndStatus("VIDEO", "COMPLETED");
-        long onsiteCompleted = interviewRepository.countByInterviewTypeAndStatus("ON_SITE", "COMPLETED");
-        
+
+        long phoneInterviews = interviewRepository.findByType(InterviewType.PHONE).size();
+        long videoInterviews = interviewRepository.findByType(InterviewType.VIDEO).size();
+        long onsiteInterviews = interviewRepository.findByType(InterviewType.IN_PERSON).size();
+
+        long phoneCompleted = interviewRepository.findByType(InterviewType.PHONE).stream()
+            .filter(i -> i.getStatus() == InterviewStatus.COMPLETED).count();
+        long videoCompleted = interviewRepository.findByType(InterviewType.VIDEO).stream()
+            .filter(i -> i.getStatus() == InterviewStatus.COMPLETED).count();
+        long onsiteCompleted = interviewRepository.findByType(InterviewType.IN_PERSON).stream()
+            .filter(i -> i.getStatus() == InterviewStatus.COMPLETED).count();
+
         passRates.put("phone", phoneInterviews > 0 ? (double) phoneCompleted / phoneInterviews * 100 : 0);
         passRates.put("video", videoInterviews > 0 ? (double) videoCompleted / videoInterviews * 100 : 0);
         passRates.put("onsite", onsiteInterviews > 0 ? (double) onsiteCompleted / onsiteInterviews * 100 : 0);
-        
+
         return passRates;
     }
 
     private List<Map<String, Object>> calculateInterviewerEffectiveness() {
-        List<Object[]> interviewerData = interviewRepository.findInterviewerStats();
+        List<Interview> allInterviews = interviewRepository.findAll();
+        Map<String, List<Interview>> byInterviewer = allInterviews.stream()
+            .filter(i -> i.getInterviewerName() != null)
+            .collect(Collectors.groupingBy(Interview::getInterviewerName));
+
         List<Map<String, Object>> stats = new ArrayList<>();
-        
-        for (Object[] data : interviewerData) {
+        for (Map.Entry<String, List<Interview>> entry : byInterviewer.entrySet()) {
             Map<String, Object> stat = new HashMap<>();
-            stat.put("interviewerName", data[0]);
-            stat.put("totalInterviews", data[1]);
-            stat.put("averageRating", data[2] != null ? Math.round((Double) data[2] * 100.0) / 100.0 : 0);
-            stat.put("averageTechnicalScore", data[3] != null ? Math.round((Double) data[3] * 100.0) / 100.0 : 0);
-            stat.put("averageCommunicationScore", data[4] != null ? Math.round((Double) data[4] * 100.0) / 100.0 : 0);
-            stat.put("averageCulturalScore", data[5] != null ? Math.round((Double) data[5] * 100.0) / 100.0 : 0);
-            
+            List<Interview> interviews = entry.getValue();
+            stat.put("interviewerName", entry.getKey());
+            stat.put("totalInterviews", (long) interviews.size());
+            stat.put("averageRating", interviews.stream()
+                .filter(i -> i.getRating() != null).mapToInt(Interview::getRating).average().orElse(0));
+            stat.put("averageTechnicalScore", interviews.stream()
+                .filter(i -> i.getTechnicalScore() != null).mapToInt(Interview::getTechnicalScore).average().orElse(0));
+            stat.put("averageCommunicationScore", interviews.stream()
+                .filter(i -> i.getCommunicationScore() != null).mapToInt(Interview::getCommunicationScore).average().orElse(0));
+            stat.put("averageCulturalScore", interviews.stream()
+                .filter(i -> i.getCulturalFitScore() != null).mapToInt(Interview::getCulturalFitScore).average().orElse(0));
             stats.add(stat);
         }
-        
+
         return stats;
     }
 
     private Map<String, Object> calculateFeedbackTrends() {
         Map<String, Object> trends = new HashMap<>();
-        
-        Double avgRating = interviewRepository.getAverageRating();
-        Double avgTechnical = interviewRepository.getAverageTechnicalScore();
-        Double avgCommunication = interviewRepository.getAverageCommunicationScore();
-        Double avgCultural = interviewRepository.getAverageCulturalFitScore();
-        
-        trends.put("averageOverallRating", avgRating != null ? Math.round(avgRating * 100.0) / 100.0 : 0);
-        trends.put("averageTechnicalScore", avgTechnical != null ? Math.round(avgTechnical * 100.0) / 100.0 : 0);
-        trends.put("averageCommunicationScore", avgCommunication != null ? Math.round(avgCommunication * 100.0) / 100.0 : 0);
-        trends.put("averageCulturalScore", avgCultural != null ? Math.round(avgCultural * 100.0) / 100.0 : 0);
-        
+
+        List<Interview> allInterviews = interviewRepository.findAll();
+
+        double avgRating = allInterviews.stream()
+            .filter(i -> i.getRating() != null).mapToInt(Interview::getRating).average().orElse(0);
+        double avgTechnical = allInterviews.stream()
+            .filter(i -> i.getTechnicalScore() != null).mapToInt(Interview::getTechnicalScore).average().orElse(0);
+        double avgCommunication = allInterviews.stream()
+            .filter(i -> i.getCommunicationScore() != null).mapToInt(Interview::getCommunicationScore).average().orElse(0);
+        double avgCultural = allInterviews.stream()
+            .filter(i -> i.getCulturalFitScore() != null).mapToInt(Interview::getCulturalFitScore).average().orElse(0);
+
+        trends.put("averageOverallRating", Math.round(avgRating * 100.0) / 100.0);
+        trends.put("averageTechnicalScore", Math.round(avgTechnical * 100.0) / 100.0);
+        trends.put("averageCommunicationScore", Math.round(avgCommunication * 100.0) / 100.0);
+        trends.put("averageCulturalScore", Math.round(avgCultural * 100.0) / 100.0);
+
         return trends;
     }
 
     private Map<String, Object> calculateSchedulingEfficiency() {
         Map<String, Object> efficiency = new HashMap<>();
-        
+
         long totalInterviews = interviewRepository.count();
-        long scheduledOnTime = interviewRepository.countByStatus("SCHEDULED");
-        long completed = interviewRepository.countByStatus("COMPLETED");
-        long cancelled = interviewRepository.countByStatus("CANCELLED");
-        
+        long completed = interviewRepository.findByStatus(InterviewStatus.COMPLETED).size();
+        long cancelled = interviewRepository.findByStatus(InterviewStatus.CANCELLED).size();
+
         double completionRate = totalInterviews > 0 ? (double) completed / totalInterviews * 100 : 0;
         double cancellationRate = totalInterviews > 0 ? (double) cancelled / totalInterviews * 100 : 0;
-        
+
         efficiency.put("totalInterviews", totalInterviews);
         efficiency.put("completionRate", Math.round(completionRate * 100.0) / 100.0);
         efficiency.put("cancellationRate", Math.round(cancellationRate * 100.0) / 100.0);
-        efficiency.put("averageDuration", interviewRepository.getAverageDurationMinutes());
-        
+        double avgDuration = interviewRepository.findAll().stream()
+            .filter(i -> i.getDurationMinutes() != null)
+            .mapToInt(Interview::getDurationMinutes).average().orElse(60);
+        efficiency.put("averageDuration", Math.round(avgDuration * 100.0) / 100.0);
+
         return efficiency;
     }
 

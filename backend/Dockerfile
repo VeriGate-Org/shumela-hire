@@ -10,6 +10,14 @@ RUN addgroup -S appgroup && adduser -S appuser -G appgroup
 COPY --from=build /app/target/*.jar app.jar
 RUN chown -R appuser:appgroup /app
 USER appuser
-ENV SPRING_PROFILES_ACTIVE=production
+
+ARG SPRING_PROFILES_ACTIVE=prod
+ENV SPRING_PROFILES_ACTIVE=${SPRING_PROFILES_ACTIVE}
+ENV JAVA_OPTS="-XX:+UseContainerSupport -XX:MaxRAMPercentage=75.0 -XX:InitialRAMPercentage=50.0 -Djava.security.egd=file:/dev/./urandom"
+
 EXPOSE 8080
-ENTRYPOINT ["java", "-jar", "app.jar"]
+
+HEALTHCHECK --interval=30s --timeout=5s --start-period=60s --retries=3 \
+  CMD wget -qO- http://localhost:8080/actuator/health || exit 1
+
+ENTRYPOINT ["sh", "-c", "java $JAVA_OPTS -jar app.jar"]

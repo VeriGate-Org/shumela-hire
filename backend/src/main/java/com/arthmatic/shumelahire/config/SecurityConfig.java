@@ -2,10 +2,13 @@ package com.arthmatic.shumelahire.config;
 
 import com.arthmatic.shumelahire.security.JwtAuthenticationFilter;
 import com.arthmatic.shumelahire.security.JwtAuthenticationEntryPoint;
+import com.arthmatic.shumelahire.security.RateLimitFilter;
 import com.arthmatic.shumelahire.service.CustomUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.env.Environment;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
@@ -25,10 +28,6 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import java.util.Arrays;
 import java.util.List;
 
-/**
- * Security configuration for ShumelaHire
- * Implements JWT-based authentication with role-based access control
- */
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity(prePostEnabled = true)
@@ -43,17 +42,17 @@ public class SecurityConfig {
     @Autowired
     private JwtAuthenticationFilter jwtAuthenticationFilter;
 
-    /**
-     * Password encoder using BCrypt with strength 12
-     */
+    @Autowired
+    private RateLimitFilter rateLimitFilter;
+
+    @Autowired
+    private Environment environment;
+
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder(12);
     }
 
-    /**
-     * Authentication provider using custom user details service
-     */
     @Bean
     public DaoAuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
@@ -62,54 +61,60 @@ public class SecurityConfig {
         return authProvider;
     }
 
-    /**
-     * Authentication manager
-     */
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
         return config.getAuthenticationManager();
     }
 
-    /**
-     * CORS configuration for cross-origin requests
-     */
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOriginPatterns(Arrays.asList("http://localhost:3000", "https://*.vercel.app"));
+        configuration.setAllowedOriginPatterns(getAllowedOrigins());
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
         configuration.setAllowedHeaders(Arrays.asList("*"));
         configuration.setAllowCredentials(true);
         configuration.setMaxAge(3600L);
-        
+
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
         return source;
     }
 
-    /**
-     * Security filter chain configuration
-     */
+    private List<String> getAllowedOrigins() {
+        List<String> activeProfiles = Arrays.asList(environment.getActiveProfiles());
+
+        if (activeProfiles.contains("prod")) {
+            return Arrays.asList(
+                    "https://shumelahire.co.za",
+                    "https://www.shumelahire.co.za"
+            );
+        } else if (activeProfiles.contains("ppe")) {
+            return Arrays.asList(
+                    "https://ppe.shumelahire.co.za"
+            );
+        } else if (activeProfiles.contains("sbx")) {
+            return Arrays.asList(
+                    "https://sbx.shumelahire.co.za"
+            );
+        } else {
+            return Arrays.asList(
+                    "http://localhost:3000",
+                    "http://localhost:3001"
+            );
+        }
+    }
+
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-            // Disable CSRF for API endpoints
             .csrf(AbstractHttpConfigurer::disable)
-            
-            // Enable CORS
             .cors(cors -> cors.configurationSource(corsConfigurationSource()))
-            
-            // Configure exception handling
             .exceptionHandling(exception -> exception
                 .authenticationEntryPoint(jwtAuthenticationEntryPoint)
             )
-            
-            // Set session management to stateless
             .sessionManagement(session -> session
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             )
-            
-            // Configure authorization rules
             .authorizeHttpRequests(authz -> authz
                 // Public endpoints
                 .requestMatchers("/api/auth/**").permitAll()
@@ -119,6 +124,10 @@ public class SecurityConfig {
                 .requestMatchers("/api/public/**").permitAll()
                 .requestMatchers("/api/health").permitAll()
                 .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
+
+                // Actuator health endpoint
+                .requestMatchers("/actuator/health").permitAll()
+                .requestMatchers("/actuator/**").hasRole("ADMIN")
 
                 // Admin only endpoints
                 .requestMatchers("/api/admin/**").hasRole("ADMIN")
@@ -140,7 +149,7 @@ public class SecurityConfig {
                 // Recruiter endpoints
                 .requestMatchers("/api/applications/manage/**").hasAnyRole("ADMIN", "HR_MANAGER", "RECRUITER")
 
-                // Internal jobs — accessible to all internal staff
+                // Internal jobs
                 .requestMatchers("/api/internal/jobs/**").hasAnyRole("ADMIN", "HR_MANAGER", "RECRUITER", "HIRING_MANAGER", "INTERVIEWER", "EMPLOYEE", "EXECUTIVE")
 
                 // E-Signature endpoints
@@ -182,10 +191,9 @@ public class SecurityConfig {
                 .anyRequest().permitAll()
             );
 
-        // Add JWT filter
+        // Add rate limit filter before JWT filter
+        http.addFilterBefore(rateLimitFilter, UsernamePasswordAuthenticationFilter.class);
         http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
-
-        // Set authentication provider
         http.authenticationProvider(authenticationProvider());
 
         return http.build();
