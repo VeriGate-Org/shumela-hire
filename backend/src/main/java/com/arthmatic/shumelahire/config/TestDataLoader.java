@@ -1,9 +1,11 @@
 package com.arthmatic.shumelahire.config;
 
+import com.arthmatic.shumelahire.config.tenant.TenantContext;
 import com.arthmatic.shumelahire.entity.*;
 import com.arthmatic.shumelahire.repository.ApplicantRepository;
 import com.arthmatic.shumelahire.repository.ApplicationRepository;
 import com.arthmatic.shumelahire.repository.InterviewRepository;
+import com.arthmatic.shumelahire.repository.TenantRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Profile;
@@ -27,12 +29,27 @@ public class TestDataLoader implements CommandLineRunner {
     @Autowired
     private InterviewRepository interviewRepository;
 
+    @Autowired
+    private TenantRepository tenantRepository;
+
     private final Random random = new Random();
 
     @Override
     public void run(String... args) throws Exception {
-        if (applicantRepository.count() == 0) {
-            loadTestData();
+        // Ensure default tenant exists
+        if (!tenantRepository.existsById("default")) {
+            Tenant defaultTenant = new Tenant("default", "Default Organization", "default", "admin@shumelahire.co.za");
+            tenantRepository.save(defaultTenant);
+        }
+
+        // Set tenant context for test data seeding
+        TenantContext.setCurrentTenant("default");
+        try {
+            if (applicantRepository.count() == 0) {
+                loadTestData();
+            }
+        } finally {
+            TenantContext.clear();
         }
     }
 

@@ -463,6 +463,17 @@ ApiInterceptors.addRequestInterceptor(async (config) => {
   return config;
 });
 
+// Tenant header interceptor — injects X-Tenant-Id from subdomain
+ApiInterceptors.addRequestInterceptor(async (config) => {
+  const { getTenantSubdomain } = await import('@/lib/tenant-utils');
+  const tenantSubdomain = getTenantSubdomain();
+  config.headers = {
+    ...config.headers,
+    'X-Tenant-Id': tenantSubdomain,
+  };
+  return config;
+});
+
 // Error handling interceptor
 ApiInterceptors.addResponseInterceptor(async (response) => {
   if (response.status === 401) {

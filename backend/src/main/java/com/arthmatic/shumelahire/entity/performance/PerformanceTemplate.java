@@ -1,5 +1,6 @@
 package com.arthmatic.shumelahire.entity.performance;
 
+import com.arthmatic.shumelahire.entity.TenantAwareEntity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 
@@ -7,7 +8,7 @@ import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "performance_templates")
-public class PerformanceTemplate {
+public class PerformanceTemplate extends TenantAwareEntity {
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -43,9 +44,6 @@ public class PerformanceTemplate {
     @Column(name = "is_default")
     private Boolean isDefault = false;
     
-    @Column(name = "tenant_id", nullable = false, length = 50)
-    private String tenantId;
-    
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
     
@@ -60,10 +58,9 @@ public class PerformanceTemplate {
         this.createdAt = LocalDateTime.now();
     }
     
-    public PerformanceTemplate(String name, String tenantId, String createdBy) {
+    public PerformanceTemplate(String name, String createdBy) {
         this();
         this.name = name;
-        this.tenantId = tenantId;
         this.createdBy = createdBy;
     }
     
@@ -119,9 +116,6 @@ public class PerformanceTemplate {
     
     public Boolean getIsDefault() { return isDefault; }
     public void setIsDefault(Boolean isDefault) { this.isDefault = isDefault; }
-    
-    public String getTenantId() { return tenantId; }
-    public void setTenantId(String tenantId) { this.tenantId = tenantId; }
     
     public LocalDateTime getCreatedAt() { return createdAt; }
     public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }

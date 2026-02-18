@@ -8,6 +8,7 @@ public sealed class EnvironmentConfig
     public required string DomainName { get; init; }
     public required string ApiDomainName { get; init; }
     public string? CertificateArn { get; init; }
+    public string? WildcardCertificateArn { get; init; }
     public string? ApiCertificateArn { get; init; }
     public required string Region { get; init; }
 
@@ -15,11 +16,11 @@ public sealed class EnvironmentConfig
 
     public string[] CorsOrigins => EnvironmentName switch
     {
-        "prod" => new[] { $"https://{DomainName}", $"https://www.{DomainName}" },
-        "ppe" => new[] { $"https://ppe.{DomainName}" },
-        "sbx" => new[] { $"https://sbx.{DomainName}" },
-        "dev" => new[] { $"https://dev.{DomainName}", "http://localhost:3000" },
-        _ => new[] { "http://localhost:3000", "http://localhost:3001" }
+        "prod" => new[] { $"https://{DomainName}", $"https://www.{DomainName}", $"https://*.{DomainName}" },
+        "ppe" => new[] { $"https://ppe.{DomainName}", $"https://*.ppe.{DomainName}" },
+        "sbx" => new[] { $"https://sbx.{DomainName}", $"https://*.sbx.{DomainName}" },
+        "dev" => new[] { $"https://dev.{DomainName}", $"https://*.dev.{DomainName}", "http://localhost:3000", "http://*.localhost:3000" },
+        _ => new[] { "http://localhost:3000", "http://localhost:3001", "http://*.localhost:3000" }
     };
 
     public string UiUrl => EnvironmentName switch
@@ -56,12 +57,16 @@ public sealed class EnvironmentConfig
         var apiCertArn = (string?)app.Node.TryGetContext("apiCertificateArn")
                          ?? System.Environment.GetEnvironmentVariable("API_CERTIFICATE_ARN");
 
+        var wildcardCertArn = (string?)app.Node.TryGetContext("wildcardCertificateArn")
+                              ?? System.Environment.GetEnvironmentVariable("WILDCARD_CERTIFICATE_ARN");
+
         return new EnvironmentConfig
         {
             EnvironmentName = env,
             DomainName = domain,
             ApiDomainName = $"api.{domain}",
             CertificateArn = certArn,
+            WildcardCertificateArn = wildcardCertArn,
             ApiCertificateArn = apiCertArn,
             Region = region
         };

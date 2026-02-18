@@ -1,9 +1,13 @@
 package com.arthmatic.shumelahire.entity;
 
+import com.arthmatic.shumelahire.config.tenant.TenantContext;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
+import org.hibernate.annotations.Filter;
+import org.hibernate.annotations.FilterDef;
+import org.hibernate.annotations.ParamDef;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -18,6 +22,8 @@ import java.util.Set;
  */
 @Entity
 @Table(name = "users")
+@FilterDef(name = "tenantFilter", parameters = @ParamDef(name = "tenantId", type = String.class))
+@Filter(name = "tenantFilter", condition = "tenant_id = :tenantId")
 public class User implements UserDetails {
 
     @Id
@@ -100,6 +106,9 @@ public class User implements UserDetails {
     @Column(name = "sso_user_id")
     private String ssoUserId; // External user ID from SSO
 
+    @Column(name = "tenant_id", nullable = false, length = 50)
+    private String tenantId;
+
     // Constructors
     public User() {}
 
@@ -155,6 +164,13 @@ public class User implements UserDetails {
         return passwordResetToken != null && 
                passwordResetExpires != null && 
                LocalDateTime.now().isBefore(passwordResetExpires);
+    }
+
+    @PrePersist
+    protected void prePersistTenant() {
+        if (this.tenantId == null) {
+            this.tenantId = TenantContext.requireCurrentTenant();
+        }
     }
 
     @PreUpdate
@@ -233,6 +249,9 @@ public class User implements UserDetails {
 
     public String getSsoUserId() { return ssoUserId; }
     public void setSsoUserId(String ssoUserId) { this.ssoUserId = ssoUserId; }
+
+    public String getTenantId() { return tenantId; }
+    public void setTenantId(String tenantId) { this.tenantId = tenantId; }
 
     /**
      * User roles enum

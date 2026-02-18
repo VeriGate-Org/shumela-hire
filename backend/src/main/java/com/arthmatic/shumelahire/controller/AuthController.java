@@ -1,5 +1,6 @@
 package com.arthmatic.shumelahire.controller;
 
+import com.arthmatic.shumelahire.config.tenant.TenantContext;
 import com.arthmatic.shumelahire.dto.JwtResponse;
 import com.arthmatic.shumelahire.dto.LoginRequest;
 import com.arthmatic.shumelahire.dto.SignupRequest;
@@ -181,6 +182,7 @@ public class AuthController {
                     signUpRequest.getLastName(),
                     signUpRequest.getRole()
             );
+            user.setTenantId(TenantContext.requireCurrentTenant());
 
             // Generate email verification token
             String verificationToken = jwtUtil.generateEmailVerificationToken(user.getUsername());

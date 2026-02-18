@@ -4,6 +4,7 @@ import "./globals.css";
 import { AuthProvider } from '@/contexts/AuthContext';
 import { ThemeProvider } from '@/contexts/ThemeContext';
 import { LayoutProvider } from '@/contexts/LayoutContext';
+import { TenantProvider } from '@/contexts/TenantContext';
 
 const manrope = Manrope({
   variable: "--font-manrope",
@@ -84,13 +85,15 @@ export default function RootLayout({
       <body
         className={`${manrope.variable} ${jetbrainsMono.variable} antialiased`}
       >
-        <ThemeProvider>
-          <AuthProvider>
-            <LayoutProvider>
-              {children}
-            </LayoutProvider>
-          </AuthProvider>
-        </ThemeProvider>
+        <TenantProvider>
+          <ThemeProvider>
+            <AuthProvider>
+              <LayoutProvider>
+                {children}
+              </LayoutProvider>
+            </AuthProvider>
+          </ThemeProvider>
+        </TenantProvider>
       </body>
     </html>
   );

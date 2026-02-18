@@ -1,5 +1,6 @@
 package com.arthmatic.shumelahire.security;
 
+import com.arthmatic.shumelahire.config.tenant.TenantContext;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
@@ -22,6 +23,18 @@ public class CognitoJwtConverter implements Converter<Jwt, AbstractAuthenticatio
     public AbstractAuthenticationToken convert(Jwt jwt) {
         Collection<GrantedAuthority> authorities = extractAuthorities(jwt);
         String principal = extractPrincipal(jwt);
+
+        // Extract tenant_id from JWT custom attribute and set in TenantContext
+        String tenantId = jwt.getClaimAsString("custom:tenant_id");
+        if (tenantId != null && !tenantId.isBlank()) {
+            // Validate against currently resolved tenant if present
+            String currentTenant = TenantContext.getCurrentTenant();
+            if (currentTenant != null && !currentTenant.equals(tenantId)) {
+                throw new SecurityException("JWT tenant_id does not match resolved tenant");
+            }
+            TenantContext.setCurrentTenant(tenantId);
+        }
+
         return new JwtAuthenticationToken(jwt, authorities, principal);
     }
 

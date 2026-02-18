@@ -169,4 +169,7 @@ public interface JobPostingRepository extends JpaRepository<JobPosting, Long> {
     // Find jobs published by user
     @Query("SELECT j FROM JobPosting j WHERE j.publishedBy = :publisherId ORDER BY j.publishedAt DESC")
     List<JobPosting> findJobsPublishedBy(@Param("publisherId") Long publisherId);
+
+    // Tenant-scoped slug lookup
+    Optional<JobPosting> findBySlugAndTenantId(String slug, String tenantId);
 }

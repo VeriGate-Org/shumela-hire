@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "job_ad_history")
-public class JobAdHistory {
+public class JobAdHistory extends TenantAwareEntity {
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

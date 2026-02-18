@@ -7,7 +7,7 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "talent_pool_entries",
     uniqueConstraints = @UniqueConstraint(columnNames = {"talent_pool_id", "applicant_id"}))
-public class TalentPoolEntry {
+public class TalentPoolEntry extends TenantAwareEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

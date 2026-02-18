@@ -7,6 +7,7 @@ using Amazon.CDK.AWS.SQS;
 using Amazon.CDK.AWS.SecretsManager;
 using Amazon.CDK.AWS.Cognito;
 using Constructs;
+using System.Collections.Generic;
 
 namespace ShumelaHire.Infra;
 
@@ -255,6 +256,10 @@ public class ShumelaHireFoundationStack : Stack
                 Email = new StandardAttribute { Required = true, Mutable = true },
                 GivenName = new StandardAttribute { Required = true, Mutable = true },
                 FamilyName = new StandardAttribute { Required = true, Mutable = true }
+            },
+            CustomAttributes = new Dictionary<string, ICustomAttribute>
+            {
+                ["tenant_id"] = new StringAttribute(new StringAttributeProps { MinLen = 1, MaxLen = 50, Mutable = true })
             },
             PasswordPolicy = new PasswordPolicy
             {

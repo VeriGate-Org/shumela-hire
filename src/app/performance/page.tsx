@@ -4,14 +4,16 @@ import React, { useState } from 'react';
 import CycleManagement from '@/components/performance/CycleManagement';
 import ContractBuilder from '@/components/performance/ContractBuilder';
 import { PerformanceCycle } from '@/types/performance';
+import { useTenant } from '@/contexts/TenantContext';
+import { useAuth } from '@/contexts/AuthContext';
 
 export default function PerformanceDashboard() {
   const [selectedCycle, setSelectedCycle] = useState<PerformanceCycle | null>(null);
   const [showContractBuilder, setShowContractBuilder] = useState(false);
-  
-  // Mock values - in real app these would come from authentication/context
-  const tenantId = 'icasa-tenant-001';
-  const userId = 'current-user-id';
+
+  const { tenantId } = useTenant();
+  const { user } = useAuth();
+  const userId = user?.id || 'anonymous';
 
   const handleCycleSelect = (cycle: PerformanceCycle) => {
     setSelectedCycle(cycle);
@@ -33,7 +35,7 @@ export default function PerformanceDashboard() {
             <div>
               <h1 className="text-3xl font-bold text-gray-900">Performance Management</h1>
               <p className="mt-1 text-sm text-gray-600">
-                Manage performance cycles, contracts, and reviews for ICASA
+                Manage performance cycles, contracts, and reviews
               </p>
             </div>
             {selectedCycle && (

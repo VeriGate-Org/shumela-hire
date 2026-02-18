@@ -7,7 +7,7 @@ import java.time.LocalDateTime;
 @Entity(name = "TgJobBoardPosting")
 @Table(name = "tg_job_board_postings")
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-public class JobBoardPosting {
+public class JobBoardPosting extends TenantAwareEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

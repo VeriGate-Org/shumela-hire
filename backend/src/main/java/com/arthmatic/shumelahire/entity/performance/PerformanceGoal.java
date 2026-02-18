@@ -1,5 +1,6 @@
 package com.arthmatic.shumelahire.entity.performance;
 
+import com.arthmatic.shumelahire.entity.TenantAwareEntity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.DecimalMax;
@@ -11,7 +12,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "performance_goals")
-public class PerformanceGoal {
+public class PerformanceGoal extends TenantAwareEntity {
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

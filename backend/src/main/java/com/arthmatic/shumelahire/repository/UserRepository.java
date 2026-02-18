@@ -95,4 +95,19 @@ public interface UserRepository extends JpaRepository<User, Long> {
      * Find unverified email users
      */
     List<User> findByEmailVerifiedFalse();
+
+    /**
+     * Find user by email within a tenant
+     */
+    Optional<User> findByEmailAndTenantId(String email, String tenantId);
+
+    /**
+     * Check if username exists within a tenant
+     */
+    boolean existsByUsernameAndTenantId(String username, String tenantId);
+
+    /**
+     * Check if email exists within a tenant
+     */
+    boolean existsByEmailAndTenantId(String email, String tenantId);
 }

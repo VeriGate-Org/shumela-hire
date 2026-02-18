@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "documents")
-public class Document {
+public class Document extends TenantAwareEntity {
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

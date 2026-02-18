@@ -10,7 +10,7 @@ import java.time.temporal.ChronoUnit;
 @Entity
 @Table(name = "interviews")
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-public class Interview {
+public class Interview extends TenantAwareEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

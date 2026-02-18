@@ -1,5 +1,6 @@
 package com.arthmatic.shumelahire.entity.performance;
 
+import com.arthmatic.shumelahire.entity.TenantAwareEntity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 
@@ -7,7 +8,7 @@ import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "review_evidence")
-public class ReviewEvidence {
+public class ReviewEvidence extends TenantAwareEntity {
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

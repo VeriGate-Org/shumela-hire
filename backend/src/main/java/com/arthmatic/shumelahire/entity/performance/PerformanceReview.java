@@ -1,5 +1,6 @@
 package com.arthmatic.shumelahire.entity.performance;
 
+import com.arthmatic.shumelahire.entity.TenantAwareEntity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 
@@ -9,7 +10,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "performance_reviews")
-public class PerformanceReview {
+public class PerformanceReview extends TenantAwareEntity {
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -71,9 +72,6 @@ public class PerformanceReview {
     @Column(name = "due_date")
     private LocalDateTime dueDate;
     
-    @Column(name = "tenant_id", nullable = false, length = 50)
-    private String tenantId;
-    
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
     
@@ -92,11 +90,10 @@ public class PerformanceReview {
         this.createdAt = LocalDateTime.now();
     }
     
-    public PerformanceReview(PerformanceContract contract, ReviewType type, String tenantId) {
+    public PerformanceReview(PerformanceContract contract, ReviewType type) {
         this();
         this.contract = contract;
         this.type = type;
-        this.tenantId = tenantId;
     }
     
     // Lifecycle callbacks
@@ -206,9 +203,6 @@ public class PerformanceReview {
     
     public LocalDateTime getDueDate() { return dueDate; }
     public void setDueDate(LocalDateTime dueDate) { this.dueDate = dueDate; }
-    
-    public String getTenantId() { return tenantId; }
-    public void setTenantId(String tenantId) { this.tenantId = tenantId; }
     
     public LocalDateTime getCreatedAt() { return createdAt; }
     public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }

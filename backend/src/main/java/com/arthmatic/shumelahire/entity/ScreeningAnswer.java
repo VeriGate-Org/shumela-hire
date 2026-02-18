@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "screening_answers", 
        uniqueConstraints = @UniqueConstraint(columnNames = {"application_id", "screening_question_id"}))
-public class ScreeningAnswer {
+public class ScreeningAnswer extends TenantAwareEntity {
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

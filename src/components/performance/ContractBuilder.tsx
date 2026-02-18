@@ -113,10 +113,6 @@ export default function ContractBuilder({
     try {
       const response = await apiFetch('/api/performance/contracts', {
         method: 'POST',
-        headers: {
-          'X-Tenant-Id': tenantId,
-          'Content-Type': 'application/json'
-        },
         body: JSON.stringify(contract)
       });
 

@@ -10,7 +10,7 @@ import java.util.List;
 @Entity
 @Table(name = "applications")
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-public class Application {
+public class Application extends TenantAwareEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

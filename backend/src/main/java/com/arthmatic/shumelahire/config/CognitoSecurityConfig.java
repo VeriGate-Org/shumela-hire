@@ -1,5 +1,7 @@
 package com.arthmatic.shumelahire.config;
 
+import com.arthmatic.shumelahire.config.tenant.TenantResolutionFilter;
+import com.arthmatic.shumelahire.repository.TenantRepository;
 import com.arthmatic.shumelahire.security.CognitoJwtConverter;
 import com.arthmatic.shumelahire.security.RateLimitFilter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,6 +39,9 @@ public class CognitoSecurityConfig {
     private RateLimitFilter rateLimitFilter;
 
     @Autowired
+    private TenantRepository tenantRepository;
+
+    @Autowired
     private Environment environment;
 
     @Bean
@@ -64,15 +69,18 @@ public class CognitoSecurityConfig {
         if (activeProfiles.contains("prod")) {
             return Arrays.asList(
                     "https://shumelahire.co.za",
-                    "https://www.shumelahire.co.za"
+                    "https://www.shumelahire.co.za",
+                    "https://*.shumelahire.co.za"
             );
         } else if (activeProfiles.contains("ppe")) {
             return Arrays.asList(
-                    "https://ppe.shumelahire.co.za"
+                    "https://ppe.shumelahire.co.za",
+                    "https://*.ppe.shumelahire.co.za"
             );
         } else {
             return Arrays.asList(
-                    "https://sbx.shumelahire.co.za"
+                    "https://sbx.shumelahire.co.za",
+                    "https://*.sbx.shumelahire.co.za"
             );
         }
     }
@@ -164,6 +172,7 @@ public class CognitoSecurityConfig {
                 )
             );
 
+        http.addFilterBefore(new TenantResolutionFilter(tenantRepository, environment), UsernamePasswordAuthenticationFilter.class);
         http.addFilterBefore(rateLimitFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();

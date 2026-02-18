@@ -1,5 +1,6 @@
 package com.arthmatic.shumelahire.entity.performance;
 
+import com.arthmatic.shumelahire.entity.TenantAwareEntity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.DecimalMin;
@@ -10,7 +11,7 @@ import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "goal_kpis")
-public class GoalKPI {
+public class GoalKPI extends TenantAwareEntity {
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

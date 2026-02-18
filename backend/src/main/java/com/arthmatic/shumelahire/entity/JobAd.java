@@ -13,7 +13,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "job_ads")
-public class JobAd {
+public class JobAd extends TenantAwareEntity {
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

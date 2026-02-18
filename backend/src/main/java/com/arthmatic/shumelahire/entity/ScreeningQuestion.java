@@ -12,7 +12,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "screening_questions")
-public class ScreeningQuestion {
+public class ScreeningQuestion extends TenantAwareEntity {
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

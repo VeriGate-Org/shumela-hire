@@ -37,6 +37,7 @@ interface User {
   email: string;
   role: UserRole;
   permissions: string[];
+  tenantId?: string;
 }
 
 interface AuthContextType {
@@ -107,12 +108,14 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         const role = extractRoleFromGroups(groups);
         const attrs = await fetchUserAttributes();
 
+        const tenantId = (idToken.payload['custom:tenant_id'] as string) || undefined;
         setUser({
           id: authUser.userId,
           name: attrs.name || attrs.email || authUser.username,
           email: attrs.email || '',
           role,
           permissions: rolePermissions[role],
+          tenantId,
         });
         setToken(idToken.toString());
       }
@@ -154,12 +157,14 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         const role = extractRoleFromGroups(groups);
         const attrs = await fetchUserAttributes();
 
+        const tenantId = (idToken.payload['custom:tenant_id'] as string) || undefined;
         const userData: User = {
           id: authUser.userId,
           name: attrs.name || attrs.email || authUser.username,
           email: attrs.email || '',
           role,
           permissions: rolePermissions[role],
+          tenantId,
         };
         setUser(userData);
         setToken(idToken.toString());

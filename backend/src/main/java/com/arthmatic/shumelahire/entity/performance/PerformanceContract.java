@@ -1,5 +1,6 @@
 package com.arthmatic.shumelahire.entity.performance;
 
+import com.arthmatic.shumelahire.entity.TenantAwareEntity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 
@@ -8,7 +9,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "performance_contracts")
-public class PerformanceContract {
+public class PerformanceContract extends TenantAwareEntity {
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -81,9 +82,6 @@ public class PerformanceContract {
     @Column(name = "amended_by", length = 50)
     private String amendedBy;
     
-    @Column(name = "tenant_id", nullable = false, length = 50)
-    private String tenantId;
-    
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
     
@@ -102,12 +100,11 @@ public class PerformanceContract {
         this.createdAt = LocalDateTime.now();
     }
     
-    public PerformanceContract(PerformanceCycle cycle, String employeeId, String managerId, String tenantId) {
+    public PerformanceContract(PerformanceCycle cycle, String employeeId, String managerId) {
         this();
         this.cycle = cycle;
         this.employeeId = employeeId;
         this.managerId = managerId;
-        this.tenantId = tenantId;
     }
     
     // Lifecycle callbacks
@@ -226,9 +223,6 @@ public class PerformanceContract {
     
     public String getAmendedBy() { return amendedBy; }
     public void setAmendedBy(String amendedBy) { this.amendedBy = amendedBy; }
-    
-    public String getTenantId() { return tenantId; }
-    public void setTenantId(String tenantId) { this.tenantId = tenantId; }
     
     public LocalDateTime getCreatedAt() { return createdAt; }
     public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }

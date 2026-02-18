@@ -8,7 +8,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "messages")
-public class Message {
+public class Message extends TenantAwareEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

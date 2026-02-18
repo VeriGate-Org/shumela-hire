@@ -1,5 +1,6 @@
 package com.arthmatic.shumelahire.entity.performance;
 
+import com.arthmatic.shumelahire.entity.TenantAwareEntity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -10,7 +11,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "performance_cycles")
-public class PerformanceCycle {
+public class PerformanceCycle extends TenantAwareEntity {
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -43,9 +44,6 @@ public class PerformanceCycle {
     @Column(nullable = false)
     private CycleStatus status = CycleStatus.PLANNING;
     
-    @Column(name = "tenant_id", nullable = false, length = 50)
-    private String tenantId;
-    
     @Column(name = "is_default")
     private Boolean isDefault = false;
     
@@ -67,12 +65,11 @@ public class PerformanceCycle {
         this.createdAt = LocalDateTime.now();
     }
     
-    public PerformanceCycle(String name, LocalDate startDate, LocalDate endDate, String tenantId, String createdBy) {
+    public PerformanceCycle(String name, LocalDate startDate, LocalDate endDate, String createdBy) {
         this();
         this.name = name;
         this.startDate = startDate;
         this.endDate = endDate;
-        this.tenantId = tenantId;
         this.createdBy = createdBy;
     }
     
@@ -132,9 +129,6 @@ public class PerformanceCycle {
     
     public CycleStatus getStatus() { return status; }
     public void setStatus(CycleStatus status) { this.status = status; }
-    
-    public String getTenantId() { return tenantId; }
-    public void setTenantId(String tenantId) { this.tenantId = tenantId; }
     
     public Boolean getIsDefault() { return isDefault; }
     public void setIsDefault(Boolean isDefault) { this.isDefault = isDefault; }

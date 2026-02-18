@@ -32,12 +32,7 @@ export default function CycleManagement({ tenantId, userId, onCycleSelect }: Cyc
   const fetchCycles = async () => {
     try {
       setLoading(true);
-      const response = await apiFetch('/api/performance/cycles', {
-        headers: {
-          'X-Tenant-Id': tenantId,
-          'Content-Type': 'application/json'
-        }
-      });
+      const response = await apiFetch('/api/performance/cycles');
       
       if (response.ok) {
         const data = await response.json();
@@ -60,9 +55,7 @@ export default function CycleManagement({ tenantId, userId, onCycleSelect }: Cyc
       const response = await apiFetch('/api/performance/cycles', {
         method: 'POST',
         headers: {
-          'X-Tenant-Id': tenantId,
           'X-User-Id': userId,
-          'Content-Type': 'application/json'
         },
         body: JSON.stringify(newCycle)
       });
@@ -92,10 +85,6 @@ export default function CycleManagement({ tenantId, userId, onCycleSelect }: Cyc
     try {
       const response = await apiFetch(`/api/performance/cycles/${cycleId}/activate`, {
         method: 'POST',
-        headers: {
-          'X-Tenant-Id': tenantId,
-          'Content-Type': 'application/json'
-        }
       });
       
       if (response.ok) {

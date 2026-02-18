@@ -68,9 +68,22 @@ public class ShumelaHireFrontendStack : Stack
         // Add custom domain and certificate if available
         if (!string.IsNullOrEmpty(config.CertificateArn))
         {
-            distributionProps.DomainNames = new[] { frontendDomain };
+            var domainNames = new List<string> { frontendDomain };
+
+            // Add wildcard subdomain for multi-tenancy (*.shumelahire.co.za or *.sbx.shumelahire.co.za)
+            var wildcardDomain = config.EnvironmentName == "prod"
+                ? $"*.{config.DomainName}"
+                : $"*.{config.EnvironmentName}.{config.DomainName}";
+            domainNames.Add(wildcardDomain);
+
+            distributionProps.DomainNames = domainNames.ToArray();
+
+            // Use wildcard certificate if available, otherwise fall back to base certificate
+            var certArn = !string.IsNullOrEmpty(config.WildcardCertificateArn)
+                ? config.WildcardCertificateArn
+                : config.CertificateArn;
             distributionProps.Certificate = Certificate.FromCertificateArn(
-                this, "Certificate", config.CertificateArn);
+                this, "Certificate", certArn);
         }
 
         var distribution = new Distribution(this, "Distribution", distributionProps);
@@ -87,6 +100,18 @@ public class ShumelaHireFrontendStack : Stack
             {
                 Zone = hostedZone,
                 RecordName = frontendDomain,
+                Target = RecordTarget.FromAlias(new CloudFrontTarget(distribution))
+            });
+
+            // Wildcard A record for tenant subdomains (*.shumelahire.co.za → CloudFront)
+            var wildcardRecordName = config.EnvironmentName == "prod"
+                ? $"*.{config.DomainName}"
+                : $"*.{config.EnvironmentName}.{config.DomainName}";
+
+            new ARecord(this, "WildcardDnsRecord", new ARecordProps
+            {
+                Zone = hostedZone,
+                RecordName = wildcardRecordName,
                 Target = RecordTarget.FromAlias(new CloudFrontTarget(distribution))
             });
         }

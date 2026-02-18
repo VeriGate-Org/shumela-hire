@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 @Entity(name = "TgSalaryRecommendation")
 @Table(name = "tg_salary_recommendations")
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-public class SalaryRecommendation {
+public class SalaryRecommendation extends TenantAwareEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
