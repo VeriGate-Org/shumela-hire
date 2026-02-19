@@ -28,6 +28,8 @@ public class ShumelaHireFoundationStack : Stack
     public Repository BackendEcrRepo { get; }
     public Repository FrontendEcrRepo { get; }
     public ILogGroup EcsLogGroup { get; }
+    public Secret JwtSecret { get; }
+    public Secret EncryptionKeySecret { get; }
 
     public ShumelaHireFoundationStack(Construct scope, string id, EnvironmentConfig config,
         IStackProps? props = null) : base(scope, id, props)
@@ -226,13 +228,13 @@ public class ShumelaHireFoundationStack : Stack
             Description = "DocuSign API credentials"
         });
 
-        new Secret(this, "EncryptionKeySecret", new SecretProps
+        EncryptionKeySecret = new Secret(this, "EncryptionKeySecret", new SecretProps
         {
             SecretName = $"shumelahire/{config.EnvironmentName}/encryption-key",
             Description = "Application encryption key"
         });
 
-        new Secret(this, "JwtSecret", new SecretProps
+        JwtSecret = new Secret(this, "JwtSecret", new SecretProps
         {
             SecretName = $"shumelahire/{config.EnvironmentName}/jwt-secret",
             Description = "JWT signing secret"

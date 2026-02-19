@@ -119,18 +119,8 @@ public class ShumelaHireComputeStack : Stack
 
         // ── Secrets Manager References ─────────────────────────────────────────
         var dbSecret = foundation.Database.Secret!;
-        var jwtSecret = Amazon.CDK.AWS.SecretsManager.Secret.FromSecretNameV2(
-            this, "JwtSecretRef", $"shumelahire/{config.EnvironmentName}/jwt-secret");
-        var encryptionSecret = Amazon.CDK.AWS.SecretsManager.Secret.FromSecretNameV2(
-            this, "EncryptionSecretRef", $"shumelahire/{config.EnvironmentName}/encryption-key");
-        var aiKeysSecret = Amazon.CDK.AWS.SecretsManager.Secret.FromSecretNameV2(
-            this, "AiKeysSecretRef", $"shumelahire/{config.EnvironmentName}/ai-keys");
-        var docusignSecret = Amazon.CDK.AWS.SecretsManager.Secret.FromSecretNameV2(
-            this, "DocusignSecretRef", $"shumelahire/{config.EnvironmentName}/docusign");
-        var microsoftSecret = Amazon.CDK.AWS.SecretsManager.Secret.FromSecretNameV2(
-            this, "MicrosoftSecretRef", $"shumelahire/{config.EnvironmentName}/microsoft");
-        var jobBoardsSecret = Amazon.CDK.AWS.SecretsManager.Secret.FromSecretNameV2(
-            this, "JobBoardsSecretRef", $"shumelahire/{config.EnvironmentName}/job-boards");
+        var jwtSecret = foundation.JwtSecret;
+        var encryptionSecret = foundation.EncryptionKeySecret;
 
         // ── Log Group (from foundation stack — survives compute rollbacks) ──
         var logGroup = foundation.EcsLogGroup;
