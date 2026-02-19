@@ -1,6 +1,7 @@
 using Amazon.CDK;
 using Amazon.CDK.AWS.EC2;
 using Amazon.CDK.AWS.ECR;
+using Amazon.CDK.AWS.Logs;
 using Amazon.CDK.AWS.RDS;
 using Amazon.CDK.AWS.ElastiCache;
 using Amazon.CDK.AWS.S3;
@@ -26,6 +27,7 @@ public class ShumelaHireFoundationStack : Stack
     public string RedisEndpointAddress { get; }
     public Repository BackendEcrRepo { get; }
     public Repository FrontendEcrRepo { get; }
+    public ILogGroup EcsLogGroup { get; }
 
     public ShumelaHireFoundationStack(Construct scope, string id, EnvironmentConfig config,
         IStackProps? props = null) : base(scope, id, props)
@@ -333,6 +335,14 @@ public class ShumelaHireFoundationStack : Stack
                     Description = "Keep last 10 images"
                 }
             }
+        });
+
+        // ── ECS Log Group ──────────────────────────────────────────────────
+        EcsLogGroup = new LogGroup(this, "EcsLogGroup", new LogGroupProps
+        {
+            LogGroupName = $"/ecs/{config.Prefix}",
+            Retention = config.IsProduction ? RetentionDays.THREE_MONTHS : RetentionDays.ONE_WEEK,
+            RemovalPolicy = RemovalPolicy.RETAIN
         });
 
         // ── CfnOutputs ──────────────────────────────────────────────────────

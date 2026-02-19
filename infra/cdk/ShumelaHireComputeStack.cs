@@ -132,20 +132,15 @@ public class ShumelaHireComputeStack : Stack
         var jobBoardsSecret = Amazon.CDK.AWS.SecretsManager.Secret.FromSecretNameV2(
             this, "JobBoardsSecretRef", $"shumelahire/{config.EnvironmentName}/job-boards");
 
-        // ── Log Group ────────────────────────────────────────────────────────
-        var logGroup = new LogGroup(this, "LogGroup", new LogGroupProps
-        {
-            LogGroupName = $"/ecs/{prefix}",
-            Retention = config.IsProduction ? RetentionDays.THREE_MONTHS : RetentionDays.ONE_WEEK,
-            RemovalPolicy = RemovalPolicy.RETAIN
-        });
+        // ── Log Group (from foundation stack — survives compute rollbacks) ──
+        var logGroup = foundation.EcsLogGroup;
 
         // ── Backend Task Definition ──────────────────────────────────────────
         var taskDef = new FargateTaskDefinition(this, "TaskDef", new FargateTaskDefinitionProps
         {
             Family = prefix,
             Cpu = config.IsProduction ? 1024 : 512,
-            MemoryLimitMiB = config.IsProduction ? 2048 : 1024,
+            MemoryLimitMiB = config.IsProduction ? 2048 : 2048,
             TaskRole = taskRole,
             ExecutionRole = executionRole
         });
@@ -208,32 +203,9 @@ public class ShumelaHireComputeStack : Stack
                 ["DATABASE_PASS"] = Amazon.CDK.AWS.ECS.Secret.FromSecretsManager(dbSecret, "password"),
                 // Security
                 ["JWT_SECRET"] = Amazon.CDK.AWS.ECS.Secret.FromSecretsManager(jwtSecret),
-                ["ENCRYPTION_KEY"] = Amazon.CDK.AWS.ECS.Secret.FromSecretsManager(encryptionSecret),
-                // AI
-                ["CLAUDE_API_KEY"] = Amazon.CDK.AWS.ECS.Secret.FromSecretsManager(aiKeysSecret, "CLAUDE_API_KEY"),
-                ["OPENAI_API_KEY"] = Amazon.CDK.AWS.ECS.Secret.FromSecretsManager(aiKeysSecret, "OPENAI_API_KEY"),
-                // DocuSign
-                ["DOCUSIGN_ACCOUNT_ID"] = Amazon.CDK.AWS.ECS.Secret.FromSecretsManager(docusignSecret, "ACCOUNT_ID"),
-                ["DOCUSIGN_INTEGRATION_KEY"] = Amazon.CDK.AWS.ECS.Secret.FromSecretsManager(docusignSecret, "INTEGRATION_KEY"),
-                ["DOCUSIGN_SECRET_KEY"] = Amazon.CDK.AWS.ECS.Secret.FromSecretsManager(docusignSecret, "SECRET_KEY"),
-                ["DOCUSIGN_USER_ID"] = Amazon.CDK.AWS.ECS.Secret.FromSecretsManager(docusignSecret, "USER_ID"),
-                ["DOCUSIGN_PRIVATE_KEY"] = Amazon.CDK.AWS.ECS.Secret.FromSecretsManager(docusignSecret, "PRIVATE_KEY"),
-                ["DOCUSIGN_WEBHOOK_HMAC_KEY"] = Amazon.CDK.AWS.ECS.Secret.FromSecretsManager(docusignSecret, "WEBHOOK_HMAC_KEY"),
-                // Microsoft Graph
-                ["MICROSOFT_TENANT_ID"] = Amazon.CDK.AWS.ECS.Secret.FromSecretsManager(microsoftSecret, "TENANT_ID"),
-                ["MICROSOFT_CLIENT_ID"] = Amazon.CDK.AWS.ECS.Secret.FromSecretsManager(microsoftSecret, "CLIENT_ID"),
-                ["MICROSOFT_CLIENT_SECRET"] = Amazon.CDK.AWS.ECS.Secret.FromSecretsManager(microsoftSecret, "CLIENT_SECRET"),
-                ["TEAMS_WEBHOOK_URL"] = Amazon.CDK.AWS.ECS.Secret.FromSecretsManager(microsoftSecret, "TEAMS_WEBHOOK_URL"),
-                ["OUTLOOK_CALENDAR_USER"] = Amazon.CDK.AWS.ECS.Secret.FromSecretsManager(microsoftSecret, "OUTLOOK_CALENDAR_USER"),
-                // Job Boards
-                ["LINKEDIN_API_KEY"] = Amazon.CDK.AWS.ECS.Secret.FromSecretsManager(jobBoardsSecret, "LINKEDIN_API_KEY"),
-                ["LINKEDIN_API_SECRET"] = Amazon.CDK.AWS.ECS.Secret.FromSecretsManager(jobBoardsSecret, "LINKEDIN_API_SECRET"),
-                ["LINKEDIN_ORG_ID"] = Amazon.CDK.AWS.ECS.Secret.FromSecretsManager(jobBoardsSecret, "LINKEDIN_ORG_ID"),
-                ["INDEED_API_TOKEN"] = Amazon.CDK.AWS.ECS.Secret.FromSecretsManager(jobBoardsSecret, "INDEED_API_TOKEN"),
-                ["INDEED_EMPLOYER_ID"] = Amazon.CDK.AWS.ECS.Secret.FromSecretsManager(jobBoardsSecret, "INDEED_EMPLOYER_ID"),
-                ["PNET_API_KEY"] = Amazon.CDK.AWS.ECS.Secret.FromSecretsManager(jobBoardsSecret, "PNET_API_KEY"),
-                ["CAREER_JUNCTION_API_KEY"] = Amazon.CDK.AWS.ECS.Secret.FromSecretsManager(jobBoardsSecret, "CAREER_JUNCTION_API_KEY"),
-                ["CAREER_JUNCTION_PARTNER_ID"] = Amazon.CDK.AWS.ECS.Secret.FromSecretsManager(jobBoardsSecret, "CAREER_JUNCTION_PARTNER_ID")
+                ["ENCRYPTION_KEY"] = Amazon.CDK.AWS.ECS.Secret.FromSecretsManager(encryptionSecret)
+                // Non-essential secrets (AI, DocuSign, Microsoft, Job Boards) omitted —
+                // all features are disabled via environment variables. Add back when enabling.
             }
         });
 
