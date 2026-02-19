@@ -39,7 +39,7 @@ public class Tenant {
     @Column(name = "max_users")
     private Integer maxUsers = 50;
 
-    @Column(name = "settings", columnDefinition = "TEXT")
+    @Column(name = "settings", columnDefinition = "jsonb")
     private String settings = "{}";
 
     @Column(name = "created_at", nullable = false)
