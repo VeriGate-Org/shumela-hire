@@ -17,9 +17,9 @@ import java.sql.Statement;
 
 @Configuration
 @Profile({"sbx", "ppe", "prod"})
-public class TenantAwareDataSource {
+public class TenantAwareDataSourceConfig {
 
-    private static final Logger logger = LoggerFactory.getLogger(TenantAwareDataSource.class);
+    private static final Logger logger = LoggerFactory.getLogger(TenantAwareDataSourceConfig.class);
 
     @Bean
     @Primary
