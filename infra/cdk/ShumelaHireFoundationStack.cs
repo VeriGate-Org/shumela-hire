@@ -139,7 +139,7 @@ public class ShumelaHireFoundationStack : Stack
             ClusterName = $"{config.Prefix}-redis",
             Engine = "redis",
             EngineVersion = "7.1",
-            CacheNodeType = config.IsProduction ? "cache.r7g.large" : "cache.t4g.micro",
+            CacheNodeType = config.IsProduction ? "cache.r7g.large" : "cache.t3.micro",
             NumCacheNodes = 1,
             CacheSubnetGroupName = redisSubnetGroup.CacheSubnetGroupName,
             VpcSecurityGroupIds = new[] { redisSecurityGroup.SecurityGroupId }
@@ -189,7 +189,8 @@ public class ShumelaHireFoundationStack : Stack
         // ── SQS Queues ──────────────────────────────────────────────────────
         var notificationDlq = new Queue(this, "NotificationDlq", new QueueProps
         {
-            QueueName = $"{config.Prefix}-notification-dlq",
+            QueueName = $"{config.Prefix}-notification-dlq.fifo",
+            Fifo = true,
             RetentionPeriod = Duration.Days(14)
         });
 
