@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import PageWrapper from '@/components/PageWrapper';
+import { apiFetch } from '@/lib/api-fetch';
 import { 
   ShieldCheckIcon,
   UsersIcon,
@@ -67,165 +68,32 @@ export default function AdminPermissionsPage() {
 
   const loadPermissionData = async () => {
     setLoading(true);
+    try {
+      const [permissionsRes, rolesRes, usersRes] = await Promise.allSettled([
+        apiFetch('/api/admin/permissions'),
+        apiFetch('/api/admin/roles'),
+        apiFetch('/api/admin/users'),
+      ]);
 
-    // Mock permissions data
-    const mockPermissions: Permission[] = [
-      // Dashboard & Analytics
-      { id: 'view_dashboard', name: 'View Dashboard', description: 'Access to main dashboard and overview', category: 'dashboard', level: 'read' },
-      { id: 'view_analytics', name: 'View Analytics', description: 'Access to analytics and reporting features', category: 'analytics', level: 'read' },
-      { id: 'export_reports', name: 'Export Reports', description: 'Download reports and analytics data', category: 'analytics', level: 'write' },
-      
-      // Recruitment Management
-      { id: 'view_jobs', name: 'View Job Postings', description: 'View job postings and details', category: 'recruitment', level: 'read' },
-      { id: 'create_jobs', name: 'Create Job Postings', description: 'Create and publish job postings', category: 'recruitment', level: 'write' },
-      { id: 'edit_jobs', name: 'Edit Job Postings', description: 'Modify existing job postings', category: 'recruitment', level: 'write' },
-      { id: 'delete_jobs', name: 'Delete Job Postings', description: 'Remove job postings', category: 'recruitment', level: 'admin' },
-      
-      // Application Management
-      { id: 'view_applications', name: 'View Applications', description: 'View candidate applications', category: 'applications', level: 'read' },
-      { id: 'manage_applications', name: 'Manage Applications', description: 'Process and update application status', category: 'applications', level: 'write' },
-      { id: 'bulk_operations', name: 'Bulk Operations', description: 'Perform bulk actions on applications', category: 'applications', level: 'write' },
-      
-      // Candidate Management
-      { id: 'view_candidates', name: 'View Candidates', description: 'Access candidate profiles and information', category: 'candidates', level: 'read' },
-      { id: 'edit_candidates', name: 'Edit Candidates', description: 'Modify candidate information', category: 'candidates', level: 'write' },
-      { id: 'delete_candidates', name: 'Delete Candidates', description: 'Remove candidate records', category: 'candidates', level: 'admin' },
-      
-      // Interview Management
-      { id: 'view_interviews', name: 'View Interviews', description: 'View interview schedules and details', category: 'interviews', level: 'read' },
-      { id: 'schedule_interviews', name: 'Schedule Interviews', description: 'Create and manage interview schedules', category: 'interviews', level: 'write' },
-      { id: 'conduct_interviews', name: 'Conduct Interviews', description: 'Access interview tools and feedback forms', category: 'interviews', level: 'write' },
-      
-      // Integrations
-      { id: 'view_integrations', name: 'View Integrations', description: 'View integration status and configuration', category: 'integrations', level: 'read' },
-      { id: 'manage_integrations', name: 'Manage Integrations', description: 'Configure and manage system integrations', category: 'integrations', level: 'admin' },
-      
-      // Training
-      { id: 'view_training', name: 'View Training', description: 'Access training modules and progress', category: 'training', level: 'read' },
-      { id: 'manage_training', name: 'Manage Training', description: 'Create and manage training content', category: 'training', level: 'write' },
-      
-      // System Administration
-      { id: 'user_management', name: 'User Management', description: 'Manage user accounts and access', category: 'admin', level: 'admin' },
-      { id: 'role_management', name: 'Role Management', description: 'Manage roles and permissions', category: 'admin', level: 'admin' },
-      { id: 'system_settings', name: 'System Settings', description: 'Configure system-wide settings', category: 'admin', level: 'admin' },
-      { id: 'audit_logs', name: 'Audit Logs', description: 'Access system audit and activity logs', category: 'admin', level: 'admin' }
-    ];
-
-    // Mock roles data
-    const mockRoles: Role[] = [
-      {
-        id: 'admin',
-        name: 'Administrator',
-        description: 'Full system access with all administrative privileges',
-        color: 'red',
-        userCount: 3,
-        permissions: mockPermissions.map(p => p.id), // All permissions
-        isSystem: true,
-        createdAt: '2024-01-01T00:00:00Z',
-        lastModified: '2024-01-15T10:30:00Z'
-      },
-      {
-        id: 'hr_manager',
-        name: 'HR Manager',
-        description: 'HR department head with comprehensive recruitment and employee management access',
-        color: 'blue',
-        userCount: 8,
-        permissions: [
-          'view_dashboard', 'view_analytics', 'export_reports',
-          'view_jobs', 'create_jobs', 'edit_jobs',
-          'view_applications', 'manage_applications', 'bulk_operations',
-          'view_candidates', 'edit_candidates',
-          'view_interviews', 'schedule_interviews', 'conduct_interviews',
-          'view_integrations', 'view_training', 'manage_training'
-        ],
-        isSystem: true,
-        createdAt: '2024-01-01T00:00:00Z',
-        lastModified: '2024-01-10T14:20:00Z'
-      },
-      {
-        id: 'hiring_manager',
-        name: 'Hiring Manager',
-        description: 'Department managers responsible for specific role hiring decisions',
-        color: 'green',
-        userCount: 15,
-        permissions: [
-          'view_dashboard', 'view_analytics',
-          'view_jobs', 'create_jobs', 'edit_jobs',
-          'view_applications', 'manage_applications',
-          'view_candidates', 'edit_candidates',
-          'view_interviews', 'schedule_interviews', 'conduct_interviews',
-          'view_training'
-        ],
-        isSystem: true,
-        createdAt: '2024-01-01T00:00:00Z',
-        lastModified: '2024-01-08T09:45:00Z'
-      },
-      {
-        id: 'recruiter',
-        name: 'Recruiter',
-        description: 'Recruitment specialists focused on sourcing and initial candidate screening',
-        color: 'purple',
-        userCount: 22,
-        permissions: [
-          'view_dashboard',
-          'view_jobs', 'create_jobs', 'edit_jobs',
-          'view_applications', 'manage_applications',
-          'view_candidates', 'edit_candidates',
-          'view_interviews', 'schedule_interviews',
-          'view_integrations', 'view_training'
-        ],
-        isSystem: true,
-        createdAt: '2024-01-01T00:00:00Z',
-        lastModified: '2024-01-12T16:15:00Z'
-      },
-      {
-        id: 'executive',
-        name: 'Executive',
-        description: 'Senior leadership with strategic oversight and reporting access',
-        color: 'yellow',
-        userCount: 5,
-        permissions: [
-          'view_dashboard', 'view_analytics', 'export_reports',
-          'view_jobs', 'view_applications', 'view_candidates',
-          'view_interviews', 'view_training'
-        ],
-        isSystem: true,
-        createdAt: '2024-01-01T00:00:00Z',
-        lastModified: '2024-01-05T11:30:00Z'
-      },
-      {
-        id: 'applicant',
-        name: 'Applicant',
-        description: 'External candidates with limited access to application-related features',
-        color: 'gray',
-        userCount: 1247,
-        permissions: [
-          'view_jobs', 'view_applications', 'view_training'
-        ],
-        isSystem: true,
-        createdAt: '2024-01-01T00:00:00Z',
-        lastModified: '2024-01-01T00:00:00Z'
+      if (permissionsRes.status === 'fulfilled' && permissionsRes.value.ok) {
+        const data = await permissionsRes.value.json();
+        setPermissions(Array.isArray(data) ? data : data.data || []);
       }
-    ];
 
-    // Mock users data
-    const mockUsers: User[] = [
-      { id: '1', name: 'Sarah Wilson', email: 'sarah.wilson@company.com', roleId: 'admin', status: 'active', lastLogin: '2024-01-21T08:30:00Z', department: 'IT' },
-      { id: '2', name: 'Michael Chen', email: 'michael.chen@company.com', roleId: 'hr_manager', status: 'active', lastLogin: '2024-01-21T09:15:00Z', department: 'HR' },
-      { id: '3', name: 'Emily Rodriguez', email: 'emily.rodriguez@company.com', roleId: 'hiring_manager', status: 'active', lastLogin: '2024-01-20T16:45:00Z', department: 'Engineering' },
-      { id: '4', name: 'James Park', email: 'james.park@company.com', roleId: 'recruiter', status: 'active', lastLogin: '2024-01-21T10:20:00Z', department: 'HR' },
-      { id: '5', name: 'Lisa Johnson', email: 'lisa.johnson@company.com', roleId: 'executive', status: 'active', lastLogin: '2024-01-19T14:30:00Z', department: 'Executive' },
-      { id: '6', name: 'David Kim', email: 'david.kim@company.com', roleId: 'recruiter', status: 'inactive', department: 'HR' },
-      { id: '7', name: 'Anna Thompson', email: 'anna.thompson@company.com', roleId: 'hiring_manager', status: 'pending', department: 'Marketing' }
-    ];
+      if (rolesRes.status === 'fulfilled' && rolesRes.value.ok) {
+        const data = await rolesRes.value.json();
+        setRoles(Array.isArray(data) ? data : data.data || []);
+      }
 
-    // Simulate loading delay
-    setTimeout(() => {
-      setPermissions(mockPermissions);
-      setRoles(mockRoles);
-      setUsers(mockUsers);
+      if (usersRes.status === 'fulfilled' && usersRes.value.ok) {
+        const data = await usersRes.value.json();
+        setUsers(Array.isArray(data) ? data : data.data || []);
+      }
+    } catch {
+      // Keep empty state on error
+    } finally {
       setLoading(false);
-    }, 800);
+    }
   };
 
   const permissionCategories = [

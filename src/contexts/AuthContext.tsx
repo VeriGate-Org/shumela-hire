@@ -146,7 +146,14 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       throw new Error('Cognito is not configured. Use mock login in development.');
     }
 
-    const result = await signIn({ username: email, password });
+    // Clear any stale auth state before attempting sign-in
+    try { await signOut(); } catch { /* no previous session */ }
+
+    const result = await signIn({
+      username: email.trim().toLowerCase(),
+      password,
+      options: { authFlowType: 'USER_PASSWORD_AUTH' },
+    });
     if (result.isSignedIn) {
       const session = await fetchAuthSession();
       const idToken = session.tokens?.idToken;

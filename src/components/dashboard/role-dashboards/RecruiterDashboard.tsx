@@ -44,35 +44,8 @@ const mockCandidateColumns = [
   { key: 'score', label: 'Score', sortable: true, type: 'number' as const },
 ];
 
-const defaultMetrics: MetricItem[] = [
-  {
-    id: 'sourcing-effectiveness',
-    label: 'Sourcing Effectiveness',
-    value: 0,
-    previousValue: 0,
-    target: 75,
-    unit: 'percentage',
-    trend: 'neutral',
-    trendValue: 0,
-    description: 'Quality candidates sourced to total outreach ratio',
-    status: 'warning',
-  },
-  {
-    id: 'candidate-response-rate',
-    label: 'Candidate Response Rate',
-    value: 0,
-    previousValue: 0,
-    target: 30,
-    unit: 'percentage',
-    trend: 'neutral',
-    trendValue: 0,
-    description: 'Response rate to initial candidate outreach',
-    status: 'warning',
-  },
-];
-
 export default function RecruiterDashboard({ selectedTimeframe }: RecruiterDashboardProps) {
-  const [metrics, setMetrics] = useState<MetricItem[]>(defaultMetrics);
+  const [metrics, setMetrics] = useState<MetricItem[]>([]);
   const [candidateData, setCandidateData] = useState<CandidateRow[]>([]);
   const [loading, setLoading] = useState(true);
 

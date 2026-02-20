@@ -33,9 +33,6 @@ export async function GET(request: NextRequest) {
       filters.search = searchParams.get('search')!;
     }
 
-    // Ensure demo data is initialized
-    await jobAdService.initializeDemoData();
-    
     const jobAds = await jobAdService.getAllJobAds(filters);
 
     return NextResponse.json({

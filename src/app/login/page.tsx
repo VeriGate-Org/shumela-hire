@@ -38,8 +38,12 @@ function LoginContent() {
       await loginWithCredentials(email, password);
       router.push('/dashboard');
     } catch (err: unknown) {
-      const message = err instanceof Error ? err.message : 'Login failed';
+      const errObj = err as { name?: string; message?: string };
+      const message = errObj.name
+        ? `${errObj.name}: ${errObj.message}`
+        : errObj.message || 'Login failed';
       setError(message);
+      console.error('Login error:', err);
     } finally {
       setLoading(false);
     }

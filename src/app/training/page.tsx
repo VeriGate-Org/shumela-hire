@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import PageWrapper from '@/components/PageWrapper';
 import EmptyState from '@/components/EmptyState';
+import { apiFetch } from '@/lib/api-fetch';
 import { 
   AcademicCapIcon,
   PlayCircleIcon,
@@ -81,160 +82,32 @@ export default function TrainingPage() {
 
   const loadTrainingData = async () => {
     setLoading(true);
+    try {
+      const [modulesRes, pathsRes, statsRes] = await Promise.allSettled([
+        apiFetch('/api/training/modules'),
+        apiFetch('/api/training/paths'),
+        apiFetch('/api/training/stats'),
+      ]);
 
-    // Mock training modules
-    const mockModules: TrainingModule[] = [
-      {
-        id: 'docusign-integration-101',
-        title: 'DocuSign Integration Fundamentals',
-        description: 'Learn how to effectively use DocuSign integration for e-signatures and offer letter management.',
-        category: 'systems',
-        level: 'intermediate',
-        duration: 45,
-        status: 'completed',
-        progress: 100,
-        instructor: 'Sarah Chen',
-        rating: 4.8,
-        enrolledUsers: 156,
-        isRequired: true,
-        tags: ['DocuSign', 'Integration', 'E-Signature', 'Offers'],
-        type: 'interactive'
-      },
-      {
-        id: 'recruitment-best-practices',
-        title: 'Modern Recruitment Best Practices',
-        description: 'Comprehensive guide to contemporary recruitment strategies and candidate experience optimization.',
-        category: 'recruitment',
-        level: 'intermediate',
-        duration: 90,
-        status: 'in-progress',
-        progress: 65,
-        instructor: 'Michael Rodriguez',
-        rating: 4.7,
-        enrolledUsers: 203,
-        isRequired: true,
-        dueDate: '2024-02-15T00:00:00Z',
-        tags: ['Recruitment', 'Candidate Experience', 'Best Practices'],
-        type: 'video'
-      },
-      {
-        id: 'bias-free-interviewing',
-        title: 'Bias-Free Interviewing Techniques',
-        description: 'Learn to conduct fair, unbiased interviews that promote diversity and inclusion.',
-        category: 'interviewing',
-        level: 'beginner',
-        duration: 60,
-        status: 'not-started',
-        progress: 0,
-        instructor: 'Dr. Amanda Johnson',
-        rating: 4.9,
-        enrolledUsers: 89,
-        isRequired: true,
-        dueDate: '2024-01-30T00:00:00Z',
-        tags: ['Interviewing', 'Bias', 'Diversity', 'Inclusion'],
-        type: 'interactive'
-      },
-      {
-        id: 'gdpr-compliance',
-        title: 'GDPR and Data Privacy in Recruitment',
-        description: 'Understanding legal requirements for candidate data handling and privacy protection.',
-        category: 'compliance',
-        level: 'intermediate',
-        duration: 75,
-        status: 'completed',
-        progress: 100,
-        instructor: 'Legal Team',
-        rating: 4.6,
-        enrolledUsers: 245,
-        isRequired: true,
-        tags: ['GDPR', 'Privacy', 'Legal', 'Compliance'],
-        type: 'document'
-      },
-      {
-        id: 'advanced-sourcing',
-        title: 'Advanced Sourcing Strategies',
-        description: 'Master advanced techniques for finding and engaging top talent across multiple channels.',
-        category: 'recruitment',
-        level: 'advanced',
-        duration: 120,
-        status: 'not-started',
-        progress: 0,
-        instructor: 'Jennifer Park',
-        rating: 4.8,
-        enrolledUsers: 67,
-        isRequired: false,
-        tags: ['Sourcing', 'LinkedIn', 'Boolean Search', 'Networking'],
-        type: 'video'
-      },
-      {
-        id: 'leadership-hiring',
-        title: 'Executive and Leadership Hiring',
-        description: 'Specialized approaches for recruiting C-level executives and senior leadership positions.',
-        category: 'leadership',
-        level: 'advanced',
-        duration: 105,
-        status: 'in-progress',
-        progress: 30,
-        instructor: 'Robert Kim',
-        rating: 4.9,
-        enrolledUsers: 34,
-        isRequired: false,
-        tags: ['Executive Search', 'Leadership', 'C-Suite', 'Senior Roles'],
-        type: 'interactive'
+      if (modulesRes.status === 'fulfilled' && modulesRes.value.ok) {
+        const data = await modulesRes.value.json();
+        setModules(Array.isArray(data) ? data : data.data || []);
       }
-    ];
 
-    // Mock training paths
-    const mockPaths: TrainingPath[] = [
-      {
-        id: 'new-recruiter-onboarding',
-        name: 'New Recruiter Onboarding',
-        description: 'Complete onboarding program for new recruitment team members.',
-        modules: ['recruitment-best-practices', 'bias-free-interviewing', 'gdpr-compliance', 'sage-integration-101'],
-        totalDuration: 270,
-        completedModules: 2,
-        enrolledUsers: 45,
-        category: 'onboarding'
-      },
-      {
-        id: 'advanced-recruitment-mastery',
-        name: 'Advanced Recruitment Mastery',
-        description: 'Advanced certification path for experienced recruiters seeking to enhance their skills.',
-        modules: ['advanced-sourcing', 'leadership-hiring', 'bias-free-interviewing'],
-        totalDuration: 285,
-        completedModules: 1,
-        enrolledUsers: 28,
-        category: 'advanced'
-      },
-      {
-        id: 'compliance-certification',
-        name: 'Compliance & Legal Certification',
-        description: 'Mandatory training for all recruitment staff on legal and compliance requirements.',
-        modules: ['gdpr-compliance', 'bias-free-interviewing'],
-        totalDuration: 135,
-        completedModules: 2,
-        enrolledUsers: 156,
-        category: 'compliance'
+      if (pathsRes.status === 'fulfilled' && pathsRes.value.ok) {
+        const data = await pathsRes.value.json();
+        setTrainingPaths(Array.isArray(data) ? data : data.data || []);
       }
-    ];
 
-    // Mock stats
-    const mockStats: TrainingStats = {
-      totalModules: mockModules.length,
-      completedModules: mockModules.filter(m => m.status === 'completed').length,
-      inProgressModules: mockModules.filter(m => m.status === 'in-progress').length,
-      overdueTasks: mockModules.filter(m => m.dueDate && new Date(m.dueDate) < new Date()).length,
-      averageRating: 4.7,
-      totalLearningHours: 28.5
-    };
-
-    // Simulate loading delay
-    setTimeout(() => {
-      setModules(mockModules);
-      setTrainingPaths(mockPaths);
-      setStats(mockStats);
+      if (statsRes.status === 'fulfilled' && statsRes.value.ok) {
+        const data = await statsRes.value.json();
+        setStats(data.data || data);
+      }
+    } catch {
+      // Keep empty state on error
+    } finally {
       setLoading(false);
-    }, 800);
+    }
   };
 
   const filteredModules = modules.filter(module => {

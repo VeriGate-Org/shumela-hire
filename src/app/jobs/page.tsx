@@ -37,16 +37,13 @@ const JobsPortalPage: React.FC = () => {
     try {
       setLoading(true);
       setError(null);
-      
-      // Initialize demo data
-      await jobAdService.initializeDemoData();
-      
+
       // Fetch published external jobs
       const publishedJobs = await jobAdService.getPublishedJobAds(PublishingChannel.EXTERNAL);
-      
+
       // Filter to only active jobs
       const activeJobs = publishedJobs.filter(isJobAdActive);
-      
+
       setJobs(activeJobs);
     } catch (err) {
       setError('Failed to load job listings');

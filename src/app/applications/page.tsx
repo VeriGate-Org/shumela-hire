@@ -122,45 +122,13 @@ export default function ApplicationsPage() {
         const list = data.content || data;
         setApplications(Array.isArray(list) ? list : []);
       } else {
-        // Use demo data when API unavailable
-        setApplications(generateDemoData());
+        setApplications([]);
       }
     } catch {
-      setApplications(generateDemoData());
+      setApplications([]);
     } finally {
       setLoading(false);
     }
-  };
-
-  const generateDemoData = (): Application[] => {
-    const statuses = ['SUBMITTED', 'SCREENING', 'INTERVIEW_SCHEDULED', 'INTERVIEW_COMPLETED', 'REFERENCE_CHECK', 'OFFER_PENDING', 'OFFERED', 'HIRED', 'REJECTED', 'WITHDRAWN'];
-    const jobs = ['Senior Software Engineer', 'Marketing Manager', 'Sales Representative', 'HR Coordinator', 'Financial Analyst', 'Product Manager', 'UX Designer', 'Data Scientist'];
-    const departments = ['Engineering', 'Marketing', 'Sales', 'HR', 'Finance', 'Product', 'Operations'];
-    const names = ['Thabo Mokoena', 'Naledi Dlamini', 'Sipho Nkosi', 'Lerato Molefe', 'Bongani Mthembu', 'Ayanda Zulu', 'Nomsa Khumalo', 'Mandla Sithole', 'Zanele Ndaba', 'Pieter van der Merwe', 'Fatima Patel', 'James Okafor', 'Sarah Johnson', 'David Kim', 'Priya Naidoo'];
-
-    return Array.from({ length: 45 }, (_, i) => {
-      const submittedDate = new Date();
-      submittedDate.setDate(submittedDate.getDate() - Math.floor(Math.random() * 90));
-      const status = statuses[Math.floor(Math.random() * statuses.length)];
-      const name = names[Math.floor(Math.random() * names.length)];
-      const daysFromSubmission = Math.floor((Date.now() - submittedDate.getTime()) / (1000 * 60 * 60 * 24));
-
-      return {
-        id: i + 1,
-        jobTitle: jobs[Math.floor(Math.random() * jobs.length)],
-        department: departments[Math.floor(Math.random() * departments.length)],
-        status,
-        statusDisplayName: status.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase()),
-        statusCssClass: getStatusColor(status),
-        submittedAt: submittedDate.toISOString(),
-        rating: Math.random() > 0.3 ? Math.floor(Math.random() * 5) + 1 : undefined,
-        canBeWithdrawn: !['WITHDRAWN', 'REJECTED', 'HIRED', 'OFFERED'].includes(status),
-        daysFromSubmission,
-        applicantName: name,
-        applicantEmail: name.toLowerCase().replace(/\s+/g, '.') + '@email.com',
-        applicationSource: ['Website', 'LinkedIn', 'Referral', 'Agency', 'Job Board'][Math.floor(Math.random() * 5)],
-      };
-    });
   };
 
   const filteredApplications = useMemo(() => {

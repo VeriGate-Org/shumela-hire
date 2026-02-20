@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useCallback } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import PageWrapper from '@/components/PageWrapper';
 import {
   ReportBuilder,
@@ -20,6 +20,7 @@ import {
   ClockIcon,
 } from '@heroicons/react/24/outline';
 import EmptyState from '@/components/EmptyState';
+import { apiFetch } from '@/lib/api-fetch';
 
 // Mock data for available fields
 const AVAILABLE_FIELDS: ReportField[] = [
@@ -54,115 +55,31 @@ const AVAILABLE_FIELDS: ReportField[] = [
   { id: 'cost_per_hire', name: 'Cost per Hire', type: 'number', category: 'performance', aggregatable: true },
 ];
 
-// Mock saved reports
-const MOCK_SAVED_REPORTS: SavedReport[] = [
-  {
-    id: '1',
-    name: 'Monthly Recruitment Summary',
-    description: 'Comprehensive overview of recruitment activities and performance',
-    fields: ['position_title', 'applications_count', 'interviews_count', 'hires_count', 'conversion_rate'],
-    filters: [
-      {
-        id: 'filter1',
-        field: 'application_date',
-        operator: 'between',
-        value: ['2024-01-01', '2024-01-31'],
-        label: 'January 2024',
-      },
-    ],
-    visualization: { type: 'table' },
-    dateRange: { start: '2024-01-01', end: '2024-01-31' },
-    schedule: {
-      enabled: true,
-      frequency: 'monthly',
-      recipients: ['hr-manager@company.com', 'recruiter@company.com'],
-    },
-    createdAt: '2024-01-15T10:00:00Z',
-    updatedAt: '2024-01-20T14:30:00Z',
-    createdBy: 'john.doe@company.com',
-    isShared: true,
-    lastRun: '2024-01-31T23:00:00Z',
-    runCount: 5,
-    tags: ['monthly', 'summary', 'performance'],
-  },
-  {
-    id: '2',
-    name: 'Source Effectiveness Analysis',
-    description: 'Compare recruitment sources by conversion rates and quality',
-    fields: ['candidate_source', 'applications_count', 'conversion_rate', 'candidate_score'],
-    filters: [],
-    visualization: { type: 'bar', xAxis: 'candidate_source', yAxis: 'conversion_rate' },
-    dateRange: { start: '2024-01-01', end: '2024-12-31' },
-    createdAt: '2024-01-10T09:00:00Z',
-    updatedAt: '2024-01-25T11:15:00Z',
-    createdBy: 'jane.smith@company.com',
-    isShared: false,
-    runCount: 12,
-    tags: ['source', 'analysis', 'conversion'],
-  },
-  {
-    id: '3',
-    name: 'Time to Hire Trends',
-    description: 'Track hiring speed across departments and positions',
-    fields: ['position_department', 'position_title', 'time_to_hire', 'hire_date'],
-    filters: [
-      {
-        id: 'filter2',
-        field: 'hire_date',
-        operator: 'greater_than',
-        value: '2023-12-01',
-        label: 'Recent hires',
-      },
-    ],
-    visualization: { type: 'line', xAxis: 'hire_date', yAxis: 'time_to_hire' },
-    dateRange: { start: '2023-12-01', end: '2024-01-31' },
-    createdAt: '2024-01-05T16:45:00Z',
-    updatedAt: '2024-01-28T08:20:00Z',
-    createdBy: 'mike.johnson@company.com',
-    isShared: true,
-    lastRun: '2024-01-28T09:00:00Z',
-    runCount: 8,
-    tags: ['time-to-hire', 'trends', 'efficiency'],
-  },
-];
-
-// Mock schedules
-const MOCK_SCHEDULES: ReportSchedule[] = [
-  {
-    id: 'sched1',
-    reportId: '1',
-    reportName: 'Monthly Recruitment Summary',
-    frequency: 'monthly',
-    recipients: ['hr-manager@company.com', 'recruiter@company.com'],
-    enabled: true,
-    nextRun: '2024-02-29T23:00:00Z',
-    lastRun: '2024-01-31T23:00:00Z',
-    createdAt: '2024-01-15T10:00:00Z',
-    runCount: 5,
-    lastStatus: 'success',
-  },
-  {
-    id: 'sched2',
-    reportId: '3',
-    reportName: 'Time to Hire Trends',
-    frequency: 'weekly',
-    recipients: ['operations@company.com'],
-    enabled: false,
-    nextRun: '2024-02-05T09:00:00Z',
-    lastRun: '2024-01-28T09:00:00Z',
-    createdAt: '2024-01-05T16:45:00Z',
-    runCount: 8,
-    lastStatus: 'success',
-  },
-];
-
 export default function ReportsPage() {
   const [activeTab, setActiveTab] = useState<'create' | 'library' | 'results' | 'scheduler'>('create');
-  const [savedReports, setSavedReports] = useState<SavedReport[]>(MOCK_SAVED_REPORTS);
+  const [savedReports, setSavedReports] = useState<SavedReport[]>([]);
   const [reportResults, setReportResults] = useState<ReportResult[]>([]);
-  const [schedules, setSchedules] = useState<ReportSchedule[]>(MOCK_SCHEDULES);
+  const [schedules, setSchedules] = useState<ReportSchedule[]>([]);
   const [currentResult, setCurrentResult] = useState<ReportResult | null>(null);
   const [editingReport, setEditingReport] = useState<SavedReport | null>(null);
+
+  useEffect(() => {
+    async function loadData() {
+      const [reportsRes, schedulesRes] = await Promise.allSettled([
+        apiFetch('/api/reports'),
+        apiFetch('/api/reports/schedules'),
+      ]);
+      if (reportsRes.status === 'fulfilled' && reportsRes.value.ok) {
+        const data = await reportsRes.value.json();
+        setSavedReports(Array.isArray(data) ? data : data.data || []);
+      }
+      if (schedulesRes.status === 'fulfilled' && schedulesRes.value.ok) {
+        const data = await schedulesRes.value.json();
+        setSchedules(Array.isArray(data) ? data : data.data || []);
+      }
+    }
+    loadData();
+  }, []);
 
   // Report Builder handlers
   const handleSaveReport = useCallback((config: ReportConfig) => {

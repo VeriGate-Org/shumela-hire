@@ -6,7 +6,6 @@ import { RequisitionData } from '../../../types/workflow';
 import ApprovalTimeline, { ApprovalStep } from '../../../components/ApprovalTimeline';
 import AuditLogViewer from '../../../components/AuditLogViewer';
 import { approvalTimelineService } from '../../../services/approvalTimelineService';
-import { requisitionService } from '../../../services/requisitionService';
 import { formatSalaryRange } from '@/utils/currency';
 import { apiFetch } from '@/lib/api-fetch';
 
@@ -24,9 +23,6 @@ const RequisitionDetailPage: React.FC = () => {
     try {
       setLoading(true);
       setError(null);
-
-      // Initialize demo data first (in case it hasn't been loaded yet)
-      await requisitionService.initializeDemoData();
 
       // Fetch requisition data
       const response = await apiFetch(`/api/requisitions/${requisitionId}`);

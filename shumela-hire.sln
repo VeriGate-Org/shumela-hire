@@ -1,0 +1,32 @@
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.5.2.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "infra", "infra", "{30258541-D0D8-F3FD-D559-E63D6BF074C2}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "cdk", "cdk", "{78094D1C-4E87-E709-D0DB-11795AC74FF8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShumelaHireInfra", "infra\cdk\ShumelaHireInfra.csproj", "{42E76C8F-0323-C8E1-568B-57091EDF2EE6}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{42E76C8F-0323-C8E1-568B-57091EDF2EE6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{42E76C8F-0323-C8E1-568B-57091EDF2EE6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{42E76C8F-0323-C8E1-568B-57091EDF2EE6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{42E76C8F-0323-C8E1-568B-57091EDF2EE6}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{78094D1C-4E87-E709-D0DB-11795AC74FF8} = {30258541-D0D8-F3FD-D559-E63D6BF074C2}
+		{42E76C8F-0323-C8E1-568B-57091EDF2EE6} = {78094D1C-4E87-E709-D0DB-11795AC74FF8}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {C4D3B5BF-F5CF-4B1E-A398-95CC1BFD16DD}
+	EndGlobalSection
+EndGlobal
