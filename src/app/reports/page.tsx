@@ -20,6 +20,7 @@ import {
   ClockIcon,
 } from '@heroicons/react/24/outline';
 import EmptyState from '@/components/EmptyState';
+import { useToast } from '@/components/Toast';
 import { apiFetch } from '@/lib/api-fetch';
 
 // Mock data for available fields
@@ -62,6 +63,7 @@ export default function ReportsPage() {
   const [schedules, setSchedules] = useState<ReportSchedule[]>([]);
   const [currentResult, setCurrentResult] = useState<ReportResult | null>(null);
   const [editingReport, setEditingReport] = useState<SavedReport | null>(null);
+  const { toast } = useToast();
 
   useEffect(() => {
     async function loadData() {
@@ -95,7 +97,7 @@ export default function ReportsPage() {
     };
     
     setSavedReports(prev => [...prev, newReport]);
-    alert('Report saved successfully!');
+    toast('Report saved successfully', 'success');
   }, []);
 
   const handleRunReport = useCallback(async (config: ReportConfig) => {
@@ -132,7 +134,7 @@ export default function ReportsPage() {
   }, []);
 
   const handleExportReport = useCallback((config: ReportConfig, format: 'csv' | 'pdf' | 'xlsx') => {
-    alert(`Exporting report "${config.name}" as ${format.toUpperCase()}`);
+    toast(`Exporting report "${config.name}" as ${format.toUpperCase()}`, 'info');
   }, []);
 
   // Library handlers
@@ -164,7 +166,7 @@ export default function ReportsPage() {
     setSavedReports(prev => prev.map(r => 
       r.id === reportId ? { ...r, isShared: true } : r
     ));
-    alert('Report shared successfully!');
+    toast('Report shared successfully', 'success');
   }, []);
 
   const handleViewReport = useCallback((report: SavedReport) => {
@@ -174,13 +176,13 @@ export default function ReportsPage() {
   // Viewer handlers
   const handleExportResult = useCallback((format: 'csv' | 'pdf' | 'xlsx') => {
     if (currentResult) {
-      alert(`Exporting "${currentResult.config.name}" as ${format.toUpperCase()}`);
+      toast(`Exporting "${currentResult.config.name}" as ${format.toUpperCase()}`, 'info');
     }
   }, [currentResult]);
 
   const handleShareResult = useCallback(() => {
     if (currentResult) {
-      alert(`Sharing report result: ${currentResult.config.name}`);
+      toast(`Sharing report result: ${currentResult.config.name}`, 'info');
     }
   }, [currentResult]);
 

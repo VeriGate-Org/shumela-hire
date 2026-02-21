@@ -52,7 +52,6 @@ function LoginCallbackContent() {
       // Handle OAuth2 authorization code flow (existing mock flow)
       if (code) {
         try {
-          // TODO: Replace with real JWT token exchange
           const mockJwtPayload: any = null;
 
           const extractUserRole = (payload: {

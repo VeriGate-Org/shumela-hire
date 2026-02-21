@@ -21,6 +21,7 @@ import {
   PaperAirplaneIcon
 } from '@heroicons/react/24/outline';
 import { formatSalaryRange } from '@/utils/currency';
+import { useToast } from '@/components/Toast';
 
 // Types for internal job data
 interface InternalJobAd {
@@ -79,6 +80,7 @@ export default function InternalJobDetailPage() {
   const params = useParams();
   const router = useRouter();
   const { user, isAuthenticated } = useAuth();
+  const { toast } = useToast();
   const jobId = params.id as string;
   
   const [job, setJob] = useState<InternalJobAd | null>(null);
@@ -172,7 +174,7 @@ export default function InternalJobDetailPage() {
     } else {
       // Fallback to copying URL
       navigator.clipboard.writeText(window.location.href);
-      alert('Job URL copied to clipboard!');
+      toast('Job URL copied to clipboard!', 'success');
     }
   };
 

@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import { useToast } from '@/components/Toast';
 import { CurrencyDollarIcon } from '@heroicons/react/24/outline';
 import { salaryRecommendationService } from '@/services/salaryRecommendationService';
 import EmptyState from './EmptyState';
@@ -18,6 +19,7 @@ function formatCurrency(amount?: number, currency = 'ZAR'): string {
 }
 
 export default function SalaryRecommendationManager() {
+  const { toast } = useToast();
   const [recommendations, setRecommendations] = useState<SalaryRecommendation[]>([]);
   const [loading, setLoading] = useState(true);
   const [showCreateModal, setShowCreateModal] = useState(false);
@@ -66,7 +68,7 @@ export default function SalaryRecommendationManager() {
       await loadRecommendations();
     } catch (error) {
       console.error('Failed to create recommendation:', error);
-      alert('Failed to create recommendation');
+      toast('Failed to create recommendation', 'error');
     } finally {
       setActionLoading(null);
     }
@@ -79,7 +81,7 @@ export default function SalaryRecommendationManager() {
       await loadRecommendations();
     } catch (error) {
       console.error('Failed to submit:', error);
-      alert('Failed to submit for review');
+      toast('Failed to submit for review', 'error');
     } finally {
       setActionLoading(null);
     }
@@ -98,7 +100,7 @@ export default function SalaryRecommendationManager() {
       await loadRecommendations();
     } catch (error) {
       console.error('Failed to provide recommendation:', error);
-      alert('Failed to provide recommendation');
+      toast('Failed to provide recommendation', 'error');
     } finally {
       setActionLoading(null);
     }
@@ -111,7 +113,7 @@ export default function SalaryRecommendationManager() {
       await loadRecommendations();
     } catch (error) {
       console.error('Failed to approve:', error);
-      alert('Failed to approve');
+      toast('Failed to approve', 'error');
     } finally {
       setActionLoading(null);
     }
@@ -126,7 +128,7 @@ export default function SalaryRecommendationManager() {
       await loadRecommendations();
     } catch (error) {
       console.error('Failed to reject:', error);
-      alert('Failed to reject');
+      toast('Failed to reject', 'error');
     } finally {
       setActionLoading(null);
     }

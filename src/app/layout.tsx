@@ -5,6 +5,7 @@ import { AuthProvider } from '@/contexts/AuthContext';
 import { ThemeProvider } from '@/contexts/ThemeContext';
 import { LayoutProvider } from '@/contexts/LayoutContext';
 import { TenantProvider } from '@/contexts/TenantContext';
+import { ToastProvider } from '@/components/Toast';
 
 const manrope = Manrope({
   variable: "--font-manrope",
@@ -88,9 +89,11 @@ export default function RootLayout({
         <TenantProvider>
           <ThemeProvider>
             <AuthProvider>
-              <LayoutProvider>
-                {children}
-              </LayoutProvider>
+              <ToastProvider>
+                <LayoutProvider>
+                  {children}
+                </LayoutProvider>
+              </ToastProvider>
             </AuthProvider>
           </ThemeProvider>
         </TenantProvider>

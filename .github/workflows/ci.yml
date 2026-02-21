@@ -55,7 +55,6 @@ jobs:
 
       - name: OWASP Dependency Check
         run: mvn dependency-check:check -DfailBuildOnCVSS=7
-        continue-on-error: true
 
       - uses: actions/upload-artifact@v4
         if: always()
@@ -89,7 +88,6 @@ jobs:
 
       - name: Security Audit
         run: npm audit --audit-level=high
-        continue-on-error: true
 
   cdk:
     name: CDK Synth

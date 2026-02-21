@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import { useToast } from '@/components/Toast';
 import { apiFetch } from '@/lib/api-fetch';
 
 interface Application {
@@ -40,6 +41,7 @@ interface BulkOperation {
 
 export default function ApplicationManagementConsole() {
   const router = useRouter();
+  const { toast } = useToast();
   const [applications, setApplications] = useState<Application[]>([]);
   const [selectedApplications, setSelectedApplications] = useState<number[]>([]);
   const [loading, setLoading] = useState(false);
@@ -236,11 +238,11 @@ export default function ApplicationManagementConsole() {
         searchApplications();
         fetchStatistics();
       } else {
-        alert('Error executing bulk operation');
+        toast('Error executing bulk operation', 'error');
       }
     } catch (err) {
       console.error('Error executing bulk operation:', err);
-      alert('Error executing bulk operation');
+      toast('Error executing bulk operation', 'error');
     }
   };
 
@@ -262,11 +264,11 @@ export default function ApplicationManagementConsole() {
         a.click();
         window.URL.revokeObjectURL(url);
       } else {
-        alert('Error exporting applications');
+        toast('Error exporting applications', 'error');
       }
     } catch (err) {
       console.error('Error exporting applications:', err);
-      alert('Error exporting applications');
+      toast('Error exporting applications', 'error');
     }
   };
 

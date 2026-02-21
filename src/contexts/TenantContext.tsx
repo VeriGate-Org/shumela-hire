@@ -2,6 +2,7 @@
 
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { getTenantSubdomain } from '@/lib/tenant-utils';
+import { apiFetch } from '@/lib/api-fetch';
 
 interface TenantInfo {
   id: string;
@@ -31,8 +32,6 @@ interface TenantProviderProps {
   children: ReactNode;
 }
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080';
-
 export const TenantProvider: React.FC<TenantProviderProps> = ({ children }) => {
   const [tenant, setTenant] = useState<TenantInfo | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -53,7 +52,7 @@ export const TenantProvider: React.FC<TenantProviderProps> = ({ children }) => {
     }
 
     try {
-      const response = await fetch(`${API_BASE_URL}/api/public/tenants/resolve/${subdomain}`);
+      const response = await apiFetch(`/api/public/tenants/resolve/${subdomain}`);
       if (response.ok) {
         const data: TenantInfo = await response.json();
         setTenant(data);

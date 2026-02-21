@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { useSecurity } from '@/contexts/SecurityContext';
+import { useToast } from '@/components/Toast';
 import { apiFetch } from '@/lib/api-fetch';
 
 /**
@@ -10,6 +11,7 @@ import { apiFetch } from '@/lib/api-fetch';
  */
 const GDPRComplianceManager: React.FC = () => {
   const { user, hasPermission } = useSecurity();
+  const { toast } = useToast();
   const [activeTab, setActiveTab] = useState<'overview' | 'requests' | 'exports' | 'retention'>('overview');
   const [complianceData, setComplianceData] = useState<any>(null);
   const [dataRequests, setDataRequests] = useState<any[]>([]);
@@ -64,12 +66,12 @@ const GDPRComplianceManager: React.FC = () => {
 
       if (response.ok) {
         const result = await response.json();
-        alert(`Request submitted successfully. Request ID: ${result.requestId}`);
+        toast(`Request submitted successfully. Request ID: ${result.requestId}`, 'success');
         loadComplianceData();
       }
     } catch (error) {
       console.error('Failed to submit data request:', error);
-      alert('Failed to submit request. Please try again.');
+      toast('Failed to submit request. Please try again.', 'error');
     }
   };
 

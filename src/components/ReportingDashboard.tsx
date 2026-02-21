@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { apiFetch } from '@/lib/api-fetch';
+import { useToast } from '@/components/Toast';
 import AdvancedReportBuilder from './AdvancedReportBuilder';
 
 interface ReportType {
@@ -26,6 +27,7 @@ interface ScheduledReport {
 }
 
 const ReportingDashboard: React.FC = () => {
+  const { toast } = useToast();
   const [activeTab, setActiveTab] = useState('generate');
   const [reportTypes, setReportTypes] = useState<Record<string, ReportType>>({});
   const [selectedReportType, setSelectedReportType] = useState('');
@@ -103,7 +105,7 @@ const ReportingDashboard: React.FC = () => {
 
     } catch (error) {
       console.error('Error generating report:', error);
-      alert('Error generating report. Please try again.');
+      toast('Error generating report. Please try again.', 'error');
     } finally {
       setIsGenerating(false);
     }
@@ -135,7 +137,7 @@ const ReportingDashboard: React.FC = () => {
       }
     } catch (error) {
       console.error('Error generating advanced report:', error);
-      alert('Error generating advanced report. Please try again.');
+      toast('Error generating advanced report. Please try again.', 'error');
     } finally {
       setIsGenerating(false);
     }
@@ -167,7 +169,7 @@ const ReportingDashboard: React.FC = () => {
       }
     } catch (error) {
       console.error('Error generating custom report:', error);
-      alert('Error generating custom report. Please try again.');
+      toast('Error generating custom report. Please try again.', 'error');
     } finally {
       setIsGenerating(false);
     }
@@ -199,7 +201,7 @@ const ReportingDashboard: React.FC = () => {
       }
     } catch (error) {
       console.error('Error generating bulk export:', error);
-      alert('Error generating bulk export. Please try again.');
+      toast('Error generating bulk export. Please try again.', 'error');
     } finally {
       setIsGenerating(false);
     }

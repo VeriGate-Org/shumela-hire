@@ -1,6 +1,6 @@
 import { getTenantSubdomain } from '@/lib/tenant-utils';
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080';
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL ?? '';
 
 async function getAuthToken(): Promise<string | null> {
   try {

@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import { useToast } from '@/components/Toast';
 import { jobBoardService } from '@/services/jobBoardService';
 import {
   JobBoardPosting,
@@ -15,6 +16,7 @@ interface JobBoardManagerProps {
 }
 
 export default function JobBoardManager({ jobId }: JobBoardManagerProps) {
+  const { toast } = useToast();
   const [postings, setPostings] = useState<JobBoardPosting[]>([]);
   const [availableBoards, setAvailableBoards] = useState<AvailableBoard[]>([]);
   const [loading, setLoading] = useState(true);
@@ -50,7 +52,7 @@ export default function JobBoardManager({ jobId }: JobBoardManagerProps) {
       await loadData();
     } catch (error) {
       console.error('Failed to post:', error);
-      alert('Failed to post to board');
+      toast('Failed to post to board', 'error');
     } finally {
       setActionLoading(null);
     }

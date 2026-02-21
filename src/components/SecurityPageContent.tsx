@@ -1,12 +1,14 @@
 'use client';
 
 import { useState } from 'react';
+import { useToast } from '@/components/Toast';
 import SecurityDashboard from '@/components/SecurityDashboard';
 import GDPRComplianceManager from '@/components/GDPRComplianceManager';
 import { useSecurity } from '@/contexts/SecurityContext';
 import { apiFetch } from '@/lib/api-fetch';
 
 export default function SecurityPageContent() {
+  const { toast } = useToast();
   const { user, hasPermission } = useSecurity();
   const [activeTab, setActiveTab] = useState<'security' | 'gdpr' | 'settings'>('security');
   const [passwordForm, setPasswordForm] = useState({
@@ -19,7 +21,7 @@ export default function SecurityPageContent() {
     e.preventDefault();
 
     if (passwordForm.newPassword !== passwordForm.confirmPassword) {
-      alert('Passwords do not match');
+      toast('Passwords do not match', 'error');
       return;
     }
 
@@ -33,14 +35,14 @@ export default function SecurityPageContent() {
       });
 
       if (response.ok) {
-        alert('Password changed successfully');
+        toast('Password changed successfully', 'success');
         setPasswordForm({ currentPassword: '', newPassword: '', confirmPassword: '' });
       } else {
-        alert('Failed to change password');
+        toast('Failed to change password', 'error');
       }
     } catch (error) {
       console.error('Password change error:', error);
-      alert('An error occurred while changing password');
+      toast('An error occurred while changing password', 'error');
     }
   };
 

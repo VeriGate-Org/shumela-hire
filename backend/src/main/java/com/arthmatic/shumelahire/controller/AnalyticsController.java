@@ -97,8 +97,7 @@ public class AnalyticsController {
     @PostMapping("/calculate")
     public ResponseEntity<String> calculateMetrics(
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date,
-            @RequestParam(required = false) String department,
-            @RequestHeader("X-User-ID") Long userId) {
+            @RequestParam(required = false) String department) {
         
         try {
             analyticsService.calculateAndStoreMetrics(date, department);

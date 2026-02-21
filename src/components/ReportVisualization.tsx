@@ -1,4 +1,7 @@
+'use client';
+
 import React, { useState, useEffect } from 'react';
+import { useToast } from '@/components/Toast';
 import { apiFetch } from '@/lib/api-fetch';
 
 interface ChartData {
@@ -19,6 +22,7 @@ interface KPIWidget {
 }
 
 const ReportVisualization: React.FC = () => {
+  const { toast } = useToast();
   const [kpis, setKPIs] = useState<Record<string, KPIWidget>>({});
   const [charts, setCharts] = useState<Record<string, ChartData>>({});
   const [loading, setLoading] = useState(true);
@@ -240,7 +244,7 @@ const ReportVisualization: React.FC = () => {
       window.URL.revokeObjectURL(url);
     } catch (error) {
       console.error('Error exporting visualization:', error);
-      alert('Error exporting visualization data. Please try again.');
+      toast('Error exporting visualization data. Please try again.', 'error');
     }
   };
 

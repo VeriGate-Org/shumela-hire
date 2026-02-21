@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import { useToast } from '@/components/Toast';
 import { apiFetch } from '@/lib/api-fetch';
 
 interface Application {
@@ -75,6 +76,7 @@ const AVAILABLE_STAGES = [
 ];
 
 export default function ApplicationTimeline({ application, onClose, onStageTransition }: ApplicationTimelineProps) {
+  const { toast } = useToast();
   const [timeline, setTimeline] = useState<PipelineTransition[]>([]);
   const [availableStages, setAvailableStages] = useState<string[]>([]);
   const [loading, setLoading] = useState(false);
@@ -116,7 +118,7 @@ export default function ApplicationTimeline({ application, onClose, onStageTrans
 
   const handleStageTransition = async () => {
     if (!selectedStage || !transitionReason.trim()) {
-      alert('Please select a stage and provide a reason');
+      toast('Please select a stage and provide a reason', 'info');
       return;
     }
 

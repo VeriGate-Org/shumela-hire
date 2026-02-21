@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import { useToast } from '@/components/Toast';
 import { vacancyReportService } from '@/services/vacancyReportService';
 
 interface VacancyReportActionsProps {
@@ -9,6 +10,7 @@ interface VacancyReportActionsProps {
 }
 
 export default function VacancyReportActions({ jobId, showDemographics = false }: VacancyReportActionsProps) {
+  const { toast } = useToast();
   const [downloading, setDownloading] = useState<string | null>(null);
 
   const handleDownload = async (type: 'summary' | 'shortlist' | 'demographics') => {
@@ -27,7 +29,7 @@ export default function VacancyReportActions({ jobId, showDemographics = false }
       }
     } catch (error) {
       console.error(`Failed to download ${type} report:`, error);
-      alert(`Failed to download ${type} report. Please try again.`);
+      toast(`Failed to download ${type} report. Please try again.`, 'error');
     } finally {
       setDownloading(null);
     }

@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import { RequisitionData, ApprovalRole, WorkflowAction } from '../types/workflow';
 import { getAllowedTransitions } from '../services/workflowDefinition';
+import { useToast } from './Toast';
 
 interface WorkflowActionsProps {
   requisition: RequisitionData;
@@ -17,6 +18,7 @@ const WorkflowActions: React.FC<WorkflowActionsProps> = ({
   onAction,
   disabled = false
 }) => {
+  const { toast } = useToast();
   const [isLoading, setIsLoading] = useState(false);
   const [showCommentModal, setShowCommentModal] = useState(false);
   const [pendingAction, setPendingAction] = useState<WorkflowAction | null>(null);
@@ -44,7 +46,7 @@ const WorkflowActions: React.FC<WorkflowActionsProps> = ({
     if (!pendingAction) return;
 
     if (pendingAction === WorkflowAction.REJECT && (!comment || comment.trim().length === 0)) {
-      alert('Comment is required for rejection');
+      toast('Comment is required for rejection', 'info');
       return;
     }
 

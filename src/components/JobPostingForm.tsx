@@ -197,11 +197,8 @@ export default function JobPostingForm({ jobPostingId, currentUserId, onSuccess,
         `/api/job-postings?${actorParam}`;
       const method = jobPostingId ? 'PUT' : 'POST';
 
-      const response = await fetch(url, {
+      const response = await apiFetch(url, {
         method,
-        headers: {
-          'Content-Type': 'application/json',
-        },
         body: JSON.stringify(submitData),
       });
 

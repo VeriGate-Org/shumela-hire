@@ -60,8 +60,7 @@ interface JobFeed {
 // Fetch active jobs from backend
 async function fetchActiveJobs(): Promise<BackendJobAd[]> {
   try {
-    // Use environment variable for API base URL, fallback to localhost for development
-    const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:8080';
+    const baseUrl = process.env.NEXT_PUBLIC_API_URL || '';
     
     // Fetch published external jobs
     const url = new URL('/ads', baseUrl);

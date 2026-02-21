@@ -3,6 +3,8 @@ package com.arthmatic.shumelahire.controller;
 import com.arthmatic.shumelahire.dto.*;
 import com.arthmatic.shumelahire.entity.JobAdHistory;
 import com.arthmatic.shumelahire.entity.JobAdStatus;
+import com.arthmatic.shumelahire.entity.User;
+import com.arthmatic.shumelahire.repository.UserRepository;
 import com.arthmatic.shumelahire.service.JobAdService;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
@@ -14,6 +16,8 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -27,6 +31,9 @@ public class JobAdController {
     
     @Autowired
     private JobAdService jobAdService;
+
+    @Autowired
+    private UserRepository userRepository;
     
     /**
      * POST /ads - Create job ad (draft or publish)
@@ -54,10 +61,11 @@ public class JobAdController {
      */
     @PutMapping("/{id}")
     public ResponseEntity<ApiResponse<JobAdResponse>> updateJobAd(
-            @PathVariable Long id, 
+            @PathVariable Long id,
             @Valid @RequestBody JobAdUpdateRequest request,
-            @RequestHeader(value = "X-User-ID", required = false, defaultValue = "anonymous") String userId) {
+            Authentication authentication) {
         try {
+            String userId = resolveActorId(authentication);
             logger.info("Updating job ad: {}", id);
             JobAdResponse response = jobAdService.updateJobAd(id, request, userId);
             return ResponseEntity.ok(ApiResponse.success(response, "Job ad updated successfully"));
@@ -100,8 +108,9 @@ public class JobAdController {
     @PostMapping("/{id}/unpublish")
     public ResponseEntity<ApiResponse<JobAdResponse>> unpublishJobAd(
             @PathVariable Long id,
-            @RequestHeader(value = "X-User-ID", required = false, defaultValue = "anonymous") String userId) {
+            Authentication authentication) {
         try {
+            String userId = resolveActorId(authentication);
             logger.info("Unpublishing job ad: {}", id);
             JobAdResponse response = jobAdService.unpublishJobAd(id, userId);
             return ResponseEntity.ok(ApiResponse.success(response, "Job ad unpublished successfully"));
@@ -198,9 +207,9 @@ public class JobAdController {
      * POST /ads/expire - Manual trigger for expiring ads (admin only)
      */
     @PostMapping("/expire")
-    public ResponseEntity<ApiResponse<String>> expireAds(
-            @RequestHeader(value = "X-User-ID", required = false, defaultValue = "anonymous") String userId) {
+    public ResponseEntity<ApiResponse<String>> expireAds(Authentication authentication) {
         try {
+            String userId = resolveActorId(authentication);
             logger.info("Manually triggering ad expiration by user: {}", userId);
             int expiredCount = jobAdService.expireAds();
             String message = String.format("Expired %d job ads", expiredCount);
@@ -210,5 +219,19 @@ public class JobAdController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(ApiResponse.error("Internal server error"));
         }
+    }
+
+    private String resolveActorId(Authentication authentication) {
+        if (authentication.getPrincipal() instanceof Jwt jwt) {
+            String email = jwt.getClaimAsString("email");
+            if (email != null) {
+                return userRepository.findByEmail(email)
+                        .map(u -> String.valueOf(u.getId()))
+                        .orElse(email);
+            }
+        } else if (authentication.getPrincipal() instanceof User user) {
+            return String.valueOf(user.getId());
+        }
+        return "unknown";
     }
 }

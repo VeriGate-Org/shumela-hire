@@ -6,14 +6,16 @@ import { jobTemplateService } from '../../services/jobTemplateService';
 import TemplateList from '../../components/templates/TemplateList';
 import TemplateEditor from '../../components/templates/TemplateEditor';
 import GenerateFromTemplate from '../../components/templates/GenerateFromTemplate';
-import { 
+import { useToast } from '@/components/Toast';
+import {
   DocumentTextIcon,
   PlusIcon,
   SparklesIcon,
-  ChartBarIcon 
+  ChartBarIcon
 } from '@heroicons/react/24/outline';
 
 const JobTemplatesPage: React.FC = () => {
+  const { toast } = useToast();
   const [activeView, setActiveView] = useState<'list' | 'editor' | 'generate'>('list');
   const [selectedTemplate, setSelectedTemplate] = useState<JobAdTemplate | null>(null);
   const [stats, setStats] = useState<TemplateStats | null>(null);
@@ -59,7 +61,7 @@ const JobTemplatesPage: React.FC = () => {
 
   const handleGenerated = (draft: JobAdDraft) => {
     console.log('Job ad generated:', draft);
-    alert('Job ad draft created successfully! In a real app, this would redirect to the draft editor.');
+    toast('Job ad draft created successfully! In a real app, this would redirect to the draft editor.', 'success');
     setActiveView('list');
     setSelectedTemplate(null);
   };

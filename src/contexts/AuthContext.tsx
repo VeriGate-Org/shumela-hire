@@ -182,11 +182,11 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   // Mock login for dev
   const login = useCallback((userData: User) => {
     setUser(userData);
-    const mockToken = 'dev-token-' + Date.now(); // TODO: Replace with real token
+    const mockToken = 'dev-token-' + Date.now();
     setToken(mockToken);
     if (typeof window !== 'undefined') {
       sessionStorage.setItem('jwt_token', mockToken);
-      sessionStorage.setItem('dev_user', JSON.stringify(userData)); // TODO: Remove when real auth is wired
+      sessionStorage.setItem('dev_user', JSON.stringify(userData));
     }
   }, []);
 

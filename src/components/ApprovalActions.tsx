@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import { CheckIcon, XMarkIcon } from '@heroicons/react/24/solid';
+import { useToast } from '@/components/Toast';
 import { apiFetch } from '@/lib/api-fetch';
 
 interface ApprovalActionsProps {
@@ -19,6 +20,7 @@ const ApprovalActions: React.FC<ApprovalActionsProps> = ({
   onActionComplete,
   className = ''
 }) => {
+  const { toast } = useToast();
   const [showCommentModal, setShowCommentModal] = useState(false);
   const [actionType, setActionType] = useState<'approve' | 'reject'>('approve');
   const [comment, setComment] = useState('');
@@ -64,7 +66,7 @@ const ApprovalActions: React.FC<ApprovalActionsProps> = ({
       }
     } catch (error) {
       console.error(`Error ${actionType}ing requisition:`, error);
-      alert(`Failed to ${actionType} requisition. Please try again.`);
+      toast(`Failed to ${actionType} requisition. Please try again.`, 'error');
     } finally {
       setIsSubmitting(false);
     }

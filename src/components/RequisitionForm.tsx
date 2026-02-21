@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import { apiFetch } from '@/lib/api-fetch';
+import { useToast } from '@/components/Toast';
 
 interface RequisitionFormData {
   jobTitle: string;
@@ -36,6 +37,7 @@ const RequisitionForm: React.FC<RequisitionFormProps> = ({
   initialData = {},
   onSuccess
 }) => {
+  const { toast } = useToast();
   const [formData, setFormData] = useState<RequisitionFormData>({
     jobTitle: initialData.jobTitle || '',
     department: initialData.department || '',
@@ -153,15 +155,15 @@ const RequisitionForm: React.FC<RequisitionFormProps> = ({
 
         const result = await response.json();
         if (result.success) {
-          alert('Draft saved successfully');
+          toast('Draft saved successfully', 'success');
           if (onSuccess) onSuccess(result.data);
         } else {
-          alert(`Error: ${result.message}`);
+          toast(`Error: ${result.message}`, 'error');
         }
       }
     } catch (error) {
       console.error('Error saving draft:', error);
-      alert('Error saving draft');
+      toast('Error saving draft', 'error');
     }
     
     setIsSubmitting(false);
@@ -192,7 +194,7 @@ const RequisitionForm: React.FC<RequisitionFormProps> = ({
 
         const createResult = await createResponse.json();
         if (!createResult.success) {
-          alert(`Error creating requisition: ${createResult.message}`);
+          toast(`Error creating requisition: ${createResult.message}`, 'error');
           setIsSubmitting(false);
           return;
         }
@@ -206,15 +208,15 @@ const RequisitionForm: React.FC<RequisitionFormProps> = ({
 
         const submitResult = await submitResponse.json();
         if (submitResult.success) {
-          alert('Requisition submitted for approval successfully');
+          toast('Requisition submitted for approval successfully', 'success');
           if (onSuccess) onSuccess(submitResult.data);
         } else {
-          alert(`Error submitting for approval: ${submitResult.message}`);
+          toast(`Error submitting for approval: ${submitResult.message}`, 'error');
         }
       }
     } catch (error) {
       console.error('Error submitting for approval:', error);
-      alert('Error submitting for approval');
+      toast('Error submitting for approval', 'error');
     }
     
     setIsSubmitting(false);

@@ -1,6 +1,7 @@
 'use client';
 
 import { ShareIcon, BookmarkIcon } from '@heroicons/react/24/outline';
+import { useToast } from './Toast';
 
 interface JobDetailClientProps {
   jobTitle: string;
@@ -8,6 +9,7 @@ interface JobDetailClientProps {
 }
 
 export default function JobDetailClient({ jobTitle, companyName }: JobDetailClientProps) {
+  const { toast } = useToast();
   const handleShare = async () => {
     if (navigator.share) {
       try {
@@ -22,14 +24,14 @@ export default function JobDetailClient({ jobTitle, companyName }: JobDetailClie
     } else {
       // Fallback to copying URL
       navigator.clipboard.writeText(window.location.href);
-      alert('Job URL copied to clipboard!');
+      toast('Job URL copied to clipboard', 'success');
     }
   };
 
   const handleSave = () => {
     // You can implement bookmark functionality here
     // For now, just show a placeholder
-    alert('Bookmark functionality would be implemented here');
+    toast('Bookmark functionality would be implemented here', 'info');
   };
 
   return (

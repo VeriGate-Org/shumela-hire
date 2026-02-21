@@ -6,6 +6,8 @@ import { DocumentTextIcon } from '@heroicons/react/24/outline';
 import { RequisitionData, RequisitionStatus, ApprovalRole, WorkflowAction } from '../types/workflow';
 import EmptyState from './EmptyState';
 import { useAuth } from '../contexts/AuthContext';
+import { useToast } from './Toast';
+import { apiFetch } from '../lib/api-fetch';
 import { formatSalaryRange } from '../utils/currency';
 import WorkflowStatusBadge from './WorkflowStatusBadge';
 import WorkflowActions from './WorkflowActions';
@@ -22,6 +24,7 @@ const RequisitionList: React.FC<RequisitionListProps> = ({
   showAll = false
 }) => {
   const { user } = useAuth();
+  const { toast } = useToast();
   const [requisitions, setRequisitions] = useState<RequisitionData[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -46,7 +49,7 @@ const RequisitionList: React.FC<RequisitionListProps> = ({
         url += `?${params.toString()}`;
       }
 
-      const response = await fetch(url);
+      const response = await apiFetch(url);
       const data = await response.json();
 
       if (data.success) {
@@ -91,11 +94,8 @@ const RequisitionList: React.FC<RequisitionListProps> = ({
           throw new Error(`Unknown action: ${action}`);
       }
 
-      const response = await fetch(endpoint, {
+      const response = await apiFetch(endpoint, {
         method,
-        headers: {
-          'Content-Type': 'application/json'
-        },
         body: JSON.stringify(body)
       });
 
@@ -104,13 +104,13 @@ const RequisitionList: React.FC<RequisitionListProps> = ({
       if (result.success) {
         // Refresh the list
         await fetchRequisitions();
-        alert(result.message);
+        toast(result.message, 'success');
       } else {
-        alert(`Error: ${result.message}`);
+        toast(`Error: ${result.message}`, 'error');
       }
     } catch (err) {
       console.error('Error performing workflow action:', err);
-      alert('An error occurred while processing the action');
+      toast('An error occurred while processing the action', 'error');
     }
   };
 

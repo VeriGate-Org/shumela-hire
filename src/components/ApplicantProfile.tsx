@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { apiFetch } from '@/lib/api-fetch';
+import { useToast } from '@/components/Toast';
 
 interface Education {
   institution: string;
@@ -53,6 +54,7 @@ interface ApplicantProfileProps {
 
 export default function ApplicantProfile({ applicantId, onSave }: ApplicantProfileProps) {
   const { user } = useAuth();
+  const { toast } = useToast();
   const [formData, setFormData] = useState<ApplicantData>({
     name: '',
     surname: '',
@@ -141,11 +143,8 @@ export default function ApplicantProfile({ applicantId, onSave }: ApplicantProfi
       const url = applicantId ? `/api/applicants/${applicantId}` : '/api/applicants';
       const method = applicantId ? 'PUT' : 'POST';
       
-      const response = await fetch(url, {
+      const response = await apiFetch(url, {
         method,
-        headers: {
-          'Content-Type': 'application/json',
-        },
         body: JSON.stringify(submitData),
       });
       
@@ -171,17 +170,17 @@ export default function ApplicantProfile({ applicantId, onSave }: ApplicantProfi
   
   const handleFileUpload = async (file: File, type: 'CV' | 'SUPPORT') => {
     if (!applicantId) {
-      alert('Please save the applicant profile first before uploading documents');
+      toast('Please save the applicant profile first before uploading documents', 'info');
       return;
     }
     
     if (file.size > 10 * 1024 * 1024) {
-      alert('File size must be less than 10MB');
+      toast('File size must be less than 10MB', 'info');
       return;
     }
     
     if (!file.type.includes('pdf') && !file.type.includes('word') && !file.type.includes('document')) {
-      alert('Only PDF and Word documents are allowed');
+      toast('Only PDF and Word documents are allowed', 'info');
       return;
     }
     
@@ -203,11 +202,11 @@ export default function ApplicantProfile({ applicantId, onSave }: ApplicantProfi
         setTimeout(() => setShowSuccess(false), 3000);
       } else {
         const errorData = await response.json();
-        alert(errorData.message || 'Failed to upload document');
+        toast(errorData.message || 'Failed to upload document', 'error');
       }
     } catch (error) {
       console.error('Error uploading document:', error);
-      alert('An error occurred while uploading');
+      toast('An error occurred while uploading', 'error');
     } finally {
       setUploading(false);
     }
@@ -224,11 +223,11 @@ export default function ApplicantProfile({ applicantId, onSave }: ApplicantProfi
       if (response.ok) {
         await loadDocuments(); // Refresh documents list
       } else {
-        alert('Failed to delete document');
+        toast('Failed to delete document', 'error');
       }
     } catch (error) {
       console.error('Error deleting document:', error);
-      alert('An error occurred while deleting');
+      toast('An error occurred while deleting', 'error');
     }
   };
   

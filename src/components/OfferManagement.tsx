@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { apiFetch } from '@/lib/api-fetch';
+import { useToast } from '@/components/Toast';
 
 interface Offer {
   id: number;
@@ -82,6 +83,7 @@ const NEGOTIATION_STATUSES = [
 
 export default function OfferManagement() {
   const { user } = useAuth();
+  const { toast } = useToast();
   const currentRole = user?.role || 'recruiter';
   const [offers, setOffers] = useState<Offer[]>([]);
   const [loading, setLoading] = useState(false);
@@ -167,11 +169,11 @@ export default function OfferManagement() {
         loadOffers();
         loadDashboardCounts();
       } else {
-        alert('Action failed. Please try again.');
+        toast('Action failed. Please try again.', 'error');
       }
     } catch (error) {
       console.error('Error executing action:', error);
-      alert('Action failed. Please try again.');
+      toast('Action failed. Please try again.', 'error');
     }
   };
 

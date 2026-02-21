@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import { useToast } from '@/components/Toast';
 
 interface ApplicationStatusTrackerProps {
   application: {
@@ -26,6 +27,7 @@ export default function ApplicationStatusTracker({
   onWithdraw, 
   showWithdrawOption = true 
 }: ApplicationStatusTrackerProps) {
+  const { toast } = useToast();
   const [showWithdrawForm, setShowWithdrawForm] = useState(false);
   const [withdrawalReason, setWithdrawalReason] = useState('');
   const [withdrawing, setWithdrawing] = useState(false);
@@ -100,7 +102,7 @@ export default function ApplicationStatusTracker({
 
   const handleWithdraw = async () => {
     if (!withdrawalReason.trim()) {
-      alert('Please provide a reason for withdrawal');
+      toast('Please provide a reason for withdrawal', 'info');
       return;
     }
 

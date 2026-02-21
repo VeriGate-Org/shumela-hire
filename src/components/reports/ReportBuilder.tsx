@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useCallback } from 'react';
+import { useToast } from '@/components/Toast';
 import {
   ChartBarIcon,
   TableCellsIcon,
@@ -92,6 +93,7 @@ export default function ReportBuilder({
   initialConfig,
   className = '',
 }: ReportBuilderProps) {
+  const { toast } = useToast();
   const [config, setConfig] = useState<ReportConfig>(
     initialConfig || {
       name: '',
@@ -158,7 +160,7 @@ export default function ReportBuilder({
 
   const handleRun = useCallback(async () => {
     if (!config.name.trim()) {
-      alert('Please provide a report name');
+      toast('Please provide a report name', 'info');
       return;
     }
 
