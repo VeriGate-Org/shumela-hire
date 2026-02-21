@@ -1,5 +1,5 @@
 CREATE TABLE requisitions (
-    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    id BIGSERIAL PRIMARY KEY,
     job_title VARCHAR(200) NOT NULL,
     department VARCHAR(100),
     location VARCHAR(100),
