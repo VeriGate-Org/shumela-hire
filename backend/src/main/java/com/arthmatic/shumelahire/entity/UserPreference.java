@@ -14,7 +14,7 @@ public class UserPreference extends TenantAwareEntity {
     @Column(name = "user_id", nullable = false, unique = true)
     private Long userId;
 
-    @Column(columnDefinition = "JSON", nullable = false)
+    @Column(columnDefinition = "JSONB", nullable = false)
     private String preferences = "{}";
 
     @Column(name = "created_at")
