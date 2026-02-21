@@ -9,7 +9,7 @@ import { apiFetch } from '@/lib/api-fetch';
  * Displays security status, alerts, and management tools
  */
 const SecurityDashboard: React.FC = () => {
-  const { user, hasPermission } = useSecurity();
+  const { user: _user, hasPermission } = useSecurity();
   const [securityReport, setSecurityReport] = useState<any>(null);
   const [loading, setLoading] = useState(false);
 

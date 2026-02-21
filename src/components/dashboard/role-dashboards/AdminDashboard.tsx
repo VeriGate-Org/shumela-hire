@@ -68,7 +68,7 @@ const defaultAdminMetrics: MetricItem[] = [
   },
 ];
 
-export default function AdminDashboard({ selectedTimeframe, onTimeframeChange }: AdminDashboardProps) {
+export default function AdminDashboard({ selectedTimeframe, onTimeframeChange: _onTimeframeChange }: AdminDashboardProps) {
   const [systemHealthData, setSystemHealthData] = useState<SystemHealthPoint[]>(defaultSystemHealthData);
   const [adminMetrics, setAdminMetrics] = useState<MetricItem[]>(defaultAdminMetrics);
   const [loading, setLoading] = useState(true);

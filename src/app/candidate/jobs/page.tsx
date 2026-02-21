@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import PageWrapper from '@/components/PageWrapper';
 import EmptyState from '@/components/EmptyState';
 import { apiFetch } from '@/lib/api-fetch';
@@ -88,10 +88,6 @@ export default function BrowseJobsPage() {
     loadJobs();
   }, []);
 
-  useEffect(() => {
-    filterJobs();
-  }, [jobs, searchTerm, locationFilter, jobTypeFilter, experienceLevelFilter, salaryMinFilter, remoteOnlyFilter, sortBy]);
-
   const loadJobs = async () => {
     setLoading(true);
     try {
@@ -133,24 +129,24 @@ export default function BrowseJobsPage() {
     }
   };
 
-  const filterJobs = () => {
+  const filterJobs = useCallback(() => {
     const filtered = jobs.filter(job => {
-      const matchesSearch = searchTerm === '' || 
+      const matchesSearch = searchTerm === '' ||
         job.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
         job.company.toLowerCase().includes(searchTerm.toLowerCase()) ||
         job.skills.some(skill => skill.toLowerCase().includes(searchTerm.toLowerCase())) ||
         job.tags.some(tag => tag.toLowerCase().includes(searchTerm.toLowerCase()));
-      
-      const matchesLocation = locationFilter === '' || 
+
+      const matchesLocation = locationFilter === '' ||
         job.location.toLowerCase().includes(locationFilter.toLowerCase()) ||
         (job.isRemote && locationFilter.toLowerCase().includes('remote'));
-      
+
       const matchesJobType = jobTypeFilter === 'all' || job.jobType === jobTypeFilter;
       const matchesExperience = experienceLevelFilter === 'all' || job.experienceLevel === experienceLevelFilter;
-      const matchesSalary = salaryMinFilter === '' || 
+      const matchesSalary = salaryMinFilter === '' ||
         (job.salaryRange && job.salaryRange.min >= parseInt(salaryMinFilter));
       const matchesRemote = !remoteOnlyFilter || job.isRemote;
-      
+
       return matchesSearch && matchesLocation && matchesJobType && matchesExperience && matchesSalary && matchesRemote;
     });
 
@@ -171,7 +167,11 @@ export default function BrowseJobsPage() {
     });
 
     setFilteredJobs(filtered);
-  };
+  }, [jobs, searchTerm, locationFilter, jobTypeFilter, experienceLevelFilter, salaryMinFilter, remoteOnlyFilter, sortBy]);
+
+  useEffect(() => {
+    filterJobs();
+  }, [jobs, searchTerm, locationFilter, jobTypeFilter, experienceLevelFilter, salaryMinFilter, remoteOnlyFilter, sortBy, filterJobs]);
 
   const toggleSaveJob = (jobId: string) => {
     setSavedJobs(prev => 

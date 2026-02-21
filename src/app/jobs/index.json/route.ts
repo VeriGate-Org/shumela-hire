@@ -108,7 +108,7 @@ async function fetchActiveJobs(): Promise<BackendJobAd[]> {
 }
 
 // GET /jobs/index.json - JSON feed of active jobs
-export async function GET(request: NextRequest): Promise<NextResponse> {
+export async function GET(_request: NextRequest): Promise<NextResponse> {
   try {
     const jobs = await fetchActiveJobs();
     
@@ -168,7 +168,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
 }
 
 // HEAD request for checking feed updates
-export async function HEAD(request: NextRequest): Promise<NextResponse> {
+export async function HEAD(_request: NextRequest): Promise<NextResponse> {
   return new NextResponse(null, {
     status: 200,
     headers: {

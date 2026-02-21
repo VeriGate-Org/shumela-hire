@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { apiFetch } from '@/lib/api-fetch';
 
@@ -46,14 +46,7 @@ export default function ScreeningQuestions({
   const [errors, setErrors] = useState<{ [key: number]: string }>({});
   const [savedAnswers, setSavedAnswers] = useState<{ [key: number]: boolean }>({});
 
-  useEffect(() => {
-    loadQuestions();
-    if (applicationId) {
-      loadExistingAnswers();
-    }
-  }, [jobPostingId, applicationId]);
-
-  const loadQuestions = async () => {
+  const loadQuestions = useCallback(async () => {
     try {
       const response = await apiFetch(`/api/screening/questions/job-posting/${jobPostingId}`, {
         headers: {
@@ -73,9 +66,9 @@ export default function ScreeningQuestions({
     } finally {
       setLoading(false);
     }
-  };
+  }, [jobPostingId, token]);
 
-  const loadExistingAnswers = async () => {
+  const loadExistingAnswers = useCallback(async () => {
     try {
       const response = await apiFetch(`/api/screening/answers/application/${applicationId}`, {
         headers: {
@@ -87,23 +80,30 @@ export default function ScreeningQuestions({
       if (response.ok) {
         const result = await response.json();
         const existingAnswers = result.data || [];
-        
+
         const answerMap: { [key: number]: ScreeningAnswer } = {};
         const savedMap: { [key: number]: boolean } = {};
-        
+
         existingAnswers.forEach((answer: ScreeningAnswer & { screeningQuestion: { id: number } }) => {
           const questionId = answer.screeningQuestion.id;
           answerMap[questionId] = answer;
           savedMap[questionId] = true;
         });
-        
+
         setAnswers(answerMap);
         setSavedAnswers(savedMap);
       }
     } catch (error) {
       console.error('Error loading existing answers:', error);
     }
-  };
+  }, [applicationId, token]);
+
+  useEffect(() => {
+    loadQuestions();
+    if (applicationId) {
+      loadExistingAnswers();
+    }
+  }, [loadQuestions, applicationId, loadExistingAnswers]);
 
   const handleAnswerChange = async (questionId: number, value: string) => {
     const newAnswer: ScreeningAnswer = {
@@ -171,7 +171,7 @@ export default function ScreeningQuestions({
 
         await saveAnswer(questionId, newAnswer);
       }
-    } catch (error) {
+    } catch {
       setErrors(prev => ({
         ...prev,
         [questionId]: 'File upload failed'

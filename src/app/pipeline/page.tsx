@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, useCallback } from 'react';
 import PageWrapper from '@/components/PageWrapper';
 import { apiFetch } from '@/lib/api-fetch';
 import {
@@ -16,8 +16,7 @@ import {
   MagnifyingGlassIcon,
   UserIcon,
   CalendarIcon,
-  BriefcaseIcon,
-  ArrowUturnLeftIcon
+  BriefcaseIcon
 } from '@heroicons/react/24/outline';
 import { pipelineApplicationStatusConfig, getStatusConfig } from '@/utils/statusIcons';
 
@@ -89,7 +88,7 @@ export default function PipelinePage() {
   const [loading, setLoading] = useState(true);
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
 
-  const pipelineStages: PipelineStage[] = [
+  const pipelineStages: PipelineStage[] = useMemo(() => [
     {
       id: 'applied',
       name: 'applied',
@@ -153,13 +152,9 @@ export default function PipelinePage() {
       icon: CheckCircleIcon,
       description: 'Successfully hired'
     }
-  ];
+  ], []);
 
-  useEffect(() => {
-    loadPipelineData();
-  }, []);
-
-  const loadPipelineData = async () => {
+  const loadPipelineData = useCallback(async () => {
     setLoading(true);
     try {
       const response = await apiFetch('/api/applications/manage/search?size=200');
@@ -217,28 +212,11 @@ export default function PipelinePage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [pipelineStages]);
 
-  const generateTimeline = (startDate: Date, currentStageIndex: number) => {
-    const timeline = [];
-    const actors = ['Sarah Wilson', 'Michael Chen', 'Emily Rodriguez', 'James Park'];
-
-    for (let i = 0; i <= currentStageIndex; i++) {
-      const stage = pipelineStages[i];
-      const date = new Date(startDate);
-      date.setDate(date.getDate() + i * 7); // 7 days between stages
-
-      timeline.push({
-        stage: stage.displayName,
-        date: date.toISOString(),
-        action: i === 0 ? 'Applied' : `Progressed to ${stage.displayName}`,
-        actor: i === 0 ? 'System' : actors[Math.floor(Math.random() * actors.length)],
-        notes: i > 0 ? 'Candidate met requirements for progression' : undefined
-      });
-    }
-
-    return timeline;
-  };
+  useEffect(() => {
+    loadPipelineData();
+  }, [loadPipelineData]);
 
   const filteredApplications = useMemo(() => {
     return applications.filter(app => {

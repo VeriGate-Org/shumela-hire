@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { apiFetch } from '@/lib/api-fetch';
 import { useToast } from '@/components/Toast';
@@ -75,12 +75,6 @@ const OFFER_TYPES = [
   'TEMPORARY', 'PROBATIONARY', 'EXECUTIVE'
 ];
 
-const NEGOTIATION_STATUSES = [
-  'NOT_STARTED', 'IN_PROGRESS', 'CANDIDATE_RESPONSE_PENDING',
-  'COMPANY_RESPONSE_PENDING', 'STALLED', 'ESCALATED', 'FINAL_OFFER',
-  'AGREED', 'FAILED'
-];
-
 export default function OfferManagement() {
   const { user } = useAuth();
   const { toast } = useToast();
@@ -101,12 +95,7 @@ export default function OfferManagement() {
   const [currentPage, setCurrentPage] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
 
-  useEffect(() => {
-    loadOffers();
-    loadDashboardCounts();
-  }, [filters, currentPage]);
-
-  const loadOffers = async () => {
+  const loadOffers = useCallback(async () => {
     try {
       setLoading(true);
       const queryParams = new URLSearchParams({
@@ -128,7 +117,12 @@ export default function OfferManagement() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [filters, currentPage]);
+
+  useEffect(() => {
+    loadOffers();
+    loadDashboardCounts();
+  }, [filters, currentPage, loadOffers]);
 
   const loadDashboardCounts = async () => {
     try {

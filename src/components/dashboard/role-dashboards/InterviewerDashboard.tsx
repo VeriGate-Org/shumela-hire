@@ -20,8 +20,8 @@ interface Interview {
 }
 
 const InterviewerDashboard: React.FC<InterviewerDashboardProps> = ({
-  selectedTimeframe,
-  onTimeframeChange,
+  selectedTimeframe: _selectedTimeframe,
+  onTimeframeChange: _onTimeframeChange,
 }) => {
   const [upcomingInterviews, setUpcomingInterviews] = useState<Interview[]>([]);
   const [pendingFeedback, setPendingFeedback] = useState<Interview[]>([]);

@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { apiFetch } from '@/lib/api-fetch';
 
@@ -29,7 +29,7 @@ export default function JobApplicationForm({
   onSuccess, 
   onCancel 
 }: JobApplicationFormProps) {
-  const { user } = useAuth();
+  const { user: _user } = useAuth();
   const [applicant, setApplicant] = useState<ApplicantBasicInfo | null>(null);
   const [coverLetter, setCoverLetter] = useState('');
   const [applicationSource, setApplicationSource] = useState('EXTERNAL');
@@ -38,17 +38,7 @@ export default function JobApplicationForm({
   const [canApply, setCanApply] = useState(true);
   const [checkingEligibility, setCheckingEligibility] = useState(true);
 
-  // Load applicant info and check eligibility
-  useEffect(() => {
-    if (applicantId) {
-      loadApplicantInfo();
-      checkApplicationEligibility();
-    } else {
-      setCheckingEligibility(false);
-    }
-  }, [applicantId, jobAdId]);
-
-  const loadApplicantInfo = async () => {
+  const loadApplicantInfo = useCallback(async () => {
     try {
       const response = await apiFetch(`/api/applicants/${applicantId}`);
       if (response.ok) {
@@ -64,9 +54,9 @@ export default function JobApplicationForm({
     } catch (error) {
       console.error('Error loading applicant info:', error);
     }
-  };
+  }, [applicantId]);
 
-  const checkApplicationEligibility = async () => {
+  const checkApplicationEligibility = useCallback(async () => {
     try {
       setCheckingEligibility(true);
       const response = await apiFetch(`/api/applications/can-apply?applicantId=${applicantId}&jobAdId=${jobAdId}`);
@@ -80,7 +70,16 @@ export default function JobApplicationForm({
     } finally {
       setCheckingEligibility(false);
     }
-  };
+  }, [applicantId, jobAdId]);
+
+  useEffect(() => {
+    if (applicantId) {
+      loadApplicantInfo();
+      checkApplicationEligibility();
+    } else {
+      setCheckingEligibility(false);
+    }
+  }, [applicantId, jobAdId, loadApplicantInfo, checkApplicationEligibility]);
 
   const validateForm = () => {
     const newErrors: Record<string, string> = {};

@@ -162,7 +162,7 @@ function transformApplicationsToPipeline(applications: any[]): PipelineStage[] {
   return stages;
 }
 
-export default function HiringManagerDashboard({ selectedTimeframe, onTimeframeChange }: HiringManagerDashboardProps) {
+export default function HiringManagerDashboard({ selectedTimeframe, onTimeframeChange: _onTimeframeChange }: HiringManagerDashboardProps) {
   const [isMounted, setIsMounted] = useState(false);
   const [metrics, setMetrics] = useState<MetricItem[]>(defaultMetrics);
   const [pipelineStages, setPipelineStages] = useState<PipelineStage[]>([]);

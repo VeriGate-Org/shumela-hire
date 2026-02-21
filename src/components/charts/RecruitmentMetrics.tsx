@@ -1,9 +1,7 @@
 import React, { useMemo } from 'react';
-import { format, subDays, startOfDay } from 'date-fns';
+import { format } from 'date-fns';
 import {
-  RecruitmentLineChart,
   RecruitmentBarChart,
-  RecruitmentPieChart,
   RecruitmentAreaChart,
   RecruitmentRadialChart,
   RecruitmentComposedChart,
@@ -119,7 +117,7 @@ const PipelineFunnelChart: React.FC<PipelineFunnelProps> = ({
       
       {/* Visual funnel representation */}
       <div className="space-y-2 mb-6">
-        {conversionRates.map((stage, index) => {
+        {conversionRates.map((stage, _index) => {
           const width = (stage.count / data[0].count) * 100;
           return (
             <div key={stage.stage} className="flex items-center space-x-3">
@@ -234,7 +232,7 @@ const PerformanceGaugeChart: React.FC<PerformanceGaugeProps> = ({
         </p>
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        {data.map((metric, index) => {
+        {data.map((metric, _index) => {
           const gaugeData = [{ name: metric.metric, value: metric.percentage, fill: getPerformanceColor(metric.percentage) }];
           
           return (

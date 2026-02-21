@@ -168,7 +168,7 @@ export function useInfiniteScroll<T>({
   fetchMore,
   initialData = [],
   pageSize = 20,
-  threshold = 5,
+  threshold: _threshold = 5,
 }: UseInfiniteScrollOptions<T>) {
   const [items, setItems] = useState<T[]>(initialData);
   const [isLoading, setIsLoading] = useState(false);

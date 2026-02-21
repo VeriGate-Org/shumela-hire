@@ -3,44 +3,26 @@
 import { useState, useEffect, useCallback } from 'react';
 import { apiFetch } from '@/lib/api-fetch';
 import PageWrapper from '@/components/PageWrapper';
-import { 
+import {
   UserGroupIcon,
-  UserIcon,
   EnvelopeIcon,
   PhoneIcon,
   MapPinIcon,
-  BuildingOfficeIcon,
-  CalendarIcon,
   ChartBarIcon,
   TrophyIcon,
-  AcademicCapIcon,
   LinkIcon,
   StarIcon,
   EyeIcon,
-  PencilIcon,
   PlusIcon,
-  FunnelIcon,
   MagnifyingGlassIcon,
   UsersIcon,
-  BriefcaseIcon,
-  ClockIcon,
-  ArrowTrendingUpIcon,
-  ArrowTrendingDownIcon,
-  CheckCircleIcon,
   ExclamationTriangleIcon,
   InformationCircleIcon,
   XMarkIcon,
-  ChatBubbleLeftRightIcon,
-  DocumentTextIcon,
-  GlobeAltIcon,
   ShieldCheckIcon,
-  LightBulbIcon,
-  FireIcon,
-  HandRaisedIcon,
-  BeakerIcon
+  LightBulbIcon
 } from '@heroicons/react/24/outline';
-import { 
-  UserIcon as UserIconSolid,
+import {
   TrophyIcon as TrophyIconSolid,
   StarIcon as StarIconSolid
 } from '@heroicons/react/24/solid';
@@ -132,22 +114,18 @@ interface LeadershipAlert {
 
 export default function LeadershipTeamPage() {
   const [leaders, setLeaders] = useState<LeadershipMember[]>([]);
-  const [teamMetrics, setTeamMetrics] = useState<TeamMetrics | null>(null);
-  const [alerts, setAlerts] = useState<LeadershipAlert[]>([]);
+  const [teamMetrics, _setTeamMetrics] = useState<TeamMetrics | null>(null);
+  const [alerts, _setAlerts] = useState<LeadershipAlert[]>([]);
   const [selectedLeader, setSelectedLeader] = useState<LeadershipMember | null>(null);
   const [activeView, setActiveView] = useState<'overview' | 'directory' | 'performance' | 'succession'>('overview');
   const [filterDepartment, setFilterDepartment] = useState<string>('all');
   const [searchTerm, setSearchTerm] = useState('');
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    loadLeadershipData();
-  }, []);
-
   const loadLeadershipData = useCallback(async () => {
     setLoading(true);
     try {
-      const [teamRes, metricsRes] = await Promise.allSettled([
+      const [teamRes, _metricsRes] = await Promise.allSettled([
         apiFetch('/api/executive/leadership/team'),
         apiFetch('/api/executive/leadership/metrics'),
       ]);
@@ -164,6 +142,10 @@ export default function LeadershipTeamPage() {
       setLoading(false);
     }
   }, []);
+
+  useEffect(() => {
+    loadLeadershipData();
+  }, [loadLeadershipData]);
 
   const getAlertColor = (type: string) => {
     switch (type) {

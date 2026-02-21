@@ -50,7 +50,7 @@ const defaultMetrics: MetricItem[] = [
   },
 ];
 
-export default function HRDashboard({ selectedTimeframe, onTimeframeChange }: HRDashboardProps) {
+export default function HRDashboard({ selectedTimeframe, onTimeframeChange: _onTimeframeChange }: HRDashboardProps) {
   const [metrics, setMetrics] = useState<MetricItem[]>(defaultMetrics);
   const [loading, setLoading] = useState(true);
 

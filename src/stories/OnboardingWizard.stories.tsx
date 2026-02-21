@@ -10,7 +10,7 @@ import { AuthProvider } from '../contexts/AuthContext';
  * sessionStorage on mount, we seed the storage in a decorator so the
  * component can resolve a user object.
  */
-const withAuth = (role: string) => {
+const withAuth = (_role: string) => {
   return function AuthDecorator(Story: React.ComponentType) {
     // Seed a fake JWT so AuthProvider recognises a session
     if (typeof window !== 'undefined') {

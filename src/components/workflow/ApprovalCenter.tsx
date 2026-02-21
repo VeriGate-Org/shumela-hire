@@ -79,7 +79,7 @@ export default function ApprovalCenter({
   currentUserId,
   onApprove,
   onReject,
-  onAddComment,
+  onAddComment: _onAddComment,
   onViewDetails,
   className = '',
 }: ApprovalCenterProps) {

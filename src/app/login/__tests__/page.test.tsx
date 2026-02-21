@@ -2,7 +2,7 @@ import React from 'react';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import LoginPage from '../page';
-import { rolePermissions } from '@/config/permissions';
+
 
 // Track router.push calls
 const mockPush = jest.fn();

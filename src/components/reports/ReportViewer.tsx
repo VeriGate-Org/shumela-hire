@@ -7,7 +7,6 @@ import {
   ArrowDownTrayIcon,
   PrinterIcon,
   ShareIcon,
-  EyeIcon,
   Cog6ToothIcon,
 } from '@heroicons/react/24/outline';
 import { ReportConfig } from './ReportBuilder';

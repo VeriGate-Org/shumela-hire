@@ -18,7 +18,7 @@ export default function JobDetailClient({ jobTitle, companyName }: JobDetailClie
           text: `Check out this job opportunity: ${jobTitle}${companyName ? ` at ${companyName}` : ''}`,
           url: window.location.href
         });
-      } catch (err) {
+      } catch {
         // User cancelled sharing
       }
     } else {

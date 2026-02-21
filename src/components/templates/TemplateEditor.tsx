@@ -122,7 +122,7 @@ const TemplateEditor: React.FC<TemplateEditorProps> = ({
     }
   };
 
-  const insertPlaceholder = (placeholder: string, targetField: keyof JobAdTemplate) => {
+  const _insertPlaceholder = (placeholder: string, targetField: keyof JobAdTemplate) => {
     const currentValue = (formData[targetField] as string) || '';
     const newValue = currentValue + placeholder;
     handleInputChange(targetField, newValue);

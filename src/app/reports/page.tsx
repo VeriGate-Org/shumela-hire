@@ -98,7 +98,7 @@ export default function ReportsPage() {
     
     setSavedReports(prev => [...prev, newReport]);
     toast('Report saved successfully', 'success');
-  }, []);
+  }, [toast]);
 
   const handleRunReport = useCallback(async (config: ReportConfig) => {
     const startTime = Date.now();
@@ -135,7 +135,7 @@ export default function ReportsPage() {
 
   const handleExportReport = useCallback((config: ReportConfig, format: 'csv' | 'pdf' | 'xlsx') => {
     toast(`Exporting report "${config.name}" as ${format.toUpperCase()}`, 'info');
-  }, []);
+  }, [toast]);
 
   // Library handlers
   const handleEditReport = useCallback((report: SavedReport) => {
@@ -167,7 +167,7 @@ export default function ReportsPage() {
       r.id === reportId ? { ...r, isShared: true } : r
     ));
     toast('Report shared successfully', 'success');
-  }, []);
+  }, [toast]);
 
   const handleViewReport = useCallback((report: SavedReport) => {
     handleRunReport(report);
@@ -178,13 +178,13 @@ export default function ReportsPage() {
     if (currentResult) {
       toast(`Exporting "${currentResult.config.name}" as ${format.toUpperCase()}`, 'info');
     }
-  }, [currentResult]);
+  }, [currentResult, toast]);
 
   const handleShareResult = useCallback(() => {
     if (currentResult) {
       toast(`Sharing report result: ${currentResult.config.name}`, 'info');
     }
-  }, [currentResult]);
+  }, [currentResult, toast]);
 
   const handleEditFromViewer = useCallback(() => {
     if (currentResult) {

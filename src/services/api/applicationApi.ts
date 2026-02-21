@@ -1,4 +1,4 @@
-import { apiClient, ApiResponse, PaginatedResponse, PaginationParams } from './apiClient';
+import { apiClient, PaginatedResponse, PaginationParams } from './apiClient';
 
 // Application Management API Service
 export interface Application {

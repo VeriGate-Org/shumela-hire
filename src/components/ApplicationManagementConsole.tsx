@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { useToast } from '@/components/Toast';
 import { apiFetch } from '@/lib/api-fetch';
@@ -82,12 +82,7 @@ export default function ApplicationManagementConsole() {
   const departmentOptions = ['Engineering', 'Sales', 'Marketing', 'HR', 'Finance', 'Operations'];
   const stageOptions = ['APPLICATION', 'SCREENING', 'INTERVIEW', 'TECHNICAL', 'FINAL', 'OFFER'];
 
-  useEffect(() => {
-    searchApplications();
-    fetchStatistics();
-  }, [filters.page, filters.size, filters.sortBy, filters.sortDirection]);
-
-  const searchApplications = async () => {
+  const searchApplications = useCallback(async () => {
     setLoading(true);
     setError(null);
     try {
@@ -121,7 +116,12 @@ export default function ApplicationManagementConsole() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [filters]);
+
+  useEffect(() => {
+    searchApplications();
+    fetchStatistics();
+  }, [filters.page, filters.size, filters.sortBy, filters.sortDirection, searchApplications]);
 
   const fetchStatistics = async () => {
     try {

@@ -85,7 +85,7 @@ function formatRelativeDate(dateString: string): string {
   }
 }
 
-export default function ApplicantDashboard({ selectedTimeframe, onTimeframeChange }: ApplicantDashboardProps) {
+export default function ApplicantDashboard({ selectedTimeframe: _selectedTimeframe, onTimeframeChange: _onTimeframeChange }: ApplicantDashboardProps) {
   const [statusCounts, setStatusCounts] = useState<StatusCount[]>([
     { status: 'Applied', count: 0, color: 'bg-gold-100 text-gold-800' },
     { status: 'Under Review', count: 0, color: 'bg-yellow-100 text-yellow-800' },

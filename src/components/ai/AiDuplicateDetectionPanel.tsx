@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { aiDuplicateDetectionService } from '@/services/aiDuplicateDetectionService';
 import AiDisclaimer from './AiDisclaimer';
 import { DuplicateCandidate } from '@/types/ai';
@@ -22,7 +22,7 @@ export default function AiDuplicateDetectionPanel({
   const [loading, setLoading] = useState(false);
   const [checked, setChecked] = useState(false);
 
-  const handleCheck = async () => {
+  const handleCheck = useCallback(async () => {
     setLoading(true);
     try {
       const data = await aiDuplicateDetectionService.check({
@@ -36,13 +36,13 @@ export default function AiDuplicateDetectionPanel({
     } finally {
       setLoading(false);
     }
-  };
+  }, [fullName, email, phone, idNumber]);
 
   useEffect(() => {
     if (autoCheck && fullName && email && !checked) {
       handleCheck();
     }
-  }, [autoCheck, fullName, email]);
+  }, [autoCheck, fullName, email, checked, handleCheck]);
 
   const getConfidenceColor = (score: number) => {
     if (score >= 90) return 'text-red-700 bg-red-100';

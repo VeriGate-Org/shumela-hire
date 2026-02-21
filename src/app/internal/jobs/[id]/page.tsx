@@ -168,7 +168,7 @@ export default function InternalJobDetailPage() {
           text: `Check out this internal job opportunity: ${job.title}`,
           url: window.location.href
         });
-      } catch (err) {
+      } catch {
         // User cancelled sharing
       }
     } else {

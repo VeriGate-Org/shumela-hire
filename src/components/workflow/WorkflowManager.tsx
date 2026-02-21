@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useCallback } from 'react';
+import React, { useState } from 'react';
 import {
   PlayIcon,
   PauseIcon,
@@ -12,7 +12,6 @@ import {
   ClockIcon,
   CheckCircleIcon,
   XCircleIcon,
-  ExclamationTriangleIcon,
 } from '@heroicons/react/24/outline';
 import { WorkflowDefinition } from './WorkflowBuilder';
 

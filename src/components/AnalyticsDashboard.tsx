@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { apiFetch } from '@/lib/api-fetch';
 
@@ -32,17 +32,6 @@ interface DashboardData {
   alerts: Alert[];
 }
 
-interface ChartData {
-  labels: string[];
-  datasets: Array<{
-    label: string;
-    data: number[];
-    borderColor: string;
-    backgroundColor: string;
-    tension: number;
-  }>;
-}
-
 const METRIC_CATEGORIES = [
   { value: 'APPLICATIONS', label: 'Applications', icon: '📋', color: 'blue' },
   { value: 'INTERVIEWS', label: 'Interviews', icon: '🎤', color: 'purple' },
@@ -61,7 +50,7 @@ const REPORT_TYPES = [
 
 export default function AnalyticsDashboard() {
   const { user } = useAuth();
-  const currentRole = user?.role || 'recruiter';
+  const _currentRole = user?.role || 'recruiter';
   const [dashboardData, setDashboardData] = useState<DashboardData>({
     kpis: {},
     trends: {},
@@ -79,17 +68,7 @@ export default function AnalyticsDashboard() {
   const [reportData, setReportData] = useState<any>(null);
   const [detailedData, setDetailedData] = useState<any>(null);
 
-  useEffect(() => {
-    loadDashboardData();
-  }, [selectedDepartment]);
-
-  useEffect(() => {
-    if (selectedCategory) {
-      loadDetailedData();
-    }
-  }, [selectedCategory, dateRange]);
-
-  const loadDashboardData = async () => {
+  const loadDashboardData = useCallback(async () => {
     try {
       setLoading(true);
       const params = new URLSearchParams();
@@ -107,9 +86,9 @@ export default function AnalyticsDashboard() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [selectedDepartment]);
 
-  const loadDetailedData = async () => {
+  const loadDetailedData = useCallback(async () => {
     try {
       const params = new URLSearchParams({
         category: selectedCategory,
@@ -128,7 +107,17 @@ export default function AnalyticsDashboard() {
     } catch (error) {
       console.error('Error loading detailed data:', error);
     }
-  };
+  }, [selectedCategory, dateRange, selectedDepartment]);
+
+  useEffect(() => {
+    loadDashboardData();
+  }, [loadDashboardData]);
+
+  useEffect(() => {
+    if (selectedCategory) {
+      loadDetailedData();
+    }
+  }, [selectedCategory, loadDetailedData]);
 
   const generateReport = async () => {
     if (!selectedReportType) return;

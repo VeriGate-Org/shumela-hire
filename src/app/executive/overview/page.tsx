@@ -9,37 +9,21 @@ import {
   ChartBarIcon,
   GlobeAltIcon,
   MapPinIcon,
-  CalendarIcon,
   ArrowTrendingUpIcon,
-  ArrowTrendingDownIcon,
   EyeIcon,
-  DocumentTextIcon,
   PlusIcon,
-  FunnelIcon,
   MagnifyingGlassIcon,
-  UsersIcon,
-  BanknotesIcon,
-  AcademicCapIcon,
-  ShieldCheckIcon,
-  CurrencyDollarIcon,
-  ClockIcon,
-  TrophyIcon,
   ExclamationTriangleIcon,
-  CheckCircleIcon,
   InformationCircleIcon,
   LightBulbIcon,
-  Cog6ToothIcon,
   ArrowUpIcon,
   ArrowDownIcon,
-  MinusIcon,
   XMarkIcon,
-  ChartPieIcon,
-  PresentationChartLineIcon,
   BuildingOffice2Icon,
   HomeIcon,
   ComputerDesktopIcon
 } from '@heroicons/react/24/outline';
-import { 
+import {
   BuildingOfficeIcon as BuildingOfficeIconSolid,
   UserGroupIcon as UserGroupIconSolid,
   TrophyIcon as TrophyIconSolid,
@@ -144,13 +128,13 @@ interface CompanyMilestone {
 export default function OrganizationalOverviewPage() {
   const [orgMetrics, setOrgMetrics] = useState<OrganizationMetrics | null>(null);
   const [departments, setDepartments] = useState<Department[]>([]);
-  const [locations, setLocations] = useState<Location[]>([]);
+  const [locations, _setLocations] = useState<Location[]>([]);
   const [alerts, setAlerts] = useState<OrganizationalAlert[]>([]);
-  const [milestones, setMilestones] = useState<CompanyMilestone[]>([]);
+  const [milestones, _setMilestones] = useState<CompanyMilestone[]>([]);
   const [selectedDepartment, setSelectedDepartment] = useState<Department | null>(null);
   const [activeView, setActiveView] = useState<'overview' | 'departments' | 'locations' | 'insights'>('overview');
   const [selectedPeriod, setSelectedPeriod] = useState<'month' | 'quarter' | 'year'>('quarter');
-  const [filterDepartment, setFilterDepartment] = useState<string>('all');
+  const [_filterDepartment, _setFilterDepartment] = useState<string>('all');
   const [searchTerm, setSearchTerm] = useState('');
   const [loading, setLoading] = useState(true);
 

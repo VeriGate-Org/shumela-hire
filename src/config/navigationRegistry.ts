@@ -6,7 +6,6 @@ import {
   BriefcaseIcon,
   UsersIcon,
   Squares2X2Icon,
-  CogIcon,
   ClipboardDocumentListIcon,
   AcademicCapIcon,
   GlobeAltIcon,
@@ -14,12 +13,9 @@ import {
   BuildingOfficeIcon,
   CurrencyDollarIcon,
   EnvelopeIcon,
-  FlagIcon,
-  UserGroupIcon,
   PresentationChartBarIcon,
   WrenchScrewdriverIcon,
   MagnifyingGlassIcon,
-  StarIcon,
   DocumentCheckIcon,
 } from '@heroicons/react/24/outline';
 import {

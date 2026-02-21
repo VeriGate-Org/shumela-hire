@@ -43,8 +43,8 @@ const TemplateList: React.FC<TemplateListProps> = ({
       setError(null);
       const result = await jobTemplateService.getAllTemplates(filters);
       setTemplates(result);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to fetch templates');
+    } catch {
+      setError('Failed to fetch templates');
     } finally {
       setLoading(false);
     }
@@ -70,7 +70,7 @@ const TemplateList: React.FC<TemplateListProps> = ({
         await jobTemplateService.archiveTemplate(template.id);
       }
       await fetchTemplates();
-    } catch (err) {
+    } catch {
       setError('Failed to update template status');
     }
   };
@@ -80,7 +80,7 @@ const TemplateList: React.FC<TemplateListProps> = ({
       try {
         await jobTemplateService.deleteTemplate(template.id);
         await fetchTemplates();
-      } catch (err) {
+      } catch {
         setError('Failed to delete template');
       }
     }
@@ -92,7 +92,7 @@ const TemplateList: React.FC<TemplateListProps> = ({
       try {
         await jobTemplateService.duplicateTemplate(template.id, newName);
         await fetchTemplates();
-      } catch (err) {
+      } catch {
         setError('Failed to duplicate template');
       }
     }
@@ -133,7 +133,7 @@ const TemplateList: React.FC<TemplateListProps> = ({
       }
       setSelectedTemplates(new Set());
       await fetchTemplates();
-    } catch (err) {
+    } catch {
       setError(`Failed to ${action} templates`);
     }
   };

@@ -52,25 +52,6 @@ function LoginCallbackContent() {
       // Handle OAuth2 authorization code flow (existing mock flow)
       if (code) {
         try {
-          const mockJwtPayload: any = null;
-
-          const extractUserRole = (payload: {
-            realm_access?: { roles?: string[] };
-            resource_access?: { [key: string]: { roles?: string[] } };
-          }): string => {
-            const clientRoles = payload.resource_access?.['shumelahire']?.roles || [];
-            const realmRoles = payload.realm_access?.roles || [];
-            const roleHierarchy = ['ADMIN', 'EXECUTIVE', 'HR_MANAGER', 'HIRING_MANAGER', 'RECRUITER', 'INTERVIEWER', 'EMPLOYEE', 'APPLICANT'];
-
-            for (const role of roleHierarchy) {
-              if (clientRoles.includes(role) || realmRoles.includes(role)) {
-                return role;
-              }
-            }
-            return 'APPLICANT';
-          };
-
-          // Mock auth code flow removed - redirect to login
           router.push('/login?error=mock_auth_removed');
         } catch (err) {
           console.error('Token exchange failed:', err);

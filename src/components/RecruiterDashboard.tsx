@@ -72,7 +72,7 @@ const RecruiterDashboard: React.FC = () => {
 
   useEffect(() => {
     async function loadDashboardData() {
-      const [dashboardRes, kpisRes, pipelineRes, deptRes] = await Promise.allSettled([
+      const [dashboardRes, _kpisRes, pipelineRes, deptRes] = await Promise.allSettled([
         apiFetch('/api/analytics/dashboard'),
         apiFetch('/api/analytics/kpis'),
         apiFetch('/api/pipeline/analytics'),

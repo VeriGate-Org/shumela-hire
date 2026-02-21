@@ -55,18 +55,6 @@ interface JobFilters {
   search: string;
 }
 
-interface ApiResponse {
-  success: boolean;
-  data?: {
-    content: InternalJobAd[];
-    totalElements: number;
-    totalPages: number;
-    numberOfElements: number;
-  };
-  message?: string;
-  error?: string;
-}
-
 // Utility functions
 const getDaysUntilExpiry = (closingDate?: string): number => {
   if (!closingDate) return Infinity;
@@ -94,7 +82,7 @@ const stripHtmlTags = (html: string): string => {
 };
 
 export default function InternalJobsBoard() {
-  const { user, isAuthenticated } = useAuth();
+  const { user: _user, isAuthenticated } = useAuth();
   const router = useRouter();
   
   const [jobs, setJobs] = useState<InternalJobAd[]>([]);

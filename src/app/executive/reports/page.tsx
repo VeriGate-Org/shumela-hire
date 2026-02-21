@@ -7,43 +7,27 @@ import {
   ChartBarIcon,
   DocumentChartBarIcon,
   PresentationChartLineIcon,
-  CalendarIcon,
   ArrowDownTrayIcon,
   EyeIcon,
-  FunnelIcon,
   MagnifyingGlassIcon,
   ClockIcon,
-  UserGroupIcon,
-  BanknotesIcon,
   ArrowTrendingUpIcon,
   ArrowTrendingDownIcon,
-  TrophyIcon,
-  ExclamationTriangleIcon,
-  CheckCircleIcon,
-  XCircleIcon,
-  BuildingOfficeIcon,
-  GlobeAltIcon,
-  AcademicCapIcon,
   ShieldCheckIcon,
   CurrencyDollarIcon,
   UsersIcon,
-  StarIcon,
   ChartPieIcon,
   DocumentTextIcon,
   PlayIcon,
-  PauseIcon,
-  StopIcon,
-  ArrowPathIcon,
   PlusIcon,
   Cog6ToothIcon,
   ShareIcon,
-  PrinterIcon,
   XMarkIcon,
   InformationCircleIcon,
   LightBulbIcon,
   ExclamationCircleIcon
 } from '@heroicons/react/24/outline';
-import { 
+import {
   ChartBarIcon as ChartBarIconSolid,
   TrophyIcon as TrophyIconSolid,
   ExclamationTriangleIcon as ExclamationTriangleIconSolid,
@@ -127,7 +111,7 @@ export default function ExecutiveReportsPage() {
   const [departmentMetrics, setDepartmentMetrics] = useState<DepartmentMetrics[]>([]);
   const [reportTemplates, setReportTemplates] = useState<ReportTemplate[]>([]);
   const [performanceAlerts, setPerformanceAlerts] = useState<PerformanceAlert[]>([]);
-  const [strategicInsights, setStrategicInsights] = useState<StrategicInsight[]>([]);
+  const [strategicInsights, _setStrategicInsights] = useState<StrategicInsight[]>([]);
   const [selectedReport, setSelectedReport] = useState<ReportTemplate | null>(null);
   const [activeView, setActiveView] = useState<'dashboard' | 'reports' | 'insights' | 'analytics'>('dashboard');
   const [selectedPeriod, setSelectedPeriod] = useState<'week' | 'month' | 'quarter' | 'year'>('month');
@@ -242,16 +226,6 @@ export default function ExecutiveReportsPage() {
     // Mock report generation
     console.log(`Generating report: ${reportId}`);
     // In real implementation, this would trigger report generation API
-  };
-
-  const handleReportScheduling = (reportId: string, frequency: string) => {
-    setReportTemplates(prev =>
-      prev.map(report =>
-        report.id === reportId
-          ? { ...report, frequency: frequency as any, status: 'active' }
-          : report
-      )
-    );
   };
 
   const getAlertIcon = (type: string) => {

@@ -9,7 +9,6 @@ import {
   ArrowUturnLeftIcon,
   CalendarIcon,
   GiftIcon,
-  StarIcon,
   ExclamationTriangleIcon,
   PaperAirplaneIcon,
   ShieldCheckIcon,

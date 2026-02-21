@@ -1,11 +1,9 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import {
   MagnifyingGlassIcon,
-  AdjustmentsHorizontalIcon,
   ChartBarIcon,
   TableCellsIcon,
   ArrowDownTrayIcon,
-  EyeIcon,
 } from '@heroicons/react/24/outline';
 import { RecruitmentBarChart, RecruitmentLineChart, RecruitmentPieChart } from '../charts';
 import DashboardWidget from './DashboardWidget';

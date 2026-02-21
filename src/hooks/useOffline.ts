@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { IndexedDBManager, OfflineAction } from '../utils/offlineStorage';
 
 // Offline hook for managing offline functionality
@@ -7,55 +7,19 @@ export const useOffline = () => {
   const [offlineActions, setOfflineActions] = useState<OfflineAction[]>([]);
   const [storage] = useState(new IndexedDBManager());
 
-  useEffect(() => {
-    const handleOnline = async () => {
-      setIsOnline(true);
-      console.log('App is online - syncing offline actions');
-      
-      // Process offline actions when coming online
-      await processOfflineActions();
-    };
-
-    const handleOffline = () => {
-      setIsOnline(false);
-      console.log('App is offline');
-    };
-
-    window.addEventListener('online', handleOnline);
-    window.addEventListener('offline', handleOffline);
-
-    // Load existing offline actions
-    loadOfflineActions();
-
-    return () => {
-      window.removeEventListener('online', handleOnline);
-      window.removeEventListener('offline', handleOffline);
-    };
-  }, []);
-
-  const loadOfflineActions = async () => {
+  const loadOfflineActions = useCallback(async () => {
     try {
       const actions = await storage.getOfflineActions();
       setOfflineActions(actions);
     } catch (error) {
       console.error('Failed to load offline actions:', error);
     }
-  };
+  }, [storage]);
 
-  const storeOfflineAction = async (action: OfflineAction) => {
-    try {
-      await storage.storeOfflineAction(action);
-      await loadOfflineActions();
-      console.log('Stored offline action:', action.type);
-    } catch (error) {
-      console.error('Failed to store offline action:', error);
-    }
-  };
-
-  const processOfflineActions = async () => {
+  const processOfflineActions = useCallback(async () => {
     try {
       const actions = await storage.getOfflineActions();
-      
+
       for (const action of actions) {
         try {
           const response = await fetch(action.url, {
@@ -78,6 +42,40 @@ export const useOffline = () => {
       await loadOfflineActions();
     } catch (error) {
       console.error('Failed to process offline actions:', error);
+    }
+  }, [storage, loadOfflineActions]);
+
+  useEffect(() => {
+    const handleOnline = async () => {
+      setIsOnline(true);
+      console.log('App is online - syncing offline actions');
+
+      await processOfflineActions();
+    };
+
+    const handleOffline = () => {
+      setIsOnline(false);
+      console.log('App is offline');
+    };
+
+    window.addEventListener('online', handleOnline);
+    window.addEventListener('offline', handleOffline);
+
+    loadOfflineActions();
+
+    return () => {
+      window.removeEventListener('online', handleOnline);
+      window.removeEventListener('offline', handleOffline);
+    };
+  }, [loadOfflineActions, processOfflineActions]);
+
+  const storeOfflineAction = async (action: OfflineAction) => {
+    try {
+      await storage.storeOfflineAction(action);
+      await loadOfflineActions();
+      console.log('Stored offline action:', action.type);
+    } catch (error) {
+      console.error('Failed to store offline action:', error);
     }
   };
 

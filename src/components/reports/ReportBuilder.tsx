@@ -5,14 +5,11 @@ import { useToast } from '@/components/Toast';
 import {
   ChartBarIcon,
   TableCellsIcon,
-  CalendarIcon,
   FunnelIcon,
   DocumentArrowDownIcon,
   PlayIcon,
   PauseIcon,
   BookmarkIcon,
-  ShareIcon,
-  Cog6ToothIcon,
 } from '@heroicons/react/24/outline';
 
 export interface ReportField {
@@ -170,7 +167,7 @@ export default function ReportBuilder({
     } finally {
       setIsRunning(false);
     }
-  }, [config, onRun]);
+  }, [config, onRun, toast]);
 
   const fieldsByCategory = availableFields.reduce((acc, field) => {
     if (!acc[field.category]) acc[field.category] = [];
@@ -379,7 +376,7 @@ export default function ReportBuilder({
               </div>
             ) : (
               <div className="space-y-4">
-                {config.filters.map((filter, index) => (
+                {config.filters.map((filter, _index) => (
                   <div key={filter.id} className="p-4 border border-gray-200 rounded-sm">
                     <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
                       <div>

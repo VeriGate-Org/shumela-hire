@@ -163,7 +163,7 @@ export default function InterviewScheduler({ interviewId, onSuccess, onCancel }:
     } catch (error) {
       console.error('Error loading interviewers:', error);
     }
-  }, []);
+  }, [formData.interviewerId]);
 
   useEffect(() => {
     void loadApplications();

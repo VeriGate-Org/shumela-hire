@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useToast } from '@/components/Toast';
 import { apiFetch } from '@/lib/api-fetch';
 
@@ -84,12 +84,7 @@ export default function ApplicationTimeline({ application, onClose, onStageTrans
   const [selectedStage, setSelectedStage] = useState('');
   const [transitionReason, setTransitionReason] = useState('');
 
-  useEffect(() => {
-    loadTimeline();
-    loadAvailableStages();
-  }, [application.id]);
-
-  const loadTimeline = async () => {
+  const loadTimeline = useCallback(async () => {
     try {
       setLoading(true);
       const response = await apiFetch(`/api/pipeline/applications/${application.id}/timeline`);
@@ -102,9 +97,9 @@ export default function ApplicationTimeline({ application, onClose, onStageTrans
     } finally {
       setLoading(false);
     }
-  };
+  }, [application.id]);
 
-  const loadAvailableStages = async () => {
+  const loadAvailableStages = useCallback(async () => {
     try {
       const response = await apiFetch(`/api/pipeline/applications/${application.id}/available-transitions`);
       if (response.ok) {
@@ -114,7 +109,12 @@ export default function ApplicationTimeline({ application, onClose, onStageTrans
     } catch (error) {
       console.error('Error loading available stages:', error);
     }
-  };
+  }, [application.id]);
+
+  useEffect(() => {
+    loadTimeline();
+    loadAvailableStages();
+  }, [application.id, loadTimeline, loadAvailableStages]);
 
   const handleStageTransition = async () => {
     if (!selectedStage || !transitionReason.trim()) {
@@ -206,7 +206,7 @@ export default function ApplicationTimeline({ application, onClose, onStageTrans
                 </div>
               ) : (
                 timeline.map((transition, index) => {
-                  const isFirst = index === 0;
+                  const _isFirst = index === 0;
                   const isLast = index === timeline.length - 1;
                   const style = getTransitionStyle(transition.transitionType);
 

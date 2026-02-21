@@ -34,7 +34,7 @@ const GenerateFromTemplate: React.FC<GenerateFromTemplateProps> = ({
   const [requisitions, setRequisitions] = useState<RequisitionData[]>([]);
   const [customData, setCustomData] = useState<Record<string, string>>({});
   const [generatedDraft, setGeneratedDraft] = useState<JobAdDraft | null>(null);
-  const [showPreview, setShowPreview] = useState(false);
+  const [_showPreview, _setShowPreview] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [step, setStep] = useState<'select' | 'customize' | 'preview' | 'complete'>('select');
@@ -49,7 +49,7 @@ const GenerateFromTemplate: React.FC<GenerateFromTemplateProps> = ({
         ]);
         setTemplates(templatesData);
         setRequisitions(requisitionsData);
-      } catch (err) {
+      } catch {
         setError('Failed to load data');
       }
     };

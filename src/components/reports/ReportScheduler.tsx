@@ -46,14 +46,14 @@ export default function ReportScheduler({
   schedules,
   availableReports,
   onCreateSchedule,
-  onUpdateSchedule,
+  onUpdateSchedule: _onUpdateSchedule,
   onDeleteSchedule,
   onToggleSchedule,
   onRunNow,
   className = '',
 }: ReportSchedulerProps) {
   const [showCreateForm, setShowCreateForm] = useState(false);
-  const [editingSchedule, setEditingSchedule] = useState<string | null>(null);
+  const [_editingSchedule, setEditingSchedule] = useState<string | null>(null);
   const [formData, setFormData] = useState({
     reportId: '',
     frequency: 'weekly' as const,

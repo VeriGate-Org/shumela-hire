@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { apiFetch } from '@/lib/api-fetch';
 import { useToast } from '@/components/Toast';
@@ -53,7 +53,7 @@ interface ApplicantProfileProps {
 }
 
 export default function ApplicantProfile({ applicantId, onSave }: ApplicantProfileProps) {
-  const { user } = useAuth();
+  const { user: _user } = useAuth();
   const { toast } = useToast();
   const [formData, setFormData] = useState<ApplicantData>({
     name: '',
@@ -73,15 +73,7 @@ export default function ApplicantProfile({ applicantId, onSave }: ApplicantProfi
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [showSuccess, setShowSuccess] = useState(false);
   
-  // Load applicant data if editing
-  useEffect(() => {
-    if (applicantId) {
-      loadApplicant();
-      loadDocuments();
-    }
-  }, [applicantId]);
-  
-  const loadApplicant = async () => {
+  const loadApplicant = useCallback(async () => {
     try {
       setLoading(true);
       const response = await apiFetch(`/api/applicants/${applicantId}`);
@@ -99,9 +91,9 @@ export default function ApplicantProfile({ applicantId, onSave }: ApplicantProfi
     } finally {
       setLoading(false);
     }
-  };
-  
-  const loadDocuments = async () => {
+  }, [applicantId]);
+
+  const loadDocuments = useCallback(async () => {
     try {
       const response = await apiFetch(`/api/applicants/${applicantId}/documents`);
       if (response.ok) {
@@ -111,7 +103,14 @@ export default function ApplicantProfile({ applicantId, onSave }: ApplicantProfi
     } catch (error) {
       console.error('Error loading documents:', error);
     }
-  };
+  }, [applicantId]);
+
+  useEffect(() => {
+    if (applicantId) {
+      loadApplicant();
+      loadDocuments();
+    }
+  }, [applicantId, loadApplicant, loadDocuments]);
   
   const validateForm = () => {
     const newErrors: Record<string, string> = {};
@@ -238,7 +237,7 @@ export default function ApplicantProfile({ applicantId, onSave }: ApplicantProfi
     }));
   };
   
-  const addExperience = () => {
+  const _addExperience = () => {
     setFormData(prev => ({
       ...prev,
       experience: [...prev.experience, { company: '', position: '', startDate: '', endDate: '', description: '' }]

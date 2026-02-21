@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import PageWrapper from '@/components/PageWrapper';
 import EmptyState from '@/components/EmptyState';
 import { useAuth } from '@/contexts/AuthContext';
@@ -98,11 +98,7 @@ export default function MyOffersPage() {
   const [loading, setLoading] = useState(true);
   const [_showNegotiationModal, setShowNegotiationModal] = useState(false);
 
-  useEffect(() => {
-    loadOffers();
-  }, [user]);
-
-  const loadOffers = async () => {
+  const loadOffers = useCallback(async () => {
     if (!user?.email) { setLoading(false); return; }
     setLoading(true);
     try {
@@ -164,9 +160,13 @@ export default function MyOffersPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [user]);
 
-  const filteredOffers = offers.filter(offer => 
+  useEffect(() => {
+    loadOffers();
+  }, [user, loadOffers]);
+
+  const filteredOffers = offers.filter(offer =>
     filterStatus === 'all' || offer.status === filterStatus
   );
 

@@ -36,7 +36,7 @@ export default function InternalApplicationPage() {
   const requisitionId = params.requisitionId as string;
   const jobId = searchParams.get('jobId');
   const jobTitle = searchParams.get('title') || 'Position';
-  const source = searchParams.get('source');
+  const _source = searchParams.get('source');
   
   const [loading, setLoading] = useState(false);
   const [submitted, setSubmitted] = useState(false);

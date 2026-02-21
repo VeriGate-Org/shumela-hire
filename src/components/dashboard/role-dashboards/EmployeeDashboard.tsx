@@ -25,8 +25,8 @@ interface TrainingModule {
 }
 
 const EmployeeDashboard: React.FC<EmployeeDashboardProps> = ({
-  selectedTimeframe,
-  onTimeframeChange,
+  selectedTimeframe: _selectedTimeframe,
+  onTimeframeChange: _onTimeframeChange,
 }) => {
   const [internalJobs, setInternalJobs] = useState<InternalJob[]>([]);
   // Training modules endpoint does not exist yet — initialize as empty

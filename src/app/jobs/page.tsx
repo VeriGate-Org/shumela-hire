@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
 import { JobAd, PublishingChannel, formatSalaryRange, isJobAdActive } from '../../types/jobAd';
 import { jobAdService } from '../../services/jobAdService';
@@ -29,9 +29,44 @@ const JobsPortalPage: React.FC = () => {
     fetchJobs();
   }, []);
 
+  const applyFilters = useCallback(() => {
+    let filtered = [...jobs];
+
+    // Search filter
+    if (searchTerm) {
+      const searchLower = searchTerm.toLowerCase();
+      filtered = filtered.filter(job =>
+        job.title.toLowerCase().includes(searchLower) ||
+        job.companyName.toLowerCase().includes(searchLower) ||
+        job.intro.toLowerCase().includes(searchLower)
+      );
+    }
+
+    // Location filter
+    if (locationFilter) {
+      filtered = filtered.filter(job =>
+        job.location.toLowerCase().includes(locationFilter.toLowerCase())
+      );
+    }
+
+    // Department filter
+    if (departmentFilter) {
+      filtered = filtered.filter(job =>
+        job.department?.toLowerCase().includes(departmentFilter.toLowerCase())
+      );
+    }
+
+    // Employment type filter
+    if (employmentTypeFilter) {
+      filtered = filtered.filter(job => job.employmentType === employmentTypeFilter);
+    }
+
+    setFilteredJobs(filtered);
+  }, [jobs, searchTerm, locationFilter, departmentFilter, employmentTypeFilter]);
+
   useEffect(() => {
     applyFilters();
-  }, [jobs, searchTerm, locationFilter, departmentFilter, employmentTypeFilter]);
+  }, [jobs, searchTerm, locationFilter, departmentFilter, employmentTypeFilter, applyFilters]);
 
   const fetchJobs = async () => {
     try {
@@ -45,46 +80,11 @@ const JobsPortalPage: React.FC = () => {
       const activeJobs = publishedJobs.filter(isJobAdActive);
 
       setJobs(activeJobs);
-    } catch (err) {
+    } catch {
       setError('Failed to load job listings');
     } finally {
       setLoading(false);
     }
-  };
-
-  const applyFilters = () => {
-    let filtered = [...jobs];
-
-    // Search filter
-    if (searchTerm) {
-      const searchLower = searchTerm.toLowerCase();
-      filtered = filtered.filter(job => 
-        job.title.toLowerCase().includes(searchLower) ||
-        job.companyName.toLowerCase().includes(searchLower) ||
-        job.intro.toLowerCase().includes(searchLower)
-      );
-    }
-
-    // Location filter
-    if (locationFilter) {
-      filtered = filtered.filter(job => 
-        job.location.toLowerCase().includes(locationFilter.toLowerCase())
-      );
-    }
-
-    // Department filter
-    if (departmentFilter) {
-      filtered = filtered.filter(job => 
-        job.department?.toLowerCase().includes(departmentFilter.toLowerCase())
-      );
-    }
-
-    // Employment type filter
-    if (employmentTypeFilter) {
-      filtered = filtered.filter(job => job.employmentType === employmentTypeFilter);
-    }
-
-    setFilteredJobs(filtered);
   };
 
   const formatRelativeDate = (date: Date) => {

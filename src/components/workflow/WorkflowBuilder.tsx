@@ -3,14 +3,8 @@
 import React, { useState, useCallback } from 'react';
 import {
   PlayIcon,
-  PauseIcon,
-  StopIcon,
   Cog6ToothIcon,
-  ClockIcon,
-  CheckCircleIcon,
   XCircleIcon,
-  ExclamationTriangleIcon,
-  ArrowPathIcon,
   DocumentTextIcon,
 } from '@heroicons/react/24/outline';
 
@@ -193,7 +187,7 @@ export default function WorkflowBuilder({
   workflow,
   onSave,
   onTest,
-  availableFields,
+  availableFields: _availableFields,
   availableUsers,
   className = '',
 }: WorkflowBuilderProps) {
@@ -210,7 +204,7 @@ export default function WorkflowBuilder({
   );
 
   const [activeStep, setActiveStep] = useState<string | null>(null);
-  const [showAdvanced, setShowAdvanced] = useState(false);
+  const [_showAdvanced, _setShowAdvanced] = useState(false);
 
   const handleUpdateWorkflow = useCallback((updates: Partial<WorkflowDefinition>) => {
     setCurrentWorkflow(prev => ({ ...prev, ...updates }));

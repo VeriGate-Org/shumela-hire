@@ -74,7 +74,7 @@ export function usePerformanceMonitoring() {
           setMetrics(prev => ({ ...prev, lcp: lastEntry.startTime }));
         });
         lcpObserver.observe({ type: 'largest-contentful-paint', buffered: true });
-      } catch (e) {
+      } catch {
         console.warn('LCP monitoring not supported');
       }
 
@@ -87,7 +87,7 @@ export function usePerformanceMonitoring() {
           });
         });
         fidObserver.observe({ type: 'first-input', buffered: true });
-      } catch (e) {
+      } catch {
         console.warn('FID monitoring not supported');
       }
 
@@ -103,7 +103,7 @@ export function usePerformanceMonitoring() {
           setMetrics(prev => ({ ...prev, cls: clsValue }));
         });
         clsObserver.observe({ type: 'layout-shift', buffered: true });
-      } catch (e) {
+      } catch {
         console.warn('CLS monitoring not supported');
       }
 
@@ -118,7 +118,7 @@ export function usePerformanceMonitoring() {
           });
         });
         fcpObserver.observe({ type: 'paint', buffered: true });
-      } catch (e) {
+      } catch {
         console.warn('FCP monitoring not supported');
       }
     }
@@ -129,7 +129,7 @@ export function usePerformanceMonitoring() {
         console.log('Performance Metrics:', metrics);
       }, 3000);
     }
-  }, []);
+  }, [metrics]);
 
   return metrics;
 }
@@ -184,7 +184,7 @@ export function usePerformanceReporting() {
     const timer = setTimeout(() => {
       // Report to Google Analytics or other analytics service
       if (typeof window !== 'undefined' && (window as any).gtag) {
-        const { lcp, fid, cls, fcp, ttfb } = metrics;
+        const { lcp, fid, cls, fcp: _fcp, ttfb: _ttfb } = metrics;
         
         if (lcp) {
           (window as any).gtag('event', 'web_vitals', {

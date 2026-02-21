@@ -90,7 +90,7 @@ export const swrConfig: SWRConfiguration = {
   },
   
   // Global success handler
-  onSuccess: (data, key, config) => {
+  onSuccess: (data, key, _config) => {
     // Optional: Log successful requests in development
     if (process.env.NODE_ENV === 'development') {
       console.log('SWR Success:', key, 'Data length:', JSON.stringify(data).length);
@@ -98,7 +98,7 @@ export const swrConfig: SWRConfiguration = {
   },
   
   // Global loading state handler
-  onLoadingSlow: (key, config) => {
+  onLoadingSlow: (key, _config) => {
     console.warn('SWR Loading Slow:', key);
   },
 };

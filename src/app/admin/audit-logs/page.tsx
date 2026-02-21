@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import PageWrapper from '@/components/PageWrapper';
 import EmptyState from '@/components/EmptyState';
 import { 
@@ -65,23 +65,7 @@ export default function AuditLogsPage() {
     loadAuditLogs();
   }, []);
 
-  useEffect(() => {
-    applyFilters();
-  }, [auditLogs, filters, searchTerm]);
-
-  const loadAuditLogs = async () => {
-    setLoading(true);
-    try {
-      const logs = await auditLogService.getAllAuditLogs();
-      setAuditLogs(logs);
-    } catch (error) {
-      console.error('Failed to load audit logs:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const applyFilters = () => {
+  const applyFilters = useCallback(() => {
     let filtered = [...auditLogs];
 
     // Date range filter
@@ -154,6 +138,22 @@ export default function AuditLogsPage() {
     }
 
     setFilteredLogs(filtered);
+  }, [auditLogs, filters, searchTerm]);
+
+  useEffect(() => {
+    applyFilters();
+  }, [auditLogs, filters, searchTerm, applyFilters]);
+
+  const loadAuditLogs = async () => {
+    setLoading(true);
+    try {
+      const logs = await auditLogService.getAllAuditLogs();
+      setAuditLogs(logs);
+    } catch (error) {
+      console.error('Failed to load audit logs:', error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const auditStats = useMemo((): AuditStats => {

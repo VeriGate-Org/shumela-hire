@@ -15,7 +15,6 @@ import {
   PerformanceGaugeChart,
   HiringManagerPerformanceChart,
   MonthlyTrendsChart,
-  CHART_COLORS,
 } from '../charts';
 
 // Mock data - In real app, this would come from APIs

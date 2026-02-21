@@ -3,35 +3,24 @@
 import { useState, useEffect, useCallback } from 'react';
 import { apiFetch } from '@/lib/api-fetch';
 import PageWrapper from '@/components/PageWrapper';
-import { 
+import {
   ChartBarIcon,
   ArrowTrendingUpIcon,
   UserGroupIcon,
-  BriefcaseIcon,
   CurrencyDollarIcon,
-  CalendarIcon,
   DocumentTextIcon,
   PlusIcon,
   EyeIcon,
-  PencilIcon,
-  TrashIcon,
   CheckCircleIcon,
   ExclamationTriangleIcon,
-  InformationCircleIcon,
-  ArrowUpIcon,
-  ArrowDownIcon,
-  MinusIcon,
   ClockIcon,
-  GlobeAltIcon,
   BuildingOfficeIcon,
-  AcademicCapIcon,
   StarIcon,
   LightBulbIcon,
   XMarkIcon
 } from '@heroicons/react/24/outline';
-import { 
-  ChartBarIcon as ChartBarIconSolid,
-  StarIcon as StarIconSolid 
+import {
+  ChartBarIcon as ChartBarIconSolid
 } from '@heroicons/react/24/solid';
 
 interface StrategicGoal {
@@ -97,22 +86,18 @@ interface CapacityPlan {
 
 export default function StrategicPlanningPage() {
   const [goals, setGoals] = useState<StrategicGoal[]>([]);
-  const [insights, setInsights] = useState<MarketInsight[]>([]);
-  const [capacityPlans, setCapacityPlans] = useState<CapacityPlan[]>([]);
+  const [insights, _setInsights] = useState<MarketInsight[]>([]);
+  const [capacityPlans, _setCapacityPlans] = useState<CapacityPlan[]>([]);
   const [selectedGoal, setSelectedGoal] = useState<StrategicGoal | null>(null);
   const [activeView, setActiveView] = useState<'overview' | 'goals' | 'insights' | 'capacity' | 'forecasting'>('overview');
   const [filterCategory, setFilterCategory] = useState<string>('all');
   const [filterStatus, setFilterStatus] = useState<string>('all');
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    loadStrategicData();
-  }, []);
-
   const loadStrategicData = useCallback(async () => {
     setLoading(true);
     try {
-      const [goalsRes, capacityRes] = await Promise.allSettled([
+      const [goalsRes, _capacityRes] = await Promise.allSettled([
         apiFetch('/api/executive/planning/goals'),
         apiFetch('/api/executive/planning/capacity'),
       ]);
@@ -129,6 +114,10 @@ export default function StrategicPlanningPage() {
       setLoading(false);
     }
   }, []);
+
+  useEffect(() => {
+    loadStrategicData();
+  }, [loadStrategicData]);
 
   const getStatusColor = (status: string) => {
     switch (status) {

@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { apiFetch } from '@/lib/api-fetch';
 
 interface Notification {
@@ -31,11 +31,7 @@ export default function NotificationsPanel({
   const [loading, setLoading] = useState(true);
   const [unreadCount, setUnreadCount] = useState(0);
 
-  useEffect(() => {
-    loadNotifications();
-  }, [applicantId]);
-
-  const loadNotifications = async () => {
+  const loadNotifications = useCallback(async () => {
     try {
       setLoading(true);
       const params = new URLSearchParams({ size: String(limit), sort: 'createdAt,desc' });
@@ -50,7 +46,11 @@ export default function NotificationsPanel({
     } finally {
       setLoading(false);
     }
-  };
+  }, [limit]);
+
+  useEffect(() => {
+    loadNotifications();
+  }, [applicantId, loadNotifications]);
 
   const handleMarkAsRead = async (notificationId: number) => {
     try {

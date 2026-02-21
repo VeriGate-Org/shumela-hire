@@ -30,7 +30,7 @@ const ReportingDashboard: React.FC = () => {
   const { toast } = useToast();
   const [activeTab, setActiveTab] = useState('generate');
   const [reportTypes, setReportTypes] = useState<Record<string, ReportType>>({});
-  const [selectedReportType, setSelectedReportType] = useState('');
+  const [_selectedReportType, _setSelectedReportType] = useState('');
   const [reportConfig, setReportConfig] = useState<ReportConfig>({
     reportType: '',
     startDate: '',
@@ -70,7 +70,7 @@ const ReportingDashboard: React.FC = () => {
     }
   };
 
-  const handleGenerateReport = async (reportType: string, format: string = 'csv') => {
+  const handleGenerateReport = async (reportType: string, _format: string = 'csv') => {
     setIsGenerating(true);
     try {
       const params = new URLSearchParams();

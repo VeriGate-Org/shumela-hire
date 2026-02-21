@@ -4,39 +4,28 @@ import { useState, useEffect, useCallback } from 'react';
 import { apiFetch } from '@/lib/api-fetch';
 import PageWrapper from '@/components/PageWrapper';
 import { formatCurrency } from '@/utils/currency';
-import { 
+import {
   CurrencyDollarIcon,
   ChartBarIcon,
   DocumentTextIcon,
   CheckCircleIcon,
-  XCircleIcon,
-  ClockIcon,
   ExclamationTriangleIcon,
   UserIcon,
-  CalendarIcon,
   EyeIcon,
-  PencilIcon,
-  ArrowUpIcon,
-  ArrowDownIcon,
   BanknotesIcon,
-  CreditCardIcon,
   ReceiptPercentIcon,
   PlusIcon,
-  FunnelIcon,
   MagnifyingGlassIcon,
   BuildingOfficeIcon,
   UserGroupIcon,
   ArrowTrendingUpIcon,
-  ArrowTrendingDownIcon,
   MinusIcon,
   XMarkIcon,
   HandThumbUpIcon,
   HandThumbDownIcon,
   ChatBubbleLeftRightIcon
 } from '@heroicons/react/24/outline';
-import { 
-  CheckCircleIcon as CheckCircleIconSolid,
-  XCircleIcon as XCircleIconSolid,
+import {
   ClockIcon as ClockIconSolid,
   CurrencyDollarIcon as CurrencyDollarIconSolid
 } from '@heroicons/react/24/solid';
@@ -111,22 +100,18 @@ interface BudgetAnalytics {
 export default function BudgetApprovalsPage() {
   const [budgetItems, setBudgetItems] = useState<BudgetItem[]>([]);
   const [approvalRequests, setApprovalRequests] = useState<ApprovalRequest[]>([]);
-  const [analytics, setAnalytics] = useState<BudgetAnalytics | null>(null);
+  const [analytics, _setAnalytics] = useState<BudgetAnalytics | null>(null);
   const [selectedRequest, setSelectedRequest] = useState<ApprovalRequest | null>(null);
   const [activeView, setActiveView] = useState<'overview' | 'budget' | 'approvals' | 'analytics'>('overview');
-  const [filterCategory, setFilterCategory] = useState<string>('all');
+  const [_filterCategory, _setFilterCategory] = useState<string>('all');
   const [filterStatus, setFilterStatus] = useState<string>('all');
   const [searchTerm, setSearchTerm] = useState('');
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    loadBudgetData();
-  }, []);
-
   const loadBudgetData = useCallback(async () => {
     setLoading(true);
     try {
-      const [budgetRes, analyticsRes] = await Promise.allSettled([
+      const [budgetRes, _analyticsRes] = await Promise.allSettled([
         apiFetch('/api/executive/budget'),
         apiFetch('/api/executive/budget/analytics'),
       ]);
@@ -143,6 +128,10 @@ export default function BudgetApprovalsPage() {
       setLoading(false);
     }
   }, []);
+
+  useEffect(() => {
+    loadBudgetData();
+  }, [loadBudgetData]);
 
   const handleApprovalAction = (requestId: string, action: 'approve' | 'reject' | 'request_info') => {
     setApprovalRequests(prev => 

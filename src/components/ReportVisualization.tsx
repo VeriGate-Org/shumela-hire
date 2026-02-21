@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useToast } from '@/components/Toast';
 import { apiFetch } from '@/lib/api-fetch';
 
@@ -28,49 +28,7 @@ const ReportVisualization: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [selectedDateRange, setSelectedDateRange] = useState('last-6-months');
 
-  useEffect(() => {
-    fetchVisualizationData();
-  }, [selectedDateRange]);
-
-  const fetchVisualizationData = async () => {
-    setLoading(true);
-    try {
-      // Fetch KPIs
-      const kpiResponse = await apiFetch('/api/visualization/kpis');
-      const kpiData = await kpiResponse.json();
-      setKPIs(kpiData);
-
-      // Fetch individual charts
-      const chartEndpoints = [
-        'application-status',
-        'applications-timeline',
-        'top-positions',
-        'source-effectiveness',
-        'interview-ratings',
-        'hiring-trends'
-      ];
-
-      const chartData: Record<string, ChartData> = {};
-      
-      for (const endpoint of chartEndpoints) {
-        try {
-          const response = await apiFetch(`/api/visualization/charts/${endpoint}${getDateParam()}`);
-          const data = await response.json();
-          chartData[endpoint] = data;
-        } catch (error) {
-          console.error(`Error fetching ${endpoint}:`, error);
-        }
-      }
-
-      setCharts(chartData);
-    } catch (error) {
-      console.error('Error fetching visualization data:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const getDateParam = () => {
+  const getDateParam = useCallback(() => {
     const now = new Date();
     let fromDate: Date;
 
@@ -89,7 +47,47 @@ const ReportVisualization: React.FC = () => {
     }
 
     return `?fromDate=${fromDate.toISOString().split('T')[0]}`;
-  };
+  }, [selectedDateRange]);
+
+  const fetchVisualizationData = useCallback(async () => {
+    setLoading(true);
+    try {
+      const kpiResponse = await apiFetch('/api/visualization/kpis');
+      const kpiData = await kpiResponse.json();
+      setKPIs(kpiData);
+
+      const chartEndpoints = [
+        'application-status',
+        'applications-timeline',
+        'top-positions',
+        'source-effectiveness',
+        'interview-ratings',
+        'hiring-trends'
+      ];
+
+      const chartData: Record<string, ChartData> = {};
+
+      for (const endpoint of chartEndpoints) {
+        try {
+          const response = await apiFetch(`/api/visualization/charts/${endpoint}${getDateParam()}`);
+          const data = await response.json();
+          chartData[endpoint] = data;
+        } catch (error) {
+          console.error(`Error fetching ${endpoint}:`, error);
+        }
+      }
+
+      setCharts(chartData);
+    } catch (error) {
+      console.error('Error fetching visualization data:', error);
+    } finally {
+      setLoading(false);
+    }
+  }, [getDateParam]);
+
+  useEffect(() => {
+    fetchVisualizationData();
+  }, [fetchVisualizationData]);
 
   const getTrendIcon = (trend: string) => {
     switch (trend) {
@@ -111,7 +109,7 @@ const ReportVisualization: React.FC = () => {
     return colorMap[color] || 'bg-gray-500 text-gray-100';
   };
 
-  const KPICard: React.FC<{ kpi: KPIWidget; name: string }> = ({ kpi, name }) => (
+  const KPICard: React.FC<{ kpi: KPIWidget; name: string }> = ({ kpi, name: _name }) => (
     <div className="bg-white rounded-sm shadow-md p-6 border-l-4 border-gold-500">
       <div className="flex items-center justify-between">
         <div>
@@ -145,7 +143,7 @@ const ReportVisualization: React.FC = () => {
     </div>
   );
 
-  const ChartCard: React.FC<{ chart: ChartData; name: string }> = ({ chart, name }) => (
+  const ChartCard: React.FC<{ chart: ChartData; name: string }> = ({ chart, name: _name }) => (
     <div className="bg-white rounded-sm shadow-md p-6">
       <h3 className="text-lg font-semibold text-gray-900 mb-4">{chart.title}</h3>
       <div className="h-64 flex items-center justify-center">

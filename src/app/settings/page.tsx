@@ -6,7 +6,6 @@ import { apiFetch } from '@/lib/api-fetch';
 import {
   BellIcon,
   ShieldCheckIcon,
-  LockClosedIcon,
   TrashIcon,
   ArrowDownTrayIcon,
   ComputerDesktopIcon,

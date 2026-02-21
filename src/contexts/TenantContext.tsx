@@ -1,6 +1,6 @@
 'use client';
 
-import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import React, { createContext, useContext, useState, useEffect, useCallback, ReactNode } from 'react';
 import { getTenantSubdomain } from '@/lib/tenant-utils';
 import { apiFetch } from '@/lib/api-fetch';
 
@@ -39,12 +39,7 @@ export const TenantProvider: React.FC<TenantProviderProps> = ({ children }) => {
 
   const subdomain = typeof window !== 'undefined' ? getTenantSubdomain() : 'default';
 
-  useEffect(() => {
-    resolveTenant();
-  }, [subdomain]);
-
-  async function resolveTenant() {
-    // In dev with default subdomain, use a static fallback
+  const resolveTenant = useCallback(async () => {
     if (subdomain === 'default') {
       setTenant({ id: 'default', name: 'Default Organization', subdomain: 'default', plan: 'STANDARD' });
       setIsLoading(false);
@@ -64,7 +59,11 @@ export const TenantProvider: React.FC<TenantProviderProps> = ({ children }) => {
     } finally {
       setIsLoading(false);
     }
-  }
+  }, [subdomain]);
+
+  useEffect(() => {
+    resolveTenant();
+  }, [resolveTenant]);
 
   const tenantId = tenant?.id || 'default';
 

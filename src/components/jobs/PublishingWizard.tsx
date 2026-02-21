@@ -1,13 +1,12 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { 
-  JobAd, 
-  PublishingChannel, 
+import {
+  JobAd,
+  PublishingChannel,
   PublishingRequest,
   PUBLISHING_WIZARD_STEPS,
   DEFAULT_PUBLISHING_SETTINGS,
-  generateSlug
 } from '../../types/jobAd';
 import { JobAdDraft } from '../../types/jobTemplate';
 import { jobAdService } from '../../services/jobAdService';
@@ -72,7 +71,7 @@ const PublishingWizard: React.FC<PublishingWizardProps> = ({
     if (!formData.customSlug) {
       setFormData(prev => ({ ...prev, customSlug: slug }));
     }
-  }, [formData.title]);
+  }, [formData.title, formData.customSlug]);
 
   const steps = PUBLISHING_WIZARD_STEPS.map((step, index) => ({
     ...step,

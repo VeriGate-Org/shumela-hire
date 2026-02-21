@@ -63,7 +63,7 @@ const RequisitionList: React.FC<RequisitionListProps> = ({
     } finally {
       setLoading(false);
     }
-  }, [filterStatus, user?.role]);
+  }, [filterStatus, showAll, user?.role]);
 
   useEffect(() => {
     fetchRequisitions();

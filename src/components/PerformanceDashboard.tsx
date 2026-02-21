@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useApiData } from '@/hooks/useApiData';
 import { LoadingSpinner, CardSkeleton } from '@/components/LoadingComponents';
 import { apiFetch } from '@/lib/api-fetch';
@@ -65,13 +65,6 @@ export default function PerformanceDashboard() {
     const sizes = ['Bytes', 'KB', 'MB', 'GB'];
     const i = Math.floor(Math.log(bytes) / Math.log(k));
     return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
-  };
-
-  const formatUptime = (timestamp: number) => {
-    const uptime = Date.now() - timestamp;
-    const hours = Math.floor(uptime / (1000 * 60 * 60));
-    const minutes = Math.floor((uptime % (1000 * 60 * 60)) / (1000 * 60));
-    return `${hours}h ${minutes}m`;
   };
 
   const getPerformanceStatus = (responseTime: number) => {

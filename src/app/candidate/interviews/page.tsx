@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import PageWrapper from '@/components/PageWrapper';
 import EmptyState from '@/components/EmptyState';
 import { useAuth } from '@/contexts/AuthContext';
@@ -105,11 +105,7 @@ export default function InterviewSchedulePage() {
   const [selectedDate, setSelectedDate] = useState<string>(new Date().toISOString().split('T')[0]);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    loadInterviews();
-  }, [user]);
-
-  const loadInterviews = async () => {
+  const loadInterviews = useCallback(async () => {
     if (!user?.email) { setLoading(false); return; }
     setLoading(true);
     try {
@@ -162,7 +158,11 @@ export default function InterviewSchedulePage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [user]);
+
+  useEffect(() => {
+    loadInterviews();
+  }, [user, loadInterviews]);
 
   const filteredInterviews = interviews.filter(interview => {
     const now = new Date();

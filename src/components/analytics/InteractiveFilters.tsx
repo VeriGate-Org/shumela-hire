@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import {
   MagnifyingGlassIcon,
   FunnelIcon,
@@ -38,7 +38,7 @@ const InteractiveFilters: React.FC<InteractiveFiltersProps> = ({
   className = '',
 }) => {
   const [isExpanded, setIsExpanded] = useState(false);
-  const [searchTerm, setSearchTerm] = useState('');
+  const [_searchTerm, _setSearchTerm] = useState('');
 
   const getValue = (filterId: string) => {
     const filterValue = values.find(v => v.id === filterId);

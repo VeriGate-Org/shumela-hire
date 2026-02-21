@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import PageWrapper from '@/components/PageWrapper';
 import EmptyState from '@/components/EmptyState';
 import { useAuth } from '@/contexts/AuthContext';
@@ -96,11 +96,7 @@ export default function MyApplicationsPage() {
   const [sortBy, setSortBy] = useState<'date' | 'company' | 'status'>('date');
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    loadApplications();
-  }, [user]);
-
-  const loadApplications = async () => {
+  const loadApplications = useCallback(async () => {
     if (!user?.email) { setLoading(false); return; }
     setLoading(true);
     try {
@@ -138,7 +134,11 @@ export default function MyApplicationsPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [user]);
+
+  useEffect(() => {
+    loadApplications();
+  }, [user, loadApplications]);
 
   const filteredApplications = applications.filter(app => {
     const matchesStatus = filterStatus === 'all' || app.status === filterStatus;

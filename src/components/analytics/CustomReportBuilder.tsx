@@ -94,7 +94,7 @@ const CustomReportBuilder: React.FC<CustomReportBuilderProps> = ({
       return [];
     }
     return generateSampleData(reportConfig);
-  }, [reportConfig.dimensions, reportConfig.metrics, reportConfig.filters]);
+  }, [reportConfig]);
 
   const handleDragStart = (field: ReportField) => {
     setDraggedField(field);

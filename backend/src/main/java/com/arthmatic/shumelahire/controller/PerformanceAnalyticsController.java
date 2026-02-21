@@ -121,6 +121,7 @@ public class PerformanceAnalyticsController {
      * Get key performance indicators (KPIs) for executive reporting
      */
     @GetMapping("/kpis")
+    @SuppressWarnings("unchecked")
     public ResponseEntity<Map<String, Object>> getKeyPerformanceIndicators() {
         try {
             Map<String, Object> recruitmentMetrics = performanceAnalyticsService.getRecruitmentMetrics();
@@ -148,6 +149,7 @@ public class PerformanceAnalyticsController {
      * Get real-time performance summary for monitoring
      */
     @GetMapping("/real-time-summary")
+    @SuppressWarnings("unchecked")
     public ResponseEntity<Map<String, Object>> getRealTimeSummary() {
         try {
             Map<String, Object> recruitmentMetrics = performanceAnalyticsService.getRecruitmentMetrics();

@@ -1,16 +1,13 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
-import { 
-  PerformanceContract, 
-  PerformanceCycle, 
-  PerformanceGoal,
+import React, { useState } from 'react';
+import {
+  PerformanceContract,
+  PerformanceCycle,
   CreateContractRequest,
   CreateGoalRequest,
   GoalType,
-  ContractStatus,
-  getContractStatusColor,
-  getGoalTypeColor 
+  getGoalTypeColor
 } from '@/types/performance';
 import { apiFetch } from '@/lib/api-fetch';
 
@@ -22,12 +19,12 @@ interface ContractBuilderProps {
   onCancel?: () => void;
 }
 
-export default function ContractBuilder({ 
-  cycle, 
-  tenantId, 
-  userId, 
-  onContractCreated, 
-  onCancel 
+export default function ContractBuilder({
+  cycle,
+  tenantId: _tenantId,
+  userId,
+  onContractCreated,
+  onCancel
 }: ContractBuilderProps) {
   const [contract, setContract] = useState<CreateContractRequest>({
     cycleId: cycle.id,

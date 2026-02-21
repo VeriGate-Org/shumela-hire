@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef, useCallback, useState } from 'react';
+import { useEffect, useRef, useCallback, useState, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
 
 export interface ShortcutEntry {
@@ -24,14 +24,14 @@ export function useKeyboardShortcuts() {
     { keys: '?', description: 'Show keyboard shortcuts' },
   ];
 
-  const routeMap: Record<string, string> = {
+  const routeMap = useMemo<Record<string, string>>(() => ({
     'g+d': '/dashboard',
     'g+p': '/pipeline',
     'g+a': '/applications',
     'g+j': '/job-postings',
     'g+i': '/interviews',
     'g+r': '/reports',
-  };
+  }), []);
 
   const handleKeyDown = useCallback((e: KeyboardEvent) => {
     const target = e.target as HTMLElement;
@@ -73,7 +73,7 @@ export function useKeyboardShortcuts() {
       }, 1500);
       return;
     }
-  }, [router]);
+  }, [router, routeMap]);
 
   useEffect(() => {
     document.addEventListener('keydown', handleKeyDown);

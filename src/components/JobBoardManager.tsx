@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useToast } from '@/components/Toast';
 import { jobBoardService } from '@/services/jobBoardService';
 import {
@@ -23,11 +23,7 @@ export default function JobBoardManager({ jobId }: JobBoardManagerProps) {
   const [actionLoading, setActionLoading] = useState<number | null>(null);
   const [selectedBoard, setSelectedBoard] = useState<string>('');
 
-  useEffect(() => {
-    loadData();
-  }, [jobId]);
-
-  const loadData = async () => {
+  const loadData = useCallback(async () => {
     try {
       setLoading(true);
       const [postingsData, boardsData] = await Promise.all([
@@ -41,7 +37,11 @@ export default function JobBoardManager({ jobId }: JobBoardManagerProps) {
     } finally {
       setLoading(false);
     }
-  };
+  }, [jobId]);
+
+  useEffect(() => {
+    loadData();
+  }, [loadData]);
 
   const handlePost = async () => {
     if (!selectedBoard) return;

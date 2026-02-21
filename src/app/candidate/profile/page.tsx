@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import PageWrapper from '@/components/PageWrapper';
 import { useAuth } from '@/contexts/AuthContext';
 import { getApplicantId, getApplicant, getDocuments as fetchDocuments, getApplications as fetchApplications } from '@/services/candidateService';
@@ -23,8 +23,7 @@ import {
   PlusIcon,
   TrashIcon,
   ArrowUpTrayIcon,
-  StarIcon,
-  GlobeAltIcon
+  StarIcon
 } from '@heroicons/react/24/outline';
 
 interface CandidateProfile {
@@ -108,8 +107,8 @@ interface Application {
 export default function CandidateProfilePage() {
   const { user } = useAuth();
   const [profile, setProfile] = useState<CandidateProfile | null>(null);
-  const [experiences, setExperiences] = useState<Experience[]>([]);
-  const [education, setEducation] = useState<Education[]>([]);
+  const [experiences, _setExperiences] = useState<Experience[]>([]);
+  const [education, _setEducation] = useState<Education[]>([]);
   const [skills, setSkills] = useState<Skill[]>([]);
   const [documents, setDocuments] = useState<Document[]>([]);
   const [applications, setApplications] = useState<Application[]>([]);
@@ -117,11 +116,7 @@ export default function CandidateProfilePage() {
   const [isEditing, setIsEditing] = useState(false);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    loadCandidateData();
-  }, [user]);
-
-  const loadCandidateData = async () => {
+  const loadCandidateData = useCallback(async () => {
     if (!user?.email) { setLoading(false); return; }
     setLoading(true);
     try {
@@ -194,7 +189,11 @@ export default function CandidateProfilePage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [user]);
+
+  useEffect(() => {
+    loadCandidateData();
+  }, [user, loadCandidateData]);
 
   const getStatusIcon = (status: string) => {
     switch (status) {
@@ -474,7 +473,7 @@ export default function CandidateProfilePage() {
                 </div>
                 
                 <div className="space-y-6">
-                  {experiences.map((exp, index) => (
+                  {experiences.map((exp, _index) => (
                     <div key={exp.id} className="border border-gray-200 rounded-sm p-6">
                       <div className="flex items-start justify-between">
                         <div className="flex-1">
@@ -545,7 +544,7 @@ export default function CandidateProfilePage() {
                 </div>
                 
                 <div className="space-y-6">
-                  {education.map((edu, index) => (
+                  {education.map((edu, _index) => (
                     <div key={edu.id} className="border border-gray-200 rounded-sm p-6">
                       <div className="flex items-start justify-between">
                         <div className="flex-1">

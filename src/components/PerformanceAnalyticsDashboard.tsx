@@ -2,9 +2,8 @@
 
 import React, { useState, useEffect } from 'react';
 import {
-  TrendingUp, TrendingDown, Clock, DollarSign, Users, Target,
-  Calendar, Star, BarChart, PieChart, Activity, Award,
-  AlertCircle, CheckCircle
+  TrendingUp, TrendingDown, Clock, DollarSign, Target,
+  Star, AlertCircle
 } from 'lucide-react';
 import { apiFetch } from '@/lib/api-fetch';
 

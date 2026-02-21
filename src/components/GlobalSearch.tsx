@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useMemo } from 'react';
 import Link from 'next/link';
 import { MagnifyingGlassIcon } from '@heroicons/react/24/outline';
 import { useFocusTrap } from '@/hooks/useFocusTrap';
@@ -30,8 +30,7 @@ const GlobalSearch: React.FC = () => {
     setQuery('');
   });
 
-  // Sample search results data
-  const sampleResults: SearchResult[] = [
+  const sampleResults: SearchResult[] = useMemo(() => [
     {
       id: '1',
       type: 'application',
@@ -71,7 +70,7 @@ const GlobalSearch: React.FC = () => {
       href: '/reports/5',
       metadata: { date: '2024-01-15' }
     }
-  ];
+  ], []);
 
   useEffect(() => {
     if (query.trim() === '') {
@@ -93,7 +92,7 @@ const GlobalSearch: React.FC = () => {
     }, 300);
 
     return () => clearTimeout(timer);
-  }, [query]);
+  }, [query, sampleResults]);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
