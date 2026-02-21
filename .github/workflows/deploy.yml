@@ -14,6 +14,10 @@ on:
         required: true
         type: string
         default: shumelahire.co.za
+      hosted-zone-name:
+        required: false
+        type: string
+        default: ""
     secrets:
       AWS_ROLE_ARN:
         required: true
@@ -75,6 +79,16 @@ jobs:
           dotnet restore
           dotnet build --no-restore
 
+      # ── Resolve hosted zone name (defaults to domain-name) ────────────
+      - name: Resolve hosted zone name
+        id: zone
+        run: |
+          ZONE="${{ inputs.hosted-zone-name }}"
+          if [ -z "$ZONE" ]; then
+            ZONE="${{ inputs.domain-name }}"
+          fi
+          echo "name=$ZONE" >> $GITHUB_OUTPUT
+
       # ── Phase 1: Deploy foundation (VPC, DB, ECR repos, Cognito) ──────
       - name: CDK Deploy Foundation
         working-directory: infra/cdk
@@ -88,6 +102,7 @@ jobs:
           cdk deploy shumelahire-${{ inputs.environment }}-foundation --require-approval never \
             -c env=${{ inputs.environment }} \
             -c domain=${{ inputs.domain-name }} \
+            -c hostedZoneName=${{ steps.zone.outputs.name }} \
             -c certificateArn="${CERTIFICATE_ARN}" \
             -c apiCertificateArn="${API_CERTIFICATE_ARN}" \
             -c wildcardCertificateArn="${WILDCARD_CERTIFICATE_ARN}"
@@ -152,6 +167,7 @@ jobs:
           cdk deploy --all --require-approval never \
             -c env=${{ inputs.environment }} \
             -c domain=${{ inputs.domain-name }} \
+            -c hostedZoneName=${{ steps.zone.outputs.name }} \
             -c certificateArn="${CERTIFICATE_ARN}" \
             -c apiCertificateArn="${API_CERTIFICATE_ARN}" \
             -c wildcardCertificateArn="${WILDCARD_CERTIFICATE_ARN}"

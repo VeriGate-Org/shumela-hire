@@ -94,7 +94,7 @@ public class ShumelaHireFrontendStack : Stack
         {
             var hostedZone = HostedZone.FromLookup(this, "HostedZone", new HostedZoneProviderProps
             {
-                DomainName = config.DomainName
+                DomainName = config.HostedZoneName
             });
 
             new ARecord(this, "FrontendDnsRecord", new ARecordProps

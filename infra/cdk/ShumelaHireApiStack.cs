@@ -118,7 +118,7 @@ public class ShumelaHireApiStack : Stack
 
             var hostedZone = HostedZone.FromLookup(this, "HostedZone", new HostedZoneProviderProps
             {
-                DomainName = config.DomainName
+                DomainName = config.HostedZoneName
             });
 
             var albDns = compute.AlbDnsName;

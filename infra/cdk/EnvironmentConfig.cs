@@ -7,6 +7,7 @@ public sealed class EnvironmentConfig
     public required string EnvironmentName { get; init; }
     public required string DomainName { get; init; }
     public required string ApiDomainName { get; init; }
+    public required string HostedZoneName { get; init; }
     public string? CertificateArn { get; init; }
     public string? WildcardCertificateArn { get; init; }
     public string? ApiCertificateArn { get; init; }
@@ -60,11 +61,16 @@ public sealed class EnvironmentConfig
         var wildcardCertArn = (string?)app.Node.TryGetContext("wildcardCertificateArn")
                               ?? System.Environment.GetEnvironmentVariable("WILDCARD_CERTIFICATE_ARN");
 
+        var hostedZoneName = (string?)app.Node.TryGetContext("hostedZoneName")
+                             ?? System.Environment.GetEnvironmentVariable("HOSTED_ZONE_NAME")
+                             ?? domain;
+
         return new EnvironmentConfig
         {
             EnvironmentName = env,
             DomainName = domain,
             ApiDomainName = $"api.{domain}",
+            HostedZoneName = hostedZoneName,
             CertificateArn = certArn,
             WildcardCertificateArn = wildcardCertArn,
             ApiCertificateArn = apiCertArn,
