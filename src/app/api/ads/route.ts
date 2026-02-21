@@ -54,6 +54,7 @@ export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
     const {
+      draft,
       draftId,
       channels,
       expiresAt,
@@ -61,42 +62,19 @@ export async function POST(request: NextRequest) {
       department,
       featured = false,
       customSlug,
-      publishedBy = 'demo_user@company.com'
+      publishedBy = 'unknown'
     } = body;
 
     // Validate required fields
-    if (!draftId || !channels || !expiresAt || !companyName) {
+    if (!draft || !channels || !expiresAt || !companyName) {
       return NextResponse.json(
-        { success: false, message: 'draftId, channels, expiresAt, and companyName are required' },
+        { success: false, message: 'draft, channels, expiresAt, and companyName are required' },
         { status: 400 }
       );
     }
 
-    // Get draft from template service (assuming drafts are stored there)
-    // In a real app, you'd have a separate draft service
-    const draft = {
-      id: draftId,
-      templateId: 'template_001',
-      requisitionId: undefined,
-      title: 'Sample Job Title',
-      intro: '<p>Sample job introduction</p>',
-      responsibilities: '<p>Sample responsibilities</p>',
-      requirements: '<p>Sample requirements</p>',
-      benefits: '<p>Sample benefits</p>',
-      location: 'Sample Location',
-      employmentType: 'Full-time',
-      salaryRangeMin: undefined,
-      salaryRangeMax: undefined,
-      closingDate: undefined,
-      contactEmail: 'careers@company.com',
-      status: 'draft' as const,
-      createdBy: publishedBy,
-      createdAt: new Date(),
-      updatedAt: new Date()
-    };
-
     const publishingRequest = {
-      draftId,
+      draftId: draftId || draft.id,
       channels,
       expiresAt: new Date(expiresAt),
       companyName,
