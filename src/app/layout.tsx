@@ -1,11 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Manrope, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
-import { AuthProvider } from '@/contexts/AuthContext';
-import { ThemeProvider } from '@/contexts/ThemeContext';
-import { LayoutProvider } from '@/contexts/LayoutContext';
-import { TenantProvider } from '@/contexts/TenantContext';
-import { ToastProvider } from '@/components/Toast';
 
 const manrope = Manrope({
   variable: "--font-manrope",
@@ -19,17 +14,20 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "ShumelaHire",
-  description: "Comprehensive recruitment and hiring management platform",
+  title: {
+    default: "ShumelaHire — Structured Talent Acquisition for Institutions",
+    template: "%s | ShumelaHire",
+  },
+  description: "ShumelaHire brings order, transparency, and measurable outcomes to every stage of the hiring process. Purpose-built for corporates, DFIs, and government agencies.",
   manifest: "/manifest.json",
-  keywords: ["recruitment", "hiring", "HR", "job", "dashboard", "management"],
+  keywords: ["recruitment", "hiring", "talent acquisition", "HR", "enterprise", "South Africa", "POPIA", "structured hiring"],
   authors: [{ name: "Arthmatic DevWorks" }],
   creator: "ShumelaHire",
   publisher: "Arthmatic DevWorks",
   metadataBase: new URL('https://shumelahire.co.za'),
   openGraph: {
-    title: "ShumelaHire",
-    description: "Comprehensive recruitment and hiring management platform",
+    title: "ShumelaHire — Structured Talent Acquisition for Institutions",
+    description: "ShumelaHire brings order, transparency, and measurable outcomes to every stage of the hiring process.",
     url: "https://shumelahire.co.za",
     siteName: "ShumelaHire",
     images: [
@@ -37,17 +35,17 @@ export const metadata: Metadata = {
         url: "/og-image.jpg",
         width: 1200,
         height: 630,
-        alt: "ShumelaHire"
+        alt: "ShumelaHire — Structured Talent Acquisition"
       }
     ],
-    locale: "en_US",
+    locale: "en_ZA",
     type: "website"
   },
   twitter: {
     card: "summary_large_image",
-    title: "ShumelaHire",
-    description: "Comprehensive recruitment and hiring management platform",
-    images: ["/twitter-image.jpg"]
+    title: "ShumelaHire — Structured Talent Acquisition for Institutions",
+    description: "ShumelaHire brings order, transparency, and measurable outcomes to every stage of the hiring process.",
+    images: ["/og-image.jpg"]
   },
   appleWebApp: {
     title: "ShumelaHire",
@@ -86,17 +84,7 @@ export default function RootLayout({
       <body
         className={`${manrope.variable} ${jetbrainsMono.variable} antialiased`}
       >
-        <TenantProvider>
-          <ThemeProvider>
-            <AuthProvider>
-              <ToastProvider>
-                <LayoutProvider>
-                  {children}
-                </LayoutProvider>
-              </ToastProvider>
-            </AuthProvider>
-          </ThemeProvider>
-        </TenantProvider>
+        {children}
       </body>
     </html>
   );
