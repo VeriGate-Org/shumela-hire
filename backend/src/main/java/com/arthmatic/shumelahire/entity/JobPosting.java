@@ -1,5 +1,6 @@
 package com.arthmatic.shumelahire.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -146,6 +147,7 @@ public class JobPosting extends TenantAwareEntity {
     private LocalDateTime closedAt;
     
     // Relationships
+    @JsonIgnore
     @OneToMany(mappedBy = "jobPosting", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Application> applications;
     
