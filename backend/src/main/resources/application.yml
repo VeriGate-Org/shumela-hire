@@ -84,6 +84,27 @@ job-boards:
     api-key: ${CAREER_JUNCTION_API_KEY:}
     partner-id: ${CAREER_JUNCTION_PARTNER_ID:}
 
+# Background Check / Verification
+background-check:
+  provider: ${BACKGROUND_CHECK_PROVIDER:dots-africa}
+
+# Dots Africa Verification (NCR-accredited — NCRCB38)
+dots-africa:
+  base-url: ${DOTS_AFRICA_BASE_URL:https://api.dotsafrica.com/v1}
+  api-key: ${DOTS_AFRICA_API_KEY:}
+  client-id: ${DOTS_AFRICA_CLIENT_ID:}
+
+# SAP Payroll Integration
+sap:
+  payroll:
+    enabled: ${SAP_PAYROLL_ENABLED:false}
+    base-url: ${SAP_PAYROLL_BASE_URL:}
+    client-id: ${SAP_PAYROLL_CLIENT_ID:}
+    client-secret: ${SAP_PAYROLL_CLIENT_SECRET:}
+    auth-url: ${SAP_PAYROLL_AUTH_URL:}
+    company-code: ${SAP_PAYROLL_COMPANY_CODE:}
+    payroll-area: ${SAP_PAYROLL_PAYROLL_AREA:}
+
 # Notification Configuration
 notification:
   email:

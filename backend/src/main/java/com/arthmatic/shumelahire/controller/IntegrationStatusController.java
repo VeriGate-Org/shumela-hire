@@ -56,6 +56,18 @@ public class IntegrationStatusController {
     @Value("${microsoft.enabled:false}")
     private boolean microsoftEnabled;
 
+    @Value("${background-check.provider:}")
+    private String backgroundCheckProvider;
+
+    @Value("${dots-africa.api-key:}")
+    private String dotsAfricaApiKey;
+
+    @Value("${sap.payroll.enabled:false}")
+    private boolean sapPayrollEnabled;
+
+    @Value("${sap.payroll.base-url:}")
+    private String sapPayrollBaseUrl;
+
     @GetMapping("/status")
     public ResponseEntity<List<Map<String, Object>>> getIntegrationStatus() {
         List<Map<String, Object>> integrations = new ArrayList<>();
@@ -93,6 +105,18 @@ public class IntegrationStatusController {
         integrations.add(buildStatus("aws-ses", "AWS SES", "Email",
             sesEnabled && emailService instanceof SesEmailService,
             sesEnabled ? "connected" : "disconnected"));
+
+        // Dots Africa Verification
+        boolean dotsAfricaConfigured = "dots-africa".equals(backgroundCheckProvider)
+                && dotsAfricaApiKey != null && !dotsAfricaApiKey.isBlank();
+        integrations.add(buildStatus("dots-africa", "Dots Africa", "Verification",
+            dotsAfricaConfigured, dotsAfricaConfigured ? "connected" : "disconnected"));
+
+        // SAP Payroll
+        boolean sapConfigured = sapPayrollEnabled
+                && sapPayrollBaseUrl != null && !sapPayrollBaseUrl.isBlank();
+        integrations.add(buildStatus("sap-payroll", "SAP Payroll", "Payroll",
+            sapConfigured, sapConfigured ? "connected" : "disconnected"));
 
         return ResponseEntity.ok(integrations);
     }
