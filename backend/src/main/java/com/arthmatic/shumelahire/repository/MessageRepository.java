@@ -142,8 +142,8 @@ public interface MessageRepository extends JpaRepository<Message, Long> {
            "AND (:priority IS NULL OR m.priority = :priority) " +
            "AND (:isRead IS NULL OR m.isRead = :isRead) " +
            "AND (:hasAttachments IS NULL OR m.hasAttachments = :hasAttachments) " +
-           "AND (:startDate IS NULL OR m.createdAt >= :startDate) " +
-           "AND (:endDate IS NULL OR m.createdAt <= :endDate) " +
+           "AND (CAST(:startDate AS LocalDateTime) IS NULL OR m.createdAt >= :startDate) " +
+           "AND (CAST(:endDate AS LocalDateTime) IS NULL OR m.createdAt <= :endDate) " +
            "AND (:searchTerm IS NULL OR LOWER(m.content) LIKE LOWER(CONCAT('%', CAST(:searchTerm AS string), '%')) " +
            "OR LOWER(m.subject) LIKE LOWER(CONCAT('%', CAST(:searchTerm AS string), '%'))) " +
            "AND m.isDeleted = false ORDER BY m.createdAt DESC")

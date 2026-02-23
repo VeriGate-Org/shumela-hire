@@ -156,8 +156,8 @@ public interface OfferRepository extends JpaRepository<Offer, Long> {
            "(:jobTitleFilter IS NULL OR LOWER(o.jobTitle) LIKE LOWER(CONCAT('%', CAST(:jobTitleFilter AS string), '%'))) AND " +
            "(:minSalary IS NULL OR o.baseSalary >= :minSalary) AND " +
            "(:maxSalary IS NULL OR o.baseSalary <= :maxSalary) AND " +
-           "(:startDate IS NULL OR o.createdAt >= :startDate) AND " +
-           "(:endDate IS NULL OR o.createdAt <= :endDate)")
+           "(CAST(:startDate AS LocalDateTime) IS NULL OR o.createdAt >= :startDate) AND " +
+           "(CAST(:endDate AS LocalDateTime) IS NULL OR o.createdAt <= :endDate)")
     Page<Offer> searchOffers(@Param("status") OfferStatus status,
                             @Param("offerType") OfferType offerType,
                             @Param("negotiationStatus") NegotiationStatus negotiationStatus,

@@ -84,8 +84,8 @@ public interface InterviewRepository extends JpaRepository<Interview, Long> {
            "AND (:type IS NULL OR i.type = :type) " +
            "AND (:round IS NULL OR i.round = :round) " +
            "AND (:interviewerId IS NULL OR i.interviewerId = :interviewerId) " +
-           "AND (:startDate IS NULL OR i.scheduledAt >= :startDate) " +
-           "AND (:endDate IS NULL OR i.scheduledAt <= :endDate)")
+           "AND (CAST(:startDate AS LocalDateTime) IS NULL OR i.scheduledAt >= :startDate) " +
+           "AND (CAST(:endDate AS LocalDateTime) IS NULL OR i.scheduledAt <= :endDate)")
     Page<Interview> searchInterviews(@Param("searchTerm") String searchTerm,
                                    @Param("status") InterviewStatus status,
                                    @Param("type") InterviewType type,
