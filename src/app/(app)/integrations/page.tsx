@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import PageWrapper from '@/components/PageWrapper';
 import EmptyState from '@/components/EmptyState';
 import { apiFetch } from '@/lib/api-fetch';
@@ -20,6 +20,10 @@ import {
   GlobeAltIcon,
   BuildingOfficeIcon,
 } from '@heroicons/react/24/outline';
+import { useToast } from '@/components/Toast';
+import { useAuth } from '@/contexts/AuthContext';
+import { useSearchParams } from 'next/navigation';
+import { linkedInSocialService, LinkedInConnectionStatus } from '@/services/linkedInSocialService';
 
 interface Integration {
   id: string;
@@ -38,7 +42,7 @@ const INTEGRATION_META: Record<string, { description: string; icon: React.Elemen
   'linkedin': {
     description: 'Professional networking platform for job posting and candidate sourcing.',
     icon: BriefcaseIcon,
-    features: ['Job posting', 'Candidate sourcing', 'Analytics'],
+    features: ['Job posting', 'Candidate sourcing', 'Analytics', 'Social posting'],
   },
   'indeed': {
     description: 'Global job search engine and recruitment platform.',
@@ -85,10 +89,35 @@ export default function IntegrationsPage() {
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [searchTerm, setSearchTerm] = useState('');
   const [loading, setLoading] = useState(true);
+  const [linkedInStatus, setLinkedInStatus] = useState<LinkedInConnectionStatus | null>(null);
+  const [linkedInActionLoading, setLinkedInActionLoading] = useState(false);
+  const { toast } = useToast();
+  const { user } = useAuth();
+  const searchParams = useSearchParams();
+
+  const loadLinkedInStatus = useCallback(async () => {
+    try {
+      const status = await linkedInSocialService.getStatus();
+      setLinkedInStatus(status);
+    } catch {
+      // LinkedIn social not enabled — ignore
+    }
+  }, []);
 
   useEffect(() => {
     loadIntegrations();
-  }, []);
+    loadLinkedInStatus();
+  }, [loadLinkedInStatus]);
+
+  useEffect(() => {
+    const linkedInParam = searchParams.get('linkedin');
+    if (linkedInParam === 'success') {
+      toast('LinkedIn company page connected successfully', 'success');
+      loadLinkedInStatus();
+    } else if (linkedInParam === 'error') {
+      toast('Failed to connect LinkedIn company page', 'error');
+    }
+  }, [searchParams, toast, loadLinkedInStatus]);
 
   const loadIntegrations = async () => {
     setLoading(true);
@@ -288,15 +317,55 @@ export default function IntegrationsPage() {
 
                     {/* Actions */}
                     <div className="flex gap-2">
-                      <button
-                        className={`flex-1 px-3 py-2 rounded-full text-sm font-medium transition-colors ${
-                          integration.status === 'connected'
-                            ? 'bg-red-100 text-red-800 hover:bg-red-200'
-                            : 'bg-green-100 text-green-800 hover:bg-green-200'
-                        }`}
-                      >
-                        {integration.status === 'connected' ? 'Disconnect' : 'Connect'}
-                      </button>
+                      {integration.id === 'linkedin' && linkedInStatus ? (
+                        <>
+                          {user?.role === 'ADMIN' ? (
+                            <button
+                              disabled={linkedInActionLoading}
+                              onClick={async () => {
+                                setLinkedInActionLoading(true);
+                                try {
+                                  if (linkedInStatus.connected) {
+                                    await linkedInSocialService.disconnect();
+                                    toast('LinkedIn disconnected', 'success');
+                                    await loadLinkedInStatus();
+                                  } else {
+                                    const authUrl = await linkedInSocialService.getAuthUrl();
+                                    window.location.href = authUrl;
+                                  }
+                                } catch {
+                                  toast('Failed to update LinkedIn connection', 'error');
+                                } finally {
+                                  setLinkedInActionLoading(false);
+                                }
+                              }}
+                              className={`flex-1 px-3 py-2 rounded-full text-sm font-medium transition-colors disabled:opacity-50 ${
+                                linkedInStatus.connected
+                                  ? 'bg-red-100 text-red-800 hover:bg-red-200'
+                                  : 'bg-green-100 text-green-800 hover:bg-green-200'
+                              }`}
+                            >
+                              {linkedInActionLoading ? 'Loading...' : linkedInStatus.connected ? 'Disconnect' : 'Connect'}
+                            </button>
+                          ) : (
+                            <span className={`flex-1 px-3 py-2 rounded-full text-sm font-medium text-center ${
+                              linkedInStatus.connected ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-600'
+                            }`}>
+                              {linkedInStatus.connected ? `Connected: ${linkedInStatus.organizationName}` : 'Not connected'}
+                            </span>
+                          )}
+                        </>
+                      ) : (
+                        <button
+                          className={`flex-1 px-3 py-2 rounded-full text-sm font-medium transition-colors ${
+                            integration.status === 'connected'
+                              ? 'bg-red-100 text-red-800 hover:bg-red-200'
+                              : 'bg-green-100 text-green-800 hover:bg-green-200'
+                          }`}
+                        >
+                          {integration.status === 'connected' ? 'Disconnect' : 'Connect'}
+                        </button>
+                      )}
                       <button className="px-3 py-2 bg-gray-100 text-gray-700 rounded-full text-sm hover:bg-gray-200">
                         <CogIcon className="w-4 h-4" />
                       </button>

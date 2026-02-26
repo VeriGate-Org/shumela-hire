@@ -184,7 +184,13 @@ public class ShumelaHireComputeStack : Stack
                 ["PNET_ENABLED"] = "false",
                 ["CAREER_JUNCTION_ENABLED"] = "false",
                 ["AI_ENABLED"] = "false",
-                ["AI_PROVIDER"] = "mock"
+                ["AI_PROVIDER"] = "mock",
+                // LinkedIn Social Posting
+                ["LINKEDIN_SOCIAL_ENABLED"] = "false",
+                ["LINKEDIN_SOCIAL_REDIRECT_URI"] = $"https://api.{config.DomainName}/api/linkedin/social/auth/callback"
+                // Uncomment when enabling LinkedIn Social:
+                // ["LINKEDIN_SOCIAL_CLIENT_ID"] = Secret.FromSecretsManager(linkedInSocialSecret, "client_id"),
+                // ["LINKEDIN_SOCIAL_CLIENT_SECRET"] = Secret.FromSecretsManager(linkedInSocialSecret, "client_secret"),
             },
             Secrets = new Dictionary<string, Amazon.CDK.AWS.ECS.Secret>
             {

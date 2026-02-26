@@ -136,6 +136,10 @@ public class CognitoSecurityConfig {
                 // AI endpoints
                 .requestMatchers("/api/ai/**").hasAnyRole("ADMIN", "HR_MANAGER", "RECRUITER", "HIRING_MANAGER", "INTERVIEWER")
 
+                // LinkedIn Social endpoints
+                .requestMatchers("/api/linkedin/social/auth/callback").permitAll()
+                .requestMatchers("/api/linkedin/social/**").hasAnyRole("ADMIN", "HR_MANAGER", "RECRUITER")
+
                 // Job board endpoints
                 .requestMatchers("/api/job-boards/**").hasAnyRole("ADMIN", "HR_MANAGER", "RECRUITER")
 

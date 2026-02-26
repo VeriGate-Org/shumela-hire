@@ -35,6 +35,10 @@ spring:
 background-check:
   provider: dots-africa
 
+linkedin:
+  social:
+    enabled: false
+
 logging:
   level:
     com.arthmatic.shumelahire: INFO

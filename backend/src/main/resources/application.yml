@@ -84,6 +84,14 @@ job-boards:
     api-key: ${CAREER_JUNCTION_API_KEY:}
     partner-id: ${CAREER_JUNCTION_PARTNER_ID:}
 
+# LinkedIn Social Posting (company page)
+linkedin:
+  social:
+    enabled: ${LINKEDIN_SOCIAL_ENABLED:false}
+    client-id: ${LINKEDIN_SOCIAL_CLIENT_ID:}
+    client-secret: ${LINKEDIN_SOCIAL_CLIENT_SECRET:}
+    redirect-uri: ${LINKEDIN_SOCIAL_REDIRECT_URI:http://localhost:8080/api/linkedin/social/auth/callback}
+
 # Background Check / Verification
 background-check:
   provider: ${BACKGROUND_CHECK_PROVIDER:dots-africa}
