@@ -45,10 +45,10 @@ public class JobBoardPosting extends TenantAwareEntity {
     @Column(name = "application_count")
     private Integer applicationCount = 0;
 
-    @Column(name = "error_message", columnDefinition = "TEXT")
+    @Column(name = "error_message", length = 10000)
     private String errorMessage;
 
-    @Column(name = "board_config", columnDefinition = "TEXT")
+    @Column(name = "board_config", length = 10000)
     private String boardConfig; // JSON config for board-specific settings
 
     @Column(name = "created_at", nullable = false)

@@ -42,19 +42,17 @@ public interface InterviewRepository extends JpaRepository<Interview, Long> {
                                           @Param("startDate") LocalDateTime startDate,
                                           @Param("endDate") LocalDateTime endDate);
 
-    // Conflict checking (PostgreSQL-compatible interval arithmetic)
-    @Query(value = "SELECT * FROM interviews i WHERE i.interviewer_id = :interviewerId " +
+    // Conflict checking (cross-database compatible using Hibernate timestampadd)
+    @Query("SELECT i FROM Interview i WHERE i.interviewerId = :interviewerId " +
            "AND i.status IN ('SCHEDULED', 'RESCHEDULED') " +
-           "AND i.scheduled_at <= :endTime AND (i.scheduled_at + i.duration_minutes * INTERVAL '1 minute') >= :startTime",
-           nativeQuery = true)
+           "AND i.scheduledAt <= :endTime AND timestampadd(MINUTE, i.durationMinutes, i.scheduledAt) >= :startTime")
     List<Interview> findConflictingInterviews(@Param("interviewerId") Long interviewerId,
                                              @Param("startTime") LocalDateTime startTime,
                                              @Param("endTime") LocalDateTime endTime);
 
-    @Query(value = "SELECT * FROM interviews i WHERE i.meeting_room = :meetingRoom " +
+    @Query("SELECT i FROM Interview i WHERE i.meetingRoom = :meetingRoom " +
            "AND i.status IN ('SCHEDULED', 'RESCHEDULED') " +
-           "AND i.scheduled_at <= :endTime AND (i.scheduled_at + i.duration_minutes * INTERVAL '1 minute') >= :startTime",
-           nativeQuery = true)
+           "AND i.scheduledAt <= :endTime AND timestampadd(MINUTE, i.durationMinutes, i.scheduledAt) >= :startTime")
     List<Interview> findMeetingRoomConflicts(@Param("meetingRoom") String meetingRoom,
                                            @Param("startTime") LocalDateTime startTime,
                                            @Param("endTime") LocalDateTime endTime);

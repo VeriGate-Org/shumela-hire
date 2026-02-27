@@ -33,10 +33,10 @@ public class EmploymentEvent extends TenantAwareEntity {
     @Column(name = "effective_date", nullable = false)
     private LocalDate effectiveDate;
 
-    @Column(columnDefinition = "TEXT")
+    @Column(length = 10000)
     private String description;
 
-    @Column(columnDefinition = "TEXT")
+    @Column(length = 10000)
     private String notes;
 
     // Before/after snapshots

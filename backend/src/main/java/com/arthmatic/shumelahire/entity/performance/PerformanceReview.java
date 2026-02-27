@@ -30,7 +30,7 @@ public class PerformanceReview extends TenantAwareEntity {
     private ReviewStatus status = ReviewStatus.PENDING;
     
     // Self-assessment data
-    @Column(name = "self_assessment_notes", columnDefinition = "TEXT")
+    @Column(name = "self_assessment_notes", length = 10000)
     private String selfAssessmentNotes;
     
     @Column(name = "self_rating", precision = 3, scale = 2)
@@ -40,7 +40,7 @@ public class PerformanceReview extends TenantAwareEntity {
     private LocalDateTime selfSubmittedAt;
     
     // Manager assessment data
-    @Column(name = "manager_assessment_notes", columnDefinition = "TEXT")
+    @Column(name = "manager_assessment_notes", length = 10000)
     private String managerAssessmentNotes;
     
     @Column(name = "manager_rating", precision = 3, scale = 2)

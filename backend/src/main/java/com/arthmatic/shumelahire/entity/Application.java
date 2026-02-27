@@ -50,7 +50,7 @@ public class Application extends TenantAwareEntity {
     @Column(name = "pipeline_stage_entered_at", nullable = false)
     private LocalDateTime pipelineStageEnteredAt;
 
-    @Column(name = "cover_letter", columnDefinition = "TEXT")
+    @Column(name = "cover_letter", length = 10000)
     private String coverLetter;
 
     @Column(name = "application_source")
@@ -62,22 +62,22 @@ public class Application extends TenantAwareEntity {
     @Column(name = "withdrawn_at")
     private LocalDateTime withdrawnAt;
 
-    @Column(name = "withdrawal_reason", columnDefinition = "TEXT")
+    @Column(name = "withdrawal_reason", length = 10000)
     private String withdrawalReason;
 
-    @Column(name = "screening_notes", columnDefinition = "TEXT")
+    @Column(name = "screening_notes", length = 10000)
     private String screeningNotes;
 
-    @Column(name = "interview_feedback", columnDefinition = "TEXT")
+    @Column(name = "interview_feedback", length = 10000)
     private String interviewFeedback;
 
     @Column(name = "rating")
     private Integer rating;
 
-    @Column(name = "rejection_reason", columnDefinition = "TEXT")
+    @Column(name = "rejection_reason", length = 10000)
     private String rejectionReason;
 
-    @Column(name = "offer_details", columnDefinition = "TEXT")
+    @Column(name = "offer_details", length = 10000)
     private String offerDetails;
 
     @Column(name = "start_date")

@@ -37,10 +37,10 @@ public class ScreeningQuestion extends TenantAwareEntity {
     @Column(name = "display_order", nullable = false)
     private Integer displayOrder = 0;
     
-    @Column(name = "question_options", columnDefinition = "TEXT")
+    @Column(name = "question_options", length = 10000)
     private String questionOptions; // JSON array for dropdown/multiple choice options
     
-    @Column(name = "validation_rules", columnDefinition = "TEXT")
+    @Column(name = "validation_rules", length = 10000)
     private String validationRules; // JSON for custom validation
     
     @Column(name = "help_text", length = 500)

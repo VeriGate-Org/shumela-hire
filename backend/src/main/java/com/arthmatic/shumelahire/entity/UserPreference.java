@@ -1,6 +1,8 @@
 package com.arthmatic.shumelahire.entity;
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 import java.time.LocalDateTime;
 
 @Entity
@@ -14,7 +16,8 @@ public class UserPreference extends TenantAwareEntity {
     @Column(name = "user_id", nullable = false, unique = true)
     private Long userId;
 
-    @Column(columnDefinition = "JSONB", nullable = false)
+    @JdbcTypeCode(SqlTypes.JSON)
+    @Column(name = "preferences", nullable = false)
     private String preferences = "{}";
 
     @Column(name = "created_at")

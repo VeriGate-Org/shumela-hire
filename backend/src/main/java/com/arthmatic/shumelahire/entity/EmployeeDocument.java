@@ -31,7 +31,7 @@ public class EmployeeDocument extends TenantAwareEntity {
     @Column(nullable = false, length = 255)
     private String title;
 
-    @Column(columnDefinition = "TEXT")
+    @Column(length = 10000)
     private String description;
 
     @NotBlank

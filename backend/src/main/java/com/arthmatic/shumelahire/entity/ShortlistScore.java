@@ -34,7 +34,7 @@ public class ShortlistScore extends TenantAwareEntity {
     @Column(name = "keyword_match_score")
     private Double keywordMatchScore;
 
-    @Column(name = "score_breakdown", columnDefinition = "TEXT")
+    @Column(name = "score_breakdown", length = 10000)
     private String scoreBreakdown;
 
     @Column(name = "is_shortlisted")

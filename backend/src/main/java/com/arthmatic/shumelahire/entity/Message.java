@@ -24,7 +24,7 @@ public class Message extends TenantAwareEntity {
     @Column(name = "sender_role")
     private String senderRole;
 
-    @Column(name = "recipient_ids", columnDefinition = "TEXT")
+    @Column(name = "recipient_ids", length = 10000)
     private String recipientIds; // JSON array of recipient IDs
 
     @Column(name = "recipient_type")
@@ -38,7 +38,7 @@ public class Message extends TenantAwareEntity {
     @Column(name = "subject")
     private String subject;
 
-    @Column(name = "content", columnDefinition = "TEXT", nullable = false)
+    @Column(name = "content", length = 10000, nullable = false)
     private String content;
 
     @Column(name = "message_format")
@@ -79,7 +79,7 @@ public class Message extends TenantAwareEntity {
     @Column(name = "is_read")
     private Boolean isRead = false;
 
-    @Column(name = "read_by", columnDefinition = "TEXT")
+    @Column(name = "read_by", length = 10000)
     private String readBy; // JSON object with read status per recipient
 
     @Column(name = "is_delivered")
@@ -107,7 +107,7 @@ public class Message extends TenantAwareEntity {
     @Column(name = "has_attachments")
     private Boolean hasAttachments = false;
 
-    @Column(name = "attachment_urls", columnDefinition = "TEXT")
+    @Column(name = "attachment_urls", length = 10000)
     private String attachmentUrls; // JSON array of attachment URLs
 
     @Column(name = "is_urgent")
@@ -133,14 +133,14 @@ public class Message extends TenantAwareEntity {
     private Boolean isScheduled = false;
 
     // Tags and categories
-    @Column(name = "tags", columnDefinition = "TEXT")
+    @Column(name = "tags", length = 10000)
     private String tags; // JSON array of tags
 
     @Column(name = "category")
     private String category;
 
     // Tracking metadata
-    @Column(name = "metadata", columnDefinition = "TEXT")
+    @Column(name = "metadata", length = 10000)
     private String metadata; // JSON for additional data
 
     @Column(name = "created_at", nullable = false)

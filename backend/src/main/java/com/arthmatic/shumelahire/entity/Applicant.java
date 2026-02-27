@@ -39,19 +39,19 @@ public class Applicant extends TenantAwareEntity {
     @Column(name = "id_passport_number", length = 50)
     private String idPassportNumber;
 
-    @Column(columnDefinition = "TEXT")
+    @Column(length = 10000)
     private String address;
 
     @Column(name = "location")
     private String location;
 
-    @Column(name = "education", columnDefinition = "TEXT")
+    @Column(name = "education", length = 10000)
     private String education;
 
-    @Column(name = "experience", columnDefinition = "TEXT")
+    @Column(name = "experience", length = 10000)
     private String experience;
 
-    @Column(name = "skills", columnDefinition = "TEXT")
+    @Column(name = "skills", length = 10000)
     private String skills;
 
     @Column(name = "linkedin_url")
@@ -63,7 +63,7 @@ public class Applicant extends TenantAwareEntity {
     @Column(name = "resume_url")
     private String resumeUrl;
 
-    @Column(name = "cover_letter", columnDefinition = "TEXT")
+    @Column(name = "cover_letter", length = 10000)
     private String coverLetter;
 
     @Column(name = "source")

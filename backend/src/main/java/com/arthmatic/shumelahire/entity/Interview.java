@@ -59,10 +59,10 @@ public class Interview extends TenantAwareEntity {
     @Column(name = "meeting_room")
     private String meetingRoom;
 
-    @Column(name = "instructions", columnDefinition = "TEXT")
+    @Column(name = "instructions", length = 10000)
     private String instructions;
 
-    @Column(name = "agenda", columnDefinition = "TEXT")
+    @Column(name = "agenda", length = 10000)
     private String agenda;
 
     @Column(name = "interviewer_id")
@@ -77,13 +77,13 @@ public class Interview extends TenantAwareEntity {
     @Column(name = "additional_interviewers")
     private String additionalInterviewers;
 
-    @Column(name = "feedback", columnDefinition = "TEXT")
+    @Column(name = "feedback", length = 10000)
     private String feedback;
 
     @Column(name = "rating")
     private Integer rating;
 
-    @Column(name = "technical_assessment", columnDefinition = "TEXT")
+    @Column(name = "technical_assessment", length = 10000)
     private String technicalAssessment;
 
     @Column(name = "communication_skills")
@@ -104,32 +104,32 @@ public class Interview extends TenantAwareEntity {
     @Column(name = "cultural_fit_score")
     private Integer culturalFitScore;
 
-    @Column(name = "overall_impression", columnDefinition = "TEXT")
+    @Column(name = "overall_impression", length = 10000)
     private String overallImpression;
 
     @Column(name = "recommendation")
     @Enumerated(EnumType.STRING)
     private InterviewRecommendation recommendation;
 
-    @Column(name = "next_steps", columnDefinition = "TEXT")
+    @Column(name = "next_steps", length = 10000)
     private String nextSteps;
 
-    @Column(name = "candidate_questions", columnDefinition = "TEXT")
+    @Column(name = "candidate_questions", length = 10000)
     private String candidateQuestions;
 
-    @Column(name = "interviewer_notes", columnDefinition = "TEXT")
+    @Column(name = "interviewer_notes", length = 10000)
     private String interviewerNotes;
 
-    @Column(name = "questions", columnDefinition = "TEXT")
+    @Column(name = "questions", length = 10000)
     private String questions;
 
-    @Column(name = "answers", columnDefinition = "TEXT")
+    @Column(name = "answers", length = 10000)
     private String answers;
 
-    @Column(name = "notes", columnDefinition = "TEXT")
+    @Column(name = "notes", length = 10000)
     private String notes;
 
-    @Column(name = "preparation_notes", columnDefinition = "TEXT")
+    @Column(name = "preparation_notes", length = 10000)
     private String preparationNotes;
 
     @Column(name = "rescheduled_from")

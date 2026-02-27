@@ -76,15 +76,15 @@ public class Employee extends TenantAwareEntity {
 
     // Encrypted PII fields
     @Convert(converter = EncryptedFieldConverter.class)
-    @Column(name = "id_number", columnDefinition = "TEXT")
+    @Column(name = "id_number", length = 10000)
     private String idNumber;
 
     @Convert(converter = EncryptedFieldConverter.class)
-    @Column(name = "tax_number", columnDefinition = "TEXT")
+    @Column(name = "tax_number", length = 10000)
     private String taxNumber;
 
     @Convert(converter = EncryptedFieldConverter.class)
-    @Column(name = "bank_account_number", columnDefinition = "TEXT")
+    @Column(name = "bank_account_number", length = 10000)
     private String bankAccountNumber;
 
     @Column(name = "bank_name", length = 100)
@@ -94,10 +94,10 @@ public class Employee extends TenantAwareEntity {
     private String bankBranchCode;
 
     // Address
-    @Column(name = "physical_address", columnDefinition = "TEXT")
+    @Column(name = "physical_address", length = 10000)
     private String physicalAddress;
 
-    @Column(name = "postal_address", columnDefinition = "TEXT")
+    @Column(name = "postal_address", length = 10000)
     private String postalAddress;
 
     @Column(length = 100)
@@ -143,7 +143,7 @@ public class Employee extends TenantAwareEntity {
     @Column(name = "termination_date")
     private LocalDate terminationDate;
 
-    @Column(name = "termination_reason", columnDefinition = "TEXT")
+    @Column(name = "termination_reason", length = 10000)
     private String terminationReason;
 
     @Column(name = "contract_end_date")

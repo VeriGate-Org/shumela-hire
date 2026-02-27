@@ -31,7 +31,7 @@ public class ReviewEvidence extends TenantAwareEntity {
     @Column(name = "content_type", length = 100)
     private String contentType;
     
-    @Column(columnDefinition = "TEXT")
+    @Column(length = 10000)
     private String description;
     
     @Enumerated(EnumType.STRING)

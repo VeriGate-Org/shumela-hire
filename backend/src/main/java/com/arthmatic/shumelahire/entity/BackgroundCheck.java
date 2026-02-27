@@ -43,7 +43,7 @@ public class BackgroundCheck extends TenantAwareEntity {
     @Column(name = "candidate_email", length = 200)
     private String candidateEmail;
 
-    @Column(name = "check_types", columnDefinition = "TEXT")
+    @Column(name = "check_types", length = 10000)
     private String checkTypes; // JSON array of check type strings
 
     @Enumerated(EnumType.STRING)
@@ -54,7 +54,7 @@ public class BackgroundCheck extends TenantAwareEntity {
     @Column(name = "overall_result", length = 30)
     private BackgroundCheckResult overallResult;
 
-    @Column(name = "results_json", columnDefinition = "TEXT")
+    @Column(name = "results_json", length = 10000)
     private String resultsJson; // JSON object with per-check-type results
 
     @Column(name = "consent_obtained", nullable = false)
@@ -76,10 +76,10 @@ public class BackgroundCheck extends TenantAwareEntity {
     @Column(name = "report_url", length = 500)
     private String reportUrl;
 
-    @Column(name = "error_message", columnDefinition = "TEXT")
+    @Column(name = "error_message", length = 10000)
     private String errorMessage;
 
-    @Column(name = "notes", columnDefinition = "TEXT")
+    @Column(name = "notes", length = 10000)
     private String notes;
 
     @Column(name = "created_at", nullable = false)

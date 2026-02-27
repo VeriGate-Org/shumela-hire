@@ -32,7 +32,7 @@ public class AuditLog extends TenantAwareEntity {
     @Column
     private String entityId;
 
-    @Column(columnDefinition = "TEXT")
+    @Column(length = 10000)
     private String details;
 
     // Constructors

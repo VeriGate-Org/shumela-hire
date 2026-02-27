@@ -17,13 +17,13 @@ public class TalentPool extends TenantAwareEntity {
     @Column(name = "pool_name", nullable = false, unique = true)
     private String poolName;
 
-    @Column(name = "description", columnDefinition = "TEXT")
+    @Column(name = "description", length = 10000)
     private String description;
 
     @Column(name = "department")
     private String department;
 
-    @Column(name = "skills_criteria", columnDefinition = "TEXT")
+    @Column(name = "skills_criteria", length = 10000)
     private String skillsCriteria;
 
     @Column(name = "experience_level")

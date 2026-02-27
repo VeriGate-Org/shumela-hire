@@ -43,7 +43,7 @@ public class CustomField extends TenantAwareEntity {
     @Column(name = "display_order", nullable = false)
     private Integer displayOrder = 0;
 
-    @Column(columnDefinition = "TEXT")
+    @Column(length = 10000)
     private String options; // JSON array for SELECT/MULTI_SELECT types
 
     @Column(name = "default_value", length = 500)
@@ -52,7 +52,7 @@ public class CustomField extends TenantAwareEntity {
     @Column(name = "validation_regex", length = 500)
     private String validationRegex;
 
-    @Column(name = "help_text", columnDefinition = "TEXT")
+    @Column(name = "help_text", length = 10000)
     private String helpText;
 
     @CreationTimestamp

@@ -25,13 +25,13 @@ public class SapPayrollTransmission extends TenantAwareEntity {
     @Column(name = "status", nullable = false, length = 30)
     private TransmissionStatus status = TransmissionStatus.PENDING;
 
-    @Column(name = "payload_json", columnDefinition = "TEXT")
+    @Column(name = "payload_json", length = 10000)
     private String payloadJson;
 
-    @Column(name = "response_json", columnDefinition = "TEXT")
+    @Column(name = "response_json", length = 10000)
     private String responseJson;
 
-    @Column(name = "error_message", columnDefinition = "TEXT")
+    @Column(name = "error_message", length = 10000)
     private String errorMessage;
 
     @Column(name = "retry_count", nullable = false)
@@ -52,7 +52,7 @@ public class SapPayrollTransmission extends TenantAwareEntity {
     @Column(name = "sap_payroll_area", length = 10)
     private String sapPayrollArea;
 
-    @Column(name = "validation_errors", columnDefinition = "TEXT")
+    @Column(name = "validation_errors", length = 10000)
     private String validationErrors;
 
     @Column(name = "created_at", nullable = false)
@@ -73,7 +73,7 @@ public class SapPayrollTransmission extends TenantAwareEntity {
     @Column(name = "cancelled_by")
     private Long cancelledBy;
 
-    @Column(name = "cancellation_reason", columnDefinition = "TEXT")
+    @Column(name = "cancellation_reason", length = 10000)
     private String cancellationReason;
 
     // Constructors

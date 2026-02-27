@@ -32,7 +32,7 @@ public class JobAdHistory extends TenantAwareEntity {
     @Column(nullable = false, updatable = false)
     private LocalDateTime timestamp;
     
-    @Column(columnDefinition = "TEXT")
+    @Column(length = 10000)
     private String details;
     
     // Constructors

@@ -13,11 +13,11 @@ public class LinkedInOrgConnection extends TenantAwareEntity {
     private Long id;
 
     @JsonIgnore
-    @Column(name = "access_token", nullable = false, columnDefinition = "TEXT")
+    @Column(name = "access_token", nullable = false, length = 10000)
     private String accessToken;
 
     @JsonIgnore
-    @Column(name = "refresh_token", columnDefinition = "TEXT")
+    @Column(name = "refresh_token", length = 10000)
     private String refreshToken;
 
     @Column(name = "token_expires_at", nullable = false)

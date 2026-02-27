@@ -31,10 +31,10 @@ public class PipelineTransition extends TenantAwareEntity {
     @Column(name = "transition_type", nullable = false)
     private TransitionType transitionType = TransitionType.PROGRESSION;
 
-    @Column(name = "reason", columnDefinition = "TEXT")
+    @Column(name = "reason", length = 10000)
     private String reason;
 
-    @Column(name = "notes", columnDefinition = "TEXT")
+    @Column(name = "notes", length = 10000)
     private String notes;
 
     @Column(name = "automated", nullable = false)
@@ -46,7 +46,7 @@ public class PipelineTransition extends TenantAwareEntity {
     @Column(name = "triggered_by_assessment_id")
     private Long triggeredByAssessmentId;
 
-    @Column(name = "metadata", columnDefinition = "TEXT")
+    @Column(name = "metadata", length = 10000)
     private String metadata; // JSON for additional data
 
     @Column(name = "created_by", nullable = false)

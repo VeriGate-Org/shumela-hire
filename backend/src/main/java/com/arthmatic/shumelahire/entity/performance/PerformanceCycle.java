@@ -21,7 +21,7 @@ public class PerformanceCycle extends TenantAwareEntity {
     @Column(nullable = false, length = 100)
     private String name;
     
-    @Column(columnDefinition = "TEXT")
+    @Column(length = 10000)
     private String description;
     
     @NotNull(message = "Start date is required")

@@ -24,7 +24,7 @@ public class ScreeningAnswer extends TenantAwareEntity {
     @JoinColumn(name = "screening_question_id", nullable = false)
     private ScreeningQuestion screeningQuestion;
     
-    @Column(name = "answer_value", columnDefinition = "TEXT")
+    @Column(name = "answer_value", length = 10000)
     private String answerValue;
     
     @Column(name = "answer_file_url")
