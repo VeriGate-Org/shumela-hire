@@ -1,0 +1,20 @@
+package com.arthmatic.shumelahire.entity;
+
+public enum EmployeeDocumentType {
+    CONTRACT,
+    ID_COPY,
+    PASSPORT,
+    QUALIFICATION,
+    CERTIFICATION,
+    TAX_DOCUMENT,
+    MEDICAL,
+    DISCIPLINARY,
+    PERFORMANCE_REVIEW,
+    POLICY_ACKNOWLEDGEMENT,
+    VISA,
+    WORK_PERMIT,
+    DRIVERS_LICENSE,
+    BANK_CONFIRMATION,
+    PROOF_OF_ADDRESS,
+    OTHER
+}
