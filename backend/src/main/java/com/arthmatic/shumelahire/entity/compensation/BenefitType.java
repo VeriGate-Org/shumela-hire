@@ -1,0 +1,18 @@
+package com.arthmatic.shumelahire.entity.compensation;
+
+public enum BenefitType {
+    MEDICAL_AID,
+    RETIREMENT_FUND,
+    LIFE_INSURANCE,
+    DISABILITY_COVER,
+    PROVIDENT_FUND,
+    EMPLOYEE_ASSISTANCE,
+    TRAVEL_ALLOWANCE,
+    HOUSING_ALLOWANCE,
+    STUDY_AID,
+    LEAVE_ENCASHMENT,
+    COMPANY_CAR,
+    PHONE_ALLOWANCE,
+    MEAL_ALLOWANCE,
+    OTHER
+}
