@@ -174,6 +174,16 @@ public class SecurityConfig {
                 // Compliance endpoints
                 .requestMatchers("/api/compliance/**").hasAnyRole("ADMIN", "HR_MANAGER", "EXECUTIVE")
 
+                // Time & Attendance endpoints
+                .requestMatchers("/api/attendance/reports/**").hasAnyRole("ADMIN", "HR_MANAGER")
+                .requestMatchers("/api/attendance/**").hasAnyRole("ADMIN", "HR_MANAGER", "HIRING_MANAGER", "EMPLOYEE")
+                .requestMatchers("/api/geofences/**").hasAnyRole("ADMIN", "HR_MANAGER")
+                .requestMatchers("/api/shifts/swaps/**").hasAnyRole("ADMIN", "HR_MANAGER", "HIRING_MANAGER", "EMPLOYEE")
+                .requestMatchers("/api/shifts/schedules/**").hasAnyRole("ADMIN", "HR_MANAGER", "HIRING_MANAGER", "EMPLOYEE")
+                .requestMatchers("/api/shifts/**").hasAnyRole("ADMIN", "HR_MANAGER", "HIRING_MANAGER", "EMPLOYEE")
+                .requestMatchers("/api/overtime/pending/**").hasAnyRole("ADMIN", "HR_MANAGER")
+                .requestMatchers("/api/overtime/**").hasAnyRole("ADMIN", "HR_MANAGER", "HIRING_MANAGER", "EMPLOYEE")
+
                 // General authenticated endpoints
                 .requestMatchers("/api/**").authenticated()
 
