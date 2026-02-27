@@ -158,6 +158,10 @@ public class CognitoSecurityConfig {
                 // Compliance endpoints
                 .requestMatchers("/api/compliance/**").hasAnyRole("ADMIN", "HR_MANAGER", "EXECUTIVE")
 
+                // Leave administration endpoints
+                .requestMatchers("/api/leave/admin/**").hasAnyRole("ADMIN", "HR_MANAGER")
+                .requestMatchers("/api/leave/**").hasAnyRole("ADMIN", "HR_MANAGER", "HIRING_MANAGER", "EMPLOYEE")
+
                 // General authenticated endpoints
                 .requestMatchers("/api/**").authenticated()
 
