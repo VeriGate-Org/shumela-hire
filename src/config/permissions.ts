@@ -8,11 +8,13 @@ export const rolePermissions: Record<UserRole, string[]> = {
     'view_analytics', 'view_recruiter_analytics', 'view_reports',
     'manage_permissions', 'view_audit_logs',
     'view_training', 'manage_integrations',
+    'view_employees', 'manage_employees', 'manage_custom_fields',
   ],
   EXECUTIVE: [
     'view_dashboard', 'view_applications', 'view_internal_jobs',
     'manage_workflow', 'manage_offers',
     'view_analytics', 'view_reports',
+    'view_employees',
   ],
   HR_MANAGER: [
     'view_dashboard', 'manage_jobs', 'view_applications', 'view_applicants',
@@ -20,12 +22,14 @@ export const rolePermissions: Record<UserRole, string[]> = {
     'manage_applications', 'manage_workflow', 'view_salary_data',
     'view_analytics', 'view_recruiter_analytics', 'view_reports',
     'view_training',
+    'view_employees', 'manage_employees', 'manage_custom_fields',
   ],
   HIRING_MANAGER: [
     'view_dashboard', 'manage_jobs', 'view_applications',
     'manage_pipeline', 'view_interviews', 'manage_offers', 'view_internal_jobs',
     'manage_applications', 'manage_workflow',
     'view_analytics', 'view_recruiter_analytics',
+    'view_employees',
   ],
   RECRUITER: [
     'view_dashboard', 'manage_jobs', 'view_applications', 'view_applicants',
