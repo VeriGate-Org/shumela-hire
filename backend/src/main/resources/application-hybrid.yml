@@ -1,0 +1,64 @@
+spring:
+  datasource:
+    url: ${DATABASE_URL:jdbc:sqlserver://localhost:1433;databaseName=shumelahire;encrypt=true;trustServerCertificate=true}
+    username: ${DATABASE_USER}
+    password: ${DATABASE_PASS}
+    driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
+
+  jpa:
+    database-platform: org.hibernate.dialect.SQLServerDialect
+    hibernate:
+      ddl-auto: validate
+    show-sql: false
+    properties:
+      hibernate:
+        format_sql: false
+
+  flyway:
+    enabled: true
+    baseline-on-migrate: true
+    locations: classpath:db/migration/sqlserver
+
+  h2:
+    console:
+      enabled: false
+
+  data:
+    redis:
+      host: ${REDIS_HOST:localhost}
+      port: ${REDIS_PORT:6379}
+
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: ${AZURE_AD_ISSUER_URI}
+          jwk-set-uri: ${AZURE_AD_JWK_SET_URI}
+
+# Storage — Azure Blob for hybrid deployments
+storage:
+  provider: ${STORAGE_PROVIDER:azure-blob}
+
+# Azure Blob Storage
+azure:
+  storage:
+    connection-string: ${AZURE_STORAGE_CONNECTION_STRING:}
+    container-name: ${AZURE_STORAGE_CONTAINER:shumelahire-documents}
+
+# Azure AD Authentication
+azure-ad:
+  tenant-id: ${AZURE_AD_TENANT_ID}
+  client-id: ${AZURE_AD_CLIENT_ID}
+
+# Disable Swagger in hybrid deployment
+springdoc:
+  api-docs:
+    enabled: false
+  swagger-ui:
+    enabled: false
+
+logging:
+  level:
+    com.arthmatic.shumelahire: INFO
+    org.springframework.web: WARN
+    org.hibernate.SQL: WARN

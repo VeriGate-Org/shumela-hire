@@ -1,0 +1,58 @@
+spring:
+  datasource:
+    url: ${DATABASE_URL:jdbc:sqlserver://localhost:1433;databaseName=shumelahire;encrypt=true;trustServerCertificate=true}
+    username: ${DATABASE_USER}
+    password: ${DATABASE_PASS}
+    driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
+
+  jpa:
+    database-platform: org.hibernate.dialect.SQLServerDialect
+    hibernate:
+      ddl-auto: validate
+    show-sql: false
+    properties:
+      hibernate:
+        format_sql: false
+
+  flyway:
+    enabled: true
+    baseline-on-migrate: true
+    locations: classpath:db/migration/sqlserver
+
+  h2:
+    console:
+      enabled: false
+
+  # Redis disabled for on-prem — uses ConcurrentMapCache
+  data:
+    redis:
+      repositories:
+        enabled: false
+  autoconfigure:
+    exclude:
+      - org.springframework.boot.autoconfigure.data.redis.RedisAutoConfiguration
+
+  cache:
+    type: simple
+
+# Storage — local filesystem for on-prem deployments
+storage:
+  provider: ${STORAGE_PROVIDER:local}
+
+# Azure AD Authentication (on-prem AD FS or Azure AD)
+spring.security:
+  oauth2:
+    resourceserver:
+      jwt:
+        issuer-uri: ${AD_ISSUER_URI:}
+        jwk-set-uri: ${AD_JWK_SET_URI:}
+
+azure-ad:
+  tenant-id: ${AZURE_AD_TENANT_ID:}
+  client-id: ${AZURE_AD_CLIENT_ID:}
+
+logging:
+  level:
+    com.arthmatic.shumelahire: INFO
+    org.springframework.web: WARN
+    org.hibernate.SQL: WARN

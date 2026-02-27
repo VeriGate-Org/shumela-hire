@@ -109,6 +109,13 @@
             <scope>runtime</scope>
         </dependency>
 
+        <!-- SQL Server (for hybrid/on-prem deployments) -->
+        <dependency>
+            <groupId>com.microsoft.sqlserver</groupId>
+            <artifactId>mssql-jdbc</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+
         <!-- Flyway Database Migrations -->
         <dependency>
             <groupId>org.flywaydb</groupId>
@@ -117,6 +124,10 @@
         <dependency>
             <groupId>org.flywaydb</groupId>
             <artifactId>flyway-database-postgresql</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.flywaydb</groupId>
+            <artifactId>flyway-sqlserver</artifactId>
         </dependency>
 
         <!-- Development Tools -->
@@ -241,6 +252,13 @@
             <groupId>com.azure</groupId>
             <artifactId>azure-identity</artifactId>
             <version>1.11.1</version>
+        </dependency>
+
+        <!-- Azure Blob Storage (for hybrid/on-prem deployments) -->
+        <dependency>
+            <groupId>com.azure</groupId>
+            <artifactId>azure-storage-blob</artifactId>
+            <version>12.25.1</version>
         </dependency>
     </dependencies>
 
