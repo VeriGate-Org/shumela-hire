@@ -14,6 +14,8 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
+import org.springframework.ldap.core.LdapTemplate;
+import org.springframework.ldap.core.support.LdapContextSource;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
@@ -98,6 +100,7 @@ public class ActiveDirectorySecurityConfig {
                 "http://localhost:3000",
                 "http://localhost:3001",
                 "http://*.localhost:3000",
+                "https://*.shumelahire.co.za",
                 "https://*.shumelahire.local"
         ));
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
@@ -133,8 +136,8 @@ public class ActiveDirectorySecurityConfig {
                 .requestMatchers("/actuator/health").permitAll()
                 .requestMatchers("/actuator/**").hasRole("ADMIN")
 
-                // Admin endpoints
-                .requestMatchers("/api/admin/**").hasRole("ADMIN")
+                // Admin endpoints (includes AD admin)
+                .requestMatchers("/api/admin/**").hasAnyRole("ADMIN", "HR_MANAGER")
                 .requestMatchers("/api/audit/**").hasAnyRole("ADMIN", "HR_MANAGER")
                 .requestMatchers("/api/users/manage/**").hasAnyRole("ADMIN", "HR_MANAGER")
 
@@ -205,5 +208,25 @@ public class ActiveDirectorySecurityConfig {
         http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
+    }
+
+    /**
+     * LDAP context source for AD sync service and group discovery.
+     */
+    @Bean
+    @ConditionalOnProperty(name = "shumelahire.ad.enabled", havingValue = "true")
+    public LdapContextSource ldapContextSource() {
+        LdapContextSource contextSource = new LdapContextSource();
+        contextSource.setUrl(adProperties.getUrl());
+        contextSource.setBase(adProperties.getBaseDn());
+        contextSource.setReferral("follow");
+        contextSource.afterPropertiesSet();
+        return contextSource;
+    }
+
+    @Bean
+    @ConditionalOnProperty(name = "shumelahire.ad.enabled", havingValue = "true")
+    public LdapTemplate ldapTemplate(LdapContextSource contextSource) {
+        return new LdapTemplate(contextSource);
     }
 }

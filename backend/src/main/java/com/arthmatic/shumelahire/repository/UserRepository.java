@@ -112,6 +112,16 @@ public interface UserRepository extends JpaRepository<User, Long> {
     boolean existsByEmailAndTenantId(String email, String tenantId);
 
     /**
+     * Find user by Active Directory objectGUID
+     */
+    Optional<User> findByAdObjectGuid(String adObjectGuid);
+
+    /**
+     * Find all users sourced from Active Directory
+     */
+    List<User> findByAdSourceTrue();
+
+    /**
      * Find user by SSO provider and SSO user ID (for AD/SAML lookup)
      */
     Optional<User> findBySsoProviderAndSsoUserId(String ssoProvider, String ssoUserId);
