@@ -33,7 +33,7 @@ public class CacheConfig {
     public static final String EMPLOYEES_CACHE = "employees";
 
     @Configuration
-    @Profile({"dev", "test"})
+    @Profile({"dev", "test", "hybrid"})
     static class DevCacheConfig {
         @Bean
         @Primary
