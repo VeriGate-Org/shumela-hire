@@ -1,0 +1,245 @@
+/**
+ * isiZulu (South Africa) translations
+ * Locale: zu-ZA
+ */
+const zuZA = {
+  locale: {
+    code: 'zu-ZA',
+    name: 'isiZulu',
+    nativeName: 'isiZulu',
+    direction: 'ltr' as const,
+  },
+
+  // Navigation
+  nav: {
+    dashboard: 'Ikhombamzimba',
+    jobs: 'Imisebenzi',
+    applications: 'Izicelo',
+    candidates: 'Abafanelekile',
+    interviews: 'Izingxoxo',
+    offers: 'Iziphakamiso',
+    onboarding: 'Ukuqala Umsebenzi',
+    employees: 'Abasebenzi',
+    reports: 'Imibiko',
+    analytics: 'Ukuhlaziya Idatha',
+    settings: 'Izilungiselelo',
+    profile: 'Iphrofayela',
+    logout: 'Phuma',
+    recruiterDashboard: 'Ikhombamzimba Lomshintsho',
+    performance: 'Ukusebenza',
+    training: 'Uqeqesho',
+    orgChart: 'Isikimu Senhlangano',
+    workflow: 'Umsebenzi Ohleliwe',
+    support: 'Usizo',
+  },
+
+  // Common actions
+  actions: {
+    save: 'Gcina',
+    cancel: 'Khansela',
+    delete: 'Susa',
+    edit: 'Hlela',
+    create: 'Dala',
+    update: 'Buyekeza',
+    submit: 'Thumela',
+    confirm: 'Qinisekisa',
+    close: 'Vala',
+    back: 'Buyela Emuva',
+    next: 'Okulandelayo',
+    search: 'Sesha',
+    filter: 'Hlunga',
+    export: 'Khipha Idatha',
+    import: 'Ngenisa Idatha',
+    download: 'Landa',
+    upload: 'Layisha',
+    view: 'Buka',
+    add: 'Engeza',
+    remove: 'Susa',
+    apply: 'Sebenzisa',
+    clear: 'Sula',
+    refresh: 'Vuselela',
+    loading: 'Iyalayisha…',
+    saving: 'Igcinwa…',
+    learnMore: 'Funda Okwengeziwe',
+  },
+
+  // Status labels
+  status: {
+    active: 'Iyasebenza',
+    inactive: 'Ayisebenzi',
+    pending: 'Ilindile',
+    approved: 'Isamukelwe',
+    rejected: 'Ilalelwe',
+    draft: 'Idrafti',
+    published: 'Ishicilelwe',
+    closed: 'Ivaliwe',
+    completed: 'Iqediwe',
+    inProgress: 'Iyenziwa',
+    scheduled: 'Ihlelwe',
+    cancelled: 'Ikhanselwe',
+  },
+
+  // Authentication
+  auth: {
+    signIn: 'Ngena',
+    signOut: 'Phuma',
+    signUp: 'Bhalisa',
+    email: 'Ikheli le-imeyili',
+    password: 'Iphasiwedi',
+    forgotPassword: 'Ukhohlwe iphasiwedi?',
+    rememberMe: 'Ngikhumbule',
+    welcome: 'Wamukelekile futhi',
+    continueWith: 'Qhubeka nge',
+    noAccount: 'Awunawo akhawunti?',
+    haveAccount: 'Sewunawo akhawunti?',
+  },
+
+  // Settings page
+  settings: {
+    title: 'Izilungiselelo',
+    notifications: 'Izaziso',
+    privacy: 'Ubumfihlo',
+    security: 'Ukuphepha',
+    dataManagement: 'Ukuphatha Idatha',
+    language: 'Ulimi',
+    languageDescription: 'Khetha ulimi lwakho lokubukwa olufunekayo.',
+    theme: 'Isimo Sombala',
+    themeLight: 'Ukukhanya',
+    themeDark: 'Umnyama',
+    themeSystem: 'Isistimu',
+    highContrast: 'Ukuphambana Okukhulu',
+    accessibilitySettings: 'Izilungiselelo Zokufinyelela',
+    profileSettings: 'Izilungiselelo Zephrofayela',
+    changePassword: 'Shintsha Iphasiwedi',
+    twoFactor: 'Ukuqinisekiswa Kwezinto Ezimbili',
+    sessionManagement: 'Ukuphatha Isikhathi Sokusebenza',
+  },
+
+  // Jobs & Recruitment
+  jobs: {
+    title: 'Izaziso Zemisebenzi',
+    createJob: 'Dala Isaziso Somsebenzi',
+    jobTitle: 'Isihloko Somsebenzi',
+    department: 'Umnyango',
+    location: 'Indawo',
+    salary: 'Iholo',
+    salaryRange: 'Imbophezelo Yeholo',
+    jobType: 'Uhlobo Lomsebenzi',
+    fullTime: 'Isikhathi Esigcwele',
+    partTime: 'Isikhathi Esiyingxenye',
+    contract: 'Isivumelwano',
+    remote: 'Ukusebenza Kude',
+    hybrid: 'Ukuhlangana',
+    description: 'Incazelo Yomsebenzi',
+    requirements: 'Izidingo',
+    responsibilities: 'Izibopho',
+    benefits: 'Izinzuzo',
+    closingDate: 'Usuku Lokuvalwa',
+    postJob: 'Shicilela Umsebenzi',
+    noJobs: 'Azikho izaziso zemisebenzi ezitholakele.',
+    searchJobs: 'Sesha izaziso zemisebenzi…',
+  },
+
+  // Applications
+  applications: {
+    title: 'Izicelo',
+    applyNow: 'Faka Isicelo Manje',
+    applicant: 'Umfaki Wesicelo',
+    applied: 'Kufakwe Isicelo',
+    appliedOn: 'Kufakwe isicelo mhla',
+    status: 'Isimo',
+    resume: 'I-Resumé',
+    coverLetter: 'Incwadi Yezethulo',
+    noApplications: 'Azikho izicelo ezitholakele.',
+    reviewApplication: 'Hlola Isicelo',
+    shortlist: 'Faka Ohlwini Olufushane',
+    reject: 'Nqaba',
+    schedule: 'Hlelela Ingxoxo',
+    sendOffer: 'Thumela Isiphakamiso',
+  },
+
+  // Employees
+  employees: {
+    title: 'Abasebenzi',
+    addEmployee: 'Engeza Umsebenzi',
+    employeeId: 'Inombolo Yomsebenzi',
+    name: 'Igama Eligcwele',
+    firstName: 'Igama Lokuqala',
+    lastName: 'Isibongo',
+    email: 'I-imeyili',
+    phone: 'Inombolo Yocingo',
+    department: 'Umnyango',
+    position: 'Isikhundla',
+    startDate: 'Usuku Lokuqala',
+    manager: 'Umphathi',
+    employmentType: 'Uhlobo Lokuqashwa',
+    noEmployees: 'Abasebezi abatholakile.',
+    searchEmployees: 'Sesha abasebenzi…',
+  },
+
+  // Dashboard
+  dashboard: {
+    title: 'Ikhombamzimba',
+    overview: 'Isifinyezo',
+    recentActivity: 'Umsebenzi Wakamuva',
+    quickStats: 'Izibalo Ezisheshayo',
+    openPositions: 'Izikhundla Ezivuliwe',
+    activeApplications: 'Izicelo Ezisebenzayo',
+    scheduledInterviews: 'Izingxoxo Ezihlelwe',
+    pendingOffers: 'Iziphakamiso Ezilindile',
+    newCandidates: 'Abafanelekile Abasha',
+    timeToHire: 'Isikhathi Sokuqasha',
+    welcomeBack: 'Wamukelekile futhi',
+    todaySchedule: 'Uhlelo Lwannamhlanje',
+  },
+
+  // Errors & Feedback
+  errors: {
+    generic: 'Kukhona okungahambanga kahle. Sicela uzame futhi.',
+    notFound: 'Ikhasi alitholakali.',
+    unauthorized: 'Awunemvume yokubuka leli khasi.',
+    forbidden: 'Ukufinyelela kwenqatshelwe.',
+    serverError: 'Iphutha leseva. Sicela uxhumane nabasizayo.',
+    networkError: 'Iphutha lenethiwekhi. Sicela uhlole uxhumano lwakho.',
+    required: 'Le nqolobane iyadingeka.',
+    invalidEmail: 'Sicela ufake ikheli le-imeyili elivumelekile.',
+    invalidPassword: 'Iphasiwedi kufanele ibe nezinhlamvu ezingama-8 okungenani.',
+    sessionExpired: 'Isikhathi sakho sokuqhubeka siphelelwe. Sicela ungene futhi.',
+  },
+
+  // Success messages
+  success: {
+    saved: 'Izinguquko zigcinwe ngempumelelo.',
+    created: 'Kudalwe ngempumelelo.',
+    updated: 'Kubuyekezwe ngempumelelo.',
+    deleted: 'Kususiwe ngempumelelo.',
+    submitted: 'Kuthumele ngempumelelo.',
+    sent: 'Kuthunyelwe ngempumelelo.',
+    uploaded: 'Ifayela lilayishiwe ngempumelelo.',
+  },
+
+  // Dates & Time
+  datetime: {
+    today: 'Namhlanje',
+    yesterday: 'Izolo',
+    thisWeek: 'Leli Sonto',
+    lastWeek: 'Isonto Eledlule',
+    thisMonth: 'Le Nyanga',
+    lastMonth: 'Inyanga Edlule',
+    dateFormat: 'DD/MM/YYYY',
+    timeFormat: 'HH:mm',
+    ago: 'edlule',
+    just_now: 'Njalo manje',
+  },
+
+  // Language switcher
+  languageSwitcher: {
+    label: 'Ulimi',
+    en_ZA: 'English',
+    zu_ZA: 'isiZulu',
+    af_ZA: 'Afrikaans',
+    selectLanguage: 'Khetha ulimi',
+  },
+} as const;
+
+export default zuZA;

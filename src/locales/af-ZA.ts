@@ -1,0 +1,245 @@
+/**
+ * Afrikaans (South Africa) translations
+ * Locale: af-ZA
+ */
+const afZA = {
+  locale: {
+    code: 'af-ZA',
+    name: 'Afrikaans',
+    nativeName: 'Afrikaans',
+    direction: 'ltr' as const,
+  },
+
+  // Navigation
+  nav: {
+    dashboard: 'Kontroleskerm',
+    jobs: 'Werksaanbiedinge',
+    applications: 'Aansoeke',
+    candidates: 'Kandidate',
+    interviews: 'Onderhoude',
+    offers: 'Aanbiedinge',
+    onboarding: 'Inskakeling',
+    employees: 'Werknemers',
+    reports: 'Verslae',
+    analytics: 'Ontleding',
+    settings: 'Instellings',
+    profile: 'Profiel',
+    logout: 'Teken Uit',
+    recruiterDashboard: 'Werwer Kontroleskerm',
+    performance: 'Werkverrigting',
+    training: 'Opleiding',
+    orgChart: 'Organisasiekaart',
+    workflow: 'Werkstroom',
+    support: 'Ondersteuning',
+  },
+
+  // Common actions
+  actions: {
+    save: 'Stoor',
+    cancel: 'Kanselleer',
+    delete: 'Verwyder',
+    edit: 'Wysig',
+    create: 'Skep',
+    update: 'Opdateer',
+    submit: 'Indien',
+    confirm: 'Bevestig',
+    close: 'Sluit',
+    back: 'Terug',
+    next: 'Volgende',
+    search: 'Soek',
+    filter: 'Filter',
+    export: 'Uitvoer',
+    import: 'Invoer',
+    download: 'Aflaai',
+    upload: 'Oplaai',
+    view: 'Bekyk',
+    add: 'Voeg By',
+    remove: 'Verwyder',
+    apply: 'Toepas',
+    clear: 'Vee Uit',
+    refresh: 'Verfris',
+    loading: 'Laai tans…',
+    saving: 'Word gestoor…',
+    learnMore: 'Leer Meer',
+  },
+
+  // Status labels
+  status: {
+    active: 'Aktief',
+    inactive: 'Inaktief',
+    pending: 'Hangende',
+    approved: 'Goedgekeur',
+    rejected: 'Afgekeur',
+    draft: 'Konsep',
+    published: 'Gepubliseer',
+    closed: 'Gesluit',
+    completed: 'Voltooi',
+    inProgress: 'Aan die Gang',
+    scheduled: 'Geskeduleer',
+    cancelled: 'Gekanselleer',
+  },
+
+  // Authentication
+  auth: {
+    signIn: 'Teken In',
+    signOut: 'Teken Uit',
+    signUp: 'Registreer',
+    email: 'E-posadres',
+    password: 'Wagwoord',
+    forgotPassword: 'Wagwoord vergeet?',
+    rememberMe: 'Onthou My',
+    welcome: 'Welkom terug',
+    continueWith: 'Gaan voort met',
+    noAccount: 'Het nie \'n rekening nie?',
+    haveAccount: 'Het reeds \'n rekening?',
+  },
+
+  // Settings page
+  settings: {
+    title: 'Instellings',
+    notifications: 'Kennisgewings',
+    privacy: 'Privaatheid',
+    security: 'Sekuriteit',
+    dataManagement: 'Databestuur',
+    language: 'Taal',
+    languageDescription: 'Kies jou voorkeur vertoontaal.',
+    theme: 'Tema',
+    themeLight: 'Lig',
+    themeDark: 'Donker',
+    themeSystem: 'Stelsel',
+    highContrast: 'Hoë Kontras',
+    accessibilitySettings: 'Toeganklikheidsinstellings',
+    profileSettings: 'Profielinstellings',
+    changePassword: 'Verander Wagwoord',
+    twoFactor: 'Twee-faktor-verifikasie',
+    sessionManagement: 'Sessiebestuur',
+  },
+
+  // Jobs & Recruitment
+  jobs: {
+    title: 'Werksaanbiedinge',
+    createJob: 'Skep Werksaanbieding',
+    jobTitle: 'Postititel',
+    department: 'Departement',
+    location: 'Ligging',
+    salary: 'Salaris',
+    salaryRange: 'Salarisskaal',
+    jobType: 'Werkstipe',
+    fullTime: 'Voltydse',
+    partTime: 'Deeltydse',
+    contract: 'Kontrak',
+    remote: 'Afstandwerk',
+    hybrid: 'Hibried',
+    description: 'Werksbeskrywing',
+    requirements: 'Vereistes',
+    responsibilities: 'Verantwoordelikhede',
+    benefits: 'Voordele',
+    closingDate: 'Sluitingsdatum',
+    postJob: 'Plaas Werksaanbieding',
+    noJobs: 'Geen werksaanbiedinge gevind nie.',
+    searchJobs: 'Soek werksaanbiedinge…',
+  },
+
+  // Applications
+  applications: {
+    title: 'Aansoeke',
+    applyNow: 'Doen Nou Aansoek',
+    applicant: 'Aansoekers',
+    applied: 'Aansoek Gedoen',
+    appliedOn: 'Aansoek gedoen op',
+    status: 'Status',
+    resume: 'Curriculum Vitae',
+    coverLetter: 'Begeleidende Brief',
+    noApplications: 'Geen aansoeke gevind nie.',
+    reviewApplication: 'Hersien Aansoek',
+    shortlist: 'Kortlys',
+    reject: 'Verwerp',
+    schedule: 'Skeduleer Onderhoud',
+    sendOffer: 'Stuur Aanbod',
+  },
+
+  // Employees
+  employees: {
+    title: 'Werknemers',
+    addEmployee: 'Voeg Werknemer By',
+    employeeId: 'Werknemernommer',
+    name: 'Volledige Naam',
+    firstName: 'Voornaam',
+    lastName: 'Van',
+    email: 'E-pos',
+    phone: 'Telefoonnommer',
+    department: 'Departement',
+    position: 'Posisie',
+    startDate: 'Aanvangsdatum',
+    manager: 'Bestuurder',
+    employmentType: 'Diensvorm',
+    noEmployees: 'Geen werknemers gevind nie.',
+    searchEmployees: 'Soek werknemers…',
+  },
+
+  // Dashboard
+  dashboard: {
+    title: 'Kontroleskerm',
+    overview: 'Oorsig',
+    recentActivity: 'Onlangse Aktiwiteit',
+    quickStats: 'Vinnige Statistieke',
+    openPositions: 'Oop Poste',
+    activeApplications: 'Aktiewe Aansoeke',
+    scheduledInterviews: 'Geskeduleerde Onderhoude',
+    pendingOffers: 'Hangende Aanbiedinge',
+    newCandidates: 'Nuwe Kandidate',
+    timeToHire: 'Tyd om te Wer',
+    welcomeBack: 'Welkom terug',
+    todaySchedule: 'Vandag se Skedule',
+  },
+
+  // Errors & Feedback
+  errors: {
+    generic: 'Iets het verkeerd gegaan. Probeer asseblief weer.',
+    notFound: 'Bladsy nie gevind nie.',
+    unauthorized: 'Jy is nie gemagtig om hierdie bladsy te sien nie.',
+    forbidden: 'Toegang geweier.',
+    serverError: 'Bedienfout. Kontak asseblief ondersteuning.',
+    networkError: 'Netwerkfout. Kontroleer asseblief jou verbinding.',
+    required: 'Hierdie veld is verpligtend.',
+    invalidEmail: 'Voer asseblief \'n geldige e-posadres in.',
+    invalidPassword: 'Wagwoord moet minstens 8 karakters wees.',
+    sessionExpired: 'Jou sessie het verval. Teken asseblief weer in.',
+  },
+
+  // Success messages
+  success: {
+    saved: 'Veranderinge suksesvol gestoor.',
+    created: 'Suksesvol geskep.',
+    updated: 'Suksesvol opgedateer.',
+    deleted: 'Suksesvol verwyder.',
+    submitted: 'Suksesvol ingedien.',
+    sent: 'Suksesvol gestuur.',
+    uploaded: 'Lêer suksesvol oplaai.',
+  },
+
+  // Dates & Time
+  datetime: {
+    today: 'Vandag',
+    yesterday: 'Gister',
+    thisWeek: 'Hierdie Week',
+    lastWeek: 'Verlede Week',
+    thisMonth: 'Hierdie Maand',
+    lastMonth: 'Verlede Maand',
+    dateFormat: 'DD/MM/YYYY',
+    timeFormat: 'HH:mm',
+    ago: 'gelede',
+    just_now: 'So pas',
+  },
+
+  // Language switcher
+  languageSwitcher: {
+    label: 'Taal',
+    en_ZA: 'English',
+    zu_ZA: 'isiZulu',
+    af_ZA: 'Afrikaans',
+    selectLanguage: 'Kies taal',
+  },
+} as const;
+
+export default afZA;
