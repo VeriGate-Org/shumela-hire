@@ -1,20 +1,26 @@
 package com.arthmatic.shumelahire.entity;
 
 public enum EmployeeDocumentType {
-    CONTRACT,
-    ID_COPY,
-    PASSPORT,
-    QUALIFICATION,
-    CERTIFICATION,
-    TAX_DOCUMENT,
-    MEDICAL,
-    DISCIPLINARY,
-    PERFORMANCE_REVIEW,
-    POLICY_ACKNOWLEDGEMENT,
-    VISA,
-    WORK_PERMIT,
-    DRIVERS_LICENSE,
-    BANK_CONFIRMATION,
-    PROOF_OF_ADDRESS,
-    OTHER
+    ID_DOCUMENT("ID Document"),
+    PASSPORT("Passport"),
+    WORK_PERMIT("Work Permit"),
+    TAX_CERTIFICATE("Tax Certificate"),
+    QUALIFICATION("Qualification"),
+    CONTRACT("Contract"),
+    OFFER_LETTER("Offer Letter"),
+    DISCIPLINARY("Disciplinary"),
+    MEDICAL("Medical"),
+    TRAINING_CERTIFICATE("Training Certificate"),
+    PERFORMANCE_REVIEW("Performance Review"),
+    OTHER("Other");
+
+    private final String displayName;
+
+    EmployeeDocumentType(String displayName) {
+        this.displayName = displayName;
+    }
+
+    public String getDisplayName() {
+        return displayName;
+    }
 }

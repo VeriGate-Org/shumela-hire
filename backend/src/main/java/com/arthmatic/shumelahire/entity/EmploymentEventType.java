@@ -1,19 +1,24 @@
 package com.arthmatic.shumelahire.entity;
 
 public enum EmploymentEventType {
-    HIRE,
-    PROMOTION,
-    TRANSFER,
-    DEMOTION,
-    SUSPENSION,
-    REINSTATEMENT,
-    RESIGNATION,
-    DISMISSAL,
-    RETIREMENT,
-    CONTRACT_END,
-    PROBATION_COMPLETION,
-    SALARY_CHANGE,
-    TITLE_CHANGE,
-    DEPARTMENT_CHANGE,
-    MANAGER_CHANGE
+    HIRE("Hire"),
+    PROMOTION("Promotion"),
+    TRANSFER("Transfer"),
+    DEMOTION("Demotion"),
+    SUSPENSION("Suspension"),
+    REINSTATEMENT("Reinstatement"),
+    RESIGNATION("Resignation"),
+    DISMISSAL("Dismissal"),
+    RETIREMENT("Retirement"),
+    CONTRACT_END("Contract End");
+
+    private final String displayName;
+
+    EmploymentEventType(String displayName) {
+        this.displayName = displayName;
+    }
+
+    public String getDisplayName() {
+        return displayName;
+    }
 }

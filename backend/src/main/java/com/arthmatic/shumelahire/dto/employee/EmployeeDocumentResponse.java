@@ -1,88 +1,59 @@
-package com.arthmatic.shumelahire.entity;
+package com.arthmatic.shumelahire.dto.employee;
 
-import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
+import com.arthmatic.shumelahire.entity.EmployeeDocument;
+import com.arthmatic.shumelahire.entity.EmployeeDocumentType;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
-@Entity
-@Table(name = "employee_documents")
-public class EmployeeDocument extends TenantAwareEntity {
+public class EmployeeDocumentResponse {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    @NotNull
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "employee_id", nullable = false)
-    private Employee employee;
-
-    @NotNull
-    @Enumerated(EnumType.STRING)
-    @Column(name = "document_type", nullable = false, length = 50)
+    private Long employeeId;
     private EmployeeDocumentType documentType;
-
-    @NotBlank
-    @Column(nullable = false, length = 255)
     private String title;
-
-    @Column(columnDefinition = "TEXT")
     private String description;
-
-    @NotBlank
-    @Column(nullable = false, length = 255)
     private String filename;
-
-    @NotBlank
-    @Column(name = "file_url", nullable = false, length = 500)
     private String fileUrl;
-
-    @Column(name = "file_size")
     private Long fileSize;
-
-    @Column(name = "content_type", length = 100)
     private String contentType;
-
-    @Column(nullable = false)
-    private Integer version = 1;
-
-    @Column(name = "expiry_date")
+    private Integer version;
     private LocalDate expiryDate;
-
-    @Column(name = "is_active", nullable = false)
-    private Boolean isActive = true;
-
-    @Column(name = "uploaded_by", length = 255)
+    private Boolean isActive;
+    private Boolean isExpired;
     private String uploadedBy;
-
-    @CreationTimestamp
-    @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
-
-    @UpdateTimestamp
-    @Column(name = "updated_at", nullable = false)
     private LocalDateTime updatedAt;
 
-    public boolean isExpired() {
-        return expiryDate != null && expiryDate.isBefore(LocalDate.now());
-    }
+    public EmployeeDocumentResponse() {}
 
-    public boolean isExpiringSoon(int daysThreshold) {
-        if (expiryDate == null) return false;
-        return expiryDate.isBefore(LocalDate.now().plusDays(daysThreshold));
+    public static EmployeeDocumentResponse fromEntity(EmployeeDocument doc) {
+        EmployeeDocumentResponse response = new EmployeeDocumentResponse();
+        response.setId(doc.getId());
+        response.setEmployeeId(doc.getEmployee().getId());
+        response.setDocumentType(doc.getDocumentType());
+        response.setTitle(doc.getTitle());
+        response.setDescription(doc.getDescription());
+        response.setFilename(doc.getFilename());
+        response.setFileUrl(doc.getFileUrl());
+        response.setFileSize(doc.getFileSize());
+        response.setContentType(doc.getContentType());
+        response.setVersion(doc.getVersion());
+        response.setExpiryDate(doc.getExpiryDate());
+        response.setIsActive(doc.getIsActive());
+        response.setIsExpired(doc.isExpired());
+        response.setUploadedBy(doc.getUploadedBy());
+        response.setCreatedAt(doc.getCreatedAt());
+        response.setUpdatedAt(doc.getUpdatedAt());
+        return response;
     }
 
     // Getters and Setters
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 
-    public Employee getEmployee() { return employee; }
-    public void setEmployee(Employee employee) { this.employee = employee; }
+    public Long getEmployeeId() { return employeeId; }
+    public void setEmployeeId(Long employeeId) { this.employeeId = employeeId; }
 
     public EmployeeDocumentType getDocumentType() { return documentType; }
     public void setDocumentType(EmployeeDocumentType documentType) { this.documentType = documentType; }
@@ -113,6 +84,9 @@ public class EmployeeDocument extends TenantAwareEntity {
 
     public Boolean getIsActive() { return isActive; }
     public void setIsActive(Boolean isActive) { this.isActive = isActive; }
+
+    public Boolean getIsExpired() { return isExpired; }
+    public void setIsExpired(Boolean isExpired) { this.isExpired = isExpired; }
 
     public String getUploadedBy() { return uploadedBy; }
     public void setUploadedBy(String uploadedBy) { this.uploadedBy = uploadedBy; }

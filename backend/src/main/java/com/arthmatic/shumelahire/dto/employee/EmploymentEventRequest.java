@@ -1,4 +1,4 @@
-package com.arthmatic.shumelahire.dto;
+package com.arthmatic.shumelahire.dto.employee;
 
 import com.arthmatic.shumelahire.entity.EmploymentEventType;
 import jakarta.validation.constraints.NotNull;
@@ -20,10 +20,14 @@ public class EmploymentEventRequest {
     private LocalDate effectiveDate;
 
     private String description;
-    private String previousValue;
-    private String newValue;
-    private String reason;
-    private String referenceNumber;
+    private String notes;
+
+    // Change details
+    private String newDepartment;
+    private String newJobTitle;
+    private String newJobGrade;
+    private Long newReportingManagerId;
+    private String newLocation;
 
     public EmploymentEventRequest() {}
 
@@ -43,15 +47,21 @@ public class EmploymentEventRequest {
     public String getDescription() { return description; }
     public void setDescription(String description) { this.description = description; }
 
-    public String getPreviousValue() { return previousValue; }
-    public void setPreviousValue(String previousValue) { this.previousValue = previousValue; }
+    public String getNotes() { return notes; }
+    public void setNotes(String notes) { this.notes = notes; }
 
-    public String getNewValue() { return newValue; }
-    public void setNewValue(String newValue) { this.newValue = newValue; }
+    public String getNewDepartment() { return newDepartment; }
+    public void setNewDepartment(String newDepartment) { this.newDepartment = newDepartment; }
 
-    public String getReason() { return reason; }
-    public void setReason(String reason) { this.reason = reason; }
+    public String getNewJobTitle() { return newJobTitle; }
+    public void setNewJobTitle(String newJobTitle) { this.newJobTitle = newJobTitle; }
 
-    public String getReferenceNumber() { return referenceNumber; }
-    public void setReferenceNumber(String referenceNumber) { this.referenceNumber = referenceNumber; }
+    public String getNewJobGrade() { return newJobGrade; }
+    public void setNewJobGrade(String newJobGrade) { this.newJobGrade = newJobGrade; }
+
+    public Long getNewReportingManagerId() { return newReportingManagerId; }
+    public void setNewReportingManagerId(Long newReportingManagerId) { this.newReportingManagerId = newReportingManagerId; }
+
+    public String getNewLocation() { return newLocation; }
+    public void setNewLocation(String newLocation) { this.newLocation = newLocation; }
 }

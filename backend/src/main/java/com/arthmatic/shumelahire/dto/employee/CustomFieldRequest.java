@@ -1,14 +1,11 @@
-package com.arthmatic.shumelahire.dto;
+package com.arthmatic.shumelahire.dto.employee;
 
+import com.arthmatic.shumelahire.entity.CustomFieldDataType;
 import com.arthmatic.shumelahire.entity.CustomFieldEntityType;
-import com.arthmatic.shumelahire.entity.CustomFieldType;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
 public class CustomFieldRequest {
-
-    @NotNull(message = "Entity type is required")
-    private CustomFieldEntityType entityType;
 
     @NotBlank(message = "Field name is required")
     private String fieldName;
@@ -16,32 +13,34 @@ public class CustomFieldRequest {
     @NotBlank(message = "Field label is required")
     private String fieldLabel;
 
-    @NotNull(message = "Field type is required")
-    private CustomFieldType fieldType;
+    @NotNull(message = "Entity type is required")
+    private CustomFieldEntityType entityType;
+
+    @NotNull(message = "Data type is required")
+    private CustomFieldDataType dataType;
 
     private Boolean isRequired;
     private Boolean isActive;
     private Integer displayOrder;
-    private String options;
+    private String options; // JSON array for SELECT/MULTI_SELECT
     private String defaultValue;
     private String validationRegex;
     private String helpText;
-    private String section;
 
     public CustomFieldRequest() {}
 
     // Getters and Setters
-    public CustomFieldEntityType getEntityType() { return entityType; }
-    public void setEntityType(CustomFieldEntityType entityType) { this.entityType = entityType; }
-
     public String getFieldName() { return fieldName; }
     public void setFieldName(String fieldName) { this.fieldName = fieldName; }
 
     public String getFieldLabel() { return fieldLabel; }
     public void setFieldLabel(String fieldLabel) { this.fieldLabel = fieldLabel; }
 
-    public CustomFieldType getFieldType() { return fieldType; }
-    public void setFieldType(CustomFieldType fieldType) { this.fieldType = fieldType; }
+    public CustomFieldEntityType getEntityType() { return entityType; }
+    public void setEntityType(CustomFieldEntityType entityType) { this.entityType = entityType; }
+
+    public CustomFieldDataType getDataType() { return dataType; }
+    public void setDataType(CustomFieldDataType dataType) { this.dataType = dataType; }
 
     public Boolean getIsRequired() { return isRequired; }
     public void setIsRequired(Boolean isRequired) { this.isRequired = isRequired; }
@@ -63,7 +62,4 @@ public class CustomFieldRequest {
 
     public String getHelpText() { return helpText; }
     public void setHelpText(String helpText) { this.helpText = helpText; }
-
-    public String getSection() { return section; }
-    public void setSection(String section) { this.section = section; }
 }

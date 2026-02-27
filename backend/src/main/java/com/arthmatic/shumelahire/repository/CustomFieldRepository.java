@@ -11,15 +11,11 @@ import java.util.Optional;
 @Repository
 public interface CustomFieldRepository extends JpaRepository<CustomField, Long> {
 
-    List<CustomField> findByEntityTypeAndIsActiveTrueOrderByDisplayOrderAsc(CustomFieldEntityType entityType);
+    List<CustomField> findByEntityTypeAndIsActiveTrueOrderByDisplayOrder(CustomFieldEntityType entityType);
 
-    List<CustomField> findByEntityTypeOrderByDisplayOrderAsc(CustomFieldEntityType entityType);
+    List<CustomField> findByEntityTypeOrderByDisplayOrder(CustomFieldEntityType entityType);
 
-    Optional<CustomField> findByFieldNameAndEntityTypeAndTenantId(
-            String fieldName, CustomFieldEntityType entityType, String tenantId);
+    Optional<CustomField> findByFieldNameAndEntityType(String fieldName, CustomFieldEntityType entityType);
 
-    boolean existsByFieldNameAndEntityTypeAndTenantId(
-            String fieldName, CustomFieldEntityType entityType, String tenantId);
-
-    List<CustomField> findBySection(String section);
+    boolean existsByFieldNameAndEntityType(String fieldName, CustomFieldEntityType entityType);
 }

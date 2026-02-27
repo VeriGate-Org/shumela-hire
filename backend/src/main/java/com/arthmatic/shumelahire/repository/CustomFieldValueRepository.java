@@ -11,14 +11,9 @@ import java.util.Optional;
 @Repository
 public interface CustomFieldValueRepository extends JpaRepository<CustomFieldValue, Long> {
 
-    List<CustomFieldValue> findByEntityTypeAndEntityId(CustomFieldEntityType entityType, Long entityId);
+    List<CustomFieldValue> findByEntityIdAndEntityType(Long entityId, CustomFieldEntityType entityType);
 
-    Optional<CustomFieldValue> findByCustomFieldIdAndEntityTypeAndEntityId(
-            Long customFieldId, CustomFieldEntityType entityType, Long entityId);
+    Optional<CustomFieldValue> findByCustomFieldIdAndEntityIdAndEntityType(Long customFieldId, Long entityId, CustomFieldEntityType entityType);
 
-    void deleteByEntityTypeAndEntityId(CustomFieldEntityType entityType, Long entityId);
-
-    void deleteByCustomFieldId(Long customFieldId);
-
-    long countByCustomFieldId(Long customFieldId);
+    void deleteByEntityIdAndEntityType(Long entityId, CustomFieldEntityType entityType);
 }

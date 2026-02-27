@@ -1,7 +1,7 @@
 package com.arthmatic.shumelahire.service;
 
-import com.arthmatic.shumelahire.dto.EmployeeCreateRequest;
-import com.arthmatic.shumelahire.dto.EmployeeResponse;
+import com.arthmatic.shumelahire.dto.employee.EmployeeCreateRequest;
+import com.arthmatic.shumelahire.dto.employee.EmployeeResponse;
 import com.arthmatic.shumelahire.entity.Employee;
 import com.arthmatic.shumelahire.entity.EmployeeStatus;
 import com.arthmatic.shumelahire.repository.EmployeeRepository;
@@ -15,8 +15,11 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.Year;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -24,18 +27,17 @@ import java.util.stream.Collectors;
 public class EmployeeService {
 
     private static final Logger logger = LoggerFactory.getLogger(EmployeeService.class);
+    public static final String EMPLOYEES_CACHE = "employees";
 
     @Autowired
     private EmployeeRepository employeeRepository;
 
     @Autowired
-    private DataEncryptionService encryptionService;
-
-    @Autowired
     private AuditLogService auditLogService;
 
+    @CacheEvict(value = EMPLOYEES_CACHE, allEntries = true)
     public EmployeeResponse createEmployee(EmployeeCreateRequest request) {
-        logger.info("Creating new employee: {} {}", request.getFirstName(), request.getLastName());
+        logger.info("Creating employee: {} {}", request.getFirstName(), request.getLastName());
 
         if (employeeRepository.existsByEmail(request.getEmail())) {
             throw new IllegalArgumentException("Email already exists: " + request.getEmail());
@@ -43,66 +45,62 @@ public class EmployeeService {
 
         Employee employee = new Employee();
         mapRequestToEntity(request, employee);
+        employee.setEmployeeNumber(generateEmployeeNumber());
+        employee.setStatus(EmployeeStatus.ACTIVE);
 
-        // Generate employee number if not provided
-        if (employee.getEmployeeNumber() == null || employee.getEmployeeNumber().isBlank()) {
-            employee.setEmployeeNumber(generateEmployeeNumber());
+        if (request.getReportingManagerId() != null) {
+            Employee manager = findEmployeeById(request.getReportingManagerId());
+            employee.setReportingManager(manager);
         }
 
-        // Encrypt PII fields
-        encryptPiiFields(employee);
+        if (request.getDemographicsConsent() != null && request.getDemographicsConsent()) {
+            employee.setDemographicsConsent(true);
+            employee.setDemographicsConsentDate(LocalDateTime.now());
+        }
 
         Employee saved = employeeRepository.save(employee);
 
-        auditLogService.logSystemAction("EMPLOYEE_CREATED", "EMPLOYEE",
-                "Employee created: " + saved.getEmployeeNumber() + " - " + saved.getFullName());
+        auditLogService.logApplicantAction(saved.getId(), "EMPLOYEE_CREATED", "EMPLOYEE", saved.getFullName());
+        logger.info("Employee created: {} ({})", saved.getFullName(), saved.getEmployeeNumber());
 
-        logger.info("Employee created with ID: {} ({})", saved.getId(), saved.getEmployeeNumber());
-
-        // Decrypt for response
-        decryptPiiFields(saved);
         return EmployeeResponse.fromEntity(saved);
     }
 
-    @CacheEvict(value = "employees", key = "#id")
+    @CacheEvict(value = EMPLOYEES_CACHE, allEntries = true)
     public EmployeeResponse updateEmployee(Long id, EmployeeCreateRequest request) {
         logger.info("Updating employee: {}", id);
 
         Employee employee = findEmployeeById(id);
 
-        // Check email uniqueness if changed
         if (!employee.getEmail().equals(request.getEmail()) &&
-                employeeRepository.existsByEmail(request.getEmail())) {
+            employeeRepository.existsByEmail(request.getEmail())) {
             throw new IllegalArgumentException("Email already exists: " + request.getEmail());
         }
 
         mapRequestToEntity(request, employee);
-        encryptPiiFields(employee);
 
-        Employee updated = employeeRepository.save(employee);
+        if (request.getReportingManagerId() != null) {
+            if (request.getReportingManagerId().equals(id)) {
+                throw new IllegalArgumentException("Employee cannot report to themselves");
+            }
+            Employee manager = findEmployeeById(request.getReportingManagerId());
+            employee.setReportingManager(manager);
+        } else {
+            employee.setReportingManager(null);
+        }
 
-        auditLogService.logSystemAction("EMPLOYEE_UPDATED", "EMPLOYEE",
-                "Employee updated: " + updated.getEmployeeNumber());
+        Employee saved = employeeRepository.save(employee);
 
-        logger.info("Employee updated: {}", updated.getId());
+        auditLogService.logApplicantAction(saved.getId(), "EMPLOYEE_UPDATED", "EMPLOYEE", saved.getFullName());
+        logger.info("Employee updated: {}", saved.getEmployeeNumber());
 
-        decryptPiiFields(updated);
-        return EmployeeResponse.fromEntity(updated);
+        return EmployeeResponse.fromEntity(saved);
     }
 
-    @Cacheable(value = "employees", key = "#id")
     @Transactional(readOnly = true)
+    @Cacheable(value = EMPLOYEES_CACHE, key = "#id")
     public EmployeeResponse getEmployee(Long id) {
         Employee employee = findEmployeeById(id);
-        decryptPiiFields(employee);
-        return EmployeeResponse.fromEntity(employee);
-    }
-
-    @Transactional(readOnly = true)
-    public EmployeeResponse getEmployeeByNumber(String employeeNumber) {
-        Employee employee = employeeRepository.findByEmployeeNumber(employeeNumber)
-                .orElseThrow(() -> new IllegalArgumentException("Employee not found: " + employeeNumber));
-        decryptPiiFields(employee);
         return EmployeeResponse.fromEntity(employee);
     }
 
@@ -114,86 +112,92 @@ public class EmployeeService {
         } else {
             employees = employeeRepository.findAll(pageable);
         }
-        return employees.map(e -> {
-            decryptPiiFields(e);
-            return EmployeeResponse.fromEntity(e);
-        });
+        return employees.map(EmployeeResponse::fromEntity);
     }
 
     @Transactional(readOnly = true)
     public Page<EmployeeResponse> filterEmployees(String department, EmployeeStatus status,
-                                                   String location, String jobTitle,
-                                                   String searchTerm, Pageable pageable) {
-        Page<Employee> employees = employeeRepository.findByFilters(
-                department, status, location, jobTitle, searchTerm, pageable);
-        return employees.map(e -> {
-            decryptPiiFields(e);
-            return EmployeeResponse.fromEntity(e);
-        });
+                                                   String jobTitle, String location, Pageable pageable) {
+        Page<Employee> employees = employeeRepository.findByFilters(department, status, jobTitle, location, pageable);
+        return employees.map(EmployeeResponse::fromEntity);
     }
 
     @Transactional(readOnly = true)
     public Page<EmployeeResponse> getDirectory(Pageable pageable) {
-        Page<Employee> employees = employeeRepository.findActiveEmployees(pageable);
+        Page<Employee> employees = employeeRepository.findActiveDirectory(pageable);
         return employees.map(EmployeeResponse::directoryView);
     }
 
     @Transactional(readOnly = true)
     public List<EmployeeResponse> getDirectReports(Long managerId) {
         List<Employee> reports = employeeRepository.findByReportingManagerId(managerId);
-        return reports.stream()
-                .map(EmployeeResponse::directoryView)
-                .collect(Collectors.toList());
+        return reports.stream().map(EmployeeResponse::directoryView).collect(Collectors.toList());
     }
 
     @Transactional(readOnly = true)
-    public List<Object[]> getHeadcountByDepartment() {
-        return employeeRepository.countByDepartment();
+    public Map<String, Long> getDepartmentCounts() {
+        List<Object[]> counts = employeeRepository.countByDepartment();
+        return counts.stream()
+                .collect(Collectors.toMap(
+                        row -> (String) row[0],
+                        row -> (Long) row[1]
+                ));
     }
 
     @Transactional(readOnly = true)
-    public List<Object[]> getHeadcountByStatus() {
-        return employeeRepository.countByStatus();
-    }
-
-    @Transactional(readOnly = true)
-    public List<String> getDepartments() {
+    public List<String> getDistinctDepartments() {
         return employeeRepository.findDistinctDepartments();
     }
 
     @Transactional(readOnly = true)
-    public List<String> getLocations() {
+    public List<String> getDistinctLocations() {
         return employeeRepository.findDistinctLocations();
     }
 
     @Transactional(readOnly = true)
-    public List<String> getJobTitles() {
+    public List<String> getDistinctJobTitles() {
         return employeeRepository.findDistinctJobTitles();
     }
 
-    @CacheEvict(value = "employees", key = "#id")
-    public void deleteEmployee(Long id) {
+    @CacheEvict(value = EMPLOYEES_CACHE, allEntries = true)
+    public EmployeeResponse updateStatus(Long id, EmployeeStatus status, String reason) {
         Employee employee = findEmployeeById(id);
-        employeeRepository.delete(employee);
+        EmployeeStatus previousStatus = employee.getStatus();
+        employee.setStatus(status);
 
-        auditLogService.logSystemAction("EMPLOYEE_DELETED", "EMPLOYEE",
-                "Employee deleted: " + employee.getEmployeeNumber());
+        if (status == EmployeeStatus.TERMINATED || status == EmployeeStatus.RESIGNED || status == EmployeeStatus.RETIRED) {
+            employee.setTerminationDate(LocalDate.now());
+            employee.setTerminationReason(reason);
+        }
 
-        logger.info("Employee deleted: {}", id);
+        Employee saved = employeeRepository.save(employee);
+
+        auditLogService.logApplicantAction(saved.getId(), "STATUS_CHANGED", "EMPLOYEE",
+                previousStatus + " -> " + status);
+
+        return EmployeeResponse.fromEntity(saved);
     }
 
-    // --- Helper methods ---
-
-    Employee findEmployeeById(Long id) {
+    public Employee findEmployeeById(Long id) {
         return employeeRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Employee not found: " + id));
     }
 
-    private String generateEmployeeNumber() {
-        String year = String.valueOf(Year.now().getValue());
-        String prefix = "UTW-" + year + "-";
-        long count = employeeRepository.countByEmployeeNumberPrefix(prefix + "%");
-        return prefix + String.format("%04d", count + 1);
+    String generateEmployeeNumber() {
+        String prefix = "UTW-" + Year.now().getValue() + "-";
+        String maxNumber = employeeRepository.findMaxEmployeeNumberByPrefix(prefix + "%");
+
+        int nextSeq = 1;
+        if (maxNumber != null) {
+            String seqPart = maxNumber.substring(prefix.length());
+            try {
+                nextSeq = Integer.parseInt(seqPart) + 1;
+            } catch (NumberFormatException e) {
+                logger.warn("Could not parse employee number sequence: {}", maxNumber);
+            }
+        }
+
+        return prefix + String.format("%04d", nextSeq);
     }
 
     private void mapRequestToEntity(EmployeeCreateRequest request, Employee employee) {
@@ -207,82 +211,35 @@ public class EmployeeService {
         employee.setMobilePhone(request.getMobilePhone());
         employee.setDateOfBirth(request.getDateOfBirth());
         employee.setGender(request.getGender());
-        employee.setMaritalStatus(request.getMaritalStatus());
+        employee.setRace(request.getRace());
+        employee.setDisabilityStatus(request.getDisabilityStatus());
+        employee.setCitizenshipStatus(request.getCitizenshipStatus());
         employee.setNationality(request.getNationality());
-
-        // PII — store raw values; encryption happens separately
+        employee.setMaritalStatus(request.getMaritalStatus());
         employee.setIdNumber(request.getIdNumber());
         employee.setTaxNumber(request.getTaxNumber());
-        employee.setPassportNumber(request.getPassportNumber());
+        employee.setBankAccountNumber(request.getBankAccountNumber());
         employee.setBankName(request.getBankName());
         employee.setBankBranchCode(request.getBankBranchCode());
-        employee.setBankAccountNumber(request.getBankAccountNumber());
-        employee.setBankAccountType(request.getBankAccountType());
-
-        // Address
         employee.setPhysicalAddress(request.getPhysicalAddress());
         employee.setPostalAddress(request.getPostalAddress());
         employee.setCity(request.getCity());
         employee.setProvince(request.getProvince());
         employee.setPostalCode(request.getPostalCode());
         employee.setCountry(request.getCountry());
-
-        // Employment
         employee.setDepartment(request.getDepartment());
         employee.setDivision(request.getDivision());
         employee.setJobTitle(request.getJobTitle());
         employee.setJobGrade(request.getJobGrade());
-        employee.setCostCentre(request.getCostCentre());
-        employee.setLocation(request.getLocation());
-        if (request.getEmploymentType() != null) {
-            employee.setEmploymentType(request.getEmploymentType());
-        }
-        if (request.getStatus() != null) {
-            employee.setStatus(request.getStatus());
-        }
+        employee.setEmploymentType(request.getEmploymentType());
         employee.setHireDate(request.getHireDate());
         employee.setProbationEndDate(request.getProbationEndDate());
-
-        // Compensation
-        employee.setSalary(request.getSalary());
-        if (request.getSalaryCurrency() != null) {
-            employee.setSalaryCurrency(request.getSalaryCurrency());
-        }
-        if (request.getPayFrequency() != null) {
-            employee.setPayFrequency(request.getPayFrequency());
-        }
-
-        // Org hierarchy
-        if (request.getReportingManagerId() != null) {
-            Employee manager = findEmployeeById(request.getReportingManagerId());
-            employee.setReportingManager(manager);
-        }
-        employee.setUserId(request.getUserId());
-
-        // Employment equity
-        employee.setRace(request.getRace());
-        employee.setDisabilityStatus(request.getDisabilityStatus());
-        employee.setCitizenshipStatus(request.getCitizenshipStatus());
-
-        // Emergency contact
+        employee.setContractEndDate(request.getContractEndDate());
+        employee.setCostCentre(request.getCostCentre());
+        employee.setLocation(request.getLocation());
+        employee.setSite(request.getSite());
         employee.setEmergencyContactName(request.getEmergencyContactName());
         employee.setEmergencyContactPhone(request.getEmergencyContactPhone());
         employee.setEmergencyContactRelationship(request.getEmergencyContactRelationship());
-
-        employee.setNotes(request.getNotes());
-    }
-
-    private void encryptPiiFields(Employee employee) {
-        employee.setIdNumber(encryptionService.encryptPII(employee.getIdNumber()));
-        employee.setTaxNumber(encryptionService.encryptPII(employee.getTaxNumber()));
-        employee.setPassportNumber(encryptionService.encryptPII(employee.getPassportNumber()));
-        employee.setBankAccountNumber(encryptionService.encryptPII(employee.getBankAccountNumber()));
-    }
-
-    private void decryptPiiFields(Employee employee) {
-        employee.setIdNumber(encryptionService.decryptPII(employee.getIdNumber()));
-        employee.setTaxNumber(encryptionService.decryptPII(employee.getTaxNumber()));
-        employee.setPassportNumber(encryptionService.decryptPII(employee.getPassportNumber()));
-        employee.setBankAccountNumber(encryptionService.decryptPII(employee.getBankAccountNumber()));
     }
 }

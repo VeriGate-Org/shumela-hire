@@ -1,14 +1,11 @@
 package com.arthmatic.shumelahire.service;
 
-import com.arthmatic.shumelahire.dto.EmployeeCreateRequest;
-import com.arthmatic.shumelahire.dto.EmployeeResponse;
-import com.arthmatic.shumelahire.dto.EmploymentEventRequest;
-import com.arthmatic.shumelahire.entity.Applicant;
-import com.arthmatic.shumelahire.entity.EmployeeEmploymentType;
-import com.arthmatic.shumelahire.entity.EmployeeStatus;
-import com.arthmatic.shumelahire.entity.EmploymentEventType;
+import com.arthmatic.shumelahire.dto.employee.ApplicantToEmployeeRequest;
+import com.arthmatic.shumelahire.dto.employee.EmployeeResponse;
+import com.arthmatic.shumelahire.entity.*;
 import com.arthmatic.shumelahire.repository.ApplicantRepository;
 import com.arthmatic.shumelahire.repository.EmployeeRepository;
+import com.arthmatic.shumelahire.repository.EmploymentEventRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,69 +27,82 @@ public class ApplicantToEmployeeService {
     private EmployeeRepository employeeRepository;
 
     @Autowired
-    private EmployeeService employeeService;
+    private EmploymentEventRepository eventRepository;
 
     @Autowired
-    private EmploymentEventService employmentEventService;
+    private EmployeeService employeeService;
 
     @Autowired
     private AuditLogService auditLogService;
 
-    public EmployeeResponse convertApplicantToEmployee(Long applicantId, LocalDate hireDate,
-                                                        String department, String jobTitle,
-                                                        Long reportingManagerId,
-                                                        EmployeeEmploymentType employmentType) {
-        logger.info("Converting applicant {} to employee", applicantId);
+    public EmployeeResponse convertApplicantToEmployee(ApplicantToEmployeeRequest request) {
+        logger.info("Converting applicant {} to employee", request.getApplicantId());
 
-        Applicant applicant = applicantRepository.findById(applicantId)
-                .orElseThrow(() -> new IllegalArgumentException("Applicant not found: " + applicantId));
+        // Verify applicant exists
+        Applicant applicant = applicantRepository.findById(request.getApplicantId())
+                .orElseThrow(() -> new IllegalArgumentException("Applicant not found: " + request.getApplicantId()));
 
-        // Check if applicant already converted
-        if (employeeRepository.findByApplicantId(applicantId).isPresent()) {
-            throw new IllegalArgumentException("Applicant already converted to employee: " + applicantId);
+        // Check if already converted
+        if (employeeRepository.findByApplicantId(request.getApplicantId()).isPresent()) {
+            throw new IllegalArgumentException("Applicant already converted to employee");
         }
 
-        // Build employee create request from applicant data
-        EmployeeCreateRequest request = new EmployeeCreateRequest();
-        request.setFirstName(applicant.getName());
-        request.setLastName(applicant.getSurname());
-        request.setEmail(applicant.getEmail());
-        request.setPhone(applicant.getPhone());
-        request.setIdNumber(applicant.getIdPassportNumber());
-        request.setPhysicalAddress(applicant.getAddress());
-        request.setHireDate(hireDate);
-        request.setDepartment(department);
-        request.setJobTitle(jobTitle);
-        request.setReportingManagerId(reportingManagerId);
-        request.setEmploymentType(employmentType != null ? employmentType : EmployeeEmploymentType.PERMANENT);
-        request.setStatus(EmployeeStatus.PROBATION);
-        request.setApplicantId(applicantId);
+        // Create employee from applicant data
+        Employee employee = new Employee();
+        employee.setEmployeeNumber(employeeService.generateEmployeeNumber());
+        employee.setFirstName(applicant.getName());
+        employee.setLastName(applicant.getSurname());
+        employee.setEmail(applicant.getEmail());
+        employee.setPhone(applicant.getPhone());
+        employee.setIdNumber(applicant.getIdPassportNumber());
+        employee.setPhysicalAddress(applicant.getAddress());
+        employee.setGender(applicant.getGender());
+        employee.setRace(applicant.getRace());
+        employee.setDisabilityStatus(applicant.getDisabilityStatus());
+        employee.setCitizenshipStatus(applicant.getCitizenshipStatus());
+        employee.setDemographicsConsent(applicant.getDemographicsConsent());
+        employee.setDemographicsConsentDate(applicant.getDemographicsConsentDate());
+        employee.setApplicant(applicant);
 
-        // Carry over employment equity data
-        request.setGender(applicant.getGender());
-        request.setRace(applicant.getRace());
-        request.setDisabilityStatus(applicant.getDisabilityStatus());
-        request.setCitizenshipStatus(applicant.getCitizenshipStatus());
+        // Set employment details from request
+        employee.setHireDate(request.getHireDate());
+        employee.setDepartment(request.getDepartment());
+        employee.setJobTitle(request.getJobTitle());
+        employee.setJobGrade(request.getJobGrade());
+        employee.setEmploymentType(request.getEmploymentType());
+        employee.setLocation(request.getLocation());
+        employee.setSite(request.getSite());
+        employee.setCostCentre(request.getCostCentre());
+        employee.setProbationEndDate(request.getProbationEndDate());
+        employee.setContractEndDate(request.getContractEndDate());
+        employee.setStatus(EmployeeStatus.ACTIVE);
 
-        EmployeeResponse employee = employeeService.createEmployee(request);
+        if (request.getReportingManagerId() != null) {
+            Employee manager = employeeService.findEmployeeById(request.getReportingManagerId());
+            employee.setReportingManager(manager);
+        }
+
+        Employee saved = employeeRepository.save(employee);
 
         // Create HIRE employment event
-        EmploymentEventRequest eventRequest = new EmploymentEventRequest();
-        eventRequest.setEmployeeId(employee.getId());
-        eventRequest.setEventType(EmploymentEventType.HIRE);
-        eventRequest.setEventDate(hireDate);
-        eventRequest.setEffectiveDate(hireDate);
-        eventRequest.setDescription("Employee hired — converted from applicant #" + applicantId);
-        eventRequest.setNewValue("{\"department\":\"" + department + "\",\"jobTitle\":\"" + jobTitle + "\"}");
+        EmploymentEvent hireEvent = new EmploymentEvent();
+        hireEvent.setEmployee(saved);
+        hireEvent.setEventType(EmploymentEventType.HIRE);
+        hireEvent.setEventDate(LocalDate.now());
+        hireEvent.setEffectiveDate(request.getHireDate());
+        hireEvent.setDescription("Hired from applicant conversion");
+        hireEvent.setNewDepartment(request.getDepartment());
+        hireEvent.setNewJobTitle(request.getJobTitle());
+        hireEvent.setNewJobGrade(request.getJobGrade());
+        hireEvent.setNewLocation(request.getLocation());
+        eventRepository.save(hireEvent);
 
-        employmentEventService.createEvent(eventRequest);
-
-        auditLogService.logSystemAction("APPLICANT_CONVERTED", "EMPLOYEE",
-                "Applicant " + applicantId + " converted to employee " + employee.getEmployeeNumber());
+        auditLogService.logApplicantAction(saved.getId(), "APPLICANT_CONVERTED", "EMPLOYEE",
+                "Applicant " + applicant.getFullName() + " converted to employee " + saved.getEmployeeNumber());
 
         logger.info("Applicant {} converted to employee {} ({})",
-                applicantId, employee.getId(), employee.getEmployeeNumber());
+                applicant.getId(), saved.getId(), saved.getEmployeeNumber());
 
-        return employee;
+        return EmployeeResponse.fromEntity(saved);
     }
 }

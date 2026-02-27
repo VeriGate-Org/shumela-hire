@@ -1,88 +1,70 @@
-package com.arthmatic.shumelahire.entity;
+package com.arthmatic.shumelahire.dto.employee;
 
-import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
-import org.hibernate.annotations.CreationTimestamp;
+import com.arthmatic.shumelahire.entity.EmploymentEvent;
+import com.arthmatic.shumelahire.entity.EmploymentEventType;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
-@Entity
-@Table(name = "employment_events")
-public class EmploymentEvent extends TenantAwareEntity {
+public class EmploymentEventResponse {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    @NotNull
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "employee_id", nullable = false)
-    private Employee employee;
-
-    @NotNull
-    @Enumerated(EnumType.STRING)
-    @Column(name = "event_type", nullable = false, length = 50)
+    private Long employeeId;
+    private String employeeName;
     private EmploymentEventType eventType;
-
-    @NotNull
-    @Column(name = "event_date", nullable = false)
     private LocalDate eventDate;
-
-    @NotNull
-    @Column(name = "effective_date", nullable = false)
     private LocalDate effectiveDate;
-
-    @Column(columnDefinition = "TEXT")
     private String description;
-
-    @Column(columnDefinition = "TEXT")
     private String notes;
-
-    // Before/after snapshots
-    @Column(name = "previous_department", length = 200)
     private String previousDepartment;
-
-    @Column(name = "new_department", length = 200)
     private String newDepartment;
-
-    @Column(name = "previous_job_title", length = 200)
     private String previousJobTitle;
-
-    @Column(name = "new_job_title", length = 200)
     private String newJobTitle;
-
-    @Column(name = "previous_job_grade", length = 50)
     private String previousJobGrade;
-
-    @Column(name = "new_job_grade", length = 50)
     private String newJobGrade;
-
-    @Column(name = "previous_reporting_manager_id")
     private Long previousReportingManagerId;
-
-    @Column(name = "new_reporting_manager_id")
     private Long newReportingManagerId;
-
-    @Column(name = "previous_location", length = 200)
     private String previousLocation;
-
-    @Column(name = "new_location", length = 200)
     private String newLocation;
-
-    @Column(name = "recorded_by", length = 255)
     private String recordedBy;
-
-    @CreationTimestamp
-    @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
+
+    public EmploymentEventResponse() {}
+
+    public static EmploymentEventResponse fromEntity(EmploymentEvent event) {
+        EmploymentEventResponse response = new EmploymentEventResponse();
+        response.setId(event.getId());
+        response.setEmployeeId(event.getEmployee().getId());
+        response.setEmployeeName(event.getEmployee().getFullName());
+        response.setEventType(event.getEventType());
+        response.setEventDate(event.getEventDate());
+        response.setEffectiveDate(event.getEffectiveDate());
+        response.setDescription(event.getDescription());
+        response.setNotes(event.getNotes());
+        response.setPreviousDepartment(event.getPreviousDepartment());
+        response.setNewDepartment(event.getNewDepartment());
+        response.setPreviousJobTitle(event.getPreviousJobTitle());
+        response.setNewJobTitle(event.getNewJobTitle());
+        response.setPreviousJobGrade(event.getPreviousJobGrade());
+        response.setNewJobGrade(event.getNewJobGrade());
+        response.setPreviousReportingManagerId(event.getPreviousReportingManagerId());
+        response.setNewReportingManagerId(event.getNewReportingManagerId());
+        response.setPreviousLocation(event.getPreviousLocation());
+        response.setNewLocation(event.getNewLocation());
+        response.setRecordedBy(event.getRecordedBy());
+        response.setCreatedAt(event.getCreatedAt());
+        return response;
+    }
 
     // Getters and Setters
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 
-    public Employee getEmployee() { return employee; }
-    public void setEmployee(Employee employee) { this.employee = employee; }
+    public Long getEmployeeId() { return employeeId; }
+    public void setEmployeeId(Long employeeId) { this.employeeId = employeeId; }
+
+    public String getEmployeeName() { return employeeName; }
+    public void setEmployeeName(String employeeName) { this.employeeName = employeeName; }
 
     public EmploymentEventType getEventType() { return eventType; }
     public void setEventType(EmploymentEventType eventType) { this.eventType = eventType; }
