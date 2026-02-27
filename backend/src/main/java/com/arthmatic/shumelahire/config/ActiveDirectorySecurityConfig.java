@@ -2,28 +2,28 @@ package com.arthmatic.shumelahire.config;
 
 import com.arthmatic.shumelahire.config.tenant.TenantResolutionFilter;
 import com.arthmatic.shumelahire.repository.TenantRepository;
+import com.arthmatic.shumelahire.security.ActiveDirectoryUserDetailsMapper;
 import com.arthmatic.shumelahire.security.JwtAuthenticationEntryPoint;
 import com.arthmatic.shumelahire.security.JwtAuthenticationFilter;
 import com.arthmatic.shumelahire.security.RateLimitFilter;
-import com.arthmatic.shumelahire.service.CustomUserDetailsService;
+import com.arthmatic.shumelahire.service.ActiveDirectoryUserProvisioningService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Profile;
 import org.springframework.core.env.Environment;
 import org.springframework.ldap.core.LdapTemplate;
 import org.springframework.ldap.core.support.LdapContextSource;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
-import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.ldap.authentication.ad.ActiveDirectoryLdapAuthenticationProvider;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
@@ -31,20 +31,26 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.util.Arrays;
+import java.util.List;
 
 /**
- * Security configuration for Active Directory / on-premises deployments.
- * Uses JWT for API authentication with AD LDAP as the identity provider.
- * Falls back to local DB authentication when AD is not configured.
+ * Security configuration for hybrid/on-premises deployment with Active Directory.
+ * Uses AD LDAP for initial authentication and JWT for subsequent API calls.
+ * Enabled when ad.enabled=true (typically in the hybrid profile).
  */
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity(prePostEnabled = true)
-@Profile({"sqlserver", "onprem"})
+@ConditionalOnProperty(name = "ad.enabled", havingValue = "true")
 public class ActiveDirectorySecurityConfig {
 
+    private static final Logger logger = LoggerFactory.getLogger(ActiveDirectorySecurityConfig.class);
+
     @Autowired
-    private CustomUserDetailsService userDetailsService;
+    private ActiveDirectoryProperties adProperties;
+
+    @Autowired
+    private ActiveDirectoryUserProvisioningService provisioningService;
 
     @Autowired
     private JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
@@ -61,20 +67,30 @@ public class ActiveDirectorySecurityConfig {
     @Autowired
     private Environment environment;
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
-
     @Bean
-    public DaoAuthenticationProvider authenticationProvider() {
-        DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
-        authProvider.setUserDetailsService(userDetailsService);
-        authProvider.setPasswordEncoder(passwordEncoder);
-        return authProvider;
+    public ActiveDirectoryLdapAuthenticationProvider activeDirectoryAuthProvider() {
+        ActiveDirectoryLdapAuthenticationProvider provider =
+                new ActiveDirectoryLdapAuthenticationProvider(
+                        adProperties.getDomain(),
+                        adProperties.getUrl(),
+                        adProperties.getBaseDn()
+                );
+
+        provider.setUserDetailsContextMapper(
+                new ActiveDirectoryUserDetailsMapper(provisioningService));
+
+        provider.setConvertSubErrorCodesToExceptions(true);
+        provider.setSearchFilter(adProperties.getUserSearchFilter());
+
+        logger.info("Active Directory authentication provider configured for domain: {}",
+                adProperties.getDomain());
+
+        return provider;
     }
 
     @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
-        return config.getAuthenticationManager();
+    public AuthenticationManager authenticationManager() {
+        return new ProviderManager(List.of(activeDirectoryAuthProvider()));
     }
 
     @Bean
@@ -83,7 +99,9 @@ public class ActiveDirectorySecurityConfig {
         configuration.setAllowedOriginPatterns(Arrays.asList(
                 "http://localhost:3000",
                 "http://localhost:3001",
-                "https://*.shumelahire.co.za"
+                "http://*.localhost:3000",
+                "https://*.shumelahire.co.za",
+                "https://*.shumelahire.local"
         ));
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
         configuration.setAllowedHeaders(Arrays.asList("*"));
@@ -184,31 +202,23 @@ public class ActiveDirectorySecurityConfig {
                 .anyRequest().denyAll()
             );
 
+        // JWT filter for token-based auth on subsequent requests after AD login
         http.addFilterBefore(new TenantResolutionFilter(tenantRepository, environment), UsernamePasswordAuthenticationFilter.class);
         http.addFilterBefore(rateLimitFilter, UsernamePasswordAuthenticationFilter.class);
         http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
-        http.authenticationProvider(authenticationProvider());
 
         return http.build();
     }
 
     /**
-     * LDAP context source — conditionally created when AD is enabled.
+     * LDAP context source for AD sync service and group discovery.
      */
     @Bean
     @ConditionalOnProperty(name = "shumelahire.ad.enabled", havingValue = "true")
-    public LdapContextSource ldapContextSource(
-            @Value("${shumelahire.ad.url}") String url,
-            @Value("${shumelahire.ad.base-dn}") String baseDn,
-            @Value("${shumelahire.ad.bind-dn:}") String bindDn,
-            @Value("${shumelahire.ad.bind-password:}") String bindPassword) {
+    public LdapContextSource ldapContextSource() {
         LdapContextSource contextSource = new LdapContextSource();
-        contextSource.setUrl(url);
-        contextSource.setBase(baseDn);
-        if (!bindDn.isEmpty()) {
-            contextSource.setUserDn(bindDn);
-            contextSource.setPassword(bindPassword);
-        }
+        contextSource.setUrl(adProperties.getUrl());
+        contextSource.setBase(adProperties.getBaseDn());
         contextSource.setReferral("follow");
         contextSource.afterPropertiesSet();
         return contextSource;

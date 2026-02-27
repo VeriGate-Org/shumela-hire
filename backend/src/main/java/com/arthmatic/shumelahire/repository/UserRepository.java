@@ -120,4 +120,14 @@ public interface UserRepository extends JpaRepository<User, Long> {
      * Find all users sourced from Active Directory
      */
     List<User> findByAdSourceTrue();
+
+    /**
+     * Find user by SSO provider and SSO user ID (for AD/SAML lookup)
+     */
+    Optional<User> findBySsoProviderAndSsoUserId(String ssoProvider, String ssoUserId);
+
+    /**
+     * Find user by SSO provider and SSO user ID within a tenant
+     */
+    Optional<User> findBySsoProviderAndSsoUserIdAndTenantId(String ssoProvider, String ssoUserId, String tenantId);
 }

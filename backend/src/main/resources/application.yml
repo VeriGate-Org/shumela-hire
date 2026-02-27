@@ -102,6 +102,18 @@ dots-africa:
   api-key: ${DOTS_AFRICA_API_KEY:}
   client-id: ${DOTS_AFRICA_CLIENT_ID:}
 
+# Active Directory / LDAP Authentication (hybrid/on-prem)
+ad:
+  enabled: ${AD_ENABLED:false}
+  domain: ${AD_DOMAIN:}
+  url: ${AD_URL:}
+  base-dn: ${AD_BASE_DN:}
+  user-search-filter: ${AD_USER_SEARCH_FILTER:(&(objectClass=user)(sAMAccountName={0}))}
+  group-search-base: ${AD_GROUP_SEARCH_BASE:}
+  default-role: ${AD_DEFAULT_ROLE:EMPLOYEE}
+  default-tenant-id: ${AD_DEFAULT_TENANT_ID:default}
+  group-role-mappings: {}
+
 # SAP Payroll Integration
 sap:
   payroll:
