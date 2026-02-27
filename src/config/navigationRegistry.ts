@@ -17,6 +17,9 @@ import {
   WrenchScrewdriverIcon,
   MagnifyingGlassIcon,
   DocumentCheckIcon,
+  UserGroupIcon,
+  UserCircleIcon,
+  AdjustmentsHorizontalIcon,
 } from '@heroicons/react/24/outline';
 import {
   HomeIcon as HomeIconSolid,
@@ -25,10 +28,11 @@ import {
   ChartBarIcon as ChartBarIconSolid,
   BriefcaseIcon as BriefcaseIconSolid,
   UsersIcon as UsersIconSolid,
+  UserGroupIcon as UserGroupIconSolid,
 } from '@heroicons/react/24/solid';
 import { ComponentType } from 'react';
 
-export type NavSection = 'recruitment' | 'analytics' | 'administration' | 'personal' | 'system';
+export type NavSection = 'recruitment' | 'hr' | 'analytics' | 'administration' | 'personal' | 'system';
 
 export interface NavigationEntry {
   id: string;
@@ -55,6 +59,10 @@ export const navigationRegistry: NavigationEntry[] = [
   { id: 'workflow', label: 'Workflow Management', href: '/workflow', icon: Squares2X2Icon, section: 'recruitment', requiredPermissions: ['manage_workflow'] },
   { id: 'salary-recommendations', label: 'Salary Recommendations', href: '/salary-recommendations', icon: CurrencyDollarIcon, section: 'recruitment', requiredPermissions: ['view_salary_data'] },
 
+  // HR / Core HR
+  { id: 'employees', label: 'Employees', href: '/employees', icon: UserGroupIcon, iconSolid: UserGroupIconSolid, section: 'hr', requiredPermissions: ['view_employees'] },
+  { id: 'self-service', label: 'Self Service', href: '/employee-self-service', icon: UserCircleIcon, section: 'hr', requiredPermissions: ['view_own_profile'] },
+
   // Analytics
   { id: 'analytics', label: 'Analytics', href: '/analytics', icon: ChartBarIcon, iconSolid: ChartBarIconSolid, section: 'analytics', requiredPermissions: ['view_analytics'] },
   { id: 'recruiter-dashboard', label: 'Recruiter Analytics', href: '/recruiter-dashboard', icon: PresentationChartBarIcon, section: 'analytics', requiredPermissions: ['view_recruiter_analytics'] },
@@ -63,6 +71,7 @@ export const navigationRegistry: NavigationEntry[] = [
   // Administration
   { id: 'permissions', label: 'Role Permissions', href: '/admin/permissions', icon: ShieldCheckIcon, section: 'administration', requiredPermissions: ['manage_permissions'] },
   { id: 'audit-logs', label: 'Audit Logs', href: '/admin/audit-logs', icon: ClipboardDocumentListIcon, section: 'administration', requiredPermissions: ['view_audit_logs'] },
+  { id: 'custom-fields', label: 'Custom Fields', href: '/admin/custom-fields', icon: AdjustmentsHorizontalIcon, section: 'administration', requiredPermissions: ['manage_custom_fields'] },
 
   // Personal (Applicant-facing)
   { id: 'browse-jobs', label: 'Browse Jobs', href: '/candidate/jobs', icon: MagnifyingGlassIcon, section: 'personal', requiredPermissions: ['browse_jobs'] },
@@ -79,6 +88,7 @@ export const navigationRegistry: NavigationEntry[] = [
 
 export const sectionLabels: Record<NavSection, string> = {
   recruitment: 'Recruitment',
+  hr: 'Core HR',
   analytics: 'Analytics',
   administration: 'Administration',
   personal: 'Personal',
