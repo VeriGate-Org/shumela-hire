@@ -178,6 +178,13 @@ public class SecurityConfig {
                 .requestMatchers("/api/leave/admin/**").hasAnyRole("ADMIN", "HR_MANAGER")
                 .requestMatchers("/api/leave/**").hasAnyRole("ADMIN", "HR_MANAGER", "HIRING_MANAGER", "EMPLOYEE")
 
+                // Time & Attendance endpoints
+                .requestMatchers("/api/attendance/**").hasAnyRole("ADMIN", "HR_MANAGER", "HIRING_MANAGER", "EMPLOYEE", "RECRUITER", "INTERVIEWER", "EXECUTIVE")
+                .requestMatchers("/api/geofences/**").hasAnyRole("ADMIN", "HR_MANAGER")
+                .requestMatchers("/api/shifts/**").hasAnyRole("ADMIN", "HR_MANAGER", "HIRING_MANAGER", "EMPLOYEE")
+                .requestMatchers("/api/overtime/**").hasAnyRole("ADMIN", "HR_MANAGER", "HIRING_MANAGER", "EMPLOYEE")
+                .requestMatchers("/api/shift-swaps/**").hasAnyRole("ADMIN", "HR_MANAGER", "HIRING_MANAGER", "EMPLOYEE")
+
                 // General authenticated endpoints
                 .requestMatchers("/api/**").authenticated()
 
