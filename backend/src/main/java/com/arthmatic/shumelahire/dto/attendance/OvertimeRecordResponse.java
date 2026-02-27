@@ -1,9 +1,8 @@
 package com.arthmatic.shumelahire.dto.attendance;
 
-import com.arthmatic.shumelahire.entity.OvertimeRecord;
+import com.arthmatic.shumelahire.entity.attendance.OvertimeRecord;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 public class OvertimeRecordResponse {
@@ -12,63 +11,88 @@ public class OvertimeRecordResponse {
     private Long employeeId;
     private String employeeName;
     private Long attendanceRecordId;
-    private LocalDate overtimeDate;
-    private BigDecimal overtimeHours;
+    private String overtimeDate;
     private String overtimeType;
+    private BigDecimal hours;
     private BigDecimal rateMultiplier;
     private String status;
-    private Boolean isPreApproved;
-    private String reason;
-    private String approvedByName;
+    private String requestedBy;
+    private String approvedBy;
     private LocalDateTime approvedAt;
     private String rejectionReason;
-    private BigDecimal weeklyOvertimeTotal;
-    private BigDecimal monthlyOvertimeTotal;
-    private Boolean exceedsBceaWeeklyLimit;
-    private BigDecimal bceaWeeklyLimitHours;
+    private String notes;
     private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
 
-    public static OvertimeRecordResponse fromEntity(OvertimeRecord o) {
-        OvertimeRecordResponse r = new OvertimeRecordResponse();
-        r.id = o.getId();
-        r.employeeId = o.getEmployee().getId();
-        r.employeeName = o.getEmployee().getFullName();
-        r.attendanceRecordId = o.getAttendanceRecord() != null ? o.getAttendanceRecord().getId() : null;
-        r.overtimeDate = o.getOvertimeDate();
-        r.overtimeHours = o.getOvertimeHours();
-        r.overtimeType = o.getOvertimeType().name();
-        r.rateMultiplier = o.getRateMultiplier();
-        r.status = o.getStatus().name();
-        r.isPreApproved = o.getIsPreApproved();
-        r.reason = o.getReason();
-        r.approvedByName = o.getApprovedBy() != null ? o.getApprovedBy().getFullName() : null;
-        r.approvedAt = o.getApprovedAt();
-        r.rejectionReason = o.getRejectionReason();
-        r.weeklyOvertimeTotal = o.getWeeklyOvertimeTotal();
-        r.monthlyOvertimeTotal = o.getMonthlyOvertimeTotal();
-        r.exceedsBceaWeeklyLimit = o.getExceedsBceaWeeklyLimit();
-        r.bceaWeeklyLimitHours = o.getBceaWeeklyLimitHours();
-        r.createdAt = o.getCreatedAt();
-        return r;
+    public static OvertimeRecordResponse fromEntity(OvertimeRecord record) {
+        OvertimeRecordResponse response = new OvertimeRecordResponse();
+        response.setId(record.getId());
+        response.setEmployeeId(record.getEmployee().getId());
+        response.setEmployeeName(record.getEmployee().getFullName());
+        if (record.getAttendanceRecord() != null) {
+            response.setAttendanceRecordId(record.getAttendanceRecord().getId());
+        }
+        response.setOvertimeDate(record.getOvertimeDate().toString());
+        response.setOvertimeType(record.getOvertimeType().name());
+        response.setHours(record.getHours());
+        response.setRateMultiplier(record.getRateMultiplier());
+        response.setStatus(record.getStatus().name());
+        response.setRequestedBy(record.getRequestedBy());
+        response.setApprovedBy(record.getApprovedBy());
+        response.setApprovedAt(record.getApprovedAt());
+        response.setRejectionReason(record.getRejectionReason());
+        response.setNotes(record.getNotes());
+        response.setCreatedAt(record.getCreatedAt());
+        response.setUpdatedAt(record.getUpdatedAt());
+        return response;
     }
 
+    // Getters and Setters
     public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
+
     public Long getEmployeeId() { return employeeId; }
+    public void setEmployeeId(Long employeeId) { this.employeeId = employeeId; }
+
     public String getEmployeeName() { return employeeName; }
+    public void setEmployeeName(String employeeName) { this.employeeName = employeeName; }
+
     public Long getAttendanceRecordId() { return attendanceRecordId; }
-    public LocalDate getOvertimeDate() { return overtimeDate; }
-    public BigDecimal getOvertimeHours() { return overtimeHours; }
+    public void setAttendanceRecordId(Long attendanceRecordId) { this.attendanceRecordId = attendanceRecordId; }
+
+    public String getOvertimeDate() { return overtimeDate; }
+    public void setOvertimeDate(String overtimeDate) { this.overtimeDate = overtimeDate; }
+
     public String getOvertimeType() { return overtimeType; }
+    public void setOvertimeType(String overtimeType) { this.overtimeType = overtimeType; }
+
+    public BigDecimal getHours() { return hours; }
+    public void setHours(BigDecimal hours) { this.hours = hours; }
+
     public BigDecimal getRateMultiplier() { return rateMultiplier; }
+    public void setRateMultiplier(BigDecimal rateMultiplier) { this.rateMultiplier = rateMultiplier; }
+
     public String getStatus() { return status; }
-    public Boolean getIsPreApproved() { return isPreApproved; }
-    public String getReason() { return reason; }
-    public String getApprovedByName() { return approvedByName; }
+    public void setStatus(String status) { this.status = status; }
+
+    public String getRequestedBy() { return requestedBy; }
+    public void setRequestedBy(String requestedBy) { this.requestedBy = requestedBy; }
+
+    public String getApprovedBy() { return approvedBy; }
+    public void setApprovedBy(String approvedBy) { this.approvedBy = approvedBy; }
+
     public LocalDateTime getApprovedAt() { return approvedAt; }
+    public void setApprovedAt(LocalDateTime approvedAt) { this.approvedAt = approvedAt; }
+
     public String getRejectionReason() { return rejectionReason; }
-    public BigDecimal getWeeklyOvertimeTotal() { return weeklyOvertimeTotal; }
-    public BigDecimal getMonthlyOvertimeTotal() { return monthlyOvertimeTotal; }
-    public Boolean getExceedsBceaWeeklyLimit() { return exceedsBceaWeeklyLimit; }
-    public BigDecimal getBceaWeeklyLimitHours() { return bceaWeeklyLimitHours; }
+    public void setRejectionReason(String rejectionReason) { this.rejectionReason = rejectionReason; }
+
+    public String getNotes() { return notes; }
+    public void setNotes(String notes) { this.notes = notes; }
+
     public LocalDateTime getCreatedAt() { return createdAt; }
+    public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
+
+    public LocalDateTime getUpdatedAt() { return updatedAt; }
+    public void setUpdatedAt(LocalDateTime updatedAt) { this.updatedAt = updatedAt; }
 }

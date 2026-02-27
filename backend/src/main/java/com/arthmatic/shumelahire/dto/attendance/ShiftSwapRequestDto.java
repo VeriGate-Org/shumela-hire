@@ -2,38 +2,34 @@ package com.arthmatic.shumelahire.dto.attendance;
 
 import jakarta.validation.constraints.NotNull;
 
-import java.time.LocalDate;
-
 public class ShiftSwapRequestDto {
 
-    @NotNull
-    private Long requesterScheduleId;
+    @NotNull(message = "Requester employee ID is required")
+    private Long requesterEmployeeId;
 
-    @NotNull
+    @NotNull(message = "Target employee ID is required")
     private Long targetEmployeeId;
 
+    @NotNull(message = "Requester schedule ID is required")
+    private Long requesterScheduleId;
+
+    @NotNull(message = "Target schedule ID is required")
     private Long targetScheduleId;
 
-    @NotNull
-    private LocalDate swapDate;
-
-    private LocalDate targetDate;
     private String reason;
 
-    public Long getRequesterScheduleId() { return requesterScheduleId; }
-    public void setRequesterScheduleId(Long requesterScheduleId) { this.requesterScheduleId = requesterScheduleId; }
+    // Getters and Setters
+    public Long getRequesterEmployeeId() { return requesterEmployeeId; }
+    public void setRequesterEmployeeId(Long requesterEmployeeId) { this.requesterEmployeeId = requesterEmployeeId; }
 
     public Long getTargetEmployeeId() { return targetEmployeeId; }
     public void setTargetEmployeeId(Long targetEmployeeId) { this.targetEmployeeId = targetEmployeeId; }
 
+    public Long getRequesterScheduleId() { return requesterScheduleId; }
+    public void setRequesterScheduleId(Long requesterScheduleId) { this.requesterScheduleId = requesterScheduleId; }
+
     public Long getTargetScheduleId() { return targetScheduleId; }
     public void setTargetScheduleId(Long targetScheduleId) { this.targetScheduleId = targetScheduleId; }
-
-    public LocalDate getSwapDate() { return swapDate; }
-    public void setSwapDate(LocalDate swapDate) { this.swapDate = swapDate; }
-
-    public LocalDate getTargetDate() { return targetDate; }
-    public void setTargetDate(LocalDate targetDate) { this.targetDate = targetDate; }
 
     public String getReason() { return reason; }
     public void setReason(String reason) { this.reason = reason; }

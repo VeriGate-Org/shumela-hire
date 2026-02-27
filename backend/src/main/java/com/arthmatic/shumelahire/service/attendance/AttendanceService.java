@@ -3,15 +3,14 @@ package com.arthmatic.shumelahire.service.attendance;
 import com.arthmatic.shumelahire.dto.attendance.AttendanceRecordResponse;
 import com.arthmatic.shumelahire.dto.attendance.ClockInRequest;
 import com.arthmatic.shumelahire.dto.attendance.ClockOutRequest;
-import com.arthmatic.shumelahire.entity.*;
-import com.arthmatic.shumelahire.repository.AttendanceRecordRepository;
+import com.arthmatic.shumelahire.entity.Employee;
+import com.arthmatic.shumelahire.entity.attendance.*;
 import com.arthmatic.shumelahire.repository.EmployeeRepository;
-import com.arthmatic.shumelahire.repository.GeofenceRepository;
-import com.arthmatic.shumelahire.repository.ShiftScheduleRepository;
+import com.arthmatic.shumelahire.repository.attendance.AttendanceRecordRepository;
+import com.arthmatic.shumelahire.repository.attendance.ShiftScheduleRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,235 +29,218 @@ import java.util.stream.Collectors;
 public class AttendanceService {
 
     private static final Logger logger = LoggerFactory.getLogger(AttendanceService.class);
+    private static final BigDecimal STANDARD_WORK_HOURS = new BigDecimal("8.00");
 
-    private final AttendanceRecordRepository attendanceRepository;
-    private final EmployeeRepository employeeRepository;
-    private final GeofenceRepository geofenceRepository;
-    private final ShiftScheduleRepository shiftScheduleRepository;
-    private final GeofenceService geofenceService;
+    @Autowired
+    private AttendanceRecordRepository attendanceRecordRepository;
 
-    public AttendanceService(AttendanceRecordRepository attendanceRepository,
-                             EmployeeRepository employeeRepository,
-                             GeofenceRepository geofenceRepository,
-                             ShiftScheduleRepository shiftScheduleRepository,
-                             GeofenceService geofenceService) {
-        this.attendanceRepository = attendanceRepository;
-        this.employeeRepository = employeeRepository;
-        this.geofenceRepository = geofenceRepository;
-        this.shiftScheduleRepository = shiftScheduleRepository;
-        this.geofenceService = geofenceService;
-    }
+    @Autowired
+    private ShiftScheduleRepository shiftScheduleRepository;
+
+    @Autowired
+    private EmployeeRepository employeeRepository;
+
+    @Autowired
+    private GeofenceService geofenceService;
 
     public AttendanceRecordResponse clockIn(ClockInRequest request) {
-        Employee employee = employeeRepository.findById(request.getEmployeeId())
-                .orElseThrow(() -> new IllegalArgumentException("Employee not found"));
+        logger.info("Clock-in for employee: {}", request.getEmployeeId());
 
+        Employee employee = findEmployeeById(request.getEmployeeId());
         LocalDate today = LocalDate.now();
 
-        // Check for existing open attendance record
-        Optional<AttendanceRecord> existing = attendanceRepository
-                .findByEmployeeIdAndAttendanceDateAndStatus(
-                        employee.getId(), today, AttendanceRecord.AttendanceStatus.CLOCKED_IN);
-        if (existing.isPresent()) {
-            throw new IllegalArgumentException("Employee already clocked in for today");
+        // Check for existing open attendance
+        Optional<AttendanceRecord> existingOpen = attendanceRecordRepository.findOpenAttendance(
+                request.getEmployeeId(), employee.getTenantId());
+        if (existingOpen.isPresent()) {
+            throw new IllegalStateException("Employee already has an open attendance record. Please clock out first.");
         }
+
+        // Find today's schedule if exists
+        Optional<ShiftSchedule> schedule = shiftScheduleRepository.findByEmployeeAndDate(
+                request.getEmployeeId(), today, employee.getTenantId());
 
         AttendanceRecord record = new AttendanceRecord();
         record.setEmployee(employee);
-        record.setAttendanceDate(today);
+        record.setRecordDate(today);
         record.setClockInTime(LocalDateTime.now());
-        record.setStatus(AttendanceRecord.AttendanceStatus.CLOCKED_IN);
-
-        if (request.getClockMethod() != null) {
-            record.setClockInMethod(AttendanceRecord.ClockMethod.valueOf(request.getClockMethod()));
-        }
         record.setClockInLatitude(request.getLatitude());
         record.setClockInLongitude(request.getLongitude());
-        record.setClockInIpAddress(request.getIpAddress());
-        record.setDeviceInfo(request.getDeviceInfo());
+        record.setStatus(AttendanceStatus.PRESENT);
+        record.setNotes(request.getNotes());
 
         // Geofence validation
-        if (request.getGeofenceId() != null) {
-            Geofence geofence = geofenceRepository.findById(request.getGeofenceId()).orElse(null);
+        if (request.getLatitude() != null && request.getLongitude() != null) {
+            Geofence geofence = geofenceService.findContainingGeofence(request.getLatitude(), request.getLongitude());
             if (geofence != null) {
-                record.setGeofence(geofence);
-                boolean withinGeofence = geofenceService.isWithinGeofence(
-                        geofence, request.getLatitude(), request.getLongitude());
-                record.setClockInWithinGeofence(withinGeofence);
-
-                if (!withinGeofence && geofence.getEnforceOnClockIn()
-                        && !geofence.getAllowOverrideWithReason()) {
-                    throw new IllegalArgumentException(
-                            "Clock-in location is outside the designated geofence area");
-                }
-                if (!withinGeofence && geofence.getEnforceOnClockIn()
-                        && geofence.getAllowOverrideWithReason()
-                        && (request.getOverrideReason() == null || request.getOverrideReason().isBlank())) {
-                    throw new IllegalArgumentException(
-                            "Clock-in outside geofence requires a reason");
-                }
-                if (!withinGeofence && request.getOverrideReason() != null) {
-                    record.setNotes("Geofence override: " + request.getOverrideReason());
-                }
+                record.setClockInGeofence(geofence);
+                record.setClockInWithinGeofence(true);
+            } else {
+                record.setClockInWithinGeofence(false);
             }
         }
 
-        // Check shift schedule for late arrival
-        Optional<ShiftSchedule> schedule = shiftScheduleRepository
-                .findByEmployeeIdAndScheduleDate(employee.getId(), today);
+        // Link to schedule and check for late arrival
         if (schedule.isPresent()) {
-            Shift shift = schedule.get().getShift();
-            record.setShift(shift);
-            record.setScheduledStartTime(shift.getStartTime());
-            record.setScheduledEndTime(shift.getEndTime());
-            record.setBreakDurationMinutes(shift.getBreakDurationMinutes());
+            ShiftSchedule ss = schedule.get();
+            record.setShiftSchedule(ss);
 
-            LocalTime clockInLocalTime = record.getClockInTime().toLocalTime();
-            LocalTime graceTime = shift.getStartTime().plusMinutes(shift.getGracePeriodMinutes());
-            if (clockInLocalTime.isAfter(graceTime)) {
-                record.setLateArrival(true);
-                long lateMinutes = Duration.between(shift.getStartTime(), clockInLocalTime).toMinutes();
+            Shift shift = ss.getShift();
+            LocalTime shiftStart = shift.getStartTime();
+            LocalTime clockInTime = record.getClockInTime().toLocalTime();
+            int gracePeriod = shift.getGracePeriodMinutes() != null ? shift.getGracePeriodMinutes() : 0;
+
+            LocalTime lateCutoff = shiftStart.plusMinutes(gracePeriod);
+            if (clockInTime.isAfter(lateCutoff)) {
+                record.setIsLateArrival(true);
+                long lateMinutes = Duration.between(shiftStart, clockInTime).toMinutes();
                 record.setLateMinutes((int) lateMinutes);
+                record.setStatus(AttendanceStatus.LATE);
             }
         }
 
-        record = attendanceRepository.save(record);
-        logger.info("Clock-in recorded for employee {} at {}", employee.getEmployeeNumber(), record.getClockInTime());
-        return AttendanceRecordResponse.fromEntity(record);
+        AttendanceRecord saved = attendanceRecordRepository.save(record);
+        logger.info("Clock-in recorded for employee {} (record id={})", request.getEmployeeId(), saved.getId());
+        return AttendanceRecordResponse.fromEntity(saved);
     }
 
     public AttendanceRecordResponse clockOut(ClockOutRequest request) {
-        AttendanceRecord record = attendanceRepository.findById(request.getAttendanceRecordId())
-                .orElseThrow(() -> new IllegalArgumentException("Attendance record not found"));
+        logger.info("Clock-out for employee: {}", request.getEmployeeId());
 
-        if (record.getStatus() != AttendanceRecord.AttendanceStatus.CLOCKED_IN) {
-            throw new IllegalArgumentException("Attendance record is not in CLOCKED_IN status");
-        }
+        Employee employee = findEmployeeById(request.getEmployeeId());
+
+        AttendanceRecord record = attendanceRecordRepository.findOpenAttendance(
+                request.getEmployeeId(), employee.getTenantId())
+                .orElseThrow(() -> new IllegalStateException("No open attendance record found. Please clock in first."));
 
         record.setClockOutTime(LocalDateTime.now());
-        record.setStatus(AttendanceRecord.AttendanceStatus.CLOCKED_OUT);
-
-        if (request.getClockMethod() != null) {
-            record.setClockOutMethod(AttendanceRecord.ClockMethod.valueOf(request.getClockMethod()));
-        }
         record.setClockOutLatitude(request.getLatitude());
         record.setClockOutLongitude(request.getLongitude());
-        record.setClockOutIpAddress(request.getIpAddress());
+
         if (request.getNotes() != null) {
-            record.setNotes(record.getNotes() != null
-                    ? record.getNotes() + "; " + request.getNotes()
-                    : request.getNotes());
+            String existingNotes = record.getNotes() != null ? record.getNotes() + "\n" : "";
+            record.setNotes(existingNotes + request.getNotes());
         }
 
         // Geofence validation for clock-out
-        if (record.getGeofence() != null && record.getGeofence().getEnforceOnClockOut()) {
-            boolean withinGeofence = geofenceService.isWithinGeofence(
-                    record.getGeofence(), request.getLatitude(), request.getLongitude());
-            record.setClockOutWithinGeofence(withinGeofence);
+        if (request.getLatitude() != null && request.getLongitude() != null) {
+            Geofence geofence = geofenceService.findContainingGeofence(request.getLatitude(), request.getLongitude());
+            if (geofence != null) {
+                record.setClockOutGeofence(geofence);
+                record.setClockOutWithinGeofence(true);
+            } else {
+                record.setClockOutWithinGeofence(false);
+            }
         }
 
-        // Calculate hours worked
-        calculateHoursWorked(record);
+        // Calculate hours
+        calculateWorkHours(record);
 
-        // Check early departure
-        if (record.getScheduledEndTime() != null) {
-            LocalTime clockOutLocalTime = record.getClockOutTime().toLocalTime();
-            if (clockOutLocalTime.isBefore(record.getScheduledEndTime())) {
-                record.setEarlyDeparture(true);
-                long earlyMinutes = Duration.between(clockOutLocalTime, record.getScheduledEndTime()).toMinutes();
+        // Check for early departure
+        if (record.getShiftSchedule() != null) {
+            Shift shift = record.getShiftSchedule().getShift();
+            LocalTime shiftEnd = shift.getEndTime();
+            LocalTime clockOutTime = record.getClockOutTime().toLocalTime();
+
+            if (clockOutTime.isBefore(shiftEnd)) {
+                record.setIsEarlyDeparture(true);
+                long earlyMinutes = Duration.between(clockOutTime, shiftEnd).toMinutes();
                 record.setEarlyDepartureMinutes((int) earlyMinutes);
             }
         }
 
-        record = attendanceRepository.save(record);
-        logger.info("Clock-out recorded for employee {} at {}. Total hours: {}",
-                record.getEmployee().getEmployeeNumber(), record.getClockOutTime(), record.getTotalHoursWorked());
-        return AttendanceRecordResponse.fromEntity(record);
+        AttendanceRecord saved = attendanceRecordRepository.save(record);
+        logger.info("Clock-out recorded for employee {} (record id={})", request.getEmployeeId(), saved.getId());
+        return AttendanceRecordResponse.fromEntity(saved);
     }
 
     @Transactional(readOnly = true)
-    public AttendanceRecordResponse getById(Long id) {
-        AttendanceRecord record = attendanceRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Attendance record not found"));
-        return AttendanceRecordResponse.fromEntity(record);
+    public AttendanceRecordResponse getAttendanceRecord(Long id) {
+        return AttendanceRecordResponse.fromEntity(findRecordById(id));
     }
 
     @Transactional(readOnly = true)
-    public Page<AttendanceRecordResponse> getByEmployee(Long employeeId, Pageable pageable) {
-        return attendanceRepository.findByEmployeeId(employeeId, pageable)
+    public List<AttendanceRecordResponse> getEmployeeAttendance(Long employeeId, String startDate, String endDate) {
+        Employee employee = findEmployeeById(employeeId);
+        return attendanceRecordRepository.findByEmployeeAndDateRange(
+                employeeId, LocalDate.parse(startDate), LocalDate.parse(endDate), employee.getTenantId()
+        ).stream().map(AttendanceRecordResponse::fromEntity).collect(Collectors.toList());
+    }
+
+    @Transactional(readOnly = true)
+    public List<AttendanceRecordResponse> getAttendanceByDateRange(String startDate, String endDate) {
+        return attendanceRecordRepository.findByDateRange(
+                LocalDate.parse(startDate), LocalDate.parse(endDate), null
+        ).stream().map(AttendanceRecordResponse::fromEntity).collect(Collectors.toList());
+    }
+
+    @Transactional(readOnly = true)
+    public Optional<AttendanceRecordResponse> getOpenAttendance(Long employeeId) {
+        Employee employee = findEmployeeById(employeeId);
+        return attendanceRecordRepository.findOpenAttendance(employeeId, employee.getTenantId())
                 .map(AttendanceRecordResponse::fromEntity);
     }
 
-    @Transactional(readOnly = true)
-    public List<AttendanceRecordResponse> getByEmployeeAndDateRange(Long employeeId, LocalDate startDate, LocalDate endDate) {
-        return attendanceRepository.findByEmployeeAndDateRange(employeeId, startDate, endDate).stream()
-                .map(AttendanceRecordResponse::fromEntity)
-                .collect(Collectors.toList());
-    }
-
-    @Transactional(readOnly = true)
-    public Page<AttendanceRecordResponse> getByDateAndStatus(LocalDate date,
-                                                              AttendanceRecord.AttendanceStatus status,
-                                                              Pageable pageable) {
-        return attendanceRepository.findByDateAndOptionalStatus(date, status, pageable)
-                .map(AttendanceRecordResponse::fromEntity);
-    }
-
-    @Transactional(readOnly = true)
-    public Page<AttendanceRecordResponse> search(Long employeeId, String department,
-                                                  LocalDate startDate, LocalDate endDate,
-                                                  Pageable pageable) {
-        return attendanceRepository.findByFilters(employeeId, department, startDate, endDate, pageable)
-                .map(AttendanceRecordResponse::fromEntity);
-    }
-
-    @Transactional(readOnly = true)
-    public List<AttendanceRecordResponse> getLateArrivals(LocalDate startDate, LocalDate endDate) {
-        return attendanceRepository.findLateArrivals(startDate, endDate).stream()
-                .map(AttendanceRecordResponse::fromEntity)
-                .collect(Collectors.toList());
-    }
-
-    public AttendanceRecordResponse approve(Long id, Long approvedById) {
-        AttendanceRecord record = attendanceRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Attendance record not found"));
-        Employee approver = employeeRepository.findById(approvedById)
-                .orElseThrow(() -> new IllegalArgumentException("Approver not found"));
-
-        record.setStatus(AttendanceRecord.AttendanceStatus.APPROVED);
-        record.setApprovedBy(approver);
-        record.setApprovedAt(LocalDateTime.now());
-        record = attendanceRepository.save(record);
-        logger.info("Attendance record {} approved by {}", id, approver.getFullName());
-        return AttendanceRecordResponse.fromEntity(record);
-    }
-
-    private void calculateHoursWorked(AttendanceRecord record) {
-        if (record.getClockInTime() != null && record.getClockOutTime() != null) {
-            Duration duration = Duration.between(record.getClockInTime(), record.getClockOutTime());
-            long totalMinutes = duration.toMinutes();
-
-            // Subtract break
-            int breakMinutes = record.getBreakDurationMinutes() != null ? record.getBreakDurationMinutes() : 0;
-            long netMinutes = Math.max(0, totalMinutes - breakMinutes);
-
-            BigDecimal totalHours = BigDecimal.valueOf(netMinutes)
-                    .divide(BigDecimal.valueOf(60), 2, RoundingMode.HALF_UP);
-            record.setTotalHoursWorked(totalHours);
-
-            // Determine regular vs overtime hours
-            BigDecimal regularThreshold = BigDecimal.valueOf(8); // default 8-hour day
-            if (record.getShift() != null && record.getShift().getMinHoursForOvertime() != null) {
-                regularThreshold = record.getShift().getMinHoursForOvertime();
-            }
-
-            if (totalHours.compareTo(regularThreshold) > 0) {
-                record.setRegularHours(regularThreshold);
-                record.setOvertimeHours(totalHours.subtract(regularThreshold));
-            } else {
-                record.setRegularHours(totalHours);
-                record.setOvertimeHours(BigDecimal.ZERO);
+    /**
+     * Auto-clock-out open records (typically run as scheduled task).
+     */
+    public int autoClockOutOpenRecords(String tenantId) {
+        List<AttendanceRecord> openRecords = attendanceRecordRepository.findOpenRecords(tenantId);
+        int count = 0;
+        for (AttendanceRecord record : openRecords) {
+            // Only auto-clock-out records from previous days
+            if (record.getRecordDate().isBefore(LocalDate.now())) {
+                record.setClockOutTime(record.getRecordDate().atTime(23, 59, 59));
+                record.setAutoClockedOut(true);
+                calculateWorkHours(record);
+                attendanceRecordRepository.save(record);
+                count++;
             }
         }
+        if (count > 0) {
+            logger.info("Auto-clocked-out {} open records for tenant {}", count, tenantId);
+        }
+        return count;
+    }
+
+    private void calculateWorkHours(AttendanceRecord record) {
+        if (record.getClockInTime() == null || record.getClockOutTime() == null) {
+            return;
+        }
+
+        Duration duration = Duration.between(record.getClockInTime(), record.getClockOutTime());
+        long totalMinutes = duration.toMinutes();
+
+        // Subtract break
+        int breakMinutes = 0;
+        if (record.getShiftSchedule() != null) {
+            breakMinutes = record.getShiftSchedule().getShift().getBreakDurationMinutes();
+        }
+        record.setBreakMinutes(breakMinutes);
+        totalMinutes -= breakMinutes;
+        if (totalMinutes < 0) totalMinutes = 0;
+
+        BigDecimal totalHours = BigDecimal.valueOf(totalMinutes)
+                .divide(BigDecimal.valueOf(60), 2, RoundingMode.HALF_UP);
+        record.setTotalHours(totalHours);
+
+        // Split into regular and overtime (standard 8hr day per BCEA)
+        if (totalHours.compareTo(STANDARD_WORK_HOURS) > 0) {
+            record.setRegularHours(STANDARD_WORK_HOURS);
+            record.setOvertimeHours(totalHours.subtract(STANDARD_WORK_HOURS));
+        } else {
+            record.setRegularHours(totalHours);
+            record.setOvertimeHours(BigDecimal.ZERO);
+        }
+    }
+
+    private AttendanceRecord findRecordById(Long id) {
+        return attendanceRecordRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Attendance record not found: " + id));
+    }
+
+    private Employee findEmployeeById(Long id) {
+        return employeeRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Employee not found: " + id));
     }
 }

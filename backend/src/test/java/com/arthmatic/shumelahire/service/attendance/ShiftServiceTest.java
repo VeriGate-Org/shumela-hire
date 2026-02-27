@@ -2,15 +2,17 @@ package com.arthmatic.shumelahire.service.attendance;
 
 import com.arthmatic.shumelahire.dto.attendance.ShiftRequest;
 import com.arthmatic.shumelahire.dto.attendance.ShiftResponse;
-import com.arthmatic.shumelahire.entity.Shift;
-import com.arthmatic.shumelahire.repository.*;
+import com.arthmatic.shumelahire.entity.attendance.Shift;
+import com.arthmatic.shumelahire.repository.EmployeeRepository;
+import com.arthmatic.shumelahire.repository.attendance.ShiftPatternRepository;
+import com.arthmatic.shumelahire.repository.attendance.ShiftRepository;
+import com.arthmatic.shumelahire.repository.attendance.ShiftScheduleRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.math.BigDecimal;
 import java.time.LocalTime;
 import java.util.Arrays;
 import java.util.List;
@@ -28,16 +30,13 @@ class ShiftServiceTest {
     private ShiftRepository shiftRepository;
 
     @Mock
-    private ShiftScheduleRepository scheduleRepository;
+    private ShiftScheduleRepository shiftScheduleRepository;
 
     @Mock
-    private ShiftPatternRepository patternRepository;
+    private ShiftPatternRepository shiftPatternRepository;
 
     @Mock
     private EmployeeRepository employeeRepository;
-
-    @Mock
-    private GeofenceRepository geofenceRepository;
 
     @InjectMocks
     private ShiftService shiftService;
@@ -47,8 +46,8 @@ class ShiftServiceTest {
         ShiftRequest request = new ShiftRequest();
         request.setName("Morning Shift");
         request.setCode("MS");
-        request.setStartTime(LocalTime.of(8, 0));
-        request.setEndTime(LocalTime.of(17, 0));
+        request.setStartTime("08:00");
+        request.setEndTime("17:00");
         request.setBreakDurationMinutes(60);
 
         when(shiftRepository.save(any(Shift.class))).thenAnswer(inv -> {
@@ -61,20 +60,20 @@ class ShiftServiceTest {
 
         assertThat(response.getName()).isEqualTo("Morning Shift");
         assertThat(response.getCode()).isEqualTo("MS");
-        // 9 hours - 1 hour break = 8 hours
-        assertThat(response.getTotalHours()).isEqualByComparingTo(new BigDecimal("8.00"));
+        assertThat(response.getStartTime()).isEqualTo("08:00");
+        assertThat(response.getEndTime()).isEqualTo("17:00");
         verify(shiftRepository).save(any(Shift.class));
     }
 
     @Test
-    void createShift_overnightShift_calculatesCorrectHours() {
+    void createShift_nightShift_setsNightShiftFlag() {
         ShiftRequest request = new ShiftRequest();
         request.setName("Night Shift");
         request.setCode("NS");
-        request.setStartTime(LocalTime.of(22, 0));
-        request.setEndTime(LocalTime.of(6, 0));
+        request.setStartTime("22:00");
+        request.setEndTime("06:00");
         request.setBreakDurationMinutes(30);
-        request.setIsOvernight(true);
+        request.setIsNightShift(true);
 
         when(shiftRepository.save(any(Shift.class))).thenAnswer(inv -> {
             Shift s = inv.getArgument(0);
@@ -84,9 +83,9 @@ class ShiftServiceTest {
 
         ShiftResponse response = shiftService.createShift(request);
 
-        // 8 hours - 30 min break = 7.5 hours
-        assertThat(response.getTotalHours()).isEqualByComparingTo(new BigDecimal("7.50"));
-        assertThat(response.getIsOvernight()).isTrue();
+        assertThat(response.getIsNightShift()).isTrue();
+        assertThat(response.getStartTime()).isEqualTo("22:00");
+        assertThat(response.getEndTime()).isEqualTo("06:00");
     }
 
     @Test
@@ -121,7 +120,7 @@ class ShiftServiceTest {
     }
 
     @Test
-    void toggleShiftActive_deactivates() {
+    void deleteShift_deactivatesShift() {
         Shift shift = new Shift();
         shift.setId(1L);
         shift.setName("Test");
@@ -133,19 +132,9 @@ class ShiftServiceTest {
         when(shiftRepository.findById(1L)).thenReturn(Optional.of(shift));
         when(shiftRepository.save(any())).thenAnswer(inv -> inv.getArgument(0));
 
-        ShiftResponse response = shiftService.toggleShiftActive(1L, false);
-        assertThat(response.getIsActive()).isFalse();
-    }
-
-    @Test
-    void deleteShift_existingId_deletes() {
-        Shift shift = new Shift();
-        shift.setId(1L);
-        shift.setName("Test");
-
-        when(shiftRepository.findById(1L)).thenReturn(Optional.of(shift));
-
         shiftService.deleteShift(1L);
-        verify(shiftRepository).delete(shift);
+
+        assertThat(shift.getIsActive()).isFalse();
+        verify(shiftRepository).save(shift);
     }
 }

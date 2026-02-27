@@ -1,68 +1,75 @@
 package com.arthmatic.shumelahire.dto.attendance;
 
-import com.arthmatic.shumelahire.entity.Shift;
+import com.arthmatic.shumelahire.entity.attendance.Shift;
 
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 
 public class ShiftResponse {
 
     private Long id;
     private String name;
     private String code;
-    private String description;
-    private LocalTime startTime;
-    private LocalTime endTime;
+    private String startTime;
+    private String endTime;
     private Integer breakDurationMinutes;
-    private BigDecimal totalHours;
     private Integer gracePeriodMinutes;
-    private Boolean isOvernight;
+    private Boolean isNightShift;
     private Boolean isActive;
     private String color;
-    private Long geofenceId;
-    private String geofenceName;
-    private BigDecimal minHoursForOvertime;
-    private String department;
     private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
 
-    public static ShiftResponse fromEntity(Shift s) {
-        ShiftResponse r = new ShiftResponse();
-        r.id = s.getId();
-        r.name = s.getName();
-        r.code = s.getCode();
-        r.description = s.getDescription();
-        r.startTime = s.getStartTime();
-        r.endTime = s.getEndTime();
-        r.breakDurationMinutes = s.getBreakDurationMinutes();
-        r.totalHours = s.getTotalHours();
-        r.gracePeriodMinutes = s.getGracePeriodMinutes();
-        r.isOvernight = s.getIsOvernight();
-        r.isActive = s.getIsActive();
-        r.color = s.getColor();
-        r.geofenceId = s.getGeofence() != null ? s.getGeofence().getId() : null;
-        r.geofenceName = s.getGeofence() != null ? s.getGeofence().getName() : null;
-        r.minHoursForOvertime = s.getMinHoursForOvertime();
-        r.department = s.getDepartment();
-        r.createdAt = s.getCreatedAt();
-        return r;
+    public static ShiftResponse fromEntity(Shift shift) {
+        ShiftResponse response = new ShiftResponse();
+        response.setId(shift.getId());
+        response.setName(shift.getName());
+        response.setCode(shift.getCode());
+        response.setStartTime(shift.getStartTime() != null ? shift.getStartTime().toString() : null);
+        response.setEndTime(shift.getEndTime() != null ? shift.getEndTime().toString() : null);
+        response.setBreakDurationMinutes(shift.getBreakDurationMinutes());
+        response.setGracePeriodMinutes(shift.getGracePeriodMinutes());
+        response.setIsNightShift(shift.getIsNightShift());
+        response.setIsActive(shift.getIsActive());
+        response.setColor(shift.getColor());
+        response.setCreatedAt(shift.getCreatedAt());
+        response.setUpdatedAt(shift.getUpdatedAt());
+        return response;
     }
 
+    // Getters and Setters
     public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
+
     public String getName() { return name; }
+    public void setName(String name) { this.name = name; }
+
     public String getCode() { return code; }
-    public String getDescription() { return description; }
-    public LocalTime getStartTime() { return startTime; }
-    public LocalTime getEndTime() { return endTime; }
+    public void setCode(String code) { this.code = code; }
+
+    public String getStartTime() { return startTime; }
+    public void setStartTime(String startTime) { this.startTime = startTime; }
+
+    public String getEndTime() { return endTime; }
+    public void setEndTime(String endTime) { this.endTime = endTime; }
+
     public Integer getBreakDurationMinutes() { return breakDurationMinutes; }
-    public BigDecimal getTotalHours() { return totalHours; }
+    public void setBreakDurationMinutes(Integer breakDurationMinutes) { this.breakDurationMinutes = breakDurationMinutes; }
+
     public Integer getGracePeriodMinutes() { return gracePeriodMinutes; }
-    public Boolean getIsOvernight() { return isOvernight; }
+    public void setGracePeriodMinutes(Integer gracePeriodMinutes) { this.gracePeriodMinutes = gracePeriodMinutes; }
+
+    public Boolean getIsNightShift() { return isNightShift; }
+    public void setIsNightShift(Boolean isNightShift) { this.isNightShift = isNightShift; }
+
     public Boolean getIsActive() { return isActive; }
+    public void setIsActive(Boolean isActive) { this.isActive = isActive; }
+
     public String getColor() { return color; }
-    public Long getGeofenceId() { return geofenceId; }
-    public String getGeofenceName() { return geofenceName; }
-    public BigDecimal getMinHoursForOvertime() { return minHoursForOvertime; }
-    public String getDepartment() { return department; }
+    public void setColor(String color) { this.color = color; }
+
     public LocalDateTime getCreatedAt() { return createdAt; }
+    public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
+
+    public LocalDateTime getUpdatedAt() { return updatedAt; }
+    public void setUpdatedAt(LocalDateTime updatedAt) { this.updatedAt = updatedAt; }
 }
