@@ -47,7 +47,7 @@ public class SalaryRecommendation extends TenantAwareEntity {
     @Column(name = "candidate_expected_salary", precision = 15, scale = 2)
     private BigDecimal candidateExpectedSalary;
 
-    @Column(name = "market_data_reference", columnDefinition = "TEXT")
+    @Column(name = "market_data_reference", length = 10000)
     private String marketDataReference;
 
     // Proposed salary range
@@ -70,17 +70,17 @@ public class SalaryRecommendation extends TenantAwareEntity {
     @Column(name = "recommended_at")
     private LocalDateTime recommendedAt;
 
-    @Column(name = "recommendation_justification", columnDefinition = "TEXT")
+    @Column(name = "recommendation_justification", length = 10000)
     private String recommendationJustification;
 
     // Additional compensation
-    @Column(name = "bonus_recommendation", columnDefinition = "TEXT")
+    @Column(name = "bonus_recommendation", length = 10000)
     private String bonusRecommendation;
 
-    @Column(name = "equity_recommendation", columnDefinition = "TEXT")
+    @Column(name = "equity_recommendation", length = 10000)
     private String equityRecommendation;
 
-    @Column(name = "benefits_notes", columnDefinition = "TEXT")
+    @Column(name = "benefits_notes", length = 10000)
     private String benefitsNotes;
 
     // Approval
@@ -96,13 +96,13 @@ public class SalaryRecommendation extends TenantAwareEntity {
     @Column(name = "approved_at")
     private LocalDateTime approvedAt;
 
-    @Column(name = "approval_notes", columnDefinition = "TEXT")
+    @Column(name = "approval_notes", length = 10000)
     private String approvalNotes;
 
     @Column(name = "rejected_by")
     private String rejectedBy;
 
-    @Column(name = "rejection_reason", columnDefinition = "TEXT")
+    @Column(name = "rejection_reason", length = 10000)
     private String rejectionReason;
 
     // Currency (defaults to ZAR)

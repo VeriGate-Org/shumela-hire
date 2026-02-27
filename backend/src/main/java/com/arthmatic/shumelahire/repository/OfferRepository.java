@@ -101,15 +101,15 @@ public interface OfferRepository extends JpaRepository<Offer, Long> {
            "GROUP BY o.offerType")
     List<Object[]> getAcceptanceRateByOfferType(@Param("startDate") LocalDateTime startDate, @Param("endDate") LocalDateTime endDate);
     
-    // Time to acceptance/decision metrics (PostgreSQL-compatible EXTRACT)
-    @Query(value = "SELECT AVG(EXTRACT(EPOCH FROM (o.accepted_at - o.offer_sent_at)) / 3600) " +
-           "FROM offers o WHERE o.status = 'ACCEPTED' AND o.offer_sent_at IS NOT NULL AND o.accepted_at IS NOT NULL " +
-           "AND o.created_at BETWEEN :startDate AND :endDate", nativeQuery = true)
+    // Time to acceptance/decision metrics (cross-database compatible using Hibernate timestampdiff)
+    @Query("SELECT AVG(timestampdiff(SECOND, o.offerSentAt, o.acceptedAt) / 3600.0) " +
+           "FROM Offer o WHERE o.status = 'ACCEPTED' AND o.offerSentAt IS NOT NULL AND o.acceptedAt IS NOT NULL " +
+           "AND o.createdAt BETWEEN :startDate AND :endDate")
     Double getAverageTimeToAcceptanceHours(@Param("startDate") LocalDateTime startDate, @Param("endDate") LocalDateTime endDate);
 
-    @Query(value = "SELECT AVG(EXTRACT(EPOCH FROM (COALESCE(o.accepted_at, o.declined_at) - o.offer_sent_at)) / 3600) " +
-           "FROM offers o WHERE o.status IN ('ACCEPTED', 'DECLINED') AND o.offer_sent_at IS NOT NULL " +
-           "AND o.created_at BETWEEN :startDate AND :endDate", nativeQuery = true)
+    @Query("SELECT AVG(timestampdiff(SECOND, o.offerSentAt, COALESCE(o.acceptedAt, o.declinedAt)) / 3600.0) " +
+           "FROM Offer o WHERE o.status IN ('ACCEPTED', 'DECLINED') AND o.offerSentAt IS NOT NULL " +
+           "AND o.createdAt BETWEEN :startDate AND :endDate")
     Double getAverageTimeToDecisionHours(@Param("startDate") LocalDateTime startDate, @Param("endDate") LocalDateTime endDate);
     
     // Compensation analysis

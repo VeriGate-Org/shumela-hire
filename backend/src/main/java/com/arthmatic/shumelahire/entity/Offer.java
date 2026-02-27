@@ -78,13 +78,13 @@ public class Offer extends TenantAwareEntity {
     @Column(name = "commission_eligible")
     private Boolean commissionEligible = false;
 
-    @Column(name = "commission_structure", columnDefinition = "TEXT")
+    @Column(name = "commission_structure", length = 10000)
     private String commissionStructure;
 
     @Column(name = "equity_eligible")
     private Boolean equityEligible = false;
 
-    @Column(name = "equity_details", columnDefinition = "TEXT")
+    @Column(name = "equity_details", length = 10000)
     private String equityDetails;
 
     @Column(name = "signing_bonus", precision = 15, scale = 2)
@@ -94,7 +94,7 @@ public class Offer extends TenantAwareEntity {
     private BigDecimal relocationAllowance;
 
     // Benefits
-    @Column(name = "benefits_package", columnDefinition = "TEXT")
+    @Column(name = "benefits_package", length = 10000)
     private String benefitsPackage;
 
     @Column(name = "vacation_days_annual")
@@ -112,7 +112,7 @@ public class Offer extends TenantAwareEntity {
     @Column(name = "retirement_contribution_percentage")
     private BigDecimal retirementContributionPercentage;
 
-    @Column(name = "other_benefits", columnDefinition = "TEXT")
+    @Column(name = "other_benefits", length = 10000)
     private String otherBenefits;
 
     // Contract Terms
@@ -178,7 +178,7 @@ public class Offer extends TenantAwareEntity {
     @Column(name = "approved_at")
     private LocalDateTime approvedAt;
 
-    @Column(name = "approval_notes", columnDefinition = "TEXT")
+    @Column(name = "approval_notes", length = 10000)
     private String approvalNotes;
 
     @Column(name = "rejected_by")
@@ -187,7 +187,7 @@ public class Offer extends TenantAwareEntity {
     @Column(name = "rejected_at")
     private LocalDateTime rejectedAt;
 
-    @Column(name = "rejection_reason", columnDefinition = "TEXT")
+    @Column(name = "rejection_reason", length = 10000)
     private String rejectionReason;
 
     // Negotiation Details
@@ -197,17 +197,17 @@ public class Offer extends TenantAwareEntity {
     @Column(name = "last_negotiation_at")
     private LocalDateTime lastNegotiationAt;
 
-    @Column(name = "negotiation_notes", columnDefinition = "TEXT")
+    @Column(name = "negotiation_notes", length = 10000)
     private String negotiationNotes;
 
-    @Column(name = "candidate_counter_offer", columnDefinition = "TEXT")
+    @Column(name = "candidate_counter_offer", length = 10000)
     private String candidateCounterOffer;
 
-    @Column(name = "company_response", columnDefinition = "TEXT")
+    @Column(name = "company_response", length = 10000)
     private String companyResponse;
 
     // Additional Terms
-    @Column(name = "special_conditions", columnDefinition = "TEXT")
+    @Column(name = "special_conditions", length = 10000)
     private String specialConditions;
 
     @Column(name = "confidentiality_agreement")

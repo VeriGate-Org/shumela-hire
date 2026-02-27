@@ -26,11 +26,11 @@ public class PerformanceGoal extends TenantAwareEntity {
     @Column(nullable = false, length = 200)
     private String title;
     
-    @Column(columnDefinition = "TEXT")
+    @Column(length = 10000)
     private String description;
     
     // SMART criteria stored as JSON
-    @Column(name = "smart_criteria", columnDefinition = "TEXT")
+    @Column(name = "smart_criteria", length = 10000)
     private String smartCriteria;
     
     @Enumerated(EnumType.STRING)
@@ -42,10 +42,10 @@ public class PerformanceGoal extends TenantAwareEntity {
     @DecimalMax(value = "100.0", message = "Weighting cannot exceed 100%")
     private BigDecimal weighting;
     
-    @Column(name = "target_value", columnDefinition = "TEXT")
+    @Column(name = "target_value", length = 10000)
     private String targetValue;
     
-    @Column(name = "measurement_criteria", columnDefinition = "TEXT")
+    @Column(name = "measurement_criteria", length = 10000)
     private String measurementCriteria;
     
     @Column(name = "is_active")

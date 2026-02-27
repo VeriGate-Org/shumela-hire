@@ -35,7 +35,7 @@ public class Notification extends TenantAwareEntity {
     @Column(name = "title", nullable = false)
     private String title;
 
-    @Column(name = "message", columnDefinition = "TEXT", nullable = false)
+    @Column(name = "message", length = 10000, nullable = false)
     private String message;
 
     @Column(name = "action_url")
@@ -47,7 +47,7 @@ public class Notification extends TenantAwareEntity {
     @Column(name = "icon")
     private String icon;
 
-    @Column(name = "metadata", columnDefinition = "TEXT")
+    @Column(name = "metadata", length = 10000)
     private String metadata; // JSON string for additional data
 
     // Related entities
@@ -106,7 +106,7 @@ public class Notification extends TenantAwareEntity {
     @Column(name = "push_device_token")
     private String pushDeviceToken;
 
-    @Column(name = "push_payload", columnDefinition = "TEXT")
+    @Column(name = "push_payload", length = 10000)
     private String pushPayload;
 
     // Scheduling

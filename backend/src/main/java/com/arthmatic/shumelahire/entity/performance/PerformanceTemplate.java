@@ -18,7 +18,7 @@ public class PerformanceTemplate extends TenantAwareEntity {
     @Column(nullable = false, length = 100)
     private String name;
     
-    @Column(columnDefinition = "TEXT")
+    @Column(length = 10000)
     private String description;
     
     @Column(length = 100)
@@ -31,11 +31,11 @@ public class PerformanceTemplate extends TenantAwareEntity {
     private String jobFamily;
     
     // JSON structure defining goal categories and KPIs
-    @Column(name = "goal_template", columnDefinition = "TEXT")
+    @Column(name = "goal_template", length = 10000)
     private String goalTemplate;
     
     // JSON structure defining KPI definitions
-    @Column(name = "kpi_template", columnDefinition = "TEXT")
+    @Column(name = "kpi_template", length = 10000)
     private String kpiTemplate;
     
     @Column(name = "is_active")

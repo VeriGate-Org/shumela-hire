@@ -28,7 +28,7 @@ public class ReviewGoalScore extends TenantAwareEntity {
     @Column(precision = 3, scale = 2)
     private BigDecimal score;
 
-    @Column(columnDefinition = "TEXT")
+    @Column(length = 10000)
     private String comment;
 
     // Constructors

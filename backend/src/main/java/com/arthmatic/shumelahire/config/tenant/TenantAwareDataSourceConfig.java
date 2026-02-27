@@ -2,7 +2,6 @@ package com.arthmatic.shumelahire.config.tenant;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -13,25 +12,28 @@ import org.springframework.jdbc.datasource.DelegatingDataSource;
 import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.sql.Statement;
 
 @Configuration
-@Profile({"sbx", "ppe", "prod"})
+@Profile({"sbx", "ppe", "prod", "sqlserver", "onprem"})
 public class TenantAwareDataSourceConfig {
 
     private static final Logger logger = LoggerFactory.getLogger(TenantAwareDataSourceConfig.class);
 
     @Bean
     @Primary
-    public DataSource tenantAwareDataSource(DataSourceProperties properties) {
+    public DataSource tenantAwareDataSource(DataSourceProperties properties,
+                                            TenantConnectionPreparer connectionPreparer) {
         DataSource baseDataSource = properties.initializeDataSourceBuilder().build();
-        return new TenantSettingDataSource(baseDataSource);
+        return new TenantSettingDataSource(baseDataSource, connectionPreparer);
     }
 
     private static class TenantSettingDataSource extends DelegatingDataSource {
 
-        TenantSettingDataSource(DataSource targetDataSource) {
+        private final TenantConnectionPreparer connectionPreparer;
+
+        TenantSettingDataSource(DataSource targetDataSource, TenantConnectionPreparer connectionPreparer) {
             super(targetDataSource);
+            this.connectionPreparer = connectionPreparer;
         }
 
         @Override
@@ -51,9 +53,7 @@ public class TenantAwareDataSourceConfig {
         private void setTenantOnConnection(Connection connection) throws SQLException {
             String tenantId = TenantContext.getCurrentTenant();
             if (tenantId != null) {
-                try (Statement stmt = connection.createStatement()) {
-                    stmt.execute("SET app.current_tenant = '" + tenantId.replace("'", "''") + "'");
-                }
+                connectionPreparer.setTenantOnConnection(connection, tenantId);
             }
         }
     }

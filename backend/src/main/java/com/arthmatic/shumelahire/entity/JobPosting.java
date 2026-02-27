@@ -38,19 +38,19 @@ public class JobPosting extends TenantAwareEntity {
     private ExperienceLevel experienceLevel = ExperienceLevel.MID_LEVEL;
     
     @NotBlank(message = "Job description is required")
-    @Column(name = "description", columnDefinition = "TEXT", nullable = false)
+    @Column(name = "description", length = 10000, nullable = false)
     private String description;
     
-    @Column(name = "requirements", columnDefinition = "TEXT")
+    @Column(name = "requirements", length = 10000)
     private String requirements;
     
-    @Column(name = "responsibilities", columnDefinition = "TEXT")
+    @Column(name = "responsibilities", length = 10000)
     private String responsibilities;
     
-    @Column(name = "qualifications", columnDefinition = "TEXT")
+    @Column(name = "qualifications", length = 10000)
     private String qualifications;
     
-    @Column(name = "benefits", columnDefinition = "TEXT")
+    @Column(name = "benefits", length = 10000)
     private String benefits;
     
     @Column(name = "salary_min", precision = 10, scale = 2)
@@ -89,13 +89,13 @@ public class JobPosting extends TenantAwareEntity {
     @Column(name = "published_by")
     private Long publishedBy; // User ID who published the posting
     
-    @Column(name = "approval_notes", columnDefinition = "TEXT")
+    @Column(name = "approval_notes", length = 10000)
     private String approvalNotes;
     
-    @Column(name = "rejection_reason", columnDefinition = "TEXT")
+    @Column(name = "rejection_reason", length = 10000)
     private String rejectionReason;
     
-    @Column(name = "internal_notes", columnDefinition = "TEXT")
+    @Column(name = "internal_notes", length = 10000)
     private String internalNotes;
     
     @Column(name = "external_job_boards")

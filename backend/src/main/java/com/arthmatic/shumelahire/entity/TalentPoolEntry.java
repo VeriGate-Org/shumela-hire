@@ -28,7 +28,7 @@ public class TalentPoolEntry extends TenantAwareEntity {
     @Column(name = "source_type")
     private String sourceType; // MANUAL, AUTO_REJECTED, AGENCY
 
-    @Column(name = "notes", columnDefinition = "TEXT")
+    @Column(name = "notes", length = 10000)
     private String notes;
 
     @Column(name = "rating")

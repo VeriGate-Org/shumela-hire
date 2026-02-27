@@ -27,7 +27,7 @@ public class JobAd extends TenantAwareEntity {
     private String title;
     
     @NotBlank(message = "HTML body is required")
-    @Column(name = "html_body", nullable = false, columnDefinition = "TEXT")
+    @Column(name = "html_body", nullable = false, length = 10000)
     private String htmlBody;
     
     @Column(name = "channel_internal", nullable = false)

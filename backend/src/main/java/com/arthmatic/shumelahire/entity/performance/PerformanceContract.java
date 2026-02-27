@@ -63,17 +63,17 @@ public class PerformanceContract extends TenantAwareEntity {
     @Column(name = "approved_by", length = 50)
     private String approvedBy;
     
-    @Column(name = "approval_comments", columnDefinition = "TEXT")
+    @Column(name = "approval_comments", length = 10000)
     private String approvalComments;
     
-    @Column(name = "rejection_reason", columnDefinition = "TEXT")
+    @Column(name = "rejection_reason", length = 10000)
     private String rejectionReason;
     
     // Versioning for amendments
     @Column(name = "version")
     private Integer version = 1;
     
-    @Column(name = "amendment_reason", columnDefinition = "TEXT")
+    @Column(name = "amendment_reason", length = 10000)
     private String amendmentReason;
     
     @Column(name = "amended_at")

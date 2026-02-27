@@ -64,7 +64,7 @@ public class RecruitmentMetrics extends TenantAwareEntity {
     @Column(name = "benchmark_value", precision = 15, scale = 4)
     private BigDecimal benchmarkValue;
 
-    @Column(name = "notes", columnDefinition = "TEXT")
+    @Column(name = "notes", length = 10000)
     private String notes;
 
     @Column(name = "data_source")

@@ -35,7 +35,7 @@ public class AgencyProfile extends TenantAwareEntity {
     @Column(name = "contact_phone")
     private String contactPhone;
 
-    @Column(name = "specializations", columnDefinition = "TEXT")
+    @Column(name = "specializations", length = 10000)
     private String specializations;
 
     @Enumerated(EnumType.STRING)

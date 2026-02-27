@@ -1,0 +1,71 @@
+spring:
+  datasource:
+    url: ${DATABASE_URL}
+    username: ${DATABASE_USER}
+    password: ${DATABASE_PASS}
+    driver-class-name: ${DATABASE_DRIVER:com.microsoft.sqlserver.jdbc.SQLServerDriver}
+
+  jpa:
+    database-platform: ${JPA_DIALECT:org.hibernate.dialect.SQLServerDialect}
+    hibernate:
+      ddl-auto: validate
+    show-sql: false
+    properties:
+      hibernate:
+        format_sql: false
+
+  flyway:
+    enabled: true
+    baseline-on-migrate: true
+    locations: ${FLYWAY_LOCATIONS:classpath:db/migration/sqlserver}
+
+  h2:
+    console:
+      enabled: false
+
+  # On-premises typically won't use Cognito — disable OAuth2 resource server
+  autoconfigure:
+    exclude:
+      - org.springframework.boot.autoconfigure.security.oauth2.resource.servlet.OAuth2ResourceServerAutoConfiguration
+
+  # Redis optional for on-prem — default disabled
+  data:
+    redis:
+      host: ${REDIS_HOST:localhost}
+      port: ${REDIS_PORT:6379}
+      repositories:
+        enabled: ${REDIS_ENABLED:false}
+
+# On-premises storage defaults to local filesystem
+storage:
+  provider: ${STORAGE_PROVIDER:local}
+
+# Disable cloud-specific features
+notification:
+  sqs:
+    enabled: false
+  email:
+    enabled: ${NOTIFICATION_EMAIL_ENABLED:true}
+
+ses:
+  enabled: false
+
+# Disable Swagger in on-prem by default (can be overridden)
+springdoc:
+  api-docs:
+    enabled: ${SWAGGER_ENABLED:false}
+  swagger-ui:
+    enabled: ${SWAGGER_ENABLED:false}
+
+# On-prem deployment indicator
+shumelahire:
+  database:
+    vendor: ${DATABASE_VENDOR:sqlserver}
+  deployment:
+    mode: on-premises
+
+logging:
+  level:
+    com.arthmatic.shumelahire: INFO
+    org.springframework.web: WARN
+    org.hibernate.SQL: WARN

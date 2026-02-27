@@ -37,7 +37,7 @@ public class AgencySubmission extends TenantAwareEntity {
     @Column(name = "cv_file_key")
     private String cvFileKey;
 
-    @Column(name = "cover_note", columnDefinition = "TEXT")
+    @Column(name = "cover_note", length = 10000)
     private String coverNote;
 
     @Enumerated(EnumType.STRING)

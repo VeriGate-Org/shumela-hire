@@ -25,10 +25,10 @@ public class GoalKPI extends TenantAwareEntity {
     @Column(nullable = false, length = 200)
     private String name;
     
-    @Column(columnDefinition = "TEXT")
+    @Column(length = 10000)
     private String description;
     
-    @Column(name = "target_value", columnDefinition = "TEXT")
+    @Column(name = "target_value", length = 10000)
     private String targetValue;
     
     @Column(name = "measurement_unit", length = 50)

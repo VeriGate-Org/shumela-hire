@@ -31,10 +31,10 @@ public class Requisition extends TenantAwareEntity {
     @Column(name = "salary_max", precision = 12, scale = 2)
     private BigDecimal salaryMax;
 
-    @Column(columnDefinition = "TEXT")
+    @Column(length = 10000)
     private String description;
 
-    @Column(columnDefinition = "TEXT")
+    @Column(length = 10000)
     private String justification;
 
     @Enumerated(EnumType.STRING)

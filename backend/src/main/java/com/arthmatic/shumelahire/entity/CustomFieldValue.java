@@ -29,7 +29,7 @@ public class CustomFieldValue extends TenantAwareEntity {
     @Column(name = "entity_type", nullable = false, length = 50)
     private CustomFieldEntityType entityType;
 
-    @Column(name = "field_value", columnDefinition = "TEXT")
+    @Column(name = "field_value", length = 10000)
     private String fieldValue;
 
     @CreationTimestamp
