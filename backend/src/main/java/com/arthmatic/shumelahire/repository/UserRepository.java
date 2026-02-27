@@ -110,4 +110,14 @@ public interface UserRepository extends JpaRepository<User, Long> {
      * Check if email exists within a tenant
      */
     boolean existsByEmailAndTenantId(String email, String tenantId);
+
+    /**
+     * Find user by Active Directory objectGUID
+     */
+    Optional<User> findByAdObjectGuid(String adObjectGuid);
+
+    /**
+     * Find all users sourced from Active Directory
+     */
+    List<User> findByAdSourceTrue();
 }

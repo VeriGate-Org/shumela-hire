@@ -63,6 +63,19 @@ shumelahire:
     vendor: ${DATABASE_VENDOR:sqlserver}
   deployment:
     mode: on-premises
+  ad:
+    enabled: ${AD_ENABLED:true}
+    url: ${AD_URL:ldap://dc01.corp.local:389}
+    base-dn: ${AD_BASE_DN:dc=corp,dc=local}
+    bind-dn: ${AD_BIND_DN:}
+    bind-password: ${AD_BIND_PASSWORD:}
+    domain: ${AD_DOMAIN:corp.local}
+    user-search-base: ${AD_USER_SEARCH_BASE:ou=Users}
+    user-search-filter: ${AD_USER_SEARCH_FILTER:(sAMAccountName={0})}
+    group-search-base: ${AD_GROUP_SEARCH_BASE:ou=Groups}
+    sync:
+      enabled: ${AD_SYNC_ENABLED:true}
+      cron: ${AD_SYNC_CRON:0 0 * * * *}
 
 logging:
   level:

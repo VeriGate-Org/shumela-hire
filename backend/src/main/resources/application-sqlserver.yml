@@ -27,3 +27,16 @@ spring:
 shumelahire:
   database:
     vendor: sqlserver
+  ad:
+    enabled: ${AD_ENABLED:false}
+    url: ${AD_URL:ldap://localhost:389}
+    base-dn: ${AD_BASE_DN:dc=example,dc=com}
+    bind-dn: ${AD_BIND_DN:}
+    bind-password: ${AD_BIND_PASSWORD:}
+    domain: ${AD_DOMAIN:}
+    user-search-base: ${AD_USER_SEARCH_BASE:}
+    user-search-filter: ${AD_USER_SEARCH_FILTER:(sAMAccountName={0})}
+    group-search-base: ${AD_GROUP_SEARCH_BASE:}
+    sync:
+      enabled: ${AD_SYNC_ENABLED:true}
+      cron: ${AD_SYNC_CRON:0 0 * * * *}

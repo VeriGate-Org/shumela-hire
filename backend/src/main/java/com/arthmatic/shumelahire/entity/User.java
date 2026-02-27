@@ -116,6 +116,19 @@ public class User implements UserDetails {
     @Column(name = "sso_user_id")
     private String ssoUserId; // External user ID from SSO
 
+    // Active Directory fields
+    @Column(name = "ad_object_guid", length = 100)
+    private String adObjectGuid;
+
+    @Column(name = "ad_distinguished_name", length = 500)
+    private String adDistinguishedName;
+
+    @Column(name = "ad_synced_at")
+    private LocalDateTime adSyncedAt;
+
+    @Column(name = "ad_source")
+    private Boolean adSource = false;
+
     @Column(name = "tenant_id", nullable = false, length = 50)
     private String tenantId;
 
@@ -271,6 +284,18 @@ public class User implements UserDetails {
 
     public String getSsoUserId() { return ssoUserId; }
     public void setSsoUserId(String ssoUserId) { this.ssoUserId = ssoUserId; }
+
+    public String getAdObjectGuid() { return adObjectGuid; }
+    public void setAdObjectGuid(String adObjectGuid) { this.adObjectGuid = adObjectGuid; }
+
+    public String getAdDistinguishedName() { return adDistinguishedName; }
+    public void setAdDistinguishedName(String adDistinguishedName) { this.adDistinguishedName = adDistinguishedName; }
+
+    public LocalDateTime getAdSyncedAt() { return adSyncedAt; }
+    public void setAdSyncedAt(LocalDateTime adSyncedAt) { this.adSyncedAt = adSyncedAt; }
+
+    public Boolean getAdSource() { return adSource; }
+    public void setAdSource(Boolean adSource) { this.adSource = adSource; }
 
     public String getTenantId() { return tenantId; }
     public void setTenantId(String tenantId) { this.tenantId = tenantId; }

@@ -28,6 +28,7 @@ spring:
   autoconfigure:
     exclude:
       - org.springframework.boot.autoconfigure.data.redis.RedisAutoConfiguration
+      - org.springframework.boot.autoconfigure.ldap.LdapAutoConfiguration
 
   cache:
     type: simple
