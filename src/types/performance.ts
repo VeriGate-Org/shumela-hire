@@ -40,6 +40,7 @@ export interface PerformanceContract {
 export interface PerformanceGoal {
   id: string;
   contractId: string;
+  kraId?: string;
   title: string;
   description?: string;
   type: GoalType;
@@ -290,4 +291,284 @@ export const getDaysUntil = (dateString: string): number => {
   const today = new Date();
   const diffTime = targetDate.getTime() - today.getTime();
   return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+};
+
+// ========== PERFORMANCE ENHANCEMENT TYPES (STORY-010) ==========
+
+// Key Result Area (KRA Framework)
+export interface KeyResultArea {
+  id: string;
+  contractId: string;
+  name: string;
+  description?: string;
+  weighting: number;
+  sortOrder?: number;
+  isActive: boolean;
+  createdAt: string;
+  updatedAt?: string;
+  createdBy?: string;
+  goalCount: number;
+}
+
+export interface CreateKRARequest {
+  contractId: string;
+  name: string;
+  description?: string;
+  weighting: number;
+  sortOrder?: number;
+}
+
+// Performance Improvement Plan (PIP)
+export enum PIPStatus {
+  DRAFT = 'DRAFT',
+  ACTIVE = 'ACTIVE',
+  EXTENDED = 'EXTENDED',
+  COMPLETED_SUCCESSFULLY = 'COMPLETED_SUCCESSFULLY',
+  COMPLETED_UNSUCCESSFULLY = 'COMPLETED_UNSUCCESSFULLY',
+  TERMINATED = 'TERMINATED'
+}
+
+export enum PIPMilestoneStatus {
+  PENDING = 'PENDING',
+  IN_PROGRESS = 'IN_PROGRESS',
+  COMPLETED = 'COMPLETED',
+  MISSED = 'MISSED'
+}
+
+export interface PerformanceImprovementPlan {
+  id: string;
+  contractId: string;
+  employeeId: string;
+  employeeName: string;
+  managerId: string;
+  managerName: string;
+  reason: string;
+  performanceGaps?: string;
+  expectedImprovements?: string;
+  supportProvided?: string;
+  startDate: string;
+  endDate: string;
+  originalEndDate?: string;
+  extensionReason?: string;
+  status: PIPStatus;
+  outcomeNotes?: string;
+  completedAt?: string;
+  completedBy?: string;
+  createdAt: string;
+  createdBy: string;
+  overdue: boolean;
+  milestones: PIPMilestone[];
+}
+
+export interface PIPMilestone {
+  id: string;
+  title: string;
+  description?: string;
+  successCriteria?: string;
+  targetDate: string;
+  completedDate?: string;
+  status: PIPMilestoneStatus;
+  managerNotes?: string;
+  employeeNotes?: string;
+  overdue: boolean;
+}
+
+export interface CreatePIPRequest {
+  contractId: string;
+  employeeId: string;
+  employeeName?: string;
+  managerId: string;
+  managerName?: string;
+  reason: string;
+  performanceGaps?: string;
+  expectedImprovements?: string;
+  supportProvided?: string;
+  startDate: string;
+  endDate: string;
+  milestones?: CreatePIPMilestoneRequest[];
+}
+
+export interface CreatePIPMilestoneRequest {
+  title: string;
+  description?: string;
+  successCriteria?: string;
+  targetDate: string;
+  sortOrder?: number;
+}
+
+// Calibration Sessions
+export enum CalibrationStatus {
+  SCHEDULED = 'SCHEDULED',
+  IN_PROGRESS = 'IN_PROGRESS',
+  COMPLETED = 'COMPLETED',
+  CANCELLED = 'CANCELLED'
+}
+
+export interface CalibrationSession {
+  id: string;
+  cycleId: string;
+  name: string;
+  description?: string;
+  department?: string;
+  jobLevel?: string;
+  facilitatorId: string;
+  facilitatorName: string;
+  scheduledDate?: string;
+  startedAt?: string;
+  completedAt?: string;
+  status: CalibrationStatus;
+  notes?: string;
+  distributionTarget?: string;
+  createdAt: string;
+  createdBy: string;
+  ratingCount: number;
+}
+
+export interface CreateCalibrationSessionRequest {
+  cycleId: string;
+  name: string;
+  description?: string;
+  department?: string;
+  jobLevel?: string;
+  facilitatorId: string;
+  facilitatorName?: string;
+  scheduledDate?: string;
+  distributionTarget?: string;
+}
+
+export interface CalibrationRatingRequest {
+  reviewId: string;
+  employeeId?: string;
+  employeeName?: string;
+  calibratedRating: number;
+  adjustmentReason?: string;
+}
+
+// Self-Assessment
+export interface SelfAssessmentRequest {
+  reviewId: string;
+  assessmentNotes?: string;
+  selfRating: number;
+  goalScores?: GoalScoreRequest[];
+}
+
+export interface GoalScoreRequest {
+  goalId: string;
+  score: number;
+  comment?: string;
+}
+
+// Manager Dashboard
+export interface ManagerDashboard {
+  totalDirectReports: number;
+  contractsCompleted: number;
+  contractsPending: number;
+  reviewsCompleted: number;
+  reviewsPending: number;
+  reviewsOverdue: number;
+  activePIPs: number;
+  averageTeamRating: number;
+  teamMembers: TeamMemberSummary[];
+  ratingDistribution: Record<string, number>;
+}
+
+export interface TeamMemberSummary {
+  employeeId: string;
+  employeeName: string;
+  department?: string;
+  contractStatus: string;
+  reviewStatus?: string;
+  selfRating?: number;
+  managerRating?: number;
+  finalRating?: number;
+  hasPIP: boolean;
+}
+
+// Performance Analytics
+export interface PerformanceAnalytics {
+  cycleAnalytics?: CycleAnalytics;
+  ratingDistribution?: Record<string, number>;
+  departmentAverages?: Record<string, number>;
+  completionMetrics?: CompletionMetrics;
+  pipAnalytics?: PIPAnalytics;
+}
+
+export interface CycleAnalytics {
+  cycleId: string;
+  cycleName: string;
+  totalContracts: number;
+  approvedContracts: number;
+  pendingContracts: number;
+  totalReviews: number;
+  completedReviews: number;
+  contractCompletionRate: number;
+  reviewCompletionRate: number;
+}
+
+export interface CompletionMetrics {
+  totalEmployees: number;
+  selfAssessmentsSubmitted: number;
+  managerAssessmentsSubmitted: number;
+  calibrationsCompleted: number;
+  selfAssessmentRate: number;
+  managerAssessmentRate: number;
+}
+
+export interface PIPAnalytics {
+  totalActive: number;
+  completedSuccessfully: number;
+  completedUnsuccessfully: number;
+  terminated: number;
+  overdue: number;
+  successRate: number;
+}
+
+// Utility functions for new types
+export const getPIPStatusColor = (status: PIPStatus): string => {
+  switch (status) {
+    case PIPStatus.DRAFT:
+      return 'bg-gray-100 text-gray-800';
+    case PIPStatus.ACTIVE:
+      return 'bg-yellow-100 text-yellow-800';
+    case PIPStatus.EXTENDED:
+      return 'bg-orange-100 text-orange-800';
+    case PIPStatus.COMPLETED_SUCCESSFULLY:
+      return 'bg-green-100 text-green-800';
+    case PIPStatus.COMPLETED_UNSUCCESSFULLY:
+      return 'bg-red-100 text-red-800';
+    case PIPStatus.TERMINATED:
+      return 'bg-red-100 text-red-800';
+    default:
+      return 'bg-gray-100 text-gray-800';
+  }
+};
+
+export const getCalibrationStatusColor = (status: CalibrationStatus): string => {
+  switch (status) {
+    case CalibrationStatus.SCHEDULED:
+      return 'bg-blue-100 text-blue-800';
+    case CalibrationStatus.IN_PROGRESS:
+      return 'bg-yellow-100 text-yellow-800';
+    case CalibrationStatus.COMPLETED:
+      return 'bg-green-100 text-green-800';
+    case CalibrationStatus.CANCELLED:
+      return 'bg-gray-100 text-gray-800';
+    default:
+      return 'bg-gray-100 text-gray-800';
+  }
+};
+
+export const getMilestoneStatusColor = (status: PIPMilestoneStatus): string => {
+  switch (status) {
+    case PIPMilestoneStatus.PENDING:
+      return 'bg-gray-100 text-gray-800';
+    case PIPMilestoneStatus.IN_PROGRESS:
+      return 'bg-blue-100 text-blue-800';
+    case PIPMilestoneStatus.COMPLETED:
+      return 'bg-green-100 text-green-800';
+    case PIPMilestoneStatus.MISSED:
+      return 'bg-red-100 text-red-800';
+    default:
+      return 'bg-gray-100 text-gray-800';
+  }
 };

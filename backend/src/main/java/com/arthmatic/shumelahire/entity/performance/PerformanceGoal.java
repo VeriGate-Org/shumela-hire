@@ -22,7 +22,11 @@ public class PerformanceGoal extends TenantAwareEntity {
     @JoinColumn(name = "contract_id", nullable = false)
     @NotNull(message = "Performance contract is required")
     private PerformanceContract contract;
-    
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "kra_id")
+    private KeyResultArea kra;
+
     @Column(nullable = false, length = 200)
     private String title;
     
@@ -140,6 +144,9 @@ public class PerformanceGoal extends TenantAwareEntity {
     public LocalDateTime getUpdatedAt() { return updatedAt; }
     public void setUpdatedAt(LocalDateTime updatedAt) { this.updatedAt = updatedAt; }
     
+    public KeyResultArea getKra() { return kra; }
+    public void setKra(KeyResultArea kra) { this.kra = kra; }
+
     public List<GoalKPI> getKpis() { return kpis; }
     public void setKpis(List<GoalKPI> kpis) { this.kpis = kpis; }
 }
