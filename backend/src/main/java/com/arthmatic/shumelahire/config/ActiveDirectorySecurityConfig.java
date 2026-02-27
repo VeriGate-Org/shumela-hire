@@ -196,6 +196,13 @@ public class ActiveDirectorySecurityConfig {
                 // Compliance endpoints
                 .requestMatchers("/api/compliance/**").hasAnyRole("ADMIN", "HR_MANAGER", "EXECUTIVE")
 
+                // Time & Attendance endpoints
+                .requestMatchers("/api/attendance/**").hasAnyRole("ADMIN", "HR_MANAGER", "HIRING_MANAGER", "EMPLOYEE", "RECRUITER", "INTERVIEWER", "EXECUTIVE")
+                .requestMatchers("/api/geofences/**").hasAnyRole("ADMIN", "HR_MANAGER")
+                .requestMatchers("/api/shifts/**").hasAnyRole("ADMIN", "HR_MANAGER", "HIRING_MANAGER", "EMPLOYEE")
+                .requestMatchers("/api/overtime/**").hasAnyRole("ADMIN", "HR_MANAGER", "HIRING_MANAGER", "EMPLOYEE")
+                .requestMatchers("/api/shift-swaps/**").hasAnyRole("ADMIN", "HR_MANAGER", "HIRING_MANAGER", "EMPLOYEE")
+
                 // General authenticated endpoints
                 .requestMatchers("/api/**").authenticated()
 
