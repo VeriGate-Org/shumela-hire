@@ -1,0 +1,4 @@
+[submodule "repos/shumela-hire"]
+	path = repos/shumela-hire
+	url = https://github.com/VeriGate-Org/shumela-hire
+	branch = main
