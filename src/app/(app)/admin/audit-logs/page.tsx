@@ -24,6 +24,7 @@ import {
 import { AuditLogEntry } from '@/types/workflow';
 import { auditLogService } from '@/services/auditLogService';
 import { auditSeverityConfig, getStatusConfig } from '@/utils/statusIcons';
+import { useToast } from '@/components/Toast';
 
 interface AuditLogFilter {
   dateRange: 'today' | 'week' | 'month' | 'quarter' | 'year' | 'custom';
@@ -64,6 +65,9 @@ export default function AuditLogsPage() {
     userRole: 'all',
     severity: 'all'
   });
+  const [loadError, setLoadError] = useState<string | null>(null);
+  const [realTimeMode, setRealTimeMode] = useState(false);
+  const { toast } = useToast();
 
   useEffect(() => {
     loadAuditLogs();
@@ -151,18 +155,36 @@ export default function AuditLogsPage() {
 
   const loadAuditLogs = async (page: number = 0) => {
     setLoading(true);
+    setLoadError(null);
     try {
       const result = await auditLogService.getAllAuditLogs(page, pageSize);
       setAuditLogs(result.logs);
       setCurrentPage(result.currentPage);
       setTotalPages(result.totalPages);
       setTotalElements(result.totalElements);
-    } catch (error) {
-      console.error('Failed to load audit logs:', error);
+    } catch {
+      setLoadError('Failed to load audit logs. Please check your connection and try again.');
+      toast('Failed to load audit logs', 'error');
     } finally {
       setLoading(false);
     }
   };
+
+  // Real-time mode polling
+  useEffect(() => {
+    if (!realTimeMode) return;
+    const interval = setInterval(async () => {
+      try {
+        const result = await auditLogService.getAllAuditLogs(0, pageSize);
+        setAuditLogs(result.logs);
+        setTotalElements(result.totalElements);
+        setTotalPages(result.totalPages);
+      } catch {
+        // Silently continue with stale data in real-time mode
+      }
+    }, 5000);
+    return () => clearInterval(interval);
+  }, [realTimeMode, pageSize]);
 
   const auditStats = useMemo((): AuditStats => {
     if (auditLogs.length === 0) {
@@ -272,6 +294,7 @@ export default function AuditLogsPage() {
     a.download = `audit-logs-${new Date().toISOString().split('T')[0]}.csv`;
     a.click();
     URL.revokeObjectURL(url);
+    toast(`Exported ${filteredLogs.length} audit log entries`, 'success');
   };
 
   const uniqueEntityTypes = [...new Set(auditLogs.map(log => log.entityType))];
@@ -295,9 +318,17 @@ export default function AuditLogsPage() {
         <ArrowDownTrayIcon className="w-4 h-4 mr-2" />
         Export
       </button>
-      <button className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-full shadow-sm text-violet-900 bg-transparent border-2 border-gold-500 hover:bg-gold-500 hover:text-violet-950 uppercase tracking-wider">
+      <button
+        onClick={() => setRealTimeMode(!realTimeMode)}
+        className={`inline-flex items-center px-4 py-2 text-sm font-medium rounded-full shadow-sm uppercase tracking-wider transition-colors ${
+          realTimeMode
+            ? 'bg-gold-500 text-violet-950 border-2 border-gold-500'
+            : 'text-violet-900 bg-transparent border-2 border-gold-500 hover:bg-gold-500 hover:text-violet-950'
+        }`}
+      >
+        {realTimeMode && <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse mr-2" />}
         <ClockIcon className="w-4 h-4 mr-2" />
-        Real-time View
+        {realTimeMode ? 'Live' : 'Real-time View'}
       </button>
     </div>
   );
@@ -504,8 +535,23 @@ export default function AuditLogsPage() {
           )}
         </div>
 
+        {/* Error State */}
+        {loadError && (
+          <div className="bg-white rounded-sm shadow p-8 text-center">
+            <ExclamationTriangleIcon className="w-12 h-12 text-red-400 mx-auto mb-4" />
+            <h3 className="text-lg font-semibold text-gray-900 mb-2">Failed to load audit logs</h3>
+            <p className="text-gray-500 mb-4">{loadError}</p>
+            <button
+              onClick={() => loadAuditLogs()}
+              className="inline-flex items-center gap-2 px-4 py-2 bg-gold-500 text-violet-950 rounded-full text-sm font-medium hover:bg-gold-600"
+            >
+              Retry
+            </button>
+          </div>
+        )}
+
         {/* Audit Logs Table */}
-        {filteredLogs.length === 0 ? (
+        {!loadError && filteredLogs.length === 0 ? (
           <EmptyState
             icon={ShieldCheckIcon}
             title="No audit logs"

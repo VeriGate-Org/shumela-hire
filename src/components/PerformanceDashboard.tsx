@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import { useApiData } from '@/hooks/useApiData';
 import { LoadingSpinner, CardSkeleton } from '@/components/LoadingComponents';
 import { apiFetch } from '@/lib/api-fetch';
+import { useToast } from '@/components/Toast';
 
 interface PerformanceMetrics {
   responseTime: number;
@@ -28,6 +29,7 @@ export default function PerformanceDashboard() {
 
   const [cacheWarming, setCacheWarming] = useState(false);
   const [memoryOptimizing, setMemoryOptimizing] = useState(false);
+  const { toast } = useToast();
 
   const handleWarmUpCache = async () => {
     setCacheWarming(true);
@@ -35,10 +37,11 @@ export default function PerformanceDashboard() {
       const response = await apiFetch('/api/performance/cache/warmup', {
         method: 'POST',
       });
-      const result = await response.json();
-      console.log('Cache warmed up:', result);
-    } catch (error) {
-      console.error('Cache warmup failed:', error);
+      if (!response.ok) throw new Error('Failed');
+      await response.json();
+      toast('Cache warmed up successfully', 'success');
+    } catch {
+      toast('Cache warmup failed', 'error');
     } finally {
       setCacheWarming(false);
     }
@@ -50,10 +53,11 @@ export default function PerformanceDashboard() {
       const response = await apiFetch('/api/performance/memory/optimize', {
         method: 'POST',
       });
-      const result = await response.json();
-      console.log('Memory optimized:', result);
-    } catch (error) {
-      console.error('Memory optimization failed:', error);
+      if (!response.ok) throw new Error('Failed');
+      await response.json();
+      toast('Memory optimized successfully', 'success');
+    } catch {
+      toast('Memory optimization failed', 'error');
     } finally {
       setMemoryOptimizing(false);
     }

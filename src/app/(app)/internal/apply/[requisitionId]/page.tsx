@@ -3,6 +3,8 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useRouter, useSearchParams } from 'next/navigation';
 import { useAuth } from '@/contexts/AuthContext';
+import { apiFetch } from '@/lib/api-fetch';
+import { useToast } from '@/components/Toast';
 import Link from 'next/link';
 import {
   ArrowLeftIcon,
@@ -15,16 +17,9 @@ import {
 } from '@heroicons/react/24/outline';
 
 interface ApplicationFormData {
-  applicantName: string;
-  applicantEmail: string;
-  employeeId: string;
-  department: string;
-  currentPosition: string;
-  resumeUrl: string;
   coverLetter: string;
   reasonForApplication: string;
   availabilityDate: string;
-  additionalComments: string;
 }
 
 export default function InternalApplicationPage() {
@@ -32,27 +27,20 @@ export default function InternalApplicationPage() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const { user, isAuthenticated } = useAuth();
-  
+  const { toast } = useToast();
+
   const requisitionId = params.requisitionId as string;
   const jobId = searchParams.get('jobId');
   const jobTitle = searchParams.get('title') || 'Position';
-  const _source = searchParams.get('source');
-  
+
   const [loading, setLoading] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  
+
   const [formData, setFormData] = useState<ApplicationFormData>({
-    applicantName: '',
-    applicantEmail: '',
-    employeeId: '',
-    department: '',
-    currentPosition: '',
-    resumeUrl: '',
     coverLetter: '',
     reasonForApplication: '',
     availabilityDate: '',
-    additionalComments: ''
   });
 
   // Redirect if not authenticated
@@ -61,18 +49,7 @@ export default function InternalApplicationPage() {
       router.push('/login');
       return;
     }
-    
-    // Pre-populate form with user data
-    if (user) {
-      setFormData(prev => ({
-        ...prev,
-        applicantName: user.name,
-        applicantEmail: user.email,
-        employeeId: user.id,
-        department: 'Current Department' // This would come from user profile
-      }));
-    }
-  }, [isAuthenticated, user, router]);
+  }, [isAuthenticated, router]);
 
   const handleInputChange = (field: keyof ApplicationFormData, value: string) => {
     setFormData(prev => ({ ...prev, [field]: value }));
@@ -80,44 +57,37 @@ export default function InternalApplicationPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     try {
       setLoading(true);
       setError(null);
-      
-      const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:8080';
-      
-      // Submit to internal application endpoint
-      const response = await fetch(`${baseUrl}/internal/applications`, {
+
+      // Combine reasonForApplication and coverLetter for the backend coverLetter field
+      const coverLetterParts = [formData.reasonForApplication, formData.coverLetter].filter(Boolean);
+      const combinedCoverLetter = coverLetterParts.join('\n\n');
+
+      const response = await apiFetch('/api/applications', {
         method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${user?.id}`, // Use proper JWT token in production
-          'Content-Type': 'application/json'
-        },
         body: JSON.stringify({
-          requisitionId,
-          jobId,
-          source: 'internal',
-          ...formData
-        })
+          jobAdId: jobId ? Number(jobId) : undefined,
+          applicationSource: 'INTERNAL',
+          coverLetter: combinedCoverLetter || undefined,
+          availabilityDate: formData.availabilityDate || undefined,
+        }),
       });
-      
+
       if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.message || 'Failed to submit application');
+        const errorData = await response.json().catch(() => null);
+        throw new Error(errorData?.message || errorData?.error || 'Failed to submit application');
       }
-      
-      const result = await response.json();
-      
-      if (result.success) {
-        setSubmitted(true);
-      } else {
-        throw new Error(result.message || 'Application submission failed');
-      }
-      
+
+      setSubmitted(true);
+      toast('Application submitted successfully', 'success');
     } catch (err) {
       console.error('Error submitting application:', err);
-      setError(err instanceof Error ? err.message : 'Failed to submit application');
+      const message = err instanceof Error ? err.message : 'Failed to submit application';
+      setError(message);
+      toast(message, 'error');
     } finally {
       setLoading(false);
     }
@@ -241,96 +211,28 @@ export default function InternalApplicationPage() {
           {/* Application Form */}
           <form onSubmit={handleSubmit} className="px-8 py-6">
             <div className="space-y-6">
-              {/* Personal Information */}
-              <div>
-                <h3 className="text-lg font-semibold text-gray-900 mb-4">Personal Information</h3>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div>
-                    <label htmlFor="applicant-name" className="block text-sm font-medium text-gray-700 mb-2">
-                      Full Name *
-                    </label>
-                    <input
-                      type="text"
-                      id="applicant-name"
-                      required
-                      aria-required="true"
-                      value={formData.applicantName}
-                      onChange={(e) => handleInputChange('applicantName', e.target.value)}
-                      className="w-full border border-gray-300 rounded-sm px-3 py-2 focus:ring-2 focus:ring-gold-500/60 focus:border-violet-400"
-                      placeholder="Your full name"
-                    />
-                  </div>
-
-                  <div>
-                    <label htmlFor="applicant-email" className="block text-sm font-medium text-gray-700 mb-2">
-                      Email Address *
-                    </label>
-                    <input
-                      type="email"
-                      id="applicant-email"
-                      required
-                      aria-required="true"
-                      value={formData.applicantEmail}
-                      onChange={(e) => handleInputChange('applicantEmail', e.target.value)}
-                      className="w-full border border-gray-300 rounded-sm px-3 py-2 focus:ring-2 focus:ring-gold-500/60 focus:border-violet-400"
-                      placeholder="your.email@company.com"
-                    />
-                  </div>
-
-                  <div>
-                    <label htmlFor="employee-id" className="block text-sm font-medium text-gray-700 mb-2">
-                      Employee ID *
-                    </label>
-                    <input
-                      type="text"
-                      id="employee-id"
-                      required
-                      aria-required="true"
-                      value={formData.employeeId}
-                      onChange={(e) => handleInputChange('employeeId', e.target.value)}
-                      className="w-full border border-gray-300 rounded-sm px-3 py-2 focus:ring-2 focus:ring-gold-500/60 focus:border-violet-400"
-                      placeholder="EMP123456"
-                    />
-                  </div>
-
-                  <div>
-                    <label htmlFor="current-department" className="block text-sm font-medium text-gray-700 mb-2">
-                      Current Department *
-                    </label>
-                    <input
-                      type="text"
-                      id="current-department"
-                      required
-                      aria-required="true"
-                      value={formData.department}
-                      onChange={(e) => handleInputChange('department', e.target.value)}
-                      className="w-full border border-gray-300 rounded-sm px-3 py-2 focus:ring-2 focus:ring-gold-500/60 focus:border-violet-400"
-                      placeholder="Current department"
-                    />
+              {/* Applicant Info (read-only) */}
+              {user && (
+                <div>
+                  <h3 className="text-lg font-semibold text-gray-900 mb-4">Your Details</h3>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">Name</label>
+                      <p className="px-3 py-2 bg-gray-50 border border-gray-200 rounded-sm text-gray-700">{user.name}</p>
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">Email</label>
+                      <p className="px-3 py-2 bg-gray-50 border border-gray-200 rounded-sm text-gray-700">{user.email}</p>
+                    </div>
                   </div>
                 </div>
-              </div>
+              )}
 
-              {/* Current Position */}
+              {/* Application Details */}
               <div>
-                <h3 className="text-lg font-semibold text-gray-900 mb-4">Current Position</h3>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div>
-                    <label htmlFor="current-position" className="block text-sm font-medium text-gray-700 mb-2">
-                      Current Position Title *
-                    </label>
-                    <input
-                      type="text"
-                      id="current-position"
-                      required
-                      aria-required="true"
-                      value={formData.currentPosition}
-                      onChange={(e) => handleInputChange('currentPosition', e.target.value)}
-                      className="w-full border border-gray-300 rounded-sm px-3 py-2 focus:ring-2 focus:ring-gold-500/60 focus:border-violet-400"
-                      placeholder="Your current job title"
-                    />
-                  </div>
+                <h3 className="text-lg font-semibold text-gray-900 mb-4">Application Details</h3>
 
+                <div className="space-y-4">
                   <div>
                     <label htmlFor="availability-date" className="block text-sm font-medium text-gray-700 mb-2">
                       Available Start Date
@@ -342,30 +244,6 @@ export default function InternalApplicationPage() {
                       onChange={(e) => handleInputChange('availabilityDate', e.target.value)}
                       className="w-full border border-gray-300 rounded-sm px-3 py-2 focus:ring-2 focus:ring-gold-500/60 focus:border-violet-400"
                     />
-                  </div>
-                </div>
-              </div>
-
-              {/* Application Details */}
-              <div>
-                <h3 className="text-lg font-semibold text-gray-900 mb-4">Application Details</h3>
-                
-                <div className="space-y-4">
-                  <div>
-                    <label htmlFor="resume-url" className="block text-sm font-medium text-gray-700 mb-2">
-                      Resume/CV URL
-                    </label>
-                    <input
-                      type="url"
-                      id="resume-url"
-                      value={formData.resumeUrl}
-                      onChange={(e) => handleInputChange('resumeUrl', e.target.value)}
-                      className="w-full border border-gray-300 rounded-sm px-3 py-2 focus:ring-2 focus:ring-gold-500/60 focus:border-violet-400"
-                      placeholder="https://... (link to your updated resume)"
-                    />
-                    <p className="text-xs text-gray-500 mt-1">
-                      Link to your resume on the company portal, Google Drive, or personal website
-                    </p>
                   </div>
 
                   <div>
@@ -397,20 +275,6 @@ export default function InternalApplicationPage() {
                       placeholder="Describe how your current experience and skills make you a great fit for this role..."
                     />
                   </div>
-
-                  <div>
-                    <label htmlFor="additional-comments" className="block text-sm font-medium text-gray-700 mb-2">
-                      Additional Comments
-                    </label>
-                    <textarea
-                      id="additional-comments"
-                      rows={3}
-                      value={formData.additionalComments}
-                      onChange={(e) => handleInputChange('additionalComments', e.target.value)}
-                      className="w-full border border-gray-300 rounded-sm px-3 py-2 focus:ring-2 focus:ring-gold-500/60 focus:border-violet-400"
-                      placeholder="Any additional information you'd like to share..."
-                    />
-                  </div>
                 </div>
               </div>
 
@@ -420,10 +284,10 @@ export default function InternalApplicationPage() {
                   <p className="text-sm text-gray-600">
                     By submitting this application, you confirm that all information provided is accurate.
                   </p>
-                  
+
                   <button
                     type="submit"
-                    disabled={loading || !formData.applicantName || !formData.applicantEmail || !formData.employeeId || !formData.reasonForApplication}
+                    disabled={loading || !formData.reasonForApplication}
                     className="inline-flex items-center px-6 py-3 bg-gold-500 text-violet-950 font-medium rounded-full hover:bg-gold-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                   >
                     {loading ? (

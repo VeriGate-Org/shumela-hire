@@ -78,10 +78,26 @@ export default function ApplicationManagementConsole() {
     averageRating: 0
   });
 
-  const statusOptions = ['SUBMITTED', 'SCREENING', 'INTERVIEW_SCHEDULED', 'INTERVIEW_COMPLETED', 'REFERENCE_CHECK', 'OFFER_PENDING', 'OFFERED', 'OFFER_ACCEPTED', 'OFFER_DECLINED', 'REJECTED', 'WITHDRAWN', 'HIRED'];
-  // TODO: Replace with data from GET /api/applications/manage/filter-options
-  const departmentOptions = ['Engineering', 'Sales', 'Marketing', 'HR', 'Finance', 'Operations'];
-  const stageOptions = ['APPLICATION', 'SCREENING', 'INTERVIEW', 'TECHNICAL', 'FINAL', 'OFFER'];
+  const [statusOptions, setStatusOptions] = useState<string[]>(['SUBMITTED', 'SCREENING', 'INTERVIEW_SCHEDULED', 'INTERVIEW_COMPLETED', 'REFERENCE_CHECK', 'OFFER_PENDING', 'OFFERED', 'OFFER_ACCEPTED', 'OFFER_DECLINED', 'REJECTED', 'WITHDRAWN', 'HIRED']);
+  const [departmentOptions, setDepartmentOptions] = useState<string[]>(['Engineering', 'Sales', 'Marketing', 'HR', 'Finance', 'Operations']);
+  const [stageOptions, setStageOptions] = useState<string[]>(['APPLICATION', 'SCREENING', 'INTERVIEW', 'TECHNICAL', 'FINAL', 'OFFER']);
+
+  useEffect(() => {
+    const fetchFilterOptions = async () => {
+      try {
+        const response = await apiFetch('/api/applications/manage/filter-options');
+        if (response.ok) {
+          const data = await response.json();
+          if (data.statuses?.length) setStatusOptions(data.statuses);
+          if (data.departments?.length) setDepartmentOptions(data.departments);
+          if (data.pipelineStages?.length) setStageOptions(data.pipelineStages);
+        }
+      } catch (err) {
+        console.error('Failed to fetch filter options:', err);
+      }
+    };
+    fetchFilterOptions();
+  }, []);
 
   const searchApplications = useCallback(async () => {
     setLoading(true);
@@ -122,10 +138,13 @@ export default function ApplicationManagementConsole() {
   useEffect(() => {
     searchApplications();
     fetchStatistics();
-  }, [filters.page, filters.size, filters.sortBy, filters.sortDirection, searchApplications]);
+  }, [searchApplications]);
+
+  const [statsError, setStatsError] = useState(false);
 
   const fetchStatistics = async () => {
     try {
+      setStatsError(false);
       const response = await apiFetch('/api/applications/manage/statistics');
       if (response.ok) {
         const data = await response.json();
@@ -135,15 +154,17 @@ export default function ApplicationManagementConsole() {
           inReviewApplications: data.inReviewApplications ?? 0,
           averageRating: data.averageRating ?? 0
         });
+      } else {
+        setStatsError(true);
       }
     } catch (err) {
       console.error('Error fetching statistics:', err);
+      setStatsError(true);
     }
   };
 
   const handleSearch = () => {
     setFilters(prev => ({ ...prev, page: 0 }));
-    searchApplications();
   };
 
   const handleFilterChange = (key: string, value: any) => {
@@ -201,6 +222,10 @@ export default function ApplicationManagementConsole() {
 
   const executeBulkOperation = async () => {
     if (selectedApplications.length === 0) return;
+    if (!bulkOperation.value) {
+      toast('Please select a value for the bulk operation', 'error');
+      return;
+    }
 
     try {
       const bulkPayload: Record<string, any> = { applicationIds: selectedApplications };
@@ -224,6 +249,18 @@ export default function ApplicationManagementConsole() {
       });
 
       if (response.ok) {
+        const result = await response.json().catch(() => null);
+        const updatedCount = result?.updatedIds?.length ?? selectedApplications.length;
+        const errorCount = result?.errors?.length ?? 0;
+
+        if (errorCount > 0 && updatedCount > 0) {
+          toast(`Updated ${updatedCount} application(s). ${errorCount} failed.`, 'info');
+        } else if (errorCount > 0 && updatedCount === 0) {
+          toast(`All ${errorCount} operations failed`, 'error');
+        } else {
+          toast(`Updated ${updatedCount} application(s)`, 'success');
+        }
+
         setSelectedApplications([]);
         setShowBulkActions(false);
         searchApplications();
@@ -322,19 +359,31 @@ export default function ApplicationManagementConsole() {
         {/* Statistics Cards */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
           <div className="bg-gold-50 p-4 rounded-sm">
-            <p className="text-sm font-medium text-gold-600">Total Applications</p>
+            <div className="flex items-center justify-between">
+              <p className="text-sm font-medium text-gold-600">Total Applications</p>
+              {statsError && <span className="text-orange-500 text-xs" title="Failed to load statistics">&#9888;</span>}
+            </div>
             <p className="text-2xl font-bold text-violet-900">{statistics.totalApplications}</p>
           </div>
           <div className="bg-green-50 p-4 rounded-sm">
-            <p className="text-sm font-medium text-green-600">New Applications</p>
+            <div className="flex items-center justify-between">
+              <p className="text-sm font-medium text-green-600">New Applications</p>
+              {statsError && <span className="text-orange-500 text-xs" title="Failed to load statistics">&#9888;</span>}
+            </div>
             <p className="text-2xl font-bold text-green-900">{statistics.newApplications}</p>
           </div>
           <div className="bg-yellow-50 p-4 rounded-sm">
-            <p className="text-sm font-medium text-yellow-600">In Review</p>
+            <div className="flex items-center justify-between">
+              <p className="text-sm font-medium text-yellow-600">In Review</p>
+              {statsError && <span className="text-orange-500 text-xs" title="Failed to load statistics">&#9888;</span>}
+            </div>
             <p className="text-2xl font-bold text-yellow-900">{statistics.inReviewApplications}</p>
           </div>
           <div className="bg-purple-50 p-4 rounded-sm">
-            <p className="text-sm font-medium text-purple-600">Avg Rating</p>
+            <div className="flex items-center justify-between">
+              <p className="text-sm font-medium text-purple-600">Avg Rating</p>
+              {statsError && <span className="text-orange-500 text-xs" title="Failed to load statistics">&#9888;</span>}
+            </div>
             <p className="text-2xl font-bold text-purple-900">{statistics.averageRating.toFixed(1)}</p>
           </div>
         </div>
