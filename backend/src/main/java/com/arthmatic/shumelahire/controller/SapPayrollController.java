@@ -5,6 +5,7 @@ import com.arthmatic.shumelahire.service.SapPayrollService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import com.arthmatic.shumelahire.annotation.FeatureGate;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -13,6 +14,7 @@ import java.util.Map;
 @RestController
 @RequestMapping("/api/sap-payroll")
 @PreAuthorize("hasAnyRole('ADMIN', 'HR_MANAGER', 'TA_MANAGER')")
+@FeatureGate("SAP_PAYROLL")
 public class SapPayrollController {
 
     @Autowired(required = false)

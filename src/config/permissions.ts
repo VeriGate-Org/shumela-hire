@@ -1,6 +1,15 @@
 import { UserRole } from '@/contexts/AuthContext';
 
 export const rolePermissions: Record<UserRole, string[]> = {
+  PLATFORM_OWNER: [
+    'view_dashboard', 'manage_jobs', 'view_applications', 'view_applicants',
+    'manage_pipeline', 'view_interviews', 'manage_offers', 'view_internal_jobs',
+    'manage_applications', 'manage_workflow', 'view_salary_data',
+    'view_analytics', 'view_recruiter_analytics', 'view_reports',
+    'manage_permissions', 'view_audit_logs',
+    'view_training', 'manage_integrations',
+    'platform_admin', 'manage_features', 'manage_tenants',
+  ],
   ADMIN: [
     'view_dashboard', 'manage_jobs', 'view_applications', 'view_applicants',
     'manage_pipeline', 'view_interviews', 'manage_offers', 'view_internal_jobs',

@@ -12,6 +12,7 @@ import com.arthmatic.shumelahire.service.ai.features.ScreeningNotesAiService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
+import com.arthmatic.shumelahire.annotation.FeatureGate;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
@@ -50,6 +51,7 @@ public class AiTextGenerationController {
     }
 
     @PostMapping("/job-description/generate")
+    @FeatureGate("AI_JOB_DESCRIPTION")
     public ResponseEntity<?> generateJobDescription(
             @RequestBody JobDescriptionDto.JobDescriptionRequest request,
             Authentication authentication) {
@@ -61,6 +63,7 @@ public class AiTextGenerationController {
     }
 
     @PostMapping("/job-description/check-bias")
+    @FeatureGate("AI_JOB_DESCRIPTION")
     public ResponseEntity<?> checkBias(
             @RequestBody JobDescriptionDto.BiasCheckRequest request,
             Authentication authentication) {
@@ -72,6 +75,7 @@ public class AiTextGenerationController {
     }
 
     @PostMapping("/screening-notes/draft")
+    @FeatureGate("AI_SCREENING")
     public ResponseEntity<?> draftScreeningNotes(
             @RequestBody ScreeningNotesDto.ScreeningNotesRequest request,
             Authentication authentication) {

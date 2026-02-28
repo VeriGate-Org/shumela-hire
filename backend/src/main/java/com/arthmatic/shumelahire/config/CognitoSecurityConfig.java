@@ -98,6 +98,9 @@ public class CognitoSecurityConfig {
                 .requestMatchers("/actuator/health").permitAll()
                 .requestMatchers("/actuator/**").hasRole("ADMIN")
 
+                // Platform admin endpoints
+                .requestMatchers("/api/platform/**").hasRole("PLATFORM_OWNER")
+
                 // Admin endpoints
                 .requestMatchers("/api/admin/**").hasRole("ADMIN")
                 .requestMatchers("/api/audit/**").hasAnyRole("ADMIN", "HR_MANAGER")

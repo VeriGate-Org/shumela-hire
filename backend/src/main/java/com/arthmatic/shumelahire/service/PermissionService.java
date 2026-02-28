@@ -32,6 +32,10 @@ public class PermissionService {
     );
 
     private static final Map<User.Role, List<String>> ROLE_PERMISSIONS = Map.of(
+        User.Role.PLATFORM_OWNER, List.of("dash_view", "dash_export", "recruit_view", "recruit_manage", "app_view", "app_manage",
+                "cand_view", "cand_manage", "int_view", "int_manage", "integ_view", "integ_manage",
+                "train_view", "train_manage", "admin_users", "admin_roles", "admin_settings",
+                "platform_admin", "manage_features", "manage_tenants"),
         User.Role.ADMIN, List.of("dash_view", "dash_export", "recruit_view", "recruit_manage", "app_view", "app_manage",
                 "cand_view", "cand_manage", "int_view", "int_manage", "integ_view", "integ_manage",
                 "train_view", "train_manage", "admin_users", "admin_roles", "admin_settings"),
@@ -48,6 +52,7 @@ public class PermissionService {
     );
 
     private static final Map<User.Role, String> ROLE_COLORS = Map.of(
+        User.Role.PLATFORM_OWNER, "indigo",
         User.Role.ADMIN, "red",
         User.Role.EXECUTIVE, "purple",
         User.Role.HR_MANAGER, "blue",
