@@ -9,6 +9,13 @@ export interface RoleConfig {
 }
 
 export const roleConfigurations: Record<UserRole, RoleConfig> = {
+  PLATFORM_OWNER: {
+    primaryColor: 'bg-violet-600',
+    secondaryColor: 'bg-gold-50',
+    logo: '🔧',
+    welcomeMessage: 'Platform Administration',
+    description: 'Manage tenants, feature entitlements, and platform-wide configuration.',
+  },
   ADMIN: {
     primaryColor: 'bg-violet-600',
     secondaryColor: 'bg-gold-50',

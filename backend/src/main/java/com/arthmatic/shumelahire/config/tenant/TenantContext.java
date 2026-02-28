@@ -22,6 +22,10 @@ public final class TenantContext {
         return tenantId;
     }
 
+    public static boolean isPlatformContext() {
+        return "platform".equals(CURRENT_TENANT.get());
+    }
+
     public static void clear() {
         CURRENT_TENANT.remove();
     }

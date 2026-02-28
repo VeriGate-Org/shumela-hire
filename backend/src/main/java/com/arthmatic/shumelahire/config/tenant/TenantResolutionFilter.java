@@ -70,6 +70,10 @@ public class TenantResolutionFilter implements Filter {
         if (host != null) {
             String subdomain = extractSubdomain(host);
             if (subdomain != null) {
+                // Reserved "platform" subdomain — no DB lookup needed
+                if ("platform".equals(subdomain)) {
+                    return "platform";
+                }
                 Tenant tenant = tenantRepository.findBySubdomain(subdomain).orElse(null);
                 if (tenant != null && tenant.isActive()) {
                     return tenant.getId();
@@ -80,6 +84,10 @@ public class TenantResolutionFilter implements Filter {
         // 2. Fallback: X-Tenant-Id header
         String headerTenantId = request.getHeader("X-Tenant-Id");
         if (headerTenantId != null && !headerTenantId.isBlank()) {
+            // Reserved "platform" tenant — no DB lookup needed
+            if ("platform".equals(headerTenantId)) {
+                return "platform";
+            }
             if (tenantRepository.existsById(headerTenantId)) {
                 return headerTenantId;
             }

@@ -17,6 +17,8 @@ import {
   WrenchScrewdriverIcon,
   MagnifyingGlassIcon,
   DocumentCheckIcon,
+  Cog6ToothIcon,
+  ServerStackIcon,
 } from '@heroicons/react/24/outline';
 import {
   HomeIcon as HomeIconSolid,
@@ -28,7 +30,7 @@ import {
 } from '@heroicons/react/24/solid';
 import { ComponentType } from 'react';
 
-export type NavSection = 'recruitment' | 'analytics' | 'administration' | 'personal' | 'system';
+export type NavSection = 'recruitment' | 'analytics' | 'administration' | 'personal' | 'system' | 'platform';
 
 export interface NavigationEntry {
   id: string;
@@ -38,6 +40,7 @@ export interface NavigationEntry {
   iconSolid?: ComponentType<any>;
   section: NavSection;
   requiredPermissions: string[];
+  requiredFeature?: string;
   badge?: string;
 }
 
@@ -52,7 +55,7 @@ export const navigationRegistry: NavigationEntry[] = [
   { id: 'offers', label: 'Offers', href: '/offers', icon: CurrencyDollarIcon, section: 'recruitment', requiredPermissions: ['manage_offers'] },
   { id: 'internal-jobs', label: 'Internal Jobs', href: '/internal/jobs', icon: BuildingOfficeIcon, section: 'recruitment', requiredPermissions: ['view_internal_jobs'] },
   { id: 'application-management', label: 'Application Management', href: '/applications/manage', icon: WrenchScrewdriverIcon, section: 'recruitment', requiredPermissions: ['manage_applications'] },
-  { id: 'workflow', label: 'Workflow Management', href: '/workflow', icon: Squares2X2Icon, section: 'recruitment', requiredPermissions: ['manage_workflow'] },
+  { id: 'workflow', label: 'Workflow Management', href: '/workflow', icon: Squares2X2Icon, section: 'recruitment', requiredPermissions: ['manage_workflow'], requiredFeature: 'WORKFLOW_MANAGEMENT' },
   { id: 'salary-recommendations', label: 'Salary Recommendations', href: '/salary-recommendations', icon: CurrencyDollarIcon, section: 'recruitment', requiredPermissions: ['view_salary_data'] },
 
   // Analytics
@@ -75,6 +78,10 @@ export const navigationRegistry: NavigationEntry[] = [
   // System
   { id: 'training', label: 'Training', href: '/training', icon: AcademicCapIcon, section: 'system', requiredPermissions: ['view_training'] },
   { id: 'integrations', label: 'Integrations', href: '/integrations', icon: GlobeAltIcon, section: 'system', requiredPermissions: ['manage_integrations'] },
+
+  // Platform
+  { id: 'platform-tenants', label: 'Tenants', href: '/platform/tenants', icon: ServerStackIcon, section: 'platform', requiredPermissions: ['manage_tenants'] },
+  { id: 'platform-features', label: 'Feature Registry', href: '/platform/features', icon: Cog6ToothIcon, section: 'platform', requiredPermissions: ['manage_features'] },
 ];
 
 export const sectionLabels: Record<NavSection, string> = {
@@ -83,4 +90,5 @@ export const sectionLabels: Record<NavSection, string> = {
   administration: 'Administration',
   personal: 'Personal',
   system: 'System',
+  platform: 'Platform',
 };

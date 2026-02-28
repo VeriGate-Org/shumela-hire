@@ -22,6 +22,13 @@ public class TenantFilterInterceptor implements HandlerInterceptor {
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
         String tenantId = TenantContext.getCurrentTenant();
         if (tenantId != null) {
+            // Skip tenant filter for platform admin endpoints — they need cross-tenant access
+            String path = request.getRequestURI();
+            if ("platform".equals(tenantId) && path.startsWith("/api/platform/")) {
+                logger.debug("Skipping tenant filter for platform admin path: {}", path);
+                return true;
+            }
+
             Session session = entityManager.unwrap(Session.class);
             session.enableFilter("tenantFilter").setParameter("tenantId", tenantId);
             logger.debug("Enabled tenant filter for tenant: {}", tenantId);

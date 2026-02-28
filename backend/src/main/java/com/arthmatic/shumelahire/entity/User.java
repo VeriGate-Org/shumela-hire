@@ -279,6 +279,7 @@ public class User implements UserDetails {
      * User roles enum
      */
     public enum Role {
+        PLATFORM_OWNER("Platform Owner", 200),
         ADMIN("Administrator", 100),
         EXECUTIVE("Executive", 90),
         HR_MANAGER("HR Manager", 80),

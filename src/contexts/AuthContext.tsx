@@ -7,6 +7,7 @@ import { rolePermissions } from '@/config/permissions';
 import { isCognitoConfigured, isOAuthConfigured, configureAmplify } from '@/lib/amplify-config';
 
 export type UserRole =
+  | 'PLATFORM_OWNER'
   | 'ADMIN'
   | 'EXECUTIVE'
   | 'HR_MANAGER'
@@ -17,6 +18,7 @@ export type UserRole =
   | 'APPLICANT';
 
 export const ROLE_DISPLAY_NAMES: Record<UserRole, string> = {
+  PLATFORM_OWNER: 'Platform Owner',
   ADMIN: 'Administrator',
   EXECUTIVE: 'Executive',
   HR_MANAGER: 'HR Manager',
@@ -28,7 +30,7 @@ export const ROLE_DISPLAY_NAMES: Record<UserRole, string> = {
 };
 
 export const ALL_ROLES: UserRole[] = [
-  'ADMIN', 'EXECUTIVE', 'HR_MANAGER', 'HIRING_MANAGER',
+  'PLATFORM_OWNER', 'ADMIN', 'EXECUTIVE', 'HR_MANAGER', 'HIRING_MANAGER',
   'RECRUITER', 'INTERVIEWER', 'EMPLOYEE', 'APPLICANT',
 ];
 

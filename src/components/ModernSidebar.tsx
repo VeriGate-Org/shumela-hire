@@ -2,6 +2,7 @@ import React, { useState, useMemo } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useAuth } from '../contexts/AuthContext';
+import { useFeatureGate } from '@/contexts/FeatureGateContext';
 import { navigationRegistry, sectionLabels, NavSection, NavigationEntry } from '@/config/navigationRegistry';
 import {
   MagnifyingGlassIcon,
@@ -21,16 +22,19 @@ const ModernSidebar: React.FC<ModernSidebarProps> = ({
 }) => {
   const pathname = usePathname();
   const { user } = useAuth();
+  const { isFeatureEnabled } = useFeatureGate();
   const [searchQuery, setSearchQuery] = useState('');
 
-  // Filter navigation entries by user permissions
+  // Filter navigation entries by user permissions and feature gates
   const navigationItems = useMemo(() => {
     if (!user) return [];
     const userPermissions = user.permissions || [];
-    return navigationRegistry.filter(entry =>
-      entry.requiredPermissions.every(p => userPermissions.includes(p))
-    );
-  }, [user]);
+    return navigationRegistry.filter(entry => {
+      const hasPermissions = entry.requiredPermissions.every(p => userPermissions.includes(p));
+      const hasFeature = !entry.requiredFeature || isFeatureEnabled(entry.requiredFeature);
+      return hasPermissions && hasFeature;
+    });
+  }, [user, isFeatureEnabled]);
 
   // Apply search filtering
   const filteredItems = useMemo(() => {
