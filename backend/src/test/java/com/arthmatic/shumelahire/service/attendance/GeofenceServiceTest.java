@@ -2,21 +2,24 @@ package com.arthmatic.shumelahire.service.attendance;
 
 import com.arthmatic.shumelahire.dto.attendance.GeofenceRequest;
 import com.arthmatic.shumelahire.dto.attendance.GeofenceResponse;
-import com.arthmatic.shumelahire.entity.Geofence;
-import com.arthmatic.shumelahire.repository.GeofenceRepository;
+import com.arthmatic.shumelahire.entity.attendance.Geofence;
+import com.arthmatic.shumelahire.entity.attendance.GeofenceType;
+import com.arthmatic.shumelahire.repository.attendance.GeofenceRepository;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.within;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
@@ -29,140 +32,190 @@ class GeofenceServiceTest {
     @InjectMocks
     private GeofenceService geofenceService;
 
+    private Geofence radiusGeofence;
+    private Geofence polygonGeofence;
+
+    @BeforeEach
+    void setUp() {
+        // Radius geofence centered at Sandton City, Johannesburg
+        radiusGeofence = new Geofence();
+        radiusGeofence.setId(1L);
+        radiusGeofence.setName("Sandton Office");
+        radiusGeofence.setSite("Sandton");
+        radiusGeofence.setGeofenceType(GeofenceType.RADIUS);
+        radiusGeofence.setLatitude(-26.1076);
+        radiusGeofence.setLongitude(28.0567);
+        radiusGeofence.setRadiusMeters(200.0);
+        radiusGeofence.setIsActive(true);
+        radiusGeofence.setCreatedAt(LocalDateTime.now());
+        radiusGeofence.setUpdatedAt(LocalDateTime.now());
+
+        // Polygon geofence (roughly a triangle around a campus)
+        polygonGeofence = new Geofence();
+        polygonGeofence.setId(2L);
+        polygonGeofence.setName("Campus Area");
+        polygonGeofence.setSite("Richards Bay");
+        polygonGeofence.setGeofenceType(GeofenceType.POLYGON);
+        polygonGeofence.setPolygonCoordinates("-28.7800,32.0400;-28.7850,32.0500;-28.7900,32.0400");
+        polygonGeofence.setIsActive(true);
+        polygonGeofence.setCreatedAt(LocalDateTime.now());
+        polygonGeofence.setUpdatedAt(LocalDateTime.now());
+    }
+
     @Test
-    void create_validRequest_createsGeofence() {
+    void createGeofence_ValidRequest_ReturnsGeofenceResponse() {
         GeofenceRequest request = new GeofenceRequest();
-        request.setName("Head Office");
-        request.setCenterLatitude(new BigDecimal("-26.2041"));
-        request.setCenterLongitude(new BigDecimal("28.0473"));
-        request.setRadiusMeters(200);
-        request.setAddress("123 Main St, Johannesburg");
+        request.setName("Test Geofence");
+        request.setGeofenceType("RADIUS");
+        request.setLatitude(-26.1076);
+        request.setLongitude(28.0567);
+        request.setRadiusMeters(100.0);
 
-        Geofence saved = new Geofence();
-        saved.setId(1L);
-        saved.setName("Head Office");
-        saved.setCenterLatitude(new BigDecimal("-26.2041"));
-        saved.setCenterLongitude(new BigDecimal("28.0473"));
-        saved.setRadiusMeters(200);
-        saved.setGeofenceType(Geofence.GeofenceType.CIRCLE);
+        when(geofenceRepository.save(any(Geofence.class))).thenReturn(radiusGeofence);
 
-        when(geofenceRepository.save(any(Geofence.class))).thenReturn(saved);
+        GeofenceResponse result = geofenceService.createGeofence(request);
 
-        GeofenceResponse response = geofenceService.create(request);
-
-        assertThat(response.getName()).isEqualTo("Head Office");
-        assertThat(response.getRadiusMeters()).isEqualTo(200);
+        assertThat(result).isNotNull();
+        assertThat(result.getName()).isEqualTo("Sandton Office");
+        assertThat(result.getGeofenceType()).isEqualTo("RADIUS");
         verify(geofenceRepository).save(any(Geofence.class));
     }
 
     @Test
-    void getAll_returnsList() {
-        Geofence g1 = new Geofence();
-        g1.setId(1L);
-        g1.setName("Office A");
-        g1.setCenterLatitude(BigDecimal.ZERO);
-        g1.setCenterLongitude(BigDecimal.ZERO);
-        g1.setRadiusMeters(100);
-        g1.setGeofenceType(Geofence.GeofenceType.CIRCLE);
+    void getGeofence_ExistingId_ReturnsGeofence() {
+        when(geofenceRepository.findById(1L)).thenReturn(Optional.of(radiusGeofence));
 
-        Geofence g2 = new Geofence();
-        g2.setId(2L);
-        g2.setName("Office B");
-        g2.setCenterLatitude(BigDecimal.ONE);
-        g2.setCenterLongitude(BigDecimal.ONE);
-        g2.setRadiusMeters(150);
-        g2.setGeofenceType(Geofence.GeofenceType.CIRCLE);
+        GeofenceResponse result = geofenceService.getGeofence(1L);
 
-        when(geofenceRepository.findAll()).thenReturn(Arrays.asList(g1, g2));
-
-        List<GeofenceResponse> result = geofenceService.getAll();
-
-        assertThat(result).hasSize(2);
+        assertThat(result).isNotNull();
+        assertThat(result.getId()).isEqualTo(1L);
+        assertThat(result.getName()).isEqualTo("Sandton Office");
     }
 
     @Test
-    void getById_notFound_throwsException() {
+    void getGeofence_NonExistingId_ThrowsException() {
         when(geofenceRepository.findById(999L)).thenReturn(Optional.empty());
 
-        assertThatThrownBy(() -> geofenceService.getById(999L))
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessageContaining("Geofence not found");
+        assertThrows(IllegalArgumentException.class, () -> geofenceService.getGeofence(999L));
     }
 
     @Test
-    void haversineDistance_samePoint_returnsZero() {
-        double distance = GeofenceService.haversineDistance(-26.2041, 28.0473, -26.2041, 28.0473);
-        assertThat(distance).isEqualTo(0.0);
+    void calculateDistance_SandtonToRosebank_ReturnsCorrectDistance() {
+        // Sandton City to Rosebank Mall (~4.5 km)
+        double distance = geofenceService.calculateDistance(
+                -26.1076, 28.0567,  // Sandton City
+                -26.1455, 28.0436   // Rosebank
+        );
+
+        // Should be roughly 4.3-4.7 km
+        assertThat(distance).isBetween(4200.0, 4700.0);
     }
 
     @Test
-    void haversineDistance_knownPoints_returnsCorrectDistance() {
-        // Johannesburg to Pretoria: ~56km
-        double distance = GeofenceService.haversineDistance(-26.2041, 28.0473, -25.7479, 28.2293);
-        assertThat(distance).isBetween(50_000.0, 60_000.0);
+    void calculateDistance_SamePoint_ReturnsZero() {
+        double distance = geofenceService.calculateDistance(
+                -26.1076, 28.0567,
+                -26.1076, 28.0567
+        );
+
+        assertThat(distance).isCloseTo(0.0, within(0.01));
     }
 
     @Test
-    void isWithinGeofence_insideRadius_returnsTrue() {
-        Geofence geofence = new Geofence();
-        geofence.setId(1L);
-        geofence.setCenterLatitude(new BigDecimal("-26.2041"));
-        geofence.setCenterLongitude(new BigDecimal("28.0473"));
-        geofence.setRadiusMeters(500);
-        geofence.setGeofenceType(Geofence.GeofenceType.CIRCLE);
-
-        // Point very close to center (within 500m)
+    void isWithinGeofence_InsideRadius_ReturnsTrue() {
+        // Point very close to the center (within 200m)
         boolean result = geofenceService.isWithinGeofence(
-                geofence, new BigDecimal("-26.2040"), new BigDecimal("28.0474"));
+                radiusGeofence, -26.1077, 28.0568);
 
         assertThat(result).isTrue();
     }
 
     @Test
-    void isWithinGeofence_outsideRadius_returnsFalse() {
-        Geofence geofence = new Geofence();
-        geofence.setId(1L);
-        geofence.setCenterLatitude(new BigDecimal("-26.2041"));
-        geofence.setCenterLongitude(new BigDecimal("28.0473"));
-        geofence.setRadiusMeters(100);
-        geofence.setGeofenceType(Geofence.GeofenceType.CIRCLE);
-
-        // Point far away (~56km)
+    void isWithinGeofence_OutsideRadius_ReturnsFalse() {
+        // Point far from center (Rosebank is ~4.5km away)
         boolean result = geofenceService.isWithinGeofence(
-                geofence, new BigDecimal("-25.7479"), new BigDecimal("28.2293"));
+                radiusGeofence, -26.1455, 28.0436);
 
         assertThat(result).isFalse();
     }
 
     @Test
-    void isWithinGeofence_nullCoordinates_returnsFalse() {
-        Geofence geofence = new Geofence();
-        geofence.setId(1L);
-        geofence.setCenterLatitude(new BigDecimal("-26.2041"));
-        geofence.setCenterLongitude(new BigDecimal("28.0473"));
-        geofence.setRadiusMeters(100);
-        geofence.setGeofenceType(Geofence.GeofenceType.CIRCLE);
+    void isWithinGeofence_InsidePolygon_ReturnsTrue() {
+        // Point inside the triangle
+        boolean result = geofenceService.isWithinGeofence(
+                polygonGeofence, -28.7840, 32.0440);
 
-        boolean result = geofenceService.isWithinGeofence(geofence, null, null);
+        assertThat(result).isTrue();
+    }
+
+    @Test
+    void isWithinGeofence_OutsidePolygon_ReturnsFalse() {
+        // Point outside the triangle
+        boolean result = geofenceService.isWithinGeofence(
+                polygonGeofence, -28.7700, 32.0300);
+
         assertThat(result).isFalse();
     }
 
     @Test
-    void toggleActive_deactivatesGeofence() {
-        Geofence geofence = new Geofence();
-        geofence.setId(1L);
-        geofence.setName("Test");
-        geofence.setIsActive(true);
-        geofence.setCenterLatitude(BigDecimal.ZERO);
-        geofence.setCenterLongitude(BigDecimal.ZERO);
-        geofence.setRadiusMeters(100);
-        geofence.setGeofenceType(Geofence.GeofenceType.CIRCLE);
+    void findContainingGeofence_WithinActiveGeofence_ReturnsGeofence() {
+        when(geofenceRepository.findAll()).thenReturn(Arrays.asList(radiusGeofence, polygonGeofence));
 
-        when(geofenceRepository.findById(1L)).thenReturn(Optional.of(geofence));
-        when(geofenceRepository.save(any())).thenAnswer(inv -> inv.getArgument(0));
+        // Point within radius geofence
+        Geofence result = geofenceService.findContainingGeofence(-26.1077, 28.0568);
 
-        GeofenceResponse response = geofenceService.toggleActive(1L, false);
+        assertThat(result).isNotNull();
+        assertThat(result.getId()).isEqualTo(1L);
+    }
 
-        assertThat(response.getIsActive()).isFalse();
+    @Test
+    void findContainingGeofence_OutsideAllGeofences_ReturnsNull() {
+        when(geofenceRepository.findAll()).thenReturn(Arrays.asList(radiusGeofence, polygonGeofence));
+
+        // Point far from any geofence
+        Geofence result = geofenceService.findContainingGeofence(-30.0000, 30.0000);
+
+        assertThat(result).isNull();
+    }
+
+    @Test
+    void findContainingGeofence_NullCoordinates_ReturnsNull() {
+        Geofence result = geofenceService.findContainingGeofence(null, null);
+        assertThat(result).isNull();
+    }
+
+    @Test
+    void isWithinGeofence_NullRadiusFields_ReturnsFalse() {
+        Geofence incomplete = new Geofence();
+        incomplete.setGeofenceType(GeofenceType.RADIUS);
+        incomplete.setLatitude(null);
+        incomplete.setLongitude(null);
+        incomplete.setRadiusMeters(null);
+
+        boolean result = geofenceService.isWithinGeofence(incomplete, -26.1076, 28.0567);
+
+        assertThat(result).isFalse();
+    }
+
+    @Test
+    void isWithinGeofence_EmptyPolygonCoordinates_ReturnsFalse() {
+        Geofence incomplete = new Geofence();
+        incomplete.setGeofenceType(GeofenceType.POLYGON);
+        incomplete.setPolygonCoordinates("");
+
+        boolean result = geofenceService.isWithinGeofence(incomplete, -26.1076, 28.0567);
+
+        assertThat(result).isFalse();
+    }
+
+    @Test
+    void deleteGeofence_ExistingId_DeactivatesGeofence() {
+        when(geofenceRepository.findById(1L)).thenReturn(Optional.of(radiusGeofence));
+        when(geofenceRepository.save(any(Geofence.class))).thenReturn(radiusGeofence);
+
+        geofenceService.deleteGeofence(1L);
+
+        assertThat(radiusGeofence.getIsActive()).isFalse();
+        verify(geofenceRepository).save(radiusGeofence);
     }
 }

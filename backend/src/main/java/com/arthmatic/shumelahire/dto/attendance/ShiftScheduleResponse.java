@@ -1,8 +1,7 @@
 package com.arthmatic.shumelahire.dto.attendance;
 
-import com.arthmatic.shumelahire.entity.ShiftSchedule;
+import com.arthmatic.shumelahire.entity.attendance.ShiftSchedule;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 public class ShiftScheduleResponse {
@@ -12,44 +11,62 @@ public class ShiftScheduleResponse {
     private String employeeName;
     private Long shiftId;
     private String shiftName;
-    private String shiftCode;
-    private LocalDate scheduleDate;
-    private String status;
+    private String scheduleDate;
     private Long shiftPatternId;
     private String shiftPatternName;
-    private String notes;
-    private Boolean isPublished;
+    private String status;
     private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
 
-    public static ShiftScheduleResponse fromEntity(ShiftSchedule s) {
-        ShiftScheduleResponse r = new ShiftScheduleResponse();
-        r.id = s.getId();
-        r.employeeId = s.getEmployee().getId();
-        r.employeeName = s.getEmployee().getFullName();
-        r.shiftId = s.getShift().getId();
-        r.shiftName = s.getShift().getName();
-        r.shiftCode = s.getShift().getCode();
-        r.scheduleDate = s.getScheduleDate();
-        r.status = s.getStatus().name();
-        r.shiftPatternId = s.getShiftPattern() != null ? s.getShiftPattern().getId() : null;
-        r.shiftPatternName = s.getShiftPattern() != null ? s.getShiftPattern().getName() : null;
-        r.notes = s.getNotes();
-        r.isPublished = s.getIsPublished();
-        r.createdAt = s.getCreatedAt();
-        return r;
+    public static ShiftScheduleResponse fromEntity(ShiftSchedule schedule) {
+        ShiftScheduleResponse response = new ShiftScheduleResponse();
+        response.setId(schedule.getId());
+        response.setEmployeeId(schedule.getEmployee().getId());
+        response.setEmployeeName(schedule.getEmployee().getFullName());
+        response.setShiftId(schedule.getShift().getId());
+        response.setShiftName(schedule.getShift().getName());
+        response.setScheduleDate(schedule.getScheduleDate().toString());
+        if (schedule.getShiftPattern() != null) {
+            response.setShiftPatternId(schedule.getShiftPattern().getId());
+            response.setShiftPatternName(schedule.getShiftPattern().getName());
+        }
+        response.setStatus(schedule.getStatus().name());
+        response.setCreatedAt(schedule.getCreatedAt());
+        response.setUpdatedAt(schedule.getUpdatedAt());
+        return response;
     }
 
+    // Getters and Setters
     public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
+
     public Long getEmployeeId() { return employeeId; }
+    public void setEmployeeId(Long employeeId) { this.employeeId = employeeId; }
+
     public String getEmployeeName() { return employeeName; }
+    public void setEmployeeName(String employeeName) { this.employeeName = employeeName; }
+
     public Long getShiftId() { return shiftId; }
+    public void setShiftId(Long shiftId) { this.shiftId = shiftId; }
+
     public String getShiftName() { return shiftName; }
-    public String getShiftCode() { return shiftCode; }
-    public LocalDate getScheduleDate() { return scheduleDate; }
-    public String getStatus() { return status; }
+    public void setShiftName(String shiftName) { this.shiftName = shiftName; }
+
+    public String getScheduleDate() { return scheduleDate; }
+    public void setScheduleDate(String scheduleDate) { this.scheduleDate = scheduleDate; }
+
     public Long getShiftPatternId() { return shiftPatternId; }
+    public void setShiftPatternId(Long shiftPatternId) { this.shiftPatternId = shiftPatternId; }
+
     public String getShiftPatternName() { return shiftPatternName; }
-    public String getNotes() { return notes; }
-    public Boolean getIsPublished() { return isPublished; }
+    public void setShiftPatternName(String shiftPatternName) { this.shiftPatternName = shiftPatternName; }
+
+    public String getStatus() { return status; }
+    public void setStatus(String status) { this.status = status; }
+
     public LocalDateTime getCreatedAt() { return createdAt; }
+    public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
+
+    public LocalDateTime getUpdatedAt() { return updatedAt; }
+    public void setUpdatedAt(LocalDateTime updatedAt) { this.updatedAt = updatedAt; }
 }

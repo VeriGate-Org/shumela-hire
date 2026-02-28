@@ -2,14 +2,15 @@ package com.arthmatic.shumelahire.service.attendance;
 
 import com.arthmatic.shumelahire.dto.attendance.GeofenceRequest;
 import com.arthmatic.shumelahire.dto.attendance.GeofenceResponse;
-import com.arthmatic.shumelahire.entity.Geofence;
-import com.arthmatic.shumelahire.repository.GeofenceRepository;
+import com.arthmatic.shumelahire.entity.attendance.Geofence;
+import com.arthmatic.shumelahire.entity.attendance.GeofenceType;
+import com.arthmatic.shumelahire.repository.attendance.GeofenceRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.math.BigDecimal;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -20,160 +21,182 @@ public class GeofenceService {
     private static final Logger logger = LoggerFactory.getLogger(GeofenceService.class);
     private static final double EARTH_RADIUS_METERS = 6_371_000.0;
 
-    private final GeofenceRepository geofenceRepository;
+    @Autowired
+    private GeofenceRepository geofenceRepository;
 
-    public GeofenceService(GeofenceRepository geofenceRepository) {
-        this.geofenceRepository = geofenceRepository;
-    }
+    public GeofenceResponse createGeofence(GeofenceRequest request) {
+        logger.info("Creating geofence: {}", request.getName());
 
-    public GeofenceResponse create(GeofenceRequest request) {
         Geofence geofence = new Geofence();
-        mapRequestToEntity(request, geofence);
-        geofence = geofenceRepository.save(geofence);
-        logger.info("Geofence created: {} (radius: {}m)", geofence.getName(), geofence.getRadiusMeters());
-        return GeofenceResponse.fromEntity(geofence);
+        geofence.setName(request.getName());
+        geofence.setSite(request.getSite());
+        geofence.setGeofenceType(GeofenceType.valueOf(request.getGeofenceType()));
+        geofence.setLatitude(request.getLatitude());
+        geofence.setLongitude(request.getLongitude());
+        geofence.setRadiusMeters(request.getRadiusMeters());
+        geofence.setPolygonCoordinates(request.getPolygonCoordinates());
+        geofence.setIsActive(request.getIsActive() != null ? request.getIsActive() : true);
+
+        Geofence saved = geofenceRepository.save(geofence);
+        logger.info("Geofence created: {} (id={})", saved.getName(), saved.getId());
+        return GeofenceResponse.fromEntity(saved);
     }
 
-    public GeofenceResponse update(Long id, GeofenceRequest request) {
-        Geofence geofence = findEntityById(id);
-        mapRequestToEntity(request, geofence);
-        geofence = geofenceRepository.save(geofence);
-        logger.info("Geofence updated: {}", geofence.getName());
-        return GeofenceResponse.fromEntity(geofence);
+    public GeofenceResponse updateGeofence(Long id, GeofenceRequest request) {
+        logger.info("Updating geofence: {}", id);
+
+        Geofence geofence = findById(id);
+        geofence.setName(request.getName());
+        geofence.setSite(request.getSite());
+        geofence.setGeofenceType(GeofenceType.valueOf(request.getGeofenceType()));
+        geofence.setLatitude(request.getLatitude());
+        geofence.setLongitude(request.getLongitude());
+        geofence.setRadiusMeters(request.getRadiusMeters());
+        geofence.setPolygonCoordinates(request.getPolygonCoordinates());
+        if (request.getIsActive() != null) geofence.setIsActive(request.getIsActive());
+
+        Geofence saved = geofenceRepository.save(geofence);
+        return GeofenceResponse.fromEntity(saved);
     }
 
     @Transactional(readOnly = true)
-    public GeofenceResponse getById(Long id) {
-        return GeofenceResponse.fromEntity(findEntityById(id));
+    public GeofenceResponse getGeofence(Long id) {
+        return GeofenceResponse.fromEntity(findById(id));
     }
 
     @Transactional(readOnly = true)
-    public List<GeofenceResponse> getAll() {
+    public List<GeofenceResponse> getAllGeofences() {
         return geofenceRepository.findAll().stream()
                 .map(GeofenceResponse::fromEntity)
                 .collect(Collectors.toList());
     }
 
     @Transactional(readOnly = true)
-    public List<GeofenceResponse> getActive() {
-        return geofenceRepository.findByIsActiveTrue().stream()
+    public List<GeofenceResponse> getActiveGeofences() {
+        return geofenceRepository.findAll().stream()
+                .filter(g -> Boolean.TRUE.equals(g.getIsActive()))
                 .map(GeofenceResponse::fromEntity)
                 .collect(Collectors.toList());
     }
 
-    public GeofenceResponse toggleActive(Long id, boolean active) {
-        Geofence geofence = findEntityById(id);
-        geofence.setIsActive(active);
-        geofence = geofenceRepository.save(geofence);
-        logger.info("Geofence {} {}", geofence.getName(), active ? "activated" : "deactivated");
-        return GeofenceResponse.fromEntity(geofence);
-    }
-
-    public void delete(Long id) {
-        Geofence geofence = findEntityById(id);
-        geofenceRepository.delete(geofence);
-        logger.info("Geofence deleted: {}", geofence.getName());
+    public void deleteGeofence(Long id) {
+        Geofence geofence = findById(id);
+        geofence.setIsActive(false);
+        geofenceRepository.save(geofence);
+        logger.info("Geofence deactivated: {}", id);
     }
 
     /**
-     * Check if a coordinate is within a geofence using the Haversine formula.
+     * Check if a GPS coordinate is within any active geofence.
+     * Returns the matching geofence or null if not within any.
      */
-    public boolean isWithinGeofence(Long geofenceId, BigDecimal latitude, BigDecimal longitude) {
-        Geofence geofence = findEntityById(geofenceId);
-        return isWithinGeofence(geofence, latitude, longitude);
+    @Transactional(readOnly = true)
+    public Geofence findContainingGeofence(Double latitude, Double longitude) {
+        if (latitude == null || longitude == null) {
+            return null;
+        }
+
+        List<Geofence> activeGeofences = geofenceRepository.findAll().stream()
+                .filter(g -> Boolean.TRUE.equals(g.getIsActive()))
+                .collect(Collectors.toList());
+
+        for (Geofence geofence : activeGeofences) {
+            if (isWithinGeofence(geofence, latitude, longitude)) {
+                return geofence;
+            }
+        }
+        return null;
     }
 
-    public boolean isWithinGeofence(Geofence geofence, BigDecimal latitude, BigDecimal longitude) {
-        if (latitude == null || longitude == null) {
+    /**
+     * Check if coordinates are within a specific geofence.
+     */
+    public boolean isWithinGeofence(Geofence geofence, double latitude, double longitude) {
+        if (geofence.getGeofenceType() == GeofenceType.RADIUS) {
+            return isWithinRadius(geofence, latitude, longitude);
+        } else if (geofence.getGeofenceType() == GeofenceType.POLYGON) {
+            return isWithinPolygon(geofence, latitude, longitude);
+        }
+        return false;
+    }
+
+    /**
+     * Haversine formula to calculate distance between two GPS coordinates.
+     * Returns distance in meters.
+     */
+    public double calculateDistance(double lat1, double lon1, double lat2, double lon2) {
+        double dLat = Math.toRadians(lat2 - lat1);
+        double dLon = Math.toRadians(lon2 - lon1);
+
+        double a = Math.sin(dLat / 2) * Math.sin(dLat / 2)
+                + Math.cos(Math.toRadians(lat1)) * Math.cos(Math.toRadians(lat2))
+                * Math.sin(dLon / 2) * Math.sin(dLon / 2);
+
+        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+
+        return EARTH_RADIUS_METERS * c;
+    }
+
+    private boolean isWithinRadius(Geofence geofence, double latitude, double longitude) {
+        if (geofence.getLatitude() == null || geofence.getLongitude() == null || geofence.getRadiusMeters() == null) {
             return false;
         }
-
-        if (geofence.getGeofenceType() == Geofence.GeofenceType.POLYGON) {
-            return isWithinPolygon(geofence, latitude.doubleValue(), longitude.doubleValue());
-        }
-
-        double distance = haversineDistance(
-                geofence.getCenterLatitude().doubleValue(),
-                geofence.getCenterLongitude().doubleValue(),
-                latitude.doubleValue(),
-                longitude.doubleValue()
+        double distance = calculateDistance(
+                geofence.getLatitude(), geofence.getLongitude(),
+                latitude, longitude
         );
         return distance <= geofence.getRadiusMeters();
     }
 
     /**
-     * Haversine formula to calculate great-circle distance between two points.
-     * Returns distance in meters.
-     */
-    public static double haversineDistance(double lat1, double lon1, double lat2, double lon2) {
-        double dLat = Math.toRadians(lat2 - lat1);
-        double dLon = Math.toRadians(lon2 - lon1);
-        double a = Math.sin(dLat / 2) * Math.sin(dLat / 2)
-                + Math.cos(Math.toRadians(lat1)) * Math.cos(Math.toRadians(lat2))
-                * Math.sin(dLon / 2) * Math.sin(dLon / 2);
-        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-        return EARTH_RADIUS_METERS * c;
-    }
-
-    /**
      * Ray-casting algorithm for point-in-polygon test.
-     * Expects polygonCoordinates as JSON array: [[lat1,lon1],[lat2,lon2],...]
+     * Polygon coordinates stored as "lat1,lon1;lat2,lon2;lat3,lon3;..."
      */
-    private boolean isWithinPolygon(Geofence geofence, double lat, double lon) {
+    private boolean isWithinPolygon(Geofence geofence, double latitude, double longitude) {
         String coords = geofence.getPolygonCoordinates();
         if (coords == null || coords.isBlank()) {
             return false;
         }
 
-        try {
-            // Simple parsing of [[lat,lon],[lat,lon],...] format
-            String cleaned = coords.replaceAll("[\\[\\]\\s]", "");
-            String[] parts = cleaned.split(",");
-            if (parts.length < 6) return false; // need at least 3 points
-
-            int n = parts.length / 2;
-            double[] lats = new double[n];
-            double[] lons = new double[n];
-            for (int i = 0; i < n; i++) {
-                lats[i] = Double.parseDouble(parts[i * 2]);
-                lons[i] = Double.parseDouble(parts[i * 2 + 1]);
-            }
-
-            boolean inside = false;
-            for (int i = 0, j = n - 1; i < n; j = i++) {
-                if ((lons[i] > lon) != (lons[j] > lon)
-                        && lat < (lats[j] - lats[i]) * (lon - lons[i]) / (lons[j] - lons[i]) + lats[i]) {
-                    inside = !inside;
-                }
-            }
-            return inside;
-        } catch (Exception e) {
-            logger.warn("Failed to parse polygon coordinates for geofence {}: {}", geofence.getId(), e.getMessage());
+        String[] points = coords.split(";");
+        if (points.length < 3) {
             return false;
         }
-    }
 
-    private Geofence findEntityById(Long id) {
-        return geofenceRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Geofence not found with id: " + id));
-    }
-
-    private void mapRequestToEntity(GeofenceRequest request, Geofence geofence) {
-        geofence.setName(request.getName());
-        geofence.setDescription(request.getDescription());
-        geofence.setCenterLatitude(request.getCenterLatitude());
-        geofence.setCenterLongitude(request.getCenterLongitude());
-        geofence.setRadiusMeters(request.getRadiusMeters());
-        geofence.setAddress(request.getAddress());
-        geofence.setCity(request.getCity());
-        geofence.setProvince(request.getProvince());
-        geofence.setSiteCode(request.getSiteCode());
-        if (request.getGeofenceType() != null) {
-            geofence.setGeofenceType(Geofence.GeofenceType.valueOf(request.getGeofenceType()));
+        double[][] polygon = new double[points.length][2];
+        for (int i = 0; i < points.length; i++) {
+            String[] latLon = points[i].trim().split(",");
+            if (latLon.length != 2) return false;
+            polygon[i][0] = Double.parseDouble(latLon[0].trim());
+            polygon[i][1] = Double.parseDouble(latLon[1].trim());
         }
-        geofence.setPolygonCoordinates(request.getPolygonCoordinates());
-        if (request.getEnforceOnClockIn() != null) geofence.setEnforceOnClockIn(request.getEnforceOnClockIn());
-        if (request.getEnforceOnClockOut() != null) geofence.setEnforceOnClockOut(request.getEnforceOnClockOut());
-        if (request.getAllowOverrideWithReason() != null) geofence.setAllowOverrideWithReason(request.getAllowOverrideWithReason());
+
+        return raycastPointInPolygon(latitude, longitude, polygon);
+    }
+
+    /**
+     * Ray-casting point-in-polygon algorithm.
+     * Counts how many times a ray from the point crosses polygon edges.
+     * Odd count = inside, even count = outside.
+     */
+    private boolean raycastPointInPolygon(double testLat, double testLon, double[][] polygon) {
+        boolean inside = false;
+        int n = polygon.length;
+
+        for (int i = 0, j = n - 1; i < n; j = i++) {
+            double yi = polygon[i][0], xi = polygon[i][1];
+            double yj = polygon[j][0], xj = polygon[j][1];
+
+            if ((yi > testLat) != (yj > testLat)
+                    && testLon < (xj - xi) * (testLat - yi) / (yj - yi) + xi) {
+                inside = !inside;
+            }
+        }
+        return inside;
+    }
+
+    private Geofence findById(Long id) {
+        return geofenceRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Geofence not found: " + id));
     }
 }

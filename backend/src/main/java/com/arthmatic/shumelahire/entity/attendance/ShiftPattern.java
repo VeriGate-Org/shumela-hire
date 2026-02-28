@@ -1,32 +1,49 @@
-package com.arthmatic.shumelahire.dto.attendance;
+package com.arthmatic.shumelahire.entity.attendance;
 
-import com.arthmatic.shumelahire.entity.attendance.ShiftPattern;
+import com.arthmatic.shumelahire.entity.TenantAwareEntity;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
 
-public class ShiftPatternResponse {
+@Entity
+@Table(name = "shift_patterns")
+public class ShiftPattern extends TenantAwareEntity {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @NotBlank
+    @Column(name = "name", nullable = false, length = 100)
     private String name;
+
+    @Column(name = "description", columnDefinition = "TEXT")
     private String description;
+
+    @NotNull
+    @Column(name = "rotation_days", nullable = false)
     private Integer rotationDays;
+
+    @NotBlank
+    @Column(name = "pattern_definition", nullable = false, columnDefinition = "TEXT")
     private String patternDefinition;
-    private Boolean isActive;
+
+    @Column(name = "is_active")
+    private Boolean isActive = true;
+
+    @CreationTimestamp
+    @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
+
+    @UpdateTimestamp
+    @Column(name = "updated_at", nullable = false)
     private LocalDateTime updatedAt;
 
-    public static ShiftPatternResponse fromEntity(ShiftPattern pattern) {
-        ShiftPatternResponse response = new ShiftPatternResponse();
-        response.setId(pattern.getId());
-        response.setName(pattern.getName());
-        response.setDescription(pattern.getDescription());
-        response.setRotationDays(pattern.getRotationDays());
-        response.setPatternDefinition(pattern.getPatternDefinition());
-        response.setIsActive(pattern.getIsActive());
-        response.setCreatedAt(pattern.getCreatedAt());
-        response.setUpdatedAt(pattern.getUpdatedAt());
-        return response;
-    }
+    public ShiftPattern() {}
 
     // Getters and Setters
     public Long getId() { return id; }
