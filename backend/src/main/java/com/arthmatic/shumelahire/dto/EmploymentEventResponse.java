@@ -1,82 +1,64 @@
-package com.arthmatic.shumelahire.entity;
+package com.arthmatic.shumelahire.dto;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
-import org.hibernate.annotations.CreationTimestamp;
+import com.arthmatic.shumelahire.entity.EmploymentEvent;
+import com.arthmatic.shumelahire.entity.EmploymentEventType;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
-@Entity
-@Table(name = "employment_events")
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-public class EmploymentEvent extends TenantAwareEntity {
+public class EmploymentEventResponse {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "employee_id", nullable = false)
-    @NotNull(message = "Employee is required")
-    private Employee employee;
-
-    @Column(name = "employee_id", insertable = false, updatable = false)
     private Long employeeId;
-
-    @Enumerated(EnumType.STRING)
-    @Column(name = "event_type", nullable = false, length = 30)
-    @NotNull(message = "Event type is required")
+    private String employeeName;
     private EmploymentEventType eventType;
-
-    @NotNull(message = "Event date is required")
-    @Column(name = "event_date", nullable = false)
     private LocalDate eventDate;
-
-    @NotNull(message = "Effective date is required")
-    @Column(name = "effective_date", nullable = false)
     private LocalDate effectiveDate;
-
-    @Column(columnDefinition = "TEXT")
     private String description;
-
-    @Column(name = "previous_value", columnDefinition = "TEXT")
     private String previousValue;
-
-    @Column(name = "new_value", columnDefinition = "TEXT")
     private String newValue;
-
-    @Column(columnDefinition = "TEXT")
     private String reason;
-
-    @Column(name = "approved_by")
     private Long approvedBy;
-
-    @Column(name = "approved_at")
     private LocalDateTime approvedAt;
-
-    @Column(name = "reference_number", length = 100)
     private String referenceNumber;
-
-    @Column(columnDefinition = "TEXT")
     private String attachments;
-
-    @CreationTimestamp
-    @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
-    // Constructors
-    public EmploymentEvent() {}
+    public EmploymentEventResponse() {}
+
+    public EmploymentEventResponse(EmploymentEvent event) {
+        this.id = event.getId();
+        this.employeeId = event.getEmployeeId();
+        if (event.getEmployee() != null) {
+            this.employeeName = event.getEmployee().getFullName();
+        }
+        this.eventType = event.getEventType();
+        this.eventDate = event.getEventDate();
+        this.effectiveDate = event.getEffectiveDate();
+        this.description = event.getDescription();
+        this.previousValue = event.getPreviousValue();
+        this.newValue = event.getNewValue();
+        this.reason = event.getReason();
+        this.approvedBy = event.getApprovedBy();
+        this.approvedAt = event.getApprovedAt();
+        this.referenceNumber = event.getReferenceNumber();
+        this.attachments = event.getAttachments();
+        this.createdAt = event.getCreatedAt();
+    }
+
+    public static EmploymentEventResponse fromEntity(EmploymentEvent event) {
+        return new EmploymentEventResponse(event);
+    }
 
     // Getters and Setters
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 
-    public Employee getEmployee() { return employee; }
-    public void setEmployee(Employee employee) { this.employee = employee; }
-
     public Long getEmployeeId() { return employeeId; }
+    public void setEmployeeId(Long employeeId) { this.employeeId = employeeId; }
+
+    public String getEmployeeName() { return employeeName; }
+    public void setEmployeeName(String employeeName) { this.employeeName = employeeName; }
 
     public EmploymentEventType getEventType() { return eventType; }
     public void setEventType(EmploymentEventType eventType) { this.eventType = eventType; }
@@ -113,14 +95,4 @@ public class EmploymentEvent extends TenantAwareEntity {
 
     public LocalDateTime getCreatedAt() { return createdAt; }
     public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
-
-    @Override
-    public String toString() {
-        return "EmploymentEvent{" +
-                "id=" + id +
-                ", eventType=" + eventType +
-                ", eventDate=" + eventDate +
-                ", effectiveDate=" + effectiveDate +
-                '}';
-    }
 }

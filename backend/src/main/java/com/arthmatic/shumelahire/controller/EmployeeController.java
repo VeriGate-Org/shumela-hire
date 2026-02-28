@@ -1,7 +1,8 @@
 package com.arthmatic.shumelahire.controller;
 
-import com.arthmatic.shumelahire.dto.employee.*;
+import com.arthmatic.shumelahire.dto.*;
 import com.arthmatic.shumelahire.entity.EmployeeDocumentType;
+import com.arthmatic.shumelahire.entity.EmployeeEmploymentType;
 import com.arthmatic.shumelahire.entity.EmployeeStatus;
 import com.arthmatic.shumelahire.entity.EmploymentEventType;
 import com.arthmatic.shumelahire.service.*;
@@ -24,11 +25,10 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/api/employees")
-@PreAuthorize("hasAnyRole('ADMIN', 'HR_MANAGER', 'HIRING_MANAGER', 'EMPLOYEE')")
+@PreAuthorize("hasAnyRole('ADMIN', 'HR_MANAGER', 'EMPLOYEE')")
 public class EmployeeController {
 
     private static final Logger logger = LoggerFactory.getLogger(EmployeeController.class);
@@ -88,6 +88,7 @@ public class EmployeeController {
             EmployeeResponse response = employeeService.getEmployee(id);
             return ResponseEntity.ok(response);
         } catch (IllegalArgumentException e) {
+            logger.warn("Employee not found: {}", id);
             return ResponseEntity.notFound().build();
         } catch (Exception e) {
             logger.error("Error getting employee {}", id, e);
@@ -96,9 +97,45 @@ public class EmployeeController {
         }
     }
 
+    @GetMapping("/by-number/{employeeNumber}")
+    public ResponseEntity<?> getEmployeeByNumber(@PathVariable String employeeNumber) {
+        try {
+            EmployeeResponse response = employeeService.getEmployeeByNumber(employeeNumber);
+            return ResponseEntity.ok(response);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.notFound().build();
+        } catch (Exception e) {
+            logger.error("Error getting employee by number {}", employeeNumber, e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(new ErrorResponse("Internal server error"));
+        }
+    }
+
+    @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<?> deleteEmployee(@PathVariable Long id) {
+        try {
+            logger.info("Deleting employee: {}", id);
+            employeeService.deleteEmployee(id);
+            return ResponseEntity.noContent().build();
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.notFound().build();
+        } catch (Exception e) {
+            logger.error("Error deleting employee {}", id, e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(new ErrorResponse("Internal server error"));
+        }
+    }
+
+    // ==================== Search & Filter ====================
+
     @GetMapping
     public ResponseEntity<?> searchEmployees(
             @RequestParam(required = false) String search,
+            @RequestParam(required = false) String department,
+            @RequestParam(required = false) EmployeeStatus status,
+            @RequestParam(required = false) String location,
+            @RequestParam(required = false) String jobTitle,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
             @RequestParam(defaultValue = "lastName") String sort,
@@ -106,29 +143,16 @@ public class EmployeeController {
         try {
             Sort.Direction sortDirection = Sort.Direction.fromString(direction);
             Pageable pageable = PageRequest.of(page, size, Sort.by(sortDirection, sort));
-            Page<EmployeeResponse> results = employeeService.searchEmployees(search, pageable);
+
+            Page<EmployeeResponse> results;
+            if (department != null || status != null || location != null || jobTitle != null) {
+                results = employeeService.filterEmployees(department, status, location, jobTitle, search, pageable);
+            } else {
+                results = employeeService.searchEmployees(search, pageable);
+            }
             return ResponseEntity.ok(results);
         } catch (Exception e) {
             logger.error("Error searching employees", e);
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(new ErrorResponse("Internal server error"));
-        }
-    }
-
-    @GetMapping("/filter")
-    public ResponseEntity<?> filterEmployees(
-            @RequestParam(required = false) String department,
-            @RequestParam(required = false) EmployeeStatus status,
-            @RequestParam(required = false) String jobTitle,
-            @RequestParam(required = false) String location,
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size) {
-        try {
-            Pageable pageable = PageRequest.of(page, size, Sort.by("lastName"));
-            Page<EmployeeResponse> results = employeeService.filterEmployees(department, status, jobTitle, location, pageable);
-            return ResponseEntity.ok(results);
-        } catch (Exception e) {
-            logger.error("Error filtering employees", e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(new ErrorResponse("Internal server error"));
         }
@@ -143,7 +167,7 @@ public class EmployeeController {
             Page<EmployeeResponse> results = employeeService.getDirectory(pageable);
             return ResponseEntity.ok(results);
         } catch (Exception e) {
-            logger.error("Error getting directory", e);
+            logger.error("Error getting employee directory", e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(new ErrorResponse("Internal server error"));
         }
@@ -161,27 +185,36 @@ public class EmployeeController {
         }
     }
 
-    @PatchMapping("/{id}/status")
-    @PreAuthorize("hasAnyRole('ADMIN', 'HR_MANAGER')")
-    public ResponseEntity<?> updateStatus(@PathVariable Long id,
-                                         @RequestParam EmployeeStatus status,
-                                         @RequestParam(required = false) String reason) {
+    // ==================== Org Data ====================
+
+    @GetMapping("/stats/by-department")
+    @PreAuthorize("hasAnyRole('ADMIN', 'HR_MANAGER', 'EXECUTIVE')")
+    public ResponseEntity<?> getHeadcountByDepartment() {
         try {
-            EmployeeResponse response = employeeService.updateStatus(id, status, reason);
-            return ResponseEntity.ok(response);
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body(new ErrorResponse(e.getMessage()));
+            return ResponseEntity.ok(employeeService.getHeadcountByDepartment());
         } catch (Exception e) {
-            logger.error("Error updating employee status {}", id, e);
+            logger.error("Error getting headcount by department", e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(new ErrorResponse("Internal server error"));
         }
     }
 
-    @GetMapping("/departments")
+    @GetMapping("/stats/by-status")
+    @PreAuthorize("hasAnyRole('ADMIN', 'HR_MANAGER', 'EXECUTIVE')")
+    public ResponseEntity<?> getHeadcountByStatus() {
+        try {
+            return ResponseEntity.ok(employeeService.getHeadcountByStatus());
+        } catch (Exception e) {
+            logger.error("Error getting headcount by status", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(new ErrorResponse("Internal server error"));
+        }
+    }
+
+    @GetMapping("/meta/departments")
     public ResponseEntity<?> getDepartments() {
         try {
-            return ResponseEntity.ok(employeeService.getDistinctDepartments());
+            return ResponseEntity.ok(employeeService.getDepartments());
         } catch (Exception e) {
             logger.error("Error getting departments", e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
@@ -189,10 +222,10 @@ public class EmployeeController {
         }
     }
 
-    @GetMapping("/locations")
+    @GetMapping("/meta/locations")
     public ResponseEntity<?> getLocations() {
         try {
-            return ResponseEntity.ok(employeeService.getDistinctLocations());
+            return ResponseEntity.ok(employeeService.getLocations());
         } catch (Exception e) {
             logger.error("Error getting locations", e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
@@ -200,25 +233,12 @@ public class EmployeeController {
         }
     }
 
-    @GetMapping("/job-titles")
+    @GetMapping("/meta/job-titles")
     public ResponseEntity<?> getJobTitles() {
         try {
-            return ResponseEntity.ok(employeeService.getDistinctJobTitles());
+            return ResponseEntity.ok(employeeService.getJobTitles());
         } catch (Exception e) {
             logger.error("Error getting job titles", e);
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(new ErrorResponse("Internal server error"));
-        }
-    }
-
-    @GetMapping("/department-counts")
-    @PreAuthorize("hasAnyRole('ADMIN', 'HR_MANAGER', 'EXECUTIVE')")
-    public ResponseEntity<?> getDepartmentCounts() {
-        try {
-            Map<String, Long> counts = employeeService.getDepartmentCounts();
-            return ResponseEntity.ok(counts);
-        } catch (Exception e) {
-            logger.error("Error getting department counts", e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(new ErrorResponse("Internal server error"));
         }
@@ -227,18 +247,23 @@ public class EmployeeController {
     // ==================== Documents ====================
 
     @PostMapping(value = "/{id}/documents", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    @PreAuthorize("hasAnyRole('ADMIN', 'HR_MANAGER', 'EMPLOYEE')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'HR_MANAGER')")
     public ResponseEntity<?> uploadDocument(
             @PathVariable Long id,
-            @RequestParam EmployeeDocumentType type,
-            @RequestParam String title,
-            @RequestParam(required = false) String description,
+            @RequestParam EmployeeDocumentType documentType,
+            @RequestParam(required = false) String name,
+            @RequestParam("file") MultipartFile file,
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate expiryDate,
-            @RequestParam("file") MultipartFile file) {
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate issuedDate,
+            @RequestParam(required = false) String issuingAuthority,
+            @RequestParam(required = false) String notes) {
         try {
-            EmployeeDocumentResponse response = documentService.uploadDocument(id, type, title, description, expiryDate, file);
+            logger.info("Uploading {} document for employee: {}", documentType, id);
+            EmployeeDocumentResponse response = documentService.uploadDocument(
+                    id, documentType, name, file, expiryDate, issuedDate, issuingAuthority, notes);
             return ResponseEntity.status(HttpStatus.CREATED).body(response);
         } catch (IllegalArgumentException e) {
+            logger.warn("Failed to upload document for employee {}: {}", id, e.getMessage());
             return ResponseEntity.badRequest().body(new ErrorResponse(e.getMessage()));
         } catch (IOException e) {
             logger.error("IO error uploading document for employee {}", id, e);
@@ -252,24 +277,12 @@ public class EmployeeController {
     }
 
     @GetMapping("/{id}/documents")
-    public ResponseEntity<?> getDocuments(@PathVariable Long id) {
+    public ResponseEntity<?> getEmployeeDocuments(@PathVariable Long id) {
         try {
-            List<EmployeeDocumentResponse> documents = documentService.getDocuments(id);
+            List<EmployeeDocumentResponse> documents = documentService.getEmployeeDocuments(id);
             return ResponseEntity.ok(documents);
         } catch (Exception e) {
             logger.error("Error getting documents for employee {}", id, e);
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(new ErrorResponse("Internal server error"));
-        }
-    }
-
-    @GetMapping("/{id}/documents/type/{type}")
-    public ResponseEntity<?> getDocumentsByType(@PathVariable Long id, @PathVariable EmployeeDocumentType type) {
-        try {
-            List<EmployeeDocumentResponse> documents = documentService.getDocumentsByType(id, type);
-            return ResponseEntity.ok(documents);
-        } catch (Exception e) {
-            logger.error("Error getting documents by type for employee {}", id, e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(new ErrorResponse("Internal server error"));
         }
@@ -292,12 +305,23 @@ public class EmployeeController {
 
     @GetMapping("/documents/expiring")
     @PreAuthorize("hasAnyRole('ADMIN', 'HR_MANAGER')")
-    public ResponseEntity<?> getExpiringDocuments(@RequestParam(defaultValue = "30") int daysAhead) {
+    public ResponseEntity<?> getExpiringDocuments(@RequestParam(defaultValue = "30") int days) {
         try {
-            List<EmployeeDocumentResponse> documents = documentService.getExpiringDocuments(daysAhead);
-            return ResponseEntity.ok(documents);
+            return ResponseEntity.ok(documentService.getExpiringSoon(days));
         } catch (Exception e) {
             logger.error("Error getting expiring documents", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(new ErrorResponse("Internal server error"));
+        }
+    }
+
+    @GetMapping("/documents/expired")
+    @PreAuthorize("hasAnyRole('ADMIN', 'HR_MANAGER')")
+    public ResponseEntity<?> getExpiredDocuments() {
+        try {
+            return ResponseEntity.ok(documentService.getExpired());
+        } catch (Exception e) {
+            logger.error("Error getting expired documents", e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(new ErrorResponse("Internal server error"));
         }
@@ -311,9 +335,11 @@ public class EmployeeController {
                                         @Valid @RequestBody EmploymentEventRequest request) {
         try {
             request.setEmployeeId(id);
+            logger.info("Creating {} event for employee: {}", request.getEventType(), id);
             EmploymentEventResponse response = eventService.createEvent(request);
             return ResponseEntity.status(HttpStatus.CREATED).body(response);
         } catch (IllegalArgumentException e) {
+            logger.warn("Failed to create event for employee {}: {}", id, e.getMessage());
             return ResponseEntity.badRequest().body(new ErrorResponse(e.getMessage()));
         } catch (Exception e) {
             logger.error("Error creating event for employee {}", id, e);
@@ -323,10 +349,19 @@ public class EmployeeController {
     }
 
     @GetMapping("/{id}/events")
-    public ResponseEntity<?> getEmployeeHistory(@PathVariable Long id) {
+    public ResponseEntity<?> getEmployeeEvents(
+            @PathVariable Long id,
+            @RequestParam(required = false) EmploymentEventType eventType,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate) {
         try {
-            List<EmploymentEventResponse> events = eventService.getEmployeeHistory(id);
-            return ResponseEntity.ok(events);
+            if (eventType != null) {
+                return ResponseEntity.ok(eventService.getEmployeeEventsByType(id, eventType));
+            } else if (startDate != null && endDate != null) {
+                return ResponseEntity.ok(eventService.getEmployeeEventsByDateRange(id, startDate, endDate));
+            } else {
+                return ResponseEntity.ok(eventService.getEmployeeHistory(id));
+            }
         } catch (Exception e) {
             logger.error("Error getting events for employee {}", id, e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
@@ -334,36 +369,33 @@ public class EmployeeController {
         }
     }
 
-    @GetMapping("/{id}/events/type/{type}")
-    public ResponseEntity<?> getEventsByType(@PathVariable Long id, @PathVariable EmploymentEventType type) {
-        try {
-            List<EmploymentEventResponse> events = eventService.getEmployeeEventsByType(id, type);
-            return ResponseEntity.ok(events);
-        } catch (Exception e) {
-            logger.error("Error getting events by type for employee {}", id, e);
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(new ErrorResponse("Internal server error"));
-        }
-    }
-
     // ==================== Applicant Conversion ====================
 
-    @PostMapping("/convert-applicant")
+    @PostMapping("/convert-applicant/{applicantId}")
     @PreAuthorize("hasAnyRole('ADMIN', 'HR_MANAGER')")
-    public ResponseEntity<?> convertApplicant(@Valid @RequestBody ApplicantToEmployeeRequest request) {
+    public ResponseEntity<?> convertApplicant(
+            @PathVariable Long applicantId,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate hireDate,
+            @RequestParam String department,
+            @RequestParam String jobTitle,
+            @RequestParam(required = false) Long reportingManagerId,
+            @RequestParam(required = false) EmployeeEmploymentType employmentType) {
         try {
-            EmployeeResponse response = applicantToEmployeeService.convertApplicantToEmployee(request);
+            logger.info("Converting applicant {} to employee", applicantId);
+            EmployeeResponse response = applicantToEmployeeService.convertApplicantToEmployee(
+                    applicantId, hireDate, department, jobTitle, reportingManagerId, employmentType);
             return ResponseEntity.status(HttpStatus.CREATED).body(response);
         } catch (IllegalArgumentException e) {
+            logger.warn("Failed to convert applicant {}: {}", applicantId, e.getMessage());
             return ResponseEntity.badRequest().body(new ErrorResponse(e.getMessage()));
         } catch (Exception e) {
-            logger.error("Error converting applicant {}", request.getApplicantId(), e);
+            logger.error("Error converting applicant {}", applicantId, e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(new ErrorResponse("Internal server error"));
         }
     }
 
-    // Error response DTO (reuse pattern from ApplicantController)
+    // Error response DTO
     public static class ErrorResponse {
         private String message;
         private long timestamp;

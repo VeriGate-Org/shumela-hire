@@ -1,12 +1,17 @@
-package com.arthmatic.shumelahire.dto.employee;
+package com.arthmatic.shumelahire.dto;
 
+import com.arthmatic.shumelahire.entity.EmployeeEmploymentType;
+import com.arthmatic.shumelahire.entity.EmployeeStatus;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 
 public class EmployeeCreateRequest {
+
+    private String title;
 
     @NotBlank(message = "First name is required")
     private String firstName;
@@ -14,7 +19,6 @@ public class EmployeeCreateRequest {
     @NotBlank(message = "Last name is required")
     private String lastName;
 
-    private String title;
     private String preferredName;
 
     @NotBlank(message = "Email is required")
@@ -26,18 +30,17 @@ public class EmployeeCreateRequest {
     private String mobilePhone;
     private LocalDate dateOfBirth;
     private String gender;
-    private String race;
-    private String disabilityStatus;
-    private String citizenshipStatus;
-    private String nationality;
     private String maritalStatus;
+    private String nationality;
 
-    // PII fields
+    // PII fields (will be encrypted by service layer)
     private String idNumber;
     private String taxNumber;
-    private String bankAccountNumber;
+    private String passportNumber;
     private String bankName;
     private String bankBranchCode;
+    private String bankAccountNumber;
+    private String bankAccountType;
 
     // Address
     private String physicalAddress;
@@ -52,38 +55,50 @@ public class EmployeeCreateRequest {
     private String division;
     private String jobTitle;
     private String jobGrade;
-    private String employmentType;
+    private String costCentre;
+    private String location;
+    private EmployeeEmploymentType employmentType;
+    private EmployeeStatus status;
 
     @NotNull(message = "Hire date is required")
     private LocalDate hireDate;
 
     private LocalDate probationEndDate;
-    private LocalDate contractEndDate;
+
+    // Compensation
+    private BigDecimal salary;
+    private String salaryCurrency;
+    private String payFrequency;
+
+    // Org hierarchy
     private Long reportingManagerId;
-    private String costCentre;
-    private String location;
-    private String site;
+    private Long applicantId;
+    private Long userId;
+
+    // Employment equity
+    private String race;
+    private String disabilityStatus;
+    private String citizenshipStatus;
 
     // Emergency contact
     private String emergencyContactName;
     private String emergencyContactPhone;
     private String emergencyContactRelationship;
 
-    // POPIA consent
-    private Boolean demographicsConsent;
+    private String notes;
 
     // Constructors
     public EmployeeCreateRequest() {}
 
     // Getters and Setters
+    public String getTitle() { return title; }
+    public void setTitle(String title) { this.title = title; }
+
     public String getFirstName() { return firstName; }
     public void setFirstName(String firstName) { this.firstName = firstName; }
 
     public String getLastName() { return lastName; }
     public void setLastName(String lastName) { this.lastName = lastName; }
-
-    public String getTitle() { return title; }
-    public void setTitle(String title) { this.title = title; }
 
     public String getPreferredName() { return preferredName; }
     public void setPreferredName(String preferredName) { this.preferredName = preferredName; }
@@ -106,20 +121,11 @@ public class EmployeeCreateRequest {
     public String getGender() { return gender; }
     public void setGender(String gender) { this.gender = gender; }
 
-    public String getRace() { return race; }
-    public void setRace(String race) { this.race = race; }
-
-    public String getDisabilityStatus() { return disabilityStatus; }
-    public void setDisabilityStatus(String disabilityStatus) { this.disabilityStatus = disabilityStatus; }
-
-    public String getCitizenshipStatus() { return citizenshipStatus; }
-    public void setCitizenshipStatus(String citizenshipStatus) { this.citizenshipStatus = citizenshipStatus; }
+    public String getMaritalStatus() { return maritalStatus; }
+    public void setMaritalStatus(String maritalStatus) { this.maritalStatus = maritalStatus; }
 
     public String getNationality() { return nationality; }
     public void setNationality(String nationality) { this.nationality = nationality; }
-
-    public String getMaritalStatus() { return maritalStatus; }
-    public void setMaritalStatus(String maritalStatus) { this.maritalStatus = maritalStatus; }
 
     public String getIdNumber() { return idNumber; }
     public void setIdNumber(String idNumber) { this.idNumber = idNumber; }
@@ -127,14 +133,20 @@ public class EmployeeCreateRequest {
     public String getTaxNumber() { return taxNumber; }
     public void setTaxNumber(String taxNumber) { this.taxNumber = taxNumber; }
 
-    public String getBankAccountNumber() { return bankAccountNumber; }
-    public void setBankAccountNumber(String bankAccountNumber) { this.bankAccountNumber = bankAccountNumber; }
+    public String getPassportNumber() { return passportNumber; }
+    public void setPassportNumber(String passportNumber) { this.passportNumber = passportNumber; }
 
     public String getBankName() { return bankName; }
     public void setBankName(String bankName) { this.bankName = bankName; }
 
     public String getBankBranchCode() { return bankBranchCode; }
     public void setBankBranchCode(String bankBranchCode) { this.bankBranchCode = bankBranchCode; }
+
+    public String getBankAccountNumber() { return bankAccountNumber; }
+    public void setBankAccountNumber(String bankAccountNumber) { this.bankAccountNumber = bankAccountNumber; }
+
+    public String getBankAccountType() { return bankAccountType; }
+    public void setBankAccountType(String bankAccountType) { this.bankAccountType = bankAccountType; }
 
     public String getPhysicalAddress() { return physicalAddress; }
     public void setPhysicalAddress(String physicalAddress) { this.physicalAddress = physicalAddress; }
@@ -166,8 +178,17 @@ public class EmployeeCreateRequest {
     public String getJobGrade() { return jobGrade; }
     public void setJobGrade(String jobGrade) { this.jobGrade = jobGrade; }
 
-    public String getEmploymentType() { return employmentType; }
-    public void setEmploymentType(String employmentType) { this.employmentType = employmentType; }
+    public String getCostCentre() { return costCentre; }
+    public void setCostCentre(String costCentre) { this.costCentre = costCentre; }
+
+    public String getLocation() { return location; }
+    public void setLocation(String location) { this.location = location; }
+
+    public EmployeeEmploymentType getEmploymentType() { return employmentType; }
+    public void setEmploymentType(EmployeeEmploymentType employmentType) { this.employmentType = employmentType; }
+
+    public EmployeeStatus getStatus() { return status; }
+    public void setStatus(EmployeeStatus status) { this.status = status; }
 
     public LocalDate getHireDate() { return hireDate; }
     public void setHireDate(LocalDate hireDate) { this.hireDate = hireDate; }
@@ -175,20 +196,32 @@ public class EmployeeCreateRequest {
     public LocalDate getProbationEndDate() { return probationEndDate; }
     public void setProbationEndDate(LocalDate probationEndDate) { this.probationEndDate = probationEndDate; }
 
-    public LocalDate getContractEndDate() { return contractEndDate; }
-    public void setContractEndDate(LocalDate contractEndDate) { this.contractEndDate = contractEndDate; }
+    public BigDecimal getSalary() { return salary; }
+    public void setSalary(BigDecimal salary) { this.salary = salary; }
+
+    public String getSalaryCurrency() { return salaryCurrency; }
+    public void setSalaryCurrency(String salaryCurrency) { this.salaryCurrency = salaryCurrency; }
+
+    public String getPayFrequency() { return payFrequency; }
+    public void setPayFrequency(String payFrequency) { this.payFrequency = payFrequency; }
 
     public Long getReportingManagerId() { return reportingManagerId; }
     public void setReportingManagerId(Long reportingManagerId) { this.reportingManagerId = reportingManagerId; }
 
-    public String getCostCentre() { return costCentre; }
-    public void setCostCentre(String costCentre) { this.costCentre = costCentre; }
+    public Long getApplicantId() { return applicantId; }
+    public void setApplicantId(Long applicantId) { this.applicantId = applicantId; }
 
-    public String getLocation() { return location; }
-    public void setLocation(String location) { this.location = location; }
+    public Long getUserId() { return userId; }
+    public void setUserId(Long userId) { this.userId = userId; }
 
-    public String getSite() { return site; }
-    public void setSite(String site) { this.site = site; }
+    public String getRace() { return race; }
+    public void setRace(String race) { this.race = race; }
+
+    public String getDisabilityStatus() { return disabilityStatus; }
+    public void setDisabilityStatus(String disabilityStatus) { this.disabilityStatus = disabilityStatus; }
+
+    public String getCitizenshipStatus() { return citizenshipStatus; }
+    public void setCitizenshipStatus(String citizenshipStatus) { this.citizenshipStatus = citizenshipStatus; }
 
     public String getEmergencyContactName() { return emergencyContactName; }
     public void setEmergencyContactName(String emergencyContactName) { this.emergencyContactName = emergencyContactName; }
@@ -199,6 +232,6 @@ public class EmployeeCreateRequest {
     public String getEmergencyContactRelationship() { return emergencyContactRelationship; }
     public void setEmergencyContactRelationship(String emergencyContactRelationship) { this.emergencyContactRelationship = emergencyContactRelationship; }
 
-    public Boolean getDemographicsConsent() { return demographicsConsent; }
-    public void setDemographicsConsent(Boolean demographicsConsent) { this.demographicsConsent = demographicsConsent; }
+    public String getNotes() { return notes; }
+    public void setNotes(String notes) { this.notes = notes; }
 }

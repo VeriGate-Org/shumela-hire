@@ -1,240 +1,196 @@
-package com.arthmatic.shumelahire.entity;
+package com.arthmatic.shumelahire.dto;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import jakarta.persistence.*;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
+import com.arthmatic.shumelahire.entity.Employee;
+import com.arthmatic.shumelahire.entity.EmployeeEmploymentType;
+import com.arthmatic.shumelahire.entity.EmployeeStatus;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
-@Entity
-@Table(name = "employees")
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-public class Employee extends TenantAwareEntity {
+public class EmployeeResponse {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    @NotBlank(message = "Employee number is required")
-    @Column(name = "employee_number", nullable = false, unique = true, length = 50)
     private String employeeNumber;
-
-    @Column(length = 20)
     private String title;
-
-    @NotBlank(message = "First name is required")
-    @Column(name = "first_name", nullable = false, length = 100)
     private String firstName;
-
-    @NotBlank(message = "Last name is required")
-    @Column(name = "last_name", nullable = false, length = 100)
     private String lastName;
-
-    @Column(name = "preferred_name", length = 100)
     private String preferredName;
-
-    @NotBlank(message = "Email is required")
-    @Email(message = "Valid email is required")
-    @Column(nullable = false, length = 255)
+    private String fullName;
+    private String displayName;
     private String email;
-
-    @Column(name = "personal_email", length = 255)
     private String personalEmail;
-
-    @Column(length = 20)
     private String phone;
-
-    @Column(name = "mobile_phone", length = 20)
     private String mobilePhone;
-
-    @Column(name = "date_of_birth")
     private LocalDate dateOfBirth;
-
-    @Column(length = 20)
     private String gender;
-
-    @Column(name = "marital_status", length = 20)
     private String maritalStatus;
-
-    @Column(length = 100)
     private String nationality;
 
-    // Encrypted PII fields — stored encrypted via DataEncryptionService
-    @Column(name = "id_number", length = 500)
+    // PII — decrypted for authorized viewers
     private String idNumber;
-
-    @Column(name = "tax_number", length = 500)
     private String taxNumber;
-
-    @Column(name = "passport_number", length = 500)
     private String passportNumber;
-
-    @Column(name = "bank_name", length = 255)
     private String bankName;
-
-    @Column(name = "bank_branch_code", length = 255)
     private String bankBranchCode;
-
-    @Column(name = "bank_account_number", length = 500)
     private String bankAccountNumber;
-
-    @Column(name = "bank_account_type", length = 50)
     private String bankAccountType;
 
     // Address
-    @Column(name = "physical_address", columnDefinition = "TEXT")
     private String physicalAddress;
-
-    @Column(name = "postal_address", columnDefinition = "TEXT")
     private String postalAddress;
-
-    @Column(length = 100)
     private String city;
-
-    @Column(length = 100)
     private String province;
-
-    @Column(name = "postal_code", length = 20)
     private String postalCode;
-
-    @Column(length = 100)
     private String country;
 
     // Employment details
-    @Column(length = 100)
     private String department;
-
-    @Column(length = 100)
     private String division;
-
-    @Column(name = "job_title", length = 255)
     private String jobTitle;
-
-    @Column(name = "job_grade", length = 50)
     private String jobGrade;
-
-    @Column(name = "cost_centre", length = 100)
     private String costCentre;
-
-    @Column(length = 255)
     private String location;
-
-    @Enumerated(EnumType.STRING)
-    @Column(name = "employment_type", nullable = false, length = 30)
-    private EmployeeEmploymentType employmentType = EmployeeEmploymentType.PERMANENT;
-
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false, length = 20)
-    private EmployeeStatus status = EmployeeStatus.ACTIVE;
-
-    @NotNull(message = "Hire date is required")
-    @Column(name = "hire_date", nullable = false)
+    private EmployeeEmploymentType employmentType;
+    private EmployeeStatus status;
     private LocalDate hireDate;
-
-    @Column(name = "probation_end_date")
     private LocalDate probationEndDate;
-
-    @Column(name = "termination_date")
     private LocalDate terminationDate;
-
-    @Column(name = "termination_reason", columnDefinition = "TEXT")
     private String terminationReason;
 
     // Compensation
-    @Column(precision = 15, scale = 2)
     private BigDecimal salary;
-
-    @Column(name = "salary_currency", length = 3)
-    private String salaryCurrency = "ZAR";
-
-    @Column(name = "pay_frequency", length = 20)
-    private String payFrequency = "MONTHLY";
+    private String salaryCurrency;
+    private String payFrequency;
 
     // Org hierarchy
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "reporting_manager_id")
-    private Employee reportingManager;
-
-    @Column(name = "reporting_manager_id", insertable = false, updatable = false)
     private Long reportingManagerId;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "applicant_id")
-    private Applicant applicant;
-
-    @Column(name = "applicant_id", insertable = false, updatable = false)
+    private String reportingManagerName;
     private Long applicantId;
-
-    @Column(name = "user_id")
     private Long userId;
 
     // Employment equity
-    @Column(length = 50)
     private String race;
-
-    @Column(name = "disability_status", length = 50)
     private String disabilityStatus;
-
-    @Column(name = "citizenship_status", length = 50)
     private String citizenshipStatus;
 
     // Emergency contact
-    @Column(name = "emergency_contact_name", length = 200)
     private String emergencyContactName;
-
-    @Column(name = "emergency_contact_phone", length = 20)
     private String emergencyContactPhone;
-
-    @Column(name = "emergency_contact_relationship", length = 50)
     private String emergencyContactRelationship;
 
-    // Metadata
-    @Column(columnDefinition = "TEXT")
     private String notes;
-
-    @Column(name = "profile_photo_url", length = 500)
     private String profilePhotoUrl;
-
-    @CreationTimestamp
-    @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
-
-    @UpdateTimestamp
-    @Column(name = "updated_at", nullable = false)
     private LocalDateTime updatedAt;
 
-    // Relationships
-    @OneToMany(mappedBy = "employee", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<EmployeeDocument> documents = new ArrayList<>();
-
-    @OneToMany(mappedBy = "employee", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<EmploymentEvent> employmentEvents = new ArrayList<>();
-
-    @OneToMany(mappedBy = "reportingManager", fetch = FetchType.LAZY)
-    private List<Employee> directReports = new ArrayList<>();
-
     // Constructors
-    public Employee() {}
+    public EmployeeResponse() {}
 
-    // Helper methods
-    public String getFullName() {
-        return firstName + " " + lastName;
+    public EmployeeResponse(Employee employee) {
+        this.id = employee.getId();
+        this.employeeNumber = employee.getEmployeeNumber();
+        this.title = employee.getTitle();
+        this.firstName = employee.getFirstName();
+        this.lastName = employee.getLastName();
+        this.preferredName = employee.getPreferredName();
+        this.fullName = employee.getFullName();
+        this.displayName = employee.getDisplayName();
+        this.email = employee.getEmail();
+        this.personalEmail = employee.getPersonalEmail();
+        this.phone = employee.getPhone();
+        this.mobilePhone = employee.getMobilePhone();
+        this.dateOfBirth = employee.getDateOfBirth();
+        this.gender = employee.getGender();
+        this.maritalStatus = employee.getMaritalStatus();
+        this.nationality = employee.getNationality();
+
+        // PII fields (already decrypted by service layer)
+        this.idNumber = employee.getIdNumber();
+        this.taxNumber = employee.getTaxNumber();
+        this.passportNumber = employee.getPassportNumber();
+        this.bankName = employee.getBankName();
+        this.bankBranchCode = employee.getBankBranchCode();
+        this.bankAccountNumber = employee.getBankAccountNumber();
+        this.bankAccountType = employee.getBankAccountType();
+
+        // Address
+        this.physicalAddress = employee.getPhysicalAddress();
+        this.postalAddress = employee.getPostalAddress();
+        this.city = employee.getCity();
+        this.province = employee.getProvince();
+        this.postalCode = employee.getPostalCode();
+        this.country = employee.getCountry();
+
+        // Employment
+        this.department = employee.getDepartment();
+        this.division = employee.getDivision();
+        this.jobTitle = employee.getJobTitle();
+        this.jobGrade = employee.getJobGrade();
+        this.costCentre = employee.getCostCentre();
+        this.location = employee.getLocation();
+        this.employmentType = employee.getEmploymentType();
+        this.status = employee.getStatus();
+        this.hireDate = employee.getHireDate();
+        this.probationEndDate = employee.getProbationEndDate();
+        this.terminationDate = employee.getTerminationDate();
+        this.terminationReason = employee.getTerminationReason();
+
+        // Compensation
+        this.salary = employee.getSalary();
+        this.salaryCurrency = employee.getSalaryCurrency();
+        this.payFrequency = employee.getPayFrequency();
+
+        // Org hierarchy
+        this.reportingManagerId = employee.getReportingManagerId();
+        if (employee.getReportingManager() != null) {
+            this.reportingManagerName = employee.getReportingManager().getFullName();
+        }
+        this.applicantId = employee.getApplicantId();
+        this.userId = employee.getUserId();
+
+        // Employment equity
+        this.race = employee.getRace();
+        this.disabilityStatus = employee.getDisabilityStatus();
+        this.citizenshipStatus = employee.getCitizenshipStatus();
+
+        // Emergency contact
+        this.emergencyContactName = employee.getEmergencyContactName();
+        this.emergencyContactPhone = employee.getEmergencyContactPhone();
+        this.emergencyContactRelationship = employee.getEmergencyContactRelationship();
+
+        this.notes = employee.getNotes();
+        this.profilePhotoUrl = employee.getProfilePhotoUrl();
+        this.createdAt = employee.getCreatedAt();
+        this.updatedAt = employee.getUpdatedAt();
     }
 
-    public String getDisplayName() {
-        return preferredName != null ? preferredName + " " + lastName : getFullName();
+    public static EmployeeResponse fromEntity(Employee employee) {
+        return new EmployeeResponse(employee);
     }
 
-    public boolean isActive() {
-        return status == EmployeeStatus.ACTIVE || status == EmployeeStatus.PROBATION;
+    // Directory-level response (limited fields)
+    public static EmployeeResponse directoryView(Employee employee) {
+        EmployeeResponse response = new EmployeeResponse();
+        response.id = employee.getId();
+        response.employeeNumber = employee.getEmployeeNumber();
+        response.firstName = employee.getFirstName();
+        response.lastName = employee.getLastName();
+        response.preferredName = employee.getPreferredName();
+        response.fullName = employee.getFullName();
+        response.displayName = employee.getDisplayName();
+        response.email = employee.getEmail();
+        response.phone = employee.getPhone();
+        response.department = employee.getDepartment();
+        response.jobTitle = employee.getJobTitle();
+        response.location = employee.getLocation();
+        response.status = employee.getStatus();
+        response.profilePhotoUrl = employee.getProfilePhotoUrl();
+        response.reportingManagerId = employee.getReportingManagerId();
+        if (employee.getReportingManager() != null) {
+            response.reportingManagerName = employee.getReportingManager().getFullName();
+        }
+        return response;
     }
 
     // Getters and Setters
@@ -255,6 +211,12 @@ public class Employee extends TenantAwareEntity {
 
     public String getPreferredName() { return preferredName; }
     public void setPreferredName(String preferredName) { this.preferredName = preferredName; }
+
+    public String getFullName() { return fullName; }
+    public void setFullName(String fullName) { this.fullName = fullName; }
+
+    public String getDisplayName() { return displayName; }
+    public void setDisplayName(String displayName) { this.displayName = displayName; }
 
     public String getEmail() { return email; }
     public void setEmail(String email) { this.email = email; }
@@ -364,15 +326,14 @@ public class Employee extends TenantAwareEntity {
     public String getPayFrequency() { return payFrequency; }
     public void setPayFrequency(String payFrequency) { this.payFrequency = payFrequency; }
 
-    public Employee getReportingManager() { return reportingManager; }
-    public void setReportingManager(Employee reportingManager) { this.reportingManager = reportingManager; }
-
     public Long getReportingManagerId() { return reportingManagerId; }
+    public void setReportingManagerId(Long reportingManagerId) { this.reportingManagerId = reportingManagerId; }
 
-    public Applicant getApplicant() { return applicant; }
-    public void setApplicant(Applicant applicant) { this.applicant = applicant; }
+    public String getReportingManagerName() { return reportingManagerName; }
+    public void setReportingManagerName(String reportingManagerName) { this.reportingManagerName = reportingManagerName; }
 
     public Long getApplicantId() { return applicantId; }
+    public void setApplicantId(Long applicantId) { this.applicantId = applicantId; }
 
     public Long getUserId() { return userId; }
     public void setUserId(Long userId) { this.userId = userId; }
@@ -406,25 +367,4 @@ public class Employee extends TenantAwareEntity {
 
     public LocalDateTime getUpdatedAt() { return updatedAt; }
     public void setUpdatedAt(LocalDateTime updatedAt) { this.updatedAt = updatedAt; }
-
-    public List<EmployeeDocument> getDocuments() { return documents; }
-    public void setDocuments(List<EmployeeDocument> documents) { this.documents = documents; }
-
-    public List<EmploymentEvent> getEmploymentEvents() { return employmentEvents; }
-    public void setEmploymentEvents(List<EmploymentEvent> employmentEvents) { this.employmentEvents = employmentEvents; }
-
-    public List<Employee> getDirectReports() { return directReports; }
-    public void setDirectReports(List<Employee> directReports) { this.directReports = directReports; }
-
-    @Override
-    public String toString() {
-        return "Employee{" +
-                "id=" + id +
-                ", employeeNumber='" + employeeNumber + '\'' +
-                ", firstName='" + firstName + '\'' +
-                ", lastName='" + lastName + '\'' +
-                ", email='" + email + '\'' +
-                ", status=" + status +
-                '}';
-    }
 }
