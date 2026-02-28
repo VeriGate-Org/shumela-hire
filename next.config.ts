@@ -109,6 +109,67 @@ const nextConfig: NextConfig = {
         ...config.resolve.fallback,
         fs: false,
       };
+
+      // Enhanced per-module code splitting (spec F-5.4.1)
+      // Each top-level HR module gets its own async chunk so users on
+      // low-bandwidth links only download what they navigate to.
+      config.optimization = {
+        ...config.optimization,
+        splitChunks: {
+          chunks: 'all',
+          maxInitialRequests: 30,
+          maxAsyncRequests: 30,
+          cacheGroups: {
+            // Vendor: third-party libs rarely change → long-lived cache
+            vendor: {
+              test: /[\\/]node_modules[\\/]/,
+              name: 'vendor',
+              chunks: 'all',
+              priority: 10,
+              reuseExistingChunk: true,
+            },
+            // Recharts charting lib (large, only needed on analytics pages)
+            charts: {
+              test: /[\\/]node_modules[\\/](recharts|d3-.*)[\\/]/,
+              name: 'chunk-charts',
+              chunks: 'async',
+              priority: 20,
+            },
+            // lucide-react icons
+            icons: {
+              test: /[\\/]node_modules[\\/](lucide-react|@heroicons)[\\/]/,
+              name: 'chunk-icons',
+              chunks: 'async',
+              priority: 20,
+            },
+            // HR module groupings (pages + components per domain)
+            employees: {
+              test: /[\\/]src[\\/](app[\\/]\(app\)[\\/]employees|components[\\/]employees)[\\/]/,
+              name: 'chunk-employees',
+              chunks: 'async',
+              priority: 30,
+            },
+            performance: {
+              test: /[\\/]src[\\/](app[\\/]\(app\)[\\/]performance|components[\\/]performance)[\\/]/,
+              name: 'chunk-performance',
+              chunks: 'async',
+              priority: 30,
+            },
+            analytics: {
+              test: /[\\/]src[\\/](app[\\/]\(app\)[\\/]analytics|components[\\/](Analytics|charts))[\\/]/,
+              name: 'chunk-analytics',
+              chunks: 'async',
+              priority: 30,
+            },
+            reports: {
+              test: /[\\/]src[\\/](app[\\/]\(app\)[\\/]reports|components[\\/](Report|reports))[\\/]/,
+              name: 'chunk-reports',
+              chunks: 'async',
+              priority: 30,
+            },
+          },
+        },
+      };
     }
     return config;
   },
