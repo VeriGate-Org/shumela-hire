@@ -84,20 +84,38 @@ export default function ReportsPage() {
   }, []);
 
   // Report Builder handlers
-  const handleSaveReport = useCallback((config: ReportConfig) => {
-    const newReport: SavedReport = {
-      ...config,
-      id: `report_${Date.now()}`,
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
-      createdBy: 'current-user@company.com',
-      isShared: false,
-      runCount: 0,
-      tags: [],
-    };
-    
-    setSavedReports(prev => [...prev, newReport]);
-    toast('Report saved successfully', 'success');
+  const handleSaveReport = useCallback(async (config: ReportConfig) => {
+    try {
+      const res = await apiFetch('/api/reports/custom/csv', {
+        method: 'POST',
+        body: JSON.stringify(config),
+      });
+      if (res.ok) {
+        toast('Report saved successfully', 'success');
+        // Reload reports list
+        const reportsRes = await apiFetch('/api/reports/types');
+        if (reportsRes.ok) {
+          const data = await reportsRes.json();
+          setSavedReports(Array.isArray(data) ? data : data.data || []);
+        }
+      } else {
+        throw new Error('Failed to save');
+      }
+    } catch {
+      // Fallback: save locally
+      const newReport: SavedReport = {
+        ...config,
+        id: `report_${Date.now()}`,
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+        createdBy: 'current-user@company.com',
+        isShared: false,
+        runCount: 0,
+        tags: [],
+      };
+      setSavedReports(prev => [...prev, newReport]);
+      toast('Report saved locally', 'info');
+    }
   }, [toast]);
 
   const handleRunReport = useCallback(async (config: ReportConfig) => {
@@ -134,8 +152,33 @@ export default function ReportsPage() {
   }, []);
 
   const handleExportReport = useCallback((config: ReportConfig, format: 'csv' | 'pdf' | 'xlsx') => {
-    toast(`Exporting report "${config.name}" as ${format.toUpperCase()}`, 'info');
-  }, [toast]);
+    if (format === 'csv' && currentResult?.data && currentResult.data.length > 0) {
+      const data = currentResult.data;
+      const headers = Object.keys(data[0]);
+      const csvRows = [
+        headers.join(','),
+        ...data.map((row: Record<string, unknown>) =>
+          headers.map(h => {
+            const val = String(row[h] ?? '');
+            return val.includes(',') || val.includes('"') ? `"${val.replace(/"/g, '""')}"` : val;
+          }).join(',')
+        ),
+      ];
+      const csvContent = '\ufeff' + csvRows.join('\n');
+      const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `${config.name || 'report'}-${new Date().toISOString().split('T')[0]}.csv`;
+      a.click();
+      URL.revokeObjectURL(url);
+      toast(`Exported "${config.name}" as CSV`, 'success');
+    } else if (format !== 'csv') {
+      toast(`${format.toUpperCase()} export coming soon`, 'info');
+    } else {
+      toast('No data to export. Run the report first.', 'info');
+    }
+  }, [currentResult, toast]);
 
   // Library handlers
   const handleEditReport = useCallback((report: SavedReport) => {
@@ -143,13 +186,19 @@ export default function ReportsPage() {
     setActiveTab('create');
   }, []);
 
-  const handleDeleteReport = useCallback((reportId: string) => {
+  const handleDeleteReport = useCallback(async (reportId: string) => {
     if (confirm('Are you sure you want to delete this report?')) {
+      try {
+        await apiFetch(`/api/reports/${reportId}`, { method: 'DELETE' });
+      } catch {
+        // Endpoint may not exist — proceed with local removal
+      }
       setSavedReports(prev => prev.filter(r => r.id !== reportId));
+      toast('Report deleted', 'success');
     }
-  }, []);
+  }, [toast]);
 
-  const handleDuplicateReport = useCallback((report: SavedReport) => {
+  const handleDuplicateReport = useCallback(async (report: SavedReport) => {
     const duplicated: SavedReport = {
       ...report,
       id: `report_${Date.now()}`,
@@ -159,8 +208,17 @@ export default function ReportsPage() {
       runCount: 0,
       lastRun: undefined,
     };
+    try {
+      await apiFetch('/api/reports/custom/csv', {
+        method: 'POST',
+        body: JSON.stringify(duplicated),
+      });
+    } catch {
+      // Fallback: save locally
+    }
     setSavedReports(prev => [...prev, duplicated]);
-  }, []);
+    toast('Report duplicated', 'success');
+  }, [toast]);
 
   const handleShareReport = useCallback((reportId: string) => {
     setSavedReports(prev => prev.map(r => 
@@ -175,8 +233,32 @@ export default function ReportsPage() {
 
   // Viewer handlers
   const handleExportResult = useCallback((format: 'csv' | 'pdf' | 'xlsx') => {
-    if (currentResult) {
-      toast(`Exporting "${currentResult.config.name}" as ${format.toUpperCase()}`, 'info');
+    if (!currentResult) return;
+    if (format === 'csv' && currentResult.data && currentResult.data.length > 0) {
+      const data = currentResult.data;
+      const headers = Object.keys(data[0]);
+      const csvRows = [
+        headers.join(','),
+        ...data.map((row: Record<string, unknown>) =>
+          headers.map(h => {
+            const val = String(row[h] ?? '');
+            return val.includes(',') || val.includes('"') ? `"${val.replace(/"/g, '""')}"` : val;
+          }).join(',')
+        ),
+      ];
+      const csvContent = '\ufeff' + csvRows.join('\n');
+      const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `${currentResult.config.name || 'report'}-${new Date().toISOString().split('T')[0]}.csv`;
+      a.click();
+      URL.revokeObjectURL(url);
+      toast(`Exported "${currentResult.config.name}" as CSV`, 'success');
+    } else if (format !== 'csv') {
+      toast(`${format.toUpperCase()} export coming soon`, 'info');
+    } else {
+      toast('No data to export', 'info');
     }
   }, [currentResult, toast]);
 

@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { useToast } from '@/components/Toast';
-import { CurrencyDollarIcon } from '@heroicons/react/24/outline';
+import { CurrencyDollarIcon, ExclamationTriangleIcon } from '@heroicons/react/24/outline';
 import { salaryRecommendationService } from '@/services/salaryRecommendationService';
 import EmptyState from './EmptyState';
 import {
@@ -18,12 +18,19 @@ function formatCurrency(amount?: number, currency = 'ZAR'): string {
   return new Intl.NumberFormat('en-ZA', { style: 'currency', currency }).format(amount);
 }
 
+const POSITION_LEVELS = ['Junior', 'Mid', 'Senior', 'Lead', 'Principal', 'Director', 'VP', 'C-Suite'];
+
 export default function SalaryRecommendationManager() {
   const { toast } = useToast();
   const [recommendations, setRecommendations] = useState<SalaryRecommendation[]>([]);
   const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState<string | null>(null);
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [showRecommendModal, setShowRecommendModal] = useState<number | null>(null);
+  const [showApproveModal, setShowApproveModal] = useState<{ id: number } | null>(null);
+  const [showRejectModal, setShowRejectModal] = useState<{ id: number } | null>(null);
+  const [approvalNotes, setApprovalNotes] = useState('');
+  const [rejectReason, setRejectReason] = useState('');
   const [actionLoading, setActionLoading] = useState<number | null>(null);
 
   const [createForm, setCreateForm] = useState<SalaryRecommendationCreateRequest>({
@@ -49,10 +56,14 @@ export default function SalaryRecommendationManager() {
   const loadRecommendations = async () => {
     try {
       setLoading(true);
+      setLoadError(null);
       const data = await salaryRecommendationService.getAll();
       setRecommendations(data);
     } catch (error) {
       console.error('Failed to load recommendations:', error);
+      const message = 'Failed to load salary recommendations';
+      setLoadError(message);
+      toast(message, 'error');
     } finally {
       setLoading(false);
     }
@@ -65,6 +76,7 @@ export default function SalaryRecommendationManager() {
       await salaryRecommendationService.create(createForm);
       setShowCreateModal(false);
       setCreateForm({ positionTitle: '', department: '', jobGrade: '', positionLevel: '', candidateName: '' });
+      toast('Recommendation created', 'success');
       await loadRecommendations();
     } catch (error) {
       console.error('Failed to create recommendation:', error);
@@ -78,6 +90,7 @@ export default function SalaryRecommendationManager() {
     try {
       setActionLoading(id);
       await salaryRecommendationService.submitForReview(id);
+      toast('Submitted for review', 'success');
       await loadRecommendations();
     } catch (error) {
       console.error('Failed to submit:', error);
@@ -97,6 +110,7 @@ export default function SalaryRecommendationManager() {
       });
       setShowRecommendModal(null);
       setRecommendForm({ recommendedSalary: 0, recommendationJustification: '' });
+      toast('Recommendation provided', 'success');
       await loadRecommendations();
     } catch (error) {
       console.error('Failed to provide recommendation:', error);
@@ -106,10 +120,14 @@ export default function SalaryRecommendationManager() {
     }
   };
 
-  const handleApprove = async (id: number) => {
+  const handleApprove = async () => {
+    if (!showApproveModal) return;
     try {
-      setActionLoading(id);
-      await salaryRecommendationService.approve(id);
+      setActionLoading(showApproveModal.id);
+      await salaryRecommendationService.approve(showApproveModal.id, approvalNotes || undefined);
+      setShowApproveModal(null);
+      setApprovalNotes('');
+      toast('Recommendation approved', 'success');
       await loadRecommendations();
     } catch (error) {
       console.error('Failed to approve:', error);
@@ -119,12 +137,14 @@ export default function SalaryRecommendationManager() {
     }
   };
 
-  const handleReject = async (id: number) => {
-    const reason = prompt('Please provide a rejection reason:');
-    if (!reason) return;
+  const handleReject = async () => {
+    if (!showRejectModal || rejectReason.trim().length < 10) return;
     try {
-      setActionLoading(id);
-      await salaryRecommendationService.reject(id, reason);
+      setActionLoading(showRejectModal.id);
+      await salaryRecommendationService.reject(showRejectModal.id, rejectReason);
+      setShowRejectModal(null);
+      setRejectReason('');
+      toast('Recommendation rejected', 'success');
       await loadRecommendations();
     } catch (error) {
       console.error('Failed to reject:', error);
@@ -158,11 +178,11 @@ export default function SalaryRecommendationManager() {
 
     if (rec.status === SalaryRecommendationStatus.PENDING_APPROVAL || rec.status === SalaryRecommendationStatus.RECOMMENDED) {
       actions.push(
-        <button key="approve" onClick={() => handleApprove(rec.id)} disabled={isLoading}
+        <button key="approve" onClick={() => setShowApproveModal({ id: rec.id })} disabled={isLoading}
           className="text-xs px-2 py-1 bg-green-50 text-green-700 border border-green-200 rounded hover:bg-green-100 disabled:opacity-50">
           Approve
         </button>,
-        <button key="reject" onClick={() => handleReject(rec.id)} disabled={isLoading}
+        <button key="reject" onClick={() => setShowRejectModal({ id: rec.id })} disabled={isLoading}
           className="text-xs px-2 py-1 bg-red-50 text-red-700 border border-red-200 rounded hover:bg-red-100 disabled:opacity-50">
           Reject
         </button>
@@ -190,6 +210,22 @@ export default function SalaryRecommendationManager() {
           New Recommendation
         </button>
       </div>
+
+      {/* Load Error Banner */}
+      {loadError && (
+        <div className="mb-4 p-4 bg-red-50 border border-red-200 rounded-sm flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <ExclamationTriangleIcon className="w-5 h-5 text-red-500" />
+            <span className="text-sm text-red-700">{loadError}</span>
+          </div>
+          <button
+            onClick={loadRecommendations}
+            className="text-sm text-red-600 hover:text-red-800 underline"
+          >
+            Retry
+          </button>
+        </div>
+      )}
 
       {/* Table */}
       <div className="overflow-x-auto border border-gray-200 rounded-sm">
@@ -273,6 +309,19 @@ export default function SalaryRecommendationManager() {
                 </div>
               </div>
               <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Position Level</label>
+                <select
+                  value={createForm.positionLevel || ''}
+                  onChange={e => setCreateForm(prev => ({ ...prev, positionLevel: e.target.value }))}
+                  className="w-full p-2 border border-gray-300 rounded-sm text-sm"
+                >
+                  <option value="">Select level</option>
+                  {POSITION_LEVELS.map(level => (
+                    <option key={level} value={level}>{level}</option>
+                  ))}
+                </select>
+              </div>
+              <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">Candidate Name</label>
                 <input type="text" value={createForm.candidateName || ''}
                   onChange={e => setCreateForm(prev => ({ ...prev, candidateName: e.target.value }))}
@@ -336,6 +385,76 @@ export default function SalaryRecommendationManager() {
               <button onClick={handleProvideRecommendation} disabled={actionLoading === showRecommendModal}
                 className="px-4 py-2 text-sm bg-gold-500 text-violet-950 rounded-sm hover:bg-gold-600 disabled:opacity-50">
                 {actionLoading === showRecommendModal ? 'Submitting...' : 'Submit Recommendation'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Approve Modal */}
+      {showApproveModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
+          <div className="bg-white rounded-sm shadow-xl max-w-md w-full mx-4 p-6">
+            <h3 className="text-lg font-bold text-gray-900 mb-4">Approve Recommendation</h3>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Approval Notes (optional)</label>
+              <textarea
+                value={approvalNotes}
+                onChange={e => setApprovalNotes(e.target.value)}
+                className="w-full p-2 border border-gray-300 rounded-sm text-sm"
+                rows={3}
+                placeholder="Add any notes about this approval..."
+              />
+            </div>
+            <div className="flex justify-end gap-2 mt-6">
+              <button
+                onClick={() => { setShowApproveModal(null); setApprovalNotes(''); }}
+                className="px-4 py-2 text-sm text-gray-700 border border-gray-300 rounded-full hover:bg-gray-50"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleApprove}
+                disabled={actionLoading === showApproveModal.id}
+                className="px-4 py-2 text-sm text-white bg-green-600 rounded-full hover:bg-green-700 disabled:opacity-50"
+              >
+                {actionLoading === showApproveModal.id ? 'Approving...' : 'Approve'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Reject Modal */}
+      {showRejectModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
+          <div className="bg-white rounded-sm shadow-xl max-w-md w-full mx-4 p-6">
+            <h3 className="text-lg font-bold text-gray-900 mb-4">Reject Recommendation</h3>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Rejection Reason * <span className="text-gray-400">(min 10 characters)</span>
+              </label>
+              <textarea
+                value={rejectReason}
+                onChange={e => setRejectReason(e.target.value)}
+                className="w-full p-2 border border-gray-300 rounded-sm text-sm"
+                rows={4}
+                placeholder="Please provide a detailed reason for rejection..."
+              />
+            </div>
+            <div className="flex justify-end gap-2 mt-6">
+              <button
+                onClick={() => { setShowRejectModal(null); setRejectReason(''); }}
+                className="px-4 py-2 text-sm text-gray-700 border border-gray-300 rounded-full hover:bg-gray-50"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleReject}
+                disabled={actionLoading === showRejectModal.id || rejectReason.trim().length < 10}
+                className="px-4 py-2 text-sm text-white bg-red-600 rounded-full hover:bg-red-700 disabled:opacity-50"
+              >
+                {actionLoading === showRejectModal.id ? 'Rejecting...' : 'Reject'}
               </button>
             </div>
           </div>

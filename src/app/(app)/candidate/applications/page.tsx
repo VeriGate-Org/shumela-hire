@@ -4,6 +4,8 @@ import { useState, useEffect, useCallback } from 'react';
 import PageWrapper from '@/components/PageWrapper';
 import EmptyState from '@/components/EmptyState';
 import { useAuth } from '@/contexts/AuthContext';
+import { useToast } from '@/components/Toast';
+import { apiFetch } from '@/lib/api-fetch';
 import { getApplicantId, getApplications as fetchApplications } from '@/services/candidateService';
 import { 
   BriefcaseIcon,
@@ -89,12 +91,16 @@ function mapApplicationStatus(status: string): Application['status'] {
 
 export default function MyApplicationsPage() {
   const { user } = useAuth();
+  const { toast } = useToast();
   const [applications, setApplications] = useState<Application[]>([]);
   const [selectedApplication, setSelectedApplication] = useState<Application | null>(null);
   const [filterStatus, setFilterStatus] = useState<string>('all');
   const [searchTerm, setSearchTerm] = useState('');
   const [sortBy, setSortBy] = useState<'date' | 'company' | 'status'>('date');
   const [loading, setLoading] = useState(true);
+  const [withdrawModal, setWithdrawModal] = useState<{ id: string } | null>(null);
+  const [withdrawReason, setWithdrawReason] = useState('');
+  const [withdrawLoading, setWithdrawLoading] = useState(false);
 
   const loadApplications = useCallback(async () => {
     if (!user?.email) { setLoading(false); return; }
@@ -139,6 +145,31 @@ export default function MyApplicationsPage() {
   useEffect(() => {
     loadApplications();
   }, [user, loadApplications]);
+
+  const handleWithdraw = async () => {
+    if (!withdrawModal) return;
+    try {
+      setWithdrawLoading(true);
+      const response = await apiFetch(`/api/applications/${withdrawModal.id}/withdraw`, {
+        method: 'POST',
+        body: JSON.stringify({ reason: withdrawReason }),
+      });
+      if (response.ok) {
+        toast('Application withdrawn successfully', 'success');
+        setWithdrawModal(null);
+        setWithdrawReason('');
+        await loadApplications();
+      } else {
+        const errorData = await response.json().catch(() => null);
+        toast(errorData?.message || 'Failed to withdraw application', 'error');
+      }
+    } catch (err) {
+      console.error('Failed to withdraw application:', err);
+      toast('Failed to withdraw application', 'error');
+    } finally {
+      setWithdrawLoading(false);
+    }
+  };
 
   const filteredApplications = applications.filter(app => {
     const matchesStatus = filterStatus === 'all' || app.status === filterStatus;
@@ -460,7 +491,10 @@ export default function MyApplicationsPage() {
                     )}
                     
                     {['applied', 'under_review', 'phone_screening', 'technical_interview', 'final_interview'].includes(application.status) && (
-                      <button className="inline-flex items-center px-3 py-2 border border-gray-300 text-sm font-medium rounded-full text-gray-700 bg-white hover:bg-gray-50">
+                      <button
+                        onClick={() => setWithdrawModal({ id: application.id })}
+                        className="inline-flex items-center px-3 py-2 border border-gray-300 text-sm font-medium rounded-full text-gray-700 bg-white hover:bg-gray-50"
+                      >
                         <XCircleIcon className="w-4 h-4 mr-2" />
                         Withdraw
                       </button>
@@ -636,6 +670,45 @@ export default function MyApplicationsPage() {
                     Close
                   </button>
                 </div>
+              </div>
+            </div>
+          </div>
+        )}
+        {/* Withdraw Confirmation Modal */}
+        {withdrawModal && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+            <div className="bg-white rounded-sm shadow-xl max-w-md w-full p-6">
+              <h3 className="text-lg font-bold text-gray-900 mb-2">Withdraw Application</h3>
+              <p className="text-sm text-gray-600 mb-4">
+                Are you sure you want to withdraw this application? This action cannot be undone.
+              </p>
+              <div className="mb-4">
+                <label htmlFor="withdraw-reason" className="block text-sm font-medium text-gray-700 mb-1">
+                  Reason for withdrawal
+                </label>
+                <textarea
+                  id="withdraw-reason"
+                  rows={3}
+                  value={withdrawReason}
+                  onChange={(e) => setWithdrawReason(e.target.value)}
+                  className="w-full border border-gray-300 rounded-sm px-3 py-2 text-sm focus:ring-2 focus:ring-gold-500/60 focus:border-violet-400"
+                  placeholder="Please provide a reason for withdrawing your application..."
+                />
+              </div>
+              <div className="flex justify-end gap-2">
+                <button
+                  onClick={() => { setWithdrawModal(null); setWithdrawReason(''); }}
+                  className="px-4 py-2 text-sm text-gray-700 border border-gray-300 rounded-full hover:bg-gray-50"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={handleWithdraw}
+                  disabled={withdrawLoading}
+                  className="px-4 py-2 text-sm text-white bg-red-600 rounded-full hover:bg-red-700 disabled:opacity-50"
+                >
+                  {withdrawLoading ? 'Withdrawing...' : 'Withdraw Application'}
+                </button>
               </div>
             </div>
           </div>

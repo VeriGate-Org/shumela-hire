@@ -37,10 +37,12 @@ export function usePerformanceMonitoring() {
   useEffect(() => {
     if (typeof window === 'undefined') return;
 
+    const observers: PerformanceObserver[] = [];
+
     // Function to collect and report metrics
     const collectMetrics = () => {
       const navigation = performance.getEntriesByType('navigation')[0] as PerformanceNavigationTiming;
-      
+
       if (navigation) {
         setMetrics(prev => ({
           ...prev,
@@ -74,8 +76,9 @@ export function usePerformanceMonitoring() {
           setMetrics(prev => ({ ...prev, lcp: lastEntry.startTime }));
         });
         lcpObserver.observe({ type: 'largest-contentful-paint', buffered: true });
+        observers.push(lcpObserver);
       } catch {
-        console.warn('LCP monitoring not supported');
+        // LCP monitoring not supported
       }
 
       // First Input Delay
@@ -87,8 +90,9 @@ export function usePerformanceMonitoring() {
           });
         });
         fidObserver.observe({ type: 'first-input', buffered: true });
+        observers.push(fidObserver);
       } catch {
-        console.warn('FID monitoring not supported');
+        // FID monitoring not supported
       }
 
       // Cumulative Layout Shift
@@ -103,8 +107,9 @@ export function usePerformanceMonitoring() {
           setMetrics(prev => ({ ...prev, cls: clsValue }));
         });
         clsObserver.observe({ type: 'layout-shift', buffered: true });
+        observers.push(clsObserver);
       } catch {
-        console.warn('CLS monitoring not supported');
+        // CLS monitoring not supported
       }
 
       // First Contentful Paint
@@ -118,18 +123,17 @@ export function usePerformanceMonitoring() {
           });
         });
         fcpObserver.observe({ type: 'paint', buffered: true });
+        observers.push(fcpObserver);
       } catch {
-        console.warn('FCP monitoring not supported');
+        // FCP monitoring not supported
       }
     }
 
-    // Report metrics to console in development
-    if (process.env.NODE_ENV === 'development') {
-      setTimeout(() => {
-        console.log('Performance Metrics:', metrics);
-      }, 3000);
-    }
-  }, [metrics]);
+    // Cleanup: disconnect all observers
+    return () => {
+      observers.forEach(observer => observer.disconnect());
+    };
+  }, []); // No dependencies — observers are set up once
 
   return metrics;
 }
@@ -177,44 +181,6 @@ export function PerformanceMonitor() {
 
 // Hook to report performance to analytics
 export function usePerformanceReporting() {
-  const metrics = usePerformanceMonitoring();
-
-  useEffect(() => {
-    // Wait for metrics to be collected
-    const timer = setTimeout(() => {
-      // Report to Google Analytics or other analytics service
-      if (typeof window !== 'undefined' && (window as any).gtag) {
-        const { lcp, fid, cls, fcp: _fcp, ttfb: _ttfb } = metrics;
-        
-        if (lcp) {
-          (window as any).gtag('event', 'web_vitals', {
-            event_category: 'Performance',
-            event_label: 'LCP',
-            value: Math.round(lcp),
-            custom_map: { metric_value: Math.round(lcp) }
-          });
-        }
-        
-        if (fid) {
-          (window as any).gtag('event', 'web_vitals', {
-            event_category: 'Performance',
-            event_label: 'FID', 
-            value: Math.round(fid),
-            custom_map: { metric_value: Math.round(fid) }
-          });
-        }
-        
-        if (cls !== null) {
-          (window as any).gtag('event', 'web_vitals', {
-            event_category: 'Performance',
-            event_label: 'CLS',
-            value: Math.round(cls * 1000), // Convert to integer
-            custom_map: { metric_value: cls }
-          });
-        }
-      }
-    }, 5000);
-
-    return () => clearTimeout(timer);
-  }, [metrics]);
+  usePerformanceMonitoring();
+  // Performance reporting can be wired to a real analytics backend when available
 }

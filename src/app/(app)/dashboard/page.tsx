@@ -1,30 +1,59 @@
 'use client';
 
 import React, { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import PageWrapper from '@/components/PageWrapper';
 import RoleDashboard from '@/components/dashboard/RoleDashboard';
 import { useAuth, ROLE_DISPLAY_NAMES } from '@/contexts/AuthContext';
+import { useToast } from '@/components/Toast';
 
 export default function DashboardPage() {
   const [selectedTimeframe, setSelectedTimeframe] = useState('30days');
   const { user } = useAuth();
+  const router = useRouter();
+  const { toast } = useToast();
 
   // Default to Hiring Manager if no user role is available
   const userRole = user?.role || 'HIRING_MANAGER';
 
+  const handleExportData = () => {
+    toast('Exporting dashboard data...', 'info');
+    // Generate a basic CSV of visible dashboard summary
+    const csvContent = '\ufeff' + [
+      'Metric,Value',
+      `Role,${userRole}`,
+      `Timeframe,${selectedTimeframe}`,
+      `Export Date,${new Date().toISOString()}`,
+    ].join('\n');
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `dashboard-export-${new Date().toISOString().split('T')[0]}.csv`;
+    a.click();
+    URL.revokeObjectURL(url);
+    toast('Dashboard data exported', 'success');
+  };
+
   const actions = (
     <div className="flex items-center space-x-3">
-      <button className="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-full text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gold-500/60">
+      <button
+        onClick={handleExportData}
+        className="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-full text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gold-500/60"
+      >
         Export Data
       </button>
-      <button className="inline-flex items-center px-4 py-2 border-2 border-gold-500 text-sm font-medium rounded-full shadow-sm bg-transparent text-violet-900 hover:bg-gold-500 hover:text-violet-950 uppercase tracking-wider focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gold-500/60">
+      <button
+        onClick={() => router.push('/requisitions/create')}
+        className="inline-flex items-center px-4 py-2 border-2 border-gold-500 text-sm font-medium rounded-full shadow-sm bg-transparent text-violet-900 hover:bg-gold-500 hover:text-violet-950 uppercase tracking-wider focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gold-500/60"
+      >
         Create Position
       </button>
     </div>
   );
 
   const dashboardContent = (
-    <RoleDashboard 
+    <RoleDashboard
       role={userRole}
       selectedTimeframe={selectedTimeframe}
       onTimeframeChange={setSelectedTimeframe}

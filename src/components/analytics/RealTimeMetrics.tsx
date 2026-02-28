@@ -1,12 +1,14 @@
-import React, { useState, useEffect } from 'react';
-import { 
-  ArrowTrendingUpIcon, 
+import React, { useState, useEffect, useCallback, useRef } from 'react';
+import {
+  ArrowTrendingUpIcon,
   ArrowTrendingDownIcon,
   EyeIcon,
   UserGroupIcon,
   ClockIcon,
-  CheckCircleIcon 
+  CheckCircleIcon,
+  ExclamationTriangleIcon,
 } from '@heroicons/react/24/outline';
+import { apiFetch } from '@/lib/api-fetch';
 
 interface MetricData {
   id: string;
@@ -20,15 +22,8 @@ interface MetricData {
 
 interface RealTimeMetricsProps {
   className?: string;
-  updateInterval?: number; // in milliseconds
+  updateInterval?: number;
 }
-
-// TODO: Replace with real WebSocket/SSE data source
-
-const generateMetricValue = (baseValue: number, variance: number = 0.1): number => {
-  const change = (Math.random() - 0.5) * variance * 2;
-  return Math.max(0, Math.round(baseValue * (1 + change)));
-};
 
 const formatValue = (value: number, format: MetricData['format']): string => {
   switch (format) {
@@ -44,17 +39,63 @@ const formatValue = (value: number, format: MetricData['format']): string => {
 };
 
 const getChangeIndicator = (current: number, previous: number) => {
-  if (current === previous) return { direction: 'neutral', percentage: 0 };
-  
+  if (current === previous || previous === 0) return { direction: 'neutral', percentage: 0 };
+
   const percentage = ((current - previous) / previous) * 100;
   const direction = current > previous ? 'up' : 'down';
-  
+
   return { direction, percentage: Math.abs(percentage) };
 };
 
+function mapKpisToMetrics(kpis: Record<string, { value?: number }>, prevMetrics: MetricData[]): MetricData[] {
+  const totalApps = Number(kpis['total_applications']?.value ?? 0);
+  const avgResponseHours = Number(kpis['avg_response_time_hours']?.value ?? 0);
+  const conversionRate = Number(kpis['interview_conversion_rate']?.value ?? 0);
+  const interviewsConducted = Number(kpis['interviews_conducted']?.value ?? 0);
+
+  return [
+    {
+      id: 'applications_today',
+      label: 'Applications Today',
+      value: totalApps,
+      previousValue: prevMetrics[0]?.value ?? 0,
+      format: 'number',
+      icon: UserGroupIcon,
+      color: 'text-gold-600 bg-gold-100',
+    },
+    {
+      id: 'active_sessions',
+      label: 'Interviews Conducted',
+      value: interviewsConducted,
+      previousValue: prevMetrics[1]?.value ?? 0,
+      format: 'number',
+      icon: EyeIcon,
+      color: 'text-green-600 bg-green-100',
+    },
+    {
+      id: 'avg_response_time',
+      label: 'Avg Response Time',
+      value: Math.round(avgResponseHours / 24) || 0,
+      previousValue: prevMetrics[2]?.value ?? 0,
+      format: 'duration',
+      icon: ClockIcon,
+      color: 'text-orange-600 bg-orange-100',
+    },
+    {
+      id: 'conversion_rate',
+      label: 'Conversion Rate',
+      value: conversionRate,
+      previousValue: prevMetrics[3]?.value ?? 0,
+      format: 'percentage',
+      icon: CheckCircleIcon,
+      color: 'text-purple-600 bg-purple-100',
+    },
+  ];
+}
+
 const RealTimeMetrics: React.FC<RealTimeMetricsProps> = ({
   className = '',
-  updateInterval = 5000, // 5 seconds
+  updateInterval = 5000,
 }) => {
   const [metrics, setMetrics] = useState<MetricData[]>([
     {
@@ -68,7 +109,7 @@ const RealTimeMetrics: React.FC<RealTimeMetricsProps> = ({
     },
     {
       id: 'active_sessions',
-      label: 'Active Sessions',
+      label: 'Interviews Conducted',
       value: 0,
       previousValue: 0,
       format: 'number',
@@ -86,7 +127,7 @@ const RealTimeMetrics: React.FC<RealTimeMetricsProps> = ({
     },
     {
       id: 'conversion_rate',
-      label: 'Today\'s Conversion',
+      label: 'Conversion Rate',
       value: 0,
       previousValue: 0,
       format: 'percentage',
@@ -98,28 +139,40 @@ const RealTimeMetrics: React.FC<RealTimeMetricsProps> = ({
   const [lastUpdateTime, setLastUpdateTime] = useState(new Date());
   const [isLive, setIsLive] = useState(true);
   const [isMounted, setIsMounted] = useState(false);
+  const [fetchError, setFetchError] = useState(false);
+  const metricsRef = useRef(metrics);
+  metricsRef.current = metrics;
 
-  // Fix hydration mismatch by only showing time after component mounts
   useEffect(() => {
     setIsMounted(true);
   }, []);
 
+  const fetchMetrics = useCallback(async () => {
+    try {
+      const res = await apiFetch('/api/analytics/kpis');
+      if (!res.ok) throw new Error('Failed to fetch');
+      const json = await res.json();
+      const kpis = json.kpis ?? {};
+      setMetrics(mapKpisToMetrics(kpis, metricsRef.current));
+      setLastUpdateTime(new Date());
+      setFetchError(false);
+    } catch {
+      setFetchError(true);
+    }
+  }, []);
+
+  // Initial fetch
+  useEffect(() => {
+    fetchMetrics();
+  }, [fetchMetrics]);
+
+  // Polling interval
   useEffect(() => {
     if (!isLive) return;
 
-    const interval = setInterval(() => {
-      setMetrics(prevMetrics => 
-        prevMetrics.map(metric => ({
-          ...metric,
-          previousValue: metric.value,
-          value: generateMetricValue(metric.value, 0.1),
-        }))
-      );
-      setLastUpdateTime(new Date());
-    }, updateInterval);
-
+    const interval = setInterval(fetchMetrics, updateInterval);
     return () => clearInterval(interval);
-  }, [updateInterval, isLive]);
+  }, [updateInterval, isLive, fetchMetrics]);
 
   const toggleLiveUpdates = () => {
     setIsLive(!isLive);
@@ -133,7 +186,13 @@ const RealTimeMetrics: React.FC<RealTimeMetricsProps> = ({
           <div>
             <h3 className="text-lg font-semibold text-gray-900">Real-Time Metrics</h3>
             <p className="text-sm text-gray-500">
-              Live recruitment activity • Last updated: {isMounted ? lastUpdateTime.toLocaleTimeString() : '--:--:--'}
+              Live recruitment activity {isMounted ? `\u00B7 Last updated: ${lastUpdateTime.toLocaleTimeString()}` : ''}
+              {fetchError && (
+                <span className="ml-2 text-orange-500">
+                  <ExclamationTriangleIcon className="w-3.5 h-3.5 inline -mt-0.5 mr-0.5" />
+                  Stale data
+                </span>
+              )}
             </p>
           </div>
           <button
@@ -159,7 +218,7 @@ const RealTimeMetrics: React.FC<RealTimeMetricsProps> = ({
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
           {metrics.map((metric) => {
             const change = getChangeIndicator(metric.value, metric.previousValue);
-            
+
             return (
               <div key={metric.id} className="relative group">
                 <div className="bg-gray-50 rounded-sm p-4 transition-all duration-300 group-hover:shadow-md">
@@ -193,7 +252,7 @@ const RealTimeMetrics: React.FC<RealTimeMetricsProps> = ({
                   </div>
 
                   {/* Previous value for comparison */}
-                  {metric.previousValue !== metric.value && (
+                  {metric.previousValue !== metric.value && metric.previousValue > 0 && (
                     <div className="text-xs text-gray-400 mt-1">
                       Previous: {formatValue(metric.previousValue, metric.format)}
                     </div>
@@ -207,14 +266,6 @@ const RealTimeMetrics: React.FC<RealTimeMetricsProps> = ({
               </div>
             );
           })}
-        </div>
-
-        {/* Mini activity feed */}
-        <div className="mt-6 pt-6 border-t border-gray-200">
-          <h4 className="text-sm font-medium text-gray-900 mb-3">Recent Activity</h4>
-          <div className="space-y-2">
-            <p className="text-sm text-gray-400">No recent activity</p>
-          </div>
         </div>
       </div>
     </div>
