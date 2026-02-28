@@ -92,3 +92,9 @@ test-users.md
 *.swp
 *.swo
 *~
+
+# Hive
+.hive/
+
+# Temp repos
+repos/team-*/
