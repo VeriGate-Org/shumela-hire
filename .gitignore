@@ -92,3 +92,7 @@ test-users.md
 *.swp
 *.swo
 *~
+
+# Hive agent workspaces
+.hive/
+repos/team-*
