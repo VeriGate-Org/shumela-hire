@@ -3,6 +3,8 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import PageWrapper from '@/components/PageWrapper';
 import { apiFetch } from '@/lib/api-fetch';
+import LanguageSwitcher from '@/components/LanguageSwitcher';
+import { useLocale } from '@/contexts/LocaleContext';
 import {
   BellIcon,
   ShieldCheckIcon,
@@ -12,15 +14,17 @@ import {
   ExclamationTriangleIcon,
   EyeSlashIcon,
   DocumentArrowDownIcon,
+  GlobeAltIcon,
 } from '@heroicons/react/24/outline';
 
-type SettingsTab = 'notifications' | 'privacy' | 'security' | 'data';
+type SettingsTab = 'notifications' | 'privacy' | 'security' | 'data' | 'language';
 
 const TABS: { id: SettingsTab; label: string; icon: React.ReactNode }[] = [
   { id: 'notifications', label: 'Notifications', icon: <BellIcon className="h-4 w-4" /> },
   { id: 'privacy', label: 'Privacy', icon: <EyeSlashIcon className="h-4 w-4" /> },
   { id: 'security', label: 'Security', icon: <ShieldCheckIcon className="h-4 w-4" /> },
   { id: 'data', label: 'Data Management', icon: <DocumentArrowDownIcon className="h-4 w-4" /> },
+  { id: 'language', label: 'Language', icon: <GlobeAltIcon className="h-4 w-4" /> },
 ];
 
 /* Toggle switch */
@@ -78,6 +82,7 @@ function NotificationRow({
 
 export default function SettingsPage() {
   const [activeTab, setActiveTab] = useState<SettingsTab>('notifications');
+  const { locale, t } = useLocale();
 
   /* Notification state */
   const [emailNotifs, setEmailNotifs] = useState({
@@ -354,6 +359,24 @@ export default function SettingsPage() {
                   <p className="text-sm text-muted-foreground py-3">No active sessions.</p>
                 )}
               </div>
+            </div>
+          </div>
+        );
+
+      case 'language':
+        return (
+          <div className="space-y-6">
+            <div className="enterprise-card p-6">
+              <h3 className="text-sm font-bold uppercase tracking-[0.05em] text-foreground mb-1">
+                {t.settings.language}
+              </h3>
+              <p className="text-sm text-muted-foreground mb-5">
+                {t.settings.languageDescription}
+              </p>
+              <LanguageSwitcher />
+              <p className="mt-3 text-xs text-muted-foreground">
+                {t.settings.language}: <span className="font-medium">{locale}</span>
+              </p>
             </div>
           </div>
         );

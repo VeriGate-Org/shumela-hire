@@ -2,6 +2,7 @@ import { AuthProvider } from '@/contexts/AuthContext';
 import { ThemeProvider } from '@/contexts/ThemeContext';
 import { LayoutProvider } from '@/contexts/LayoutContext';
 import { TenantProvider } from '@/contexts/TenantContext';
+import { LocaleProvider } from '@/contexts/LocaleContext';
 import { ToastProvider } from '@/components/Toast';
 
 export default function AppLayout({
@@ -12,13 +13,15 @@ export default function AppLayout({
   return (
     <TenantProvider>
       <ThemeProvider>
-        <AuthProvider>
-          <ToastProvider>
-            <LayoutProvider>
-              {children}
-            </LayoutProvider>
-          </ToastProvider>
-        </AuthProvider>
+        <LocaleProvider>
+          <AuthProvider>
+            <ToastProvider>
+              <LayoutProvider>
+                {children}
+              </LayoutProvider>
+            </ToastProvider>
+          </AuthProvider>
+        </LocaleProvider>
       </ThemeProvider>
     </TenantProvider>
   );
