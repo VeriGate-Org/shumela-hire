@@ -145,6 +145,8 @@ export default function InternalJobsBoard() {
 
       setJobs(content);
       setTotalJobs(result.data?.totalElements || content.length);
+      // Filter options derived from current results. No dedicated filter endpoint exists for job ads,
+      // so options reflect only the current page of results.
       setFilterOptions({
         departments: [...new Set(content.map((j: InternalJobAd) => j.department).filter(Boolean))] as string[],
         locations: [...new Set(content.map((j: InternalJobAd) => j.location).filter(Boolean))] as string[],

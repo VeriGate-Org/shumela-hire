@@ -1,8 +1,10 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import PageWrapper from '@/components/PageWrapper';
 import { apiFetch } from '@/lib/api-fetch';
+import { useToast } from '@/components/Toast';
 import {
   ChartBarIcon,
   DocumentChartBarIcon,
@@ -118,6 +120,10 @@ export default function ExecutiveReportsPage() {
   const [filterCategory, setFilterCategory] = useState<string>('all');
   const [searchTerm, setSearchTerm] = useState('');
   const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState<string | null>(null);
+  const [generatingReport, setGeneratingReport] = useState<string | null>(null);
+  const { toast } = useToast();
+  const router = useRouter();
 
   useEffect(() => {
     loadExecutiveData();
@@ -216,16 +222,26 @@ export default function ExecutiveReportsPage() {
         })) : []);
       }
     } catch (error) {
-      console.error('Failed to load executive data:', error);
+      setLoadError('Failed to load executive data. Please check your connection and try again.');
     } finally {
       setLoading(false);
     }
   };
 
-  const handleReportGeneration = (reportId: string) => {
-    // Mock report generation
-    console.log(`Generating report: ${reportId}`);
-    // In real implementation, this would trigger report generation API
+  const handleReportGeneration = async (reportId: string) => {
+    setGeneratingReport(reportId);
+    try {
+      const res = await apiFetch(`/api/analytics/reports/${reportId}`, {
+        method: 'POST',
+        body: JSON.stringify({ startDate: new Date(Date.now() - 90 * 24 * 60 * 60 * 1000).toISOString().split('T')[0], endDate: new Date().toISOString().split('T')[0] }),
+      });
+      if (!res.ok) throw new Error('Failed to generate');
+      toast('Report generated successfully', 'success');
+    } catch {
+      toast('Failed to generate report', 'error');
+    } finally {
+      setGeneratingReport(null);
+    }
   };
 
   const getAlertIcon = (type: string) => {
@@ -316,7 +332,10 @@ export default function ExecutiveReportsPage() {
         <option value="year">This Year</option>
       </select>
       
-      <button className="flex items-center px-4 py-2 bg-transparent border-2 border-gold-500 text-primary hover:bg-gold-500 hover:text-primary uppercase tracking-wider rounded-full text-sm font-medium">
+      <button
+        onClick={() => router.push('/reports')}
+        className="flex items-center px-4 py-2 bg-transparent border-2 border-gold-500 text-primary hover:bg-gold-500 hover:text-primary uppercase tracking-wider rounded-full text-sm font-medium"
+      >
         <PlusIcon className="w-4 h-4 mr-2" />
         New Report
       </button>
@@ -328,6 +347,24 @@ export default function ExecutiveReportsPage() {
       <PageWrapper title="Executive Reports" subtitle="Loading executive analytics..." actions={actions}>
         <div className="flex items-center justify-center h-96">
           <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-gold-500"></div>
+        </div>
+      </PageWrapper>
+    );
+  }
+
+  if (loadError) {
+    return (
+      <PageWrapper title="Executive Reports" subtitle="Strategic insights and executive reporting" actions={actions}>
+        <div className="bg-card rounded-sm shadow p-8 text-center">
+          <ExclamationCircleIcon className="w-12 h-12 text-red-400 mx-auto mb-4" />
+          <h3 className="text-lg font-semibold text-foreground mb-2">Failed to load executive data</h3>
+          <p className="text-muted-foreground mb-4">{loadError}</p>
+          <button
+            onClick={loadExecutiveData}
+            className="inline-flex items-center gap-2 px-4 py-2 bg-gold-500 text-violet-950 rounded-full text-sm font-medium hover:bg-gold-600"
+          >
+            Retry
+          </button>
         </div>
       </PageWrapper>
     );
@@ -572,13 +609,17 @@ export default function ExecutiveReportsPage() {
 
                         <button
                           onClick={() => handleReportGeneration(report.id)}
-                          className="flex items-center px-3 py-1 border border-primary/40 text-sm font-medium rounded-full text-primary bg-gold-50 hover:bg-gold-100"
+                          disabled={generatingReport === report.id}
+                          className="flex items-center px-3 py-1 border border-primary/40 text-sm font-medium rounded-full text-primary bg-gold-50 hover:bg-gold-100 disabled:opacity-50"
                         >
                           <PlayIcon className="w-4 h-4 mr-1" />
-                          Generate
+                          {generatingReport === report.id ? 'Generating...' : 'Generate'}
                         </button>
 
-                        <button className="flex items-center px-3 py-1 border border-border text-sm font-medium rounded-full text-foreground bg-card hover:bg-muted">
+                        <button
+                          onClick={() => toast('Download not yet available for this report', 'info')}
+                          className="flex items-center px-3 py-1 border border-border text-sm font-medium rounded-full text-foreground bg-card hover:bg-muted"
+                        >
                           <ArrowDownTrayIcon className="w-4 h-4 mr-1" />
                           Download
                         </button>
@@ -788,12 +829,18 @@ export default function ExecutiveReportsPage() {
                   </button>
                   
                   <div className="flex items-center space-x-3">
-                    <button className="flex items-center px-4 py-2 border border-border text-sm font-medium rounded-full text-foreground bg-card hover:bg-muted">
+                    <button
+                      onClick={() => toast('Report configuration coming soon', 'info')}
+                      className="flex items-center px-4 py-2 border border-border text-sm font-medium rounded-full text-foreground bg-card hover:bg-muted"
+                    >
                       <Cog6ToothIcon className="w-4 h-4 mr-2" />
                       Configure
                     </button>
 
-                    <button className="flex items-center px-4 py-2 border border-primary/40 text-sm font-medium rounded-full text-primary bg-gold-50 hover:bg-gold-100">
+                    <button
+                      onClick={() => toast('Report sharing coming soon', 'info')}
+                      className="flex items-center px-4 py-2 border border-primary/40 text-sm font-medium rounded-full text-primary bg-gold-50 hover:bg-gold-100"
+                    >
                       <ShareIcon className="w-4 h-4 mr-2" />
                       Share
                     </button>

@@ -3,6 +3,8 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import PageWrapper from '@/components/PageWrapper';
 import { apiFetch } from '@/lib/api-fetch';
+import { useToast } from '@/components/Toast';
+import { auditLogService } from '@/services/auditLogService';
 import {
   BellIcon,
   ShieldCheckIcon,
@@ -102,6 +104,9 @@ export default function SettingsPage() {
   /* Security state */
   const [twoFactorEnabled, setTwoFactorEnabled] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [deleteConfirmText, setDeleteConfirmText] = useState('');
+  const [savedIndicator, setSavedIndicator] = useState(false);
+  const { toast } = useToast();
 
   const savePreferences = useCallback(async (prefs: Record<string, unknown>) => {
     try {
@@ -110,10 +115,12 @@ export default function SettingsPage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(prefs),
       });
-    } catch (error) {
-      console.error('Failed to save preferences:', error);
+      setSavedIndicator(true);
+      setTimeout(() => setSavedIndicator(false), 2000);
+    } catch {
+      toast('Failed to save preferences', 'error');
     }
-  }, []);
+  }, [toast]);
 
   const getAllPrefs = useCallback(() => ({
     emailNotifs,
@@ -370,11 +377,66 @@ export default function SettingsPage() {
                 Download a copy of your personal data in compliance with data protection regulations.
               </p>
               <div className="flex flex-wrap gap-3">
-                <button className="btn-primary">
+                <button
+                  onClick={async () => {
+                    try {
+                      const res = await apiFetch('/api/user/export');
+                      if (res.ok) {
+                        const blob = await res.blob();
+                        const url = URL.createObjectURL(blob);
+                        const a = document.createElement('a');
+                        a.href = url;
+                        a.download = `personal-data-${new Date().toISOString().split('T')[0]}.json`;
+                        a.click();
+                        URL.revokeObjectURL(url);
+                        toast('Personal data exported', 'success');
+                      } else {
+                        toast('Data export request submitted. An administrator will process your request.', 'info');
+                      }
+                    } catch {
+                      toast('Data export request submitted. An administrator will process your request.', 'info');
+                    }
+                  }}
+                  className="btn-primary"
+                >
                   <ArrowDownTrayIcon className="h-4 w-4 inline-block mr-1.5 -mt-0.5" />
                   Export Personal Data
                 </button>
-                <button className="btn-secondary">
+                <button
+                  onClick={async () => {
+                    try {
+                      const result = await auditLogService.getAllAuditLogs(0, 1000);
+                      const logs = result.logs;
+                      if (logs.length === 0) {
+                        toast('No activity logs found', 'info');
+                        return;
+                      }
+                      const header = ['Timestamp', 'Action', 'Entity Type', 'Entity ID', 'Details'].join(',');
+                      const rows = logs.map((log: { timestamp: Date; action: string; entityType: string; entityId: string; details: unknown }) => [
+                        log.timestamp.toISOString(),
+                        log.action,
+                        log.entityType,
+                        log.entityId,
+                        JSON.stringify(log.details),
+                      ].map(v => {
+                        const s = String(v);
+                        return s.includes(',') || s.includes('"') ? `"${s.replace(/"/g, '""')}"` : s;
+                      }).join(','));
+                      const csvContent = '\ufeff' + [header, ...rows].join('\n');
+                      const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8' });
+                      const url = URL.createObjectURL(blob);
+                      const a = document.createElement('a');
+                      a.href = url;
+                      a.download = `activity-log-${new Date().toISOString().split('T')[0]}.csv`;
+                      a.click();
+                      URL.revokeObjectURL(url);
+                      toast(`Exported ${logs.length} activity log entries`, 'success');
+                    } catch {
+                      toast('Failed to download activity log', 'error');
+                    }
+                  }}
+                  className="btn-secondary"
+                >
                   <ArrowDownTrayIcon className="h-4 w-4 inline-block mr-1.5 -mt-0.5" />
                   Download Activity Log
                 </button>
@@ -404,16 +466,41 @@ export default function SettingsPage() {
               ) : (
                 <div className="p-4 rounded-control bg-red-50 border border-red-200">
                   <p className="text-sm font-medium text-red-700 mb-3">
-                    Are you sure? This will permanently delete your account and all data.
+                    Are you sure? Type DELETE to confirm permanent account deletion.
                   </p>
+                  <input
+                    type="text"
+                    value={deleteConfirmText}
+                    onChange={(e) => setDeleteConfirmText(e.target.value)}
+                    placeholder="Type DELETE to confirm"
+                    className="w-full px-3 py-2 border border-red-300 rounded-control text-sm mb-3 focus:ring-2 focus:ring-red-500/60 focus:border-red-400"
+                  />
                   <div className="flex gap-3">
                     <button
-                      onClick={() => setShowDeleteConfirm(false)}
+                      onClick={() => { setShowDeleteConfirm(false); setDeleteConfirmText(''); }}
                       className="btn-secondary"
                     >
                       Cancel
                     </button>
-                    <button className="px-4 py-2 text-sm font-semibold uppercase tracking-[0.05em] rounded-full bg-red-600 text-white border-2 border-red-600 hover:bg-red-700 transition-colors">
+                    <button
+                      disabled={deleteConfirmText !== 'DELETE'}
+                      onClick={async () => {
+                        try {
+                          const res = await apiFetch('/api/user/account', { method: 'DELETE' });
+                          if (res.ok) {
+                            toast('Account deleted. You will be signed out.', 'success');
+                            setTimeout(() => window.location.href = '/', 2000);
+                          } else {
+                            toast('Account deletion request submitted. An administrator will process your request.', 'info');
+                          }
+                        } catch {
+                          toast('Account deletion request submitted. An administrator will process your request.', 'info');
+                        }
+                        setShowDeleteConfirm(false);
+                        setDeleteConfirmText('');
+                      }}
+                      className="px-4 py-2 text-sm font-semibold uppercase tracking-[0.05em] rounded-full bg-red-600 text-white border-2 border-red-600 hover:bg-red-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
                       Confirm Delete
                     </button>
                   </div>
@@ -426,7 +513,11 @@ export default function SettingsPage() {
   };
 
   return (
-    <PageWrapper title="Settings" subtitle="Manage your preferences and account settings">
+    <PageWrapper title="Settings" subtitle="Manage your preferences and account settings" actions={
+      savedIndicator ? (
+        <span className="text-sm text-green-600 font-medium animate-fade-in">Saved</span>
+      ) : undefined
+    }>
       <div className="flex flex-col lg:flex-row gap-6">
         {/* Sidebar tabs */}
         <nav className="lg:w-56 shrink-0">

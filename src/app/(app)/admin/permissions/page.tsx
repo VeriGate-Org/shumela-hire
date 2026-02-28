@@ -3,7 +3,8 @@
 import React, { useState, useEffect } from 'react';
 import PageWrapper from '@/components/PageWrapper';
 import { apiFetch } from '@/lib/api-fetch';
-import { 
+import { useToast } from '@/components/Toast';
+import {
   ShieldCheckIcon,
   UsersIcon,
   KeyIcon,
@@ -18,7 +19,8 @@ import {
   CogIcon,
   EyeIcon,
   DocumentTextIcon,
-  ChartBarIcon
+  ChartBarIcon,
+  ArrowPathIcon,
 } from '@heroicons/react/24/outline';
 
 interface Permission {
@@ -57,10 +59,16 @@ export default function AdminPermissionsPage() {
   const [users, setUsers] = useState<User[]>([]);
   const [selectedRole, setSelectedRole] = useState<Role | null>(null);
   const [selectedView, setSelectedView] = useState<'roles' | 'permissions' | 'users'>('roles');
-  const [_showRoleModal, setShowRoleModal] = useState(false);
-  const [_editingRole, setEditingRole] = useState<Role | null>(null);
-  const [_loading, setLoading] = useState(true);
+  const [showRoleModal, setShowRoleModal] = useState(false);
+  const [editingRole, setEditingRole] = useState<Role | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
+  const [savingPermission, setSavingPermission] = useState<string | null>(null);
+  const [editingUserId, setEditingUserId] = useState<string | null>(null);
+  const [editingUserRole, setEditingUserRole] = useState<string>('');
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState<string | null>(null);
+  const { toast } = useToast();
 
   useEffect(() => {
     loadPermissionData();
@@ -68,6 +76,7 @@ export default function AdminPermissionsPage() {
 
   const loadPermissionData = async () => {
     setLoading(true);
+    setLoadError(null);
     try {
       const [permissionsRes, rolesRes, usersRes] = await Promise.allSettled([
         apiFetch('/api/admin/permissions'),
@@ -75,22 +84,31 @@ export default function AdminPermissionsPage() {
         apiFetch('/api/admin/users'),
       ]);
 
+      let anySuccess = false;
+
       if (permissionsRes.status === 'fulfilled' && permissionsRes.value.ok) {
         const data = await permissionsRes.value.json();
         setPermissions(Array.isArray(data) ? data : data.data || []);
+        anySuccess = true;
       }
 
       if (rolesRes.status === 'fulfilled' && rolesRes.value.ok) {
         const data = await rolesRes.value.json();
         setRoles(Array.isArray(data) ? data : data.data || []);
+        anySuccess = true;
       }
 
       if (usersRes.status === 'fulfilled' && usersRes.value.ok) {
         const data = await usersRes.value.json();
         setUsers(Array.isArray(data) ? data : data.data || []);
+        anySuccess = true;
+      }
+
+      if (!anySuccess) {
+        setLoadError('Failed to load permission data. Please check your connection and try again.');
       }
     } catch {
-      // Keep empty state on error
+      setLoadError('Failed to load permission data. Please check your connection and try again.');
     } finally {
       setLoading(false);
     }
@@ -128,20 +146,65 @@ export default function AdminPermissionsPage() {
     return levels[level as keyof typeof levels] || levels.read;
   };
 
-  const handleRolePermissionToggle = (roleId: string, permissionId: string) => {
-    setRoles(prev => prev.map(role => {
-      if (role.id === roleId) {
-        const hasPermission = role.permissions.includes(permissionId);
-        return {
-          ...role,
-          permissions: hasPermission 
-            ? role.permissions.filter(p => p !== permissionId)
-            : [...role.permissions, permissionId],
-          lastModified: new Date().toISOString()
-        };
+  const handleRolePermissionToggle = async (roleId: string, permissionId: string) => {
+    const role = roles.find(r => r.id === roleId);
+    if (!role) return;
+
+    const hasPermission = role.permissions.includes(permissionId);
+    const newPermissions = hasPermission
+      ? role.permissions.filter(p => p !== permissionId)
+      : [...role.permissions, permissionId];
+
+    // Optimistic update
+    setRoles(prev => prev.map(r => {
+      if (r.id === roleId) {
+        return { ...r, permissions: newPermissions, lastModified: new Date().toISOString() };
       }
-      return role;
+      return r;
     }));
+    if (selectedRole?.id === roleId) {
+      setSelectedRole(prev => prev ? { ...prev, permissions: newPermissions, lastModified: new Date().toISOString() } : null);
+    }
+
+    setSavingPermission(permissionId);
+    try {
+      const res = await apiFetch(`/api/admin/roles/${roleId}/permissions`, {
+        method: 'PUT',
+        body: JSON.stringify({ permissionId, enabled: !hasPermission }),
+      });
+      if (!res.ok) throw new Error('Failed to update permission');
+      toast(`Permission ${hasPermission ? 'removed' : 'granted'} successfully`, 'success');
+    } catch {
+      // Rollback on failure
+      setRoles(prev => prev.map(r => {
+        if (r.id === roleId) {
+          return { ...r, permissions: role.permissions };
+        }
+        return r;
+      }));
+      if (selectedRole?.id === roleId) {
+        setSelectedRole(prev => prev ? { ...prev, permissions: role.permissions } : null);
+      }
+      toast('Failed to update permission. Changes reverted.', 'error');
+    } finally {
+      setSavingPermission(null);
+    }
+  };
+
+  const handleSaveRoleChanges = async () => {
+    if (!selectedRole) return;
+    try {
+      const res = await apiFetch(`/api/admin/roles/${selectedRole.id}`, {
+        method: 'PUT',
+        body: JSON.stringify(selectedRole),
+      });
+      if (!res.ok) throw new Error('Failed to save');
+      toast('Role changes saved successfully', 'success');
+      setSelectedRole(null);
+      await loadPermissionData();
+    } catch {
+      toast('Failed to save role changes', 'error');
+    }
   };
 
   const handleCreateRole = () => {
@@ -154,10 +217,57 @@ export default function AdminPermissionsPage() {
     setShowRoleModal(true);
   };
 
-  const handleDeleteRole = (roleId: string) => {
-    if (confirm('Are you sure you want to delete this role? Users with this role will need to be reassigned.')) {
+  const handleDeleteRole = async (roleId: string) => {
+    setShowDeleteConfirm(null);
+    try {
+      const res = await apiFetch(`/api/admin/roles/${roleId}`, { method: 'DELETE' });
+      if (!res.ok) throw new Error('Failed to delete');
       setRoles(prev => prev.filter(role => role.id !== roleId));
+      toast('Role deleted successfully', 'success');
+    } catch {
+      toast('Failed to delete role. It may still have assigned users.', 'error');
     }
+  };
+
+  const handleEditUser = async (userId: string) => {
+    if (!editingUserRole) return;
+    try {
+      const res = await apiFetch(`/api/admin/users/${userId}/role`, {
+        method: 'PUT',
+        body: JSON.stringify({ role: editingUserRole }),
+      });
+      if (!res.ok) throw new Error('Failed to update');
+      setUsers(prev => prev.map(u => u.id === userId ? { ...u, roleId: editingUserRole } : u));
+      toast('User role updated successfully', 'success');
+      setEditingUserId(null);
+      setEditingUserRole('');
+    } catch {
+      toast('Failed to update user role', 'error');
+    }
+  };
+
+  const handleExportPermissions = () => {
+    const header = ['Role', 'Permission', 'Category', 'Level'].join(',');
+    const rows: string[] = [];
+    for (const role of roles) {
+      for (const permId of role.permissions) {
+        const perm = permissions.find(p => p.id === permId);
+        if (perm) {
+          rows.push([role.name, perm.name, perm.category, perm.level].map(v =>
+            v.includes(',') || v.includes('"') ? `"${v.replace(/"/g, '""')}"` : v
+          ).join(','));
+        }
+      }
+    }
+    const csvContent = '\ufeff' + [header, ...rows].join('\n');
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `permissions-export-${new Date().toISOString().split('T')[0]}.csv`;
+    a.click();
+    URL.revokeObjectURL(url);
+    toast(`Exported ${rows.length} permission assignments`, 'success');
   };
 
   const filteredRoles = roles.filter(role =>
@@ -173,11 +283,14 @@ export default function AdminPermissionsPage() {
 
   const actions = (
     <div className="flex items-center gap-3">
-      <button className="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-full text-gray-700 bg-white hover:bg-gray-50">
+      <button
+        onClick={handleExportPermissions}
+        className="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-full text-gray-700 bg-white hover:bg-gray-50"
+      >
         <DocumentTextIcon className="w-4 h-4 mr-2" />
         Export Permissions
       </button>
-      <button 
+      <button
         onClick={handleCreateRole}
         className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-full shadow-sm text-violet-900 bg-transparent border-2 border-gold-500 hover:bg-gold-500 hover:text-violet-950 uppercase tracking-wider"
       >
@@ -186,6 +299,55 @@ export default function AdminPermissionsPage() {
       </button>
     </div>
   );
+
+  if (loading) {
+    return (
+      <PageWrapper
+        title="Role & Permission Management"
+        subtitle="Manage user roles, permissions, and access control across the recruitment platform"
+        actions={actions}
+      >
+        <div className="space-y-6">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+            {[1, 2, 3, 4].map(i => (
+              <div key={i} className="bg-white rounded-sm shadow p-6">
+                <div className="animate-pulse flex items-center">
+                  <div className="w-8 h-8 bg-gray-200 rounded"></div>
+                  <div className="ml-4 flex-1">
+                    <div className="h-3 bg-gray-200 rounded w-3/4 mb-2"></div>
+                    <div className="h-5 bg-gray-200 rounded w-1/2"></div>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </PageWrapper>
+    );
+  }
+
+  if (loadError) {
+    return (
+      <PageWrapper
+        title="Role & Permission Management"
+        subtitle="Manage user roles, permissions, and access control across the recruitment platform"
+        actions={actions}
+      >
+        <div className="bg-white rounded-sm shadow p-8 text-center">
+          <ExclamationTriangleIcon className="w-12 h-12 text-red-400 mx-auto mb-4" />
+          <h3 className="text-lg font-semibold text-gray-900 mb-2">Failed to load permission data</h3>
+          <p className="text-gray-500 mb-4">{loadError}</p>
+          <button
+            onClick={loadPermissionData}
+            className="inline-flex items-center gap-2 px-4 py-2 bg-gold-500 text-violet-950 rounded-full text-sm font-medium hover:bg-gold-600"
+          >
+            <ArrowPathIcon className="w-4 h-4" />
+            Retry
+          </button>
+        </div>
+      </PageWrapper>
+    );
+  }
 
   return (
     <PageWrapper
@@ -207,7 +369,7 @@ export default function AdminPermissionsPage() {
               </div>
             </div>
           </div>
-          
+
           <div className="bg-white rounded-sm shadow p-6">
             <div className="flex items-center">
               <div className="flex-shrink-0">
@@ -219,7 +381,7 @@ export default function AdminPermissionsPage() {
               </div>
             </div>
           </div>
-          
+
           <div className="bg-white rounded-sm shadow p-6">
             <div className="flex items-center">
               <div className="flex-shrink-0">
@@ -231,7 +393,7 @@ export default function AdminPermissionsPage() {
               </div>
             </div>
           </div>
-          
+
           <div className="bg-white rounded-sm shadow p-6">
             <div className="flex items-center">
               <div className="flex-shrink-0">
@@ -256,7 +418,7 @@ export default function AdminPermissionsPage() {
               ].map(view => (
                 <button
                   key={view.id}
-                  onClick={() => setSelectedView(view.id as any)}
+                  onClick={() => setSelectedView(view.id as 'roles' | 'permissions' | 'users')}
                   className={`flex items-center px-4 py-2 rounded-full text-sm font-medium transition-colors ${
                     selectedView === view.id
                       ? 'bg-gold-100 text-gold-800'
@@ -268,7 +430,7 @@ export default function AdminPermissionsPage() {
                 </button>
               ))}
             </div>
-            
+
             <input
               type="text"
               placeholder="Search..."
@@ -341,7 +503,7 @@ export default function AdminPermissionsPage() {
                           <PencilIcon className="w-4 h-4" />
                         </button>
                         <button
-                          onClick={() => handleDeleteRole(role.id)}
+                          onClick={() => setShowDeleteConfirm(role.id)}
                           className="px-3 py-2 bg-red-100 text-red-700 rounded-full hover:bg-red-200"
                         >
                           <TrashIcon className="w-4 h-4" />
@@ -370,7 +532,7 @@ export default function AdminPermissionsPage() {
                         {categoryPermissions.length} permissions
                       </span>
                     </div>
-                    
+
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
                       {categoryPermissions.map(permission => {
                         const levelInfo = getPermissionLevel(permission.level);
@@ -388,7 +550,7 @@ export default function AdminPermissionsPage() {
                                 </span>
                               </div>
                             </div>
-                            
+
                             <div className="mt-3">
                               <p className="text-xs text-gray-500 mb-2">Assigned to roles:</p>
                               <div className="flex flex-wrap gap-1">
@@ -441,6 +603,7 @@ export default function AdminPermissionsPage() {
                   <tbody className="divide-y divide-gray-200">
                     {filteredUsers.map(user => {
                       const userRole = roles.find(r => r.id === user.roleId);
+                      const isEditing = editingUserId === user.id;
                       return (
                         <tr key={user.id}>
                           <td className="px-6 py-4 whitespace-nowrap">
@@ -450,10 +613,36 @@ export default function AdminPermissionsPage() {
                             </div>
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap">
-                            {userRole && (
-                              <span className={`px-2 py-1 rounded-full text-xs font-medium border ${getRoleColor(userRole.color)}`}>
-                                {userRole.name}
-                              </span>
+                            {isEditing ? (
+                              <div className="flex items-center gap-2">
+                                <select
+                                  value={editingUserRole}
+                                  onChange={(e) => setEditingUserRole(e.target.value)}
+                                  className="px-2 py-1 border border-gray-300 rounded-sm text-sm"
+                                >
+                                  {roles.map(r => (
+                                    <option key={r.id} value={r.id}>{r.name}</option>
+                                  ))}
+                                </select>
+                                <button
+                                  onClick={() => handleEditUser(user.id)}
+                                  className="text-green-600 hover:text-green-800"
+                                >
+                                  <CheckIcon className="w-4 h-4" />
+                                </button>
+                                <button
+                                  onClick={() => { setEditingUserId(null); setEditingUserRole(''); }}
+                                  className="text-gray-400 hover:text-gray-600"
+                                >
+                                  <XMarkIcon className="w-4 h-4" />
+                                </button>
+                              </div>
+                            ) : (
+                              userRole && (
+                                <span className={`px-2 py-1 rounded-full text-xs font-medium border ${getRoleColor(userRole.color)}`}>
+                                  {userRole.name}
+                                </span>
+                              )
                             )}
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
@@ -473,10 +662,16 @@ export default function AdminPermissionsPage() {
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                             <div className="flex gap-2">
-                              <button className="text-gold-600 hover:text-violet-900 rounded-full">
+                              <button
+                                onClick={() => { setEditingUserId(user.id); setEditingUserRole(user.roleId); }}
+                                className="text-gold-600 hover:text-violet-900 rounded-full"
+                              >
                                 <PencilIcon className="w-4 h-4" />
                               </button>
-                              <button className="text-red-600 hover:text-red-900 rounded-full">
+                              <button
+                                onClick={() => toast('User deactivation coming soon', 'info')}
+                                className="text-red-600 hover:text-red-900 rounded-full"
+                              >
                                 <TrashIcon className="w-4 h-4" />
                               </button>
                             </div>
@@ -486,6 +681,76 @@ export default function AdminPermissionsPage() {
                     })}
                   </tbody>
                 </table>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Create/Edit Role Modal */}
+        {showRoleModal && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+            <div className="bg-white rounded-sm shadow-xl max-w-lg w-full">
+              <div className="p-6">
+                <div className="flex items-start justify-between mb-6">
+                  <div>
+                    <h2 className="text-xl font-bold text-gray-900">
+                      {editingRole ? 'Edit Role' : 'Create Role'}
+                    </h2>
+                    <p className="text-gray-600 mt-1">
+                      Custom role management will be available in a future release
+                    </p>
+                  </div>
+                  <button
+                    onClick={() => { setShowRoleModal(false); setEditingRole(null); }}
+                    className="text-gray-400 hover:text-gray-600"
+                  >
+                    <XMarkIcon className="w-6 h-6" />
+                  </button>
+                </div>
+                <div className="bg-gray-50 rounded-sm p-8 text-center">
+                  <CogIcon className="w-12 h-12 text-gray-400 mx-auto mb-3" />
+                  <p className="text-sm text-gray-600">
+                    Custom role management will be available in a future release.
+                    System roles are currently read-only.
+                  </p>
+                </div>
+                <div className="flex justify-end mt-6">
+                  <button
+                    onClick={() => { setShowRoleModal(false); setEditingRole(null); }}
+                    className="px-4 py-2 border border-gray-300 text-gray-700 rounded-full hover:bg-gray-50"
+                  >
+                    Close
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Delete Confirmation Modal */}
+        {showDeleteConfirm && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+            <div className="bg-white rounded-sm shadow-xl max-w-md w-full p-6">
+              <div className="flex items-center gap-3 mb-4">
+                <ExclamationTriangleIcon className="w-8 h-8 text-red-500" />
+                <h2 className="text-lg font-bold text-gray-900">Delete Role</h2>
+              </div>
+              <p className="text-gray-600 mb-6">
+                Are you sure you want to delete this role? Users with this role will need to be reassigned.
+              </p>
+              <div className="flex justify-end gap-3">
+                <button
+                  onClick={() => setShowDeleteConfirm(null)}
+                  className="px-4 py-2 border border-gray-300 text-gray-700 rounded-full hover:bg-gray-50"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={() => handleDeleteRole(showDeleteConfirm)}
+                  className="px-4 py-2 bg-red-600 text-white rounded-full hover:bg-red-700"
+                >
+                  Delete
+                </button>
               </div>
             </div>
           </div>
@@ -518,11 +783,12 @@ export default function AdminPermissionsPage() {
                           <category.icon className="w-5 h-5 text-gray-600" />
                           <h3 className="font-semibold text-gray-900">{category.name}</h3>
                         </div>
-                        
+
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                           {categoryPermissions.map(permission => {
                             const hasPermission = selectedRole.permissions.includes(permission.id);
                             const levelInfo = getPermissionLevel(permission.level);
+                            const isSaving = savingPermission === permission.id;
                             return (
                               <div key={permission.id} className="flex items-center justify-between p-3 bg-gray-50 rounded">
                                 <div className="flex-1">
@@ -538,18 +804,19 @@ export default function AdminPermissionsPage() {
                                   {!selectedRole.isSystem ? (
                                     <button
                                       onClick={() => handleRolePermissionToggle(selectedRole.id, permission.id)}
-                                      className={`w-6 h-6 rounded border-2 flex items-center justify-center ${
-                                        hasPermission 
-                                          ? 'bg-gold-500 border-gold-500 text-violet-950' 
+                                      disabled={isSaving}
+                                      className={`w-6 h-6 rounded border-2 flex items-center justify-center transition-colors ${
+                                        hasPermission
+                                          ? 'bg-gold-500 border-gold-500 text-violet-950'
                                           : 'border-gray-300 hover:border-gray-400'
-                                      }`}
+                                      } ${isSaving ? 'opacity-50' : ''}`}
                                     >
                                       {hasPermission && <CheckIcon className="w-4 h-4" />}
                                     </button>
                                   ) : (
                                     <div className={`w-6 h-6 rounded border-2 flex items-center justify-center ${
-                                      hasPermission 
-                                        ? 'bg-gold-500 border-gold-500 text-violet-950' 
+                                      hasPermission
+                                        ? 'bg-gold-500 border-gold-500 text-violet-950'
                                         : 'border-gray-300'
                                     }`}>
                                       {hasPermission && <CheckIcon className="w-4 h-4" />}
@@ -573,7 +840,10 @@ export default function AdminPermissionsPage() {
                     Close
                   </button>
                   {!selectedRole.isSystem && (
-                    <button className="px-4 py-2 bg-gold-500 text-violet-950 rounded-full hover:bg-gold-600">
+                    <button
+                      onClick={handleSaveRoleChanges}
+                      className="px-4 py-2 bg-gold-500 text-violet-950 rounded-full hover:bg-gold-600"
+                    >
                       Save Changes
                     </button>
                   )}

@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { useAuth } from '@/contexts/AuthContext';
+import { apiFetch } from '@/lib/api-fetch';
 import Link from 'next/link';
 import {
   ArrowLeftIcon,
@@ -45,13 +46,6 @@ interface InternalJobAd {
   companyName?: string;
   applicationCount?: number;
   viewCount?: number;
-}
-
-interface ApiResponse {
-  success: boolean;
-  data?: InternalJobAd;
-  message?: string;
-  error?: string;
 }
 
 // Utility functions
@@ -104,14 +98,8 @@ export default function InternalJobDetailPage() {
         setLoading(true);
         setError(null);
         
-        const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:8080';
-        const response = await fetch(`${baseUrl}/ads/${jobId}`, {
-          headers: {
-            'Authorization': `Bearer ${user?.id}`, // Use proper JWT token in production
-            'Content-Type': 'application/json'
-          }
-        });
-        
+        const response = await apiFetch(`/ads/${jobId}`);
+
         if (!response.ok) {
           if (response.status === 404) {
             setError('Job not found');
@@ -119,16 +107,8 @@ export default function InternalJobDetailPage() {
           }
           throw new Error(`HTTP error! status: ${response.status}`);
         }
-        
-        const apiResponse: ApiResponse = await response.json();
-        
-        if (!apiResponse.success || !apiResponse.data) {
-          setError(apiResponse.error || 'Failed to load job details');
-          return;
-        }
-        
-        // Check if user has access to this job based on role
-        const jobData = apiResponse.data;
+
+        const jobData: InternalJobAd = await response.json();
         if (!jobData.channelInternal && user?.role === 'APPLICANT') {
           setError('You do not have access to this job posting');
           return;
@@ -272,9 +252,15 @@ export default function InternalJobDetailPage() {
                   <ShareIcon className="w-4 h-4 mr-2" />
                   Share
                 </button>
-                <button className="inline-flex items-center px-3 py-2 border border-gray-300 rounded-full hover:bg-gray-50 transition-colors">
+                <button
+                  onClick={() => {
+                    navigator.clipboard.writeText(window.location.href);
+                    toast('Job URL copied to clipboard', 'success');
+                  }}
+                  className="inline-flex items-center px-3 py-2 border border-gray-300 rounded-full hover:bg-gray-50 transition-colors"
+                >
                   <BookmarkIcon className="w-4 h-4 mr-2" />
-                  Save
+                  Copy Link
                 </button>
               </div>
             </div>

@@ -1,10 +1,11 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { apiFetch } from '@/lib/api-fetch';
+import { useToast } from '@/components/Toast';
 import PageWrapper from '@/components/PageWrapper';
-import { 
+import {
   WorkflowBuilder,
   WorkflowManager,
   WorkflowLibrary,
@@ -21,8 +22,39 @@ import {
   PlusIcon,
 } from '@heroicons/react/24/outline';
 
+// Maps backend entity to frontend WorkflowDefinition
+function fromBackend(entity: any): WorkflowDefinition {
+  return {
+    id: String(entity.id),
+    name: entity.name || '',
+    description: entity.description || '',
+    trigger: entity.triggerConfig ? JSON.parse(entity.triggerConfig) : { id: 'manual', type: 'manual', name: 'Manual', description: 'Manually triggered' },
+    steps: entity.stepsJson ? JSON.parse(entity.stepsJson) : [],
+    isActive: entity.isActive ?? entity.active ?? false,
+    createdAt: entity.createdAt,
+    updatedAt: entity.updatedAt,
+    createdBy: entity.createdBy,
+    version: entity.version ?? 0,
+    tags: entity.category ? [entity.category] : [],
+  };
+}
+
+// Maps frontend WorkflowDefinition to backend entity shape
+function toBackend(workflow: WorkflowDefinition) {
+  return {
+    name: workflow.name,
+    description: workflow.description,
+    category: workflow.tags?.[0] || null,
+    triggerType: workflow.trigger?.type || 'manual',
+    triggerConfig: JSON.stringify(workflow.trigger),
+    stepsJson: JSON.stringify(workflow.steps),
+    createdBy: workflow.createdBy,
+  };
+}
+
 export default function WorkflowPage() {
   const { user } = useAuth();
+  const { toast } = useToast();
   const [activeView, setActiveView] = useState<'manager' | 'builder' | 'library' | 'approvals'>('manager');
   const [workflows, setWorkflows] = useState<WorkflowDefinition[]>([]);
   const [executions, setExecutions] = useState<WorkflowExecution[]>([]);
@@ -30,6 +62,26 @@ export default function WorkflowPage() {
   const [availableUsers, setAvailableUsers] = useState<{ id: string; name: string; email: string; role: string }[]>([]);
   const [selectedWorkflow, setSelectedWorkflow] = useState<WorkflowDefinition | null>(null);
   const [isEditing, setIsEditing] = useState(false);
+  const [selectedExecution, setSelectedExecution] = useState<WorkflowExecution | null>(null);
+  const importInputRef = useRef<HTMLInputElement>(null);
+
+  // Load workflows from backend
+  const loadWorkflows = useCallback(async () => {
+    try {
+      const response = await apiFetch('/api/workflows');
+      if (response.ok) {
+        const data = await response.json();
+        const mapped = (Array.isArray(data) ? data : []).map(fromBackend);
+        setWorkflows(mapped);
+      }
+    } catch (error) {
+      console.error('Failed to load workflows:', error);
+    }
+  }, []);
+
+  useEffect(() => {
+    loadWorkflows();
+  }, [loadWorkflows]);
 
   useEffect(() => {
     const loadUsers = async () => {
@@ -51,7 +103,7 @@ export default function WorkflowPage() {
     void loadUsers();
   }, []);
 
-  // Workflow actions
+  // Workflow CRUD actions (persisted to backend)
   const handleCreateWorkflow = () => {
     setSelectedWorkflow(null);
     setIsEditing(false);
@@ -64,38 +116,72 @@ export default function WorkflowPage() {
     setActiveView('builder');
   };
 
-  const handleSaveWorkflow = (workflow: WorkflowDefinition) => {
-    if (isEditing && selectedWorkflow) {
-      setWorkflows(prev => prev.map(w => w.id === workflow.id ? workflow : w));
-    } else {
-      setWorkflows(prev => [...prev, { ...workflow, id: `wf-${Date.now()}` }]);
+  const handleSaveWorkflow = async (workflow: WorkflowDefinition) => {
+    try {
+      if (isEditing && selectedWorkflow?.id) {
+        const response = await apiFetch(`/api/workflows/${selectedWorkflow.id}`, {
+          method: 'PUT',
+          body: JSON.stringify(toBackend(workflow)),
+        });
+        if (!response.ok) throw new Error('Failed to update workflow');
+        toast('Workflow updated', 'success');
+      } else {
+        const response = await apiFetch('/api/workflows', {
+          method: 'POST',
+          body: JSON.stringify({ ...toBackend(workflow), createdBy: user?.name }),
+        });
+        if (!response.ok) throw new Error('Failed to create workflow');
+        toast('Workflow created', 'success');
+      }
+      await loadWorkflows();
+    } catch (error) {
+      console.error('Failed to save workflow:', error);
+      toast('Failed to save workflow', 'error');
     }
     setActiveView('manager');
     setSelectedWorkflow(null);
     setIsEditing(false);
   };
 
-  const handleDeleteWorkflow = (workflowId: string) => {
-    setWorkflows(prev => prev.filter(w => w.id !== workflowId));
+  const handleDeleteWorkflow = async (workflowId: string) => {
+    if (!confirm('Are you sure you want to delete this workflow?')) return;
+    try {
+      const response = await apiFetch(`/api/workflows/${workflowId}`, { method: 'DELETE' });
+      if (!response.ok) throw new Error('Failed to delete workflow');
+      toast('Workflow deleted', 'success');
+      await loadWorkflows();
+    } catch (error) {
+      console.error('Failed to delete workflow:', error);
+      toast('Failed to delete workflow', 'error');
+    }
   };
 
-  const handleDuplicateWorkflow = (workflow: WorkflowDefinition) => {
-    const duplicated = {
-      ...workflow,
-      id: `wf-${Date.now()}`,
-      name: `${workflow.name} (Copy)`,
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
-    };
-    setWorkflows(prev => [...prev, duplicated]);
+  const handleDuplicateWorkflow = async (workflow: WorkflowDefinition) => {
+    if (!workflow.id) return;
+    try {
+      const response = await apiFetch(`/api/workflows/${workflow.id}/duplicate`, { method: 'POST' });
+      if (!response.ok) throw new Error('Failed to duplicate workflow');
+      toast('Workflow duplicated', 'success');
+      await loadWorkflows();
+    } catch (error) {
+      console.error('Failed to duplicate workflow:', error);
+      toast('Failed to duplicate workflow', 'error');
+    }
   };
 
-  const handleToggleWorkflow = (workflowId: string, isActive: boolean) => {
-    setWorkflows(prev => prev.map(w => 
-      w.id === workflowId ? { ...w, isActive } : w
-    ));
+  const handleToggleWorkflow = async (workflowId: string, isActive: boolean) => {
+    try {
+      const response = await apiFetch(`/api/workflows/${workflowId}/toggle?isActive=${isActive}`, { method: 'PUT' });
+      if (!response.ok) throw new Error('Failed to toggle workflow');
+      toast(isActive ? 'Workflow activated' : 'Workflow deactivated', 'success');
+      await loadWorkflows();
+    } catch (error) {
+      console.error('Failed to toggle workflow:', error);
+      toast('Failed to toggle workflow', 'error');
+    }
   };
 
+  // Execution actions (local-only — execution engine not yet implemented)
   const handleRunWorkflow = (workflowId: string) => {
     const workflow = workflows.find(w => w.id === workflowId);
     if (!workflow) return;
@@ -114,17 +200,18 @@ export default function WorkflowPage() {
     };
 
     setExecutions(prev => [newExecution, ...prev]);
+    toast('Workflow execution started (demo mode)', 'info');
   };
 
   const handleStopExecution = (executionId: string) => {
-    setExecutions(prev => prev.map(e => 
+    setExecutions(prev => prev.map(e =>
       e.id === executionId ? { ...e, status: 'cancelled' as const, completedAt: new Date().toISOString() } : e
     ));
+    toast('Execution stopped', 'success');
   };
 
   const handleViewExecution = (execution: WorkflowExecution) => {
-    // Implementation for viewing execution details
-    console.log('View execution:', execution);
+    setSelectedExecution(execution);
   };
 
   const handleSelectWorkflow = (workflow: WorkflowDefinition) => {
@@ -134,12 +221,33 @@ export default function WorkflowPage() {
   };
 
   const handleImportWorkflow = () => {
-    // Implementation for importing workflow
-    console.log('Import workflow');
+    importInputRef.current?.click();
+  };
+
+  const handleImportFile = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    try {
+      const text = await file.text();
+      const parsed = JSON.parse(text);
+      const response = await apiFetch('/api/workflows', {
+        method: 'POST',
+        body: JSON.stringify({
+          ...toBackend(parsed),
+          createdBy: user?.name,
+        }),
+      });
+      if (!response.ok) throw new Error('Failed to import workflow');
+      toast('Workflow imported', 'success');
+      await loadWorkflows();
+    } catch (error) {
+      console.error('Failed to import workflow:', error);
+      toast('Failed to import workflow. Ensure the file is valid JSON.', 'error');
+    }
+    e.target.value = '';
   };
 
   const handleExportWorkflow = (workflow: WorkflowDefinition) => {
-    // Implementation for exporting workflow
     const dataStr = JSON.stringify(workflow, null, 2);
     const dataBlob = new Blob([dataStr], { type: 'application/json' });
     const url = URL.createObjectURL(dataBlob);
@@ -147,9 +255,14 @@ export default function WorkflowPage() {
     link.href = url;
     link.download = `${workflow.name.replace(/\s+/g, '_')}.json`;
     link.click();
+    URL.revokeObjectURL(url);
   };
 
-  // Approval actions
+  const handleTestWorkflow = (workflow: WorkflowDefinition) => {
+    toast(`Test run started for "${workflow.name}" (demo mode)`, 'info');
+  };
+
+  // Approval actions (local-only — no backend approval system yet)
   const handleApprove = (requestId: string, comment?: string) => {
     setApprovalRequests(prev => prev.map(req => {
       if (req.id === requestId) {
@@ -210,8 +323,7 @@ export default function WorkflowPage() {
   };
 
   const handleViewApprovalDetails = (request: ApprovalRequest) => {
-    // Implementation for viewing approval details
-    console.log('View approval details:', request);
+    toast(`Viewing approval: ${request.workflowName}`, 'info');
   };
 
   if (!user) {
@@ -247,6 +359,14 @@ export default function WorkflowPage() {
       subtitle="Design, manage, and monitor automated recruitment workflows"
       actions={actions}
     >
+      {/* Hidden file input for import */}
+      <input
+        ref={importInputRef}
+        type="file"
+        accept=".json"
+        className="hidden"
+        onChange={handleImportFile}
+      />
 
       <div className="space-y-6">
         {/* Navigation */}
@@ -298,7 +418,7 @@ export default function WorkflowPage() {
             <WorkflowBuilder
               workflow={selectedWorkflow || undefined}
               onSave={handleSaveWorkflow}
-              onTest={(workflow) => console.log('Test workflow:', workflow)}
+              onTest={handleTestWorkflow}
               availableFields={[
                 { id: 'applicant_name', name: 'Applicant Name', type: 'string' },
                 { id: 'job_title', name: 'Job Title', type: 'string' },
@@ -333,6 +453,64 @@ export default function WorkflowPage() {
           )}
         </div>
       </div>
+
+      {/* Execution Detail Modal */}
+      {selectedExecution && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+          <div className="bg-white rounded-sm shadow-xl max-w-lg w-full p-6">
+            <h3 className="text-lg font-bold text-gray-900 mb-4">Execution Details</h3>
+            <div className="space-y-3 text-sm">
+              <div className="flex justify-between">
+                <span className="font-medium text-gray-600">Workflow</span>
+                <span>{selectedExecution.workflowName}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="font-medium text-gray-600">Status</span>
+                <span className="capitalize">{selectedExecution.status}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="font-medium text-gray-600">Started</span>
+                <span>{new Date(selectedExecution.startedAt).toLocaleString()}</span>
+              </div>
+              {selectedExecution.completedAt && (
+                <div className="flex justify-between">
+                  <span className="font-medium text-gray-600">Completed</span>
+                  <span>{new Date(selectedExecution.completedAt).toLocaleString()}</span>
+                </div>
+              )}
+              <div className="flex justify-between">
+                <span className="font-medium text-gray-600">Triggered By</span>
+                <span>{selectedExecution.triggeredBy}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="font-medium text-gray-600">Progress</span>
+                <span>{selectedExecution.currentStep ?? 0} / {selectedExecution.totalSteps} steps</span>
+              </div>
+              {selectedExecution.executionLog.length > 0 && (
+                <div>
+                  <p className="font-medium text-gray-600 mb-2">Execution Log</p>
+                  <div className="max-h-48 overflow-y-auto space-y-1 bg-gray-50 p-2 rounded-sm">
+                    {selectedExecution.executionLog.map((entry) => (
+                      <div key={entry.id} className="text-xs text-gray-700">
+                        <span className="text-gray-400">{new Date(entry.timestamp).toLocaleTimeString()}</span>{' '}
+                        {entry.action} — <span className="capitalize">{entry.status}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+            <div className="flex justify-end mt-6">
+              <button
+                onClick={() => setSelectedExecution(null)}
+                className="px-4 py-2 text-sm text-gray-700 border border-gray-300 rounded-full hover:bg-gray-50"
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </PageWrapper>
   );
 }
