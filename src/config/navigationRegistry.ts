@@ -19,6 +19,7 @@ import {
   DocumentCheckIcon,
   Cog6ToothIcon,
   ServerStackIcon,
+  QuestionMarkCircleIcon,
 } from '@heroicons/react/24/outline';
 import {
   HomeIcon as HomeIconSolid,
@@ -78,6 +79,7 @@ export const navigationRegistry: NavigationEntry[] = [
   // System
   { id: 'training', label: 'Training', href: '/training', icon: AcademicCapIcon, section: 'system', requiredPermissions: ['view_training'] },
   { id: 'integrations', label: 'Integrations', href: '/integrations', icon: GlobeAltIcon, section: 'system', requiredPermissions: ['manage_integrations'] },
+  { id: 'help', label: 'Help Center', href: '/help', icon: QuestionMarkCircleIcon, section: 'system', requiredPermissions: [] },
 
   // Platform
   { id: 'platform-tenants', label: 'Tenants', href: '/platform/tenants', icon: ServerStackIcon, section: 'platform', requiredPermissions: ['manage_tenants'] },

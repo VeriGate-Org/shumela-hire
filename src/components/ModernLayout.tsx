@@ -59,13 +59,13 @@ const ModernLayout: React.FC<ModernLayoutProps> = ({
           <div className="flex items-center gap-1">
             <NotificationCenter />
 
-            <button
-              aria-label="Open keyboard shortcuts"
-              onClick={() => setShowOverlay(true)}
+            <Link
+              href="/help"
+              aria-label="Help Center"
               className="p-2 rounded-control hover:bg-accent"
             >
               <QuestionMarkCircleIcon className="h-4 w-4 text-muted-foreground" />
-            </button>
+            </Link>
 
             <UserProfile user={user ? { name: user.name, email: user.email, role: user.role } : undefined} />
           </div>
@@ -130,7 +130,7 @@ const ModernLayout: React.FC<ModernLayoutProps> = ({
             <div className="flex gap-4 mt-2 sm:mt-0">
               <Link href="/privacy" className="idc-link">Privacy</Link>
               <Link href="/terms" className="idc-link">Terms</Link>
-              <Link href="/support" className="idc-link">Support</Link>
+              <Link href="/help" className="idc-link">Help</Link>
             </div>
           </div>
         </footer>
