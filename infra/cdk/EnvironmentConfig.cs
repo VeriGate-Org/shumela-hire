@@ -44,6 +44,7 @@ public sealed class EnvironmentConfig
     {
         "prod" => new[] { $"https://{DomainName}/login" },
         "dev" => new[] { $"https://dev.{DomainName}/login", "http://localhost:3000/login" },
+        "sbx" => new[] { $"https://sbx.{DomainName}/login", $"https://idc-demo.{DomainName}/login" },
         _ => new[] { $"https://{EnvironmentName}.{DomainName}/login" }
     };
 
@@ -51,6 +52,7 @@ public sealed class EnvironmentConfig
     {
         "prod" => new[] { $"https://{DomainName}/login" },
         "dev" => new[] { $"https://dev.{DomainName}/login", "http://localhost:3000/login" },
+        "sbx" => new[] { $"https://sbx.{DomainName}/login", $"https://idc-demo.{DomainName}/login" },
         _ => new[] { $"https://{EnvironmentName}.{DomainName}/login" }
     };
 

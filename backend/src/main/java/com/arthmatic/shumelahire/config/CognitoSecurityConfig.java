@@ -73,7 +73,8 @@ public class CognitoSecurityConfig {
         } else {
             return Arrays.asList(
                     "https://sbx.shumelahire.co.za",
-                    "https://*.sbx.shumelahire.co.za"
+                    "https://*.sbx.shumelahire.co.za",
+                    "https://idc-demo.shumelahire.co.za"
             );
         }
     }
