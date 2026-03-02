@@ -1,4 +1,4 @@
-import { JobBoardPosting, JobBoardType, AvailableBoard } from '@/types/jobBoard';
+import { JobBoardPosting, JobBoardType, AvailableBoard, BatchPostResult } from '@/types/jobBoard';
 import { apiFetch } from '@/lib/api-fetch';
 
 export const jobBoardService = {
@@ -32,6 +32,18 @@ export const jobBoardService = {
   async getAvailableBoards(): Promise<AvailableBoard[]> {
     const response = await apiFetch('/api/job-boards/available-boards');
     if (!response.ok) return [];
+    return response.json();
+  },
+
+  async postToMultipleBoards(
+    jobPostingId: string,
+    boards: { boardType: JobBoardType; boardConfig?: string }[]
+  ): Promise<BatchPostResult[]> {
+    const response = await apiFetch('/api/job-boards/postings/batch', {
+      method: 'POST',
+      body: JSON.stringify({ jobPostingId, boards }),
+    });
+    if (!response.ok) throw new Error('Batch posting failed');
     return response.json();
   },
 };

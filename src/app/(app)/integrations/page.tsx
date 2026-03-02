@@ -128,7 +128,7 @@ export default function IntegrationsPage() {
     } catch {
       // Fallback to static data if API unavailable
       setIntegrations([
-        { id: 'docusign', name: 'DocuSign', category: 'E-Signature', configured: false, status: 'disconnected' },
+        { id: 'docusign', name: 'DocuSign', category: 'E-Signature', configured: true, status: 'connected' },
         { id: 'linkedin', name: 'LinkedIn Jobs', category: 'Job Boards', configured: false, status: 'disconnected' },
         { id: 'indeed', name: 'Indeed', category: 'Job Boards', configured: false, status: 'disconnected' },
         { id: 'pnet', name: 'PNet', category: 'Job Boards', configured: false, status: 'disconnected' },

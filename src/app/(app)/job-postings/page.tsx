@@ -6,6 +6,8 @@ import EmptyState from '@/components/EmptyState';
 import JobPostingForm from '@/components/JobPostingForm';
 import JobPostingWorkflow from '@/components/JobPostingWorkflow';
 import JobBoardManager from '@/components/JobBoardManager';
+import MultiChannelPublishWizard from '@/components/MultiChannelPublishWizard';
+import VacancyReportActions from '@/components/VacancyReportActions';
 import { useTheme } from '@/contexts/ThemeContext';
 import { useAuth } from '@/contexts/AuthContext';
 import { apiFetch } from '@/lib/api-fetch';
@@ -81,6 +83,7 @@ export default function JobPostingsPage() {
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [deletingJobPosting, setDeletingJobPosting] = useState<JobPosting | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
+  const [showPublishWizard, setShowPublishWizard] = useState(false);
   const { setCurrentRole } = useTheme();
   const { user } = useAuth();
   const currentUserId = useMemo(() => {
@@ -528,8 +531,27 @@ export default function JobPostingsPage() {
             />
 
             {selectedJobPosting.status === 'PUBLISHED' && (
+              <>
+                <div className="mt-6 flex justify-end">
+                  <button
+                    onClick={() => setShowPublishWizard(true)}
+                    className="px-4 py-2 bg-gold-500 text-violet-950 rounded-sm hover:bg-gold-600 text-sm font-medium"
+                  >
+                    Publish to All Channels
+                  </button>
+                </div>
+                <div className="mt-3 rounded-md border border-gray-200 bg-white p-6 shadow-sm">
+                  <JobBoardManager jobId={String(selectedJobPosting.id)} />
+                </div>
+              </>
+            )}
+
+            {(selectedJobPosting.status === 'PUBLISHED' || selectedJobPosting.status === 'CLOSED') && (
               <div className="mt-6 rounded-md border border-gray-200 bg-white p-6 shadow-sm">
-                <JobBoardManager jobId={String(selectedJobPosting.id)} />
+                <VacancyReportActions
+                  jobId={String(selectedJobPosting.id)}
+                  showDemographics={user?.role === 'ADMIN' || user?.role === 'HR_MANAGER'}
+                />
               </div>
             )}
           </div>
@@ -543,6 +565,21 @@ export default function JobPostingsPage() {
           onClose={() => {
             setShowLinkedInModal(false);
             setLinkedInJobPosting(null);
+          }}
+        />
+      )}
+
+      {/* Multi-Channel Publish Wizard */}
+      {selectedJobPosting && (
+        <MultiChannelPublishWizard
+          jobId={String(selectedJobPosting.id)}
+          isOpen={showPublishWizard}
+          onClose={() => setShowPublishWizard(false)}
+          onComplete={() => {
+            // Refresh to reflect new postings
+            if (selectedJobPosting) {
+              handleStatusChange(selectedJobPosting.id, selectedJobPosting.status);
+            }
           }}
         />
       )}

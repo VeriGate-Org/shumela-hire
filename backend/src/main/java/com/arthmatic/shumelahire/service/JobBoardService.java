@@ -12,6 +12,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.arthmatic.shumelahire.dto.BatchPostRequest;
+
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -58,6 +62,29 @@ public class JobBoardService {
             return connector.sync(postingId);
         }
         return manualConnector.sync(postingId);
+    }
+
+    public List<Map<String, Object>> postToMultipleBoards(String jobPostingId, List<BatchPostRequest.BoardSelection> boards) {
+        logger.info("Batch posting job {} to {} boards", jobPostingId, boards.size());
+        List<Map<String, Object>> results = new ArrayList<>();
+
+        for (BatchPostRequest.BoardSelection board : boards) {
+            Map<String, Object> result = new LinkedHashMap<>();
+            result.put("boardType", board.getBoardType().name());
+            result.put("boardDisplayName", board.getBoardType().getDisplayName());
+            try {
+                JobBoardPosting posting = postToBoard(jobPostingId, board.getBoardType(), board.getBoardConfig());
+                result.put("success", true);
+                result.put("posting", posting);
+            } catch (Exception e) {
+                logger.error("Failed to post to {}: {}", board.getBoardType().getDisplayName(), e.getMessage());
+                result.put("success", false);
+                result.put("error", e.getMessage());
+            }
+            results.add(result);
+        }
+
+        return results;
     }
 
     public List<JobBoardPosting> getPostingsByJob(String jobPostingId) {

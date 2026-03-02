@@ -1,5 +1,6 @@
 package com.arthmatic.shumelahire.controller;
 
+import com.arthmatic.shumelahire.dto.BatchPostRequest;
 import com.arthmatic.shumelahire.dto.JobBoardPostRequest;
 import com.arthmatic.shumelahire.entity.JobBoardPosting;
 import com.arthmatic.shumelahire.entity.JobBoardType;
@@ -37,6 +38,18 @@ public class JobBoardController {
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body(Map.of("error", "Failed to post to board: " + e.getMessage()));
+        }
+    }
+
+    @PostMapping("/postings/batch")
+    public ResponseEntity<?> batchPost(@Valid @RequestBody BatchPostRequest request) {
+        try {
+            var results = jobBoardService.postToMultipleBoards(
+                    request.getJobPostingId(), request.getBoards());
+            return ResponseEntity.status(HttpStatus.CREATED).body(results);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(Map.of("error", "Batch posting failed: " + e.getMessage()));
         }
     }
 

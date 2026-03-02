@@ -38,6 +38,13 @@ export const vacancyReportService = {
     downloadBlob(blob, `shortlist-pack-${jobId}.pdf`);
   },
 
+  async downloadResponseHandlingPdf(jobId: string): Promise<void> {
+    const response = await apiFetch(`/api/vacancy-reports/${jobId}/response-handling/pdf`);
+    if (!response.ok) throw new Error('Failed to download response handling report PDF');
+    const blob = await response.blob();
+    downloadBlob(blob, `response-handling-${jobId}.pdf`);
+  },
+
   async downloadDemographicsReportPdf(jobId: string): Promise<void> {
     const response = await apiFetch(`/api/vacancy-reports/${jobId}/demographics/pdf`);
     if (!response.ok) throw new Error('Failed to download demographics report PDF');

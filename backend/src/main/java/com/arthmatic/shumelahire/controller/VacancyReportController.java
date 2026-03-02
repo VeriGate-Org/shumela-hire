@@ -62,6 +62,20 @@ public class VacancyReportController {
         }
     }
 
+    @GetMapping("/{jobId}/response-handling/pdf")
+    public ResponseEntity<?> downloadResponseHandlingPdf(@PathVariable String jobId) {
+        try {
+            byte[] pdf = vacancyReportService.generateResponseHandlingPdf(jobId);
+            return ResponseEntity.ok()
+                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=response-handling-" + jobId + ".pdf")
+                    .contentType(MediaType.APPLICATION_PDF)
+                    .body(pdf);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of("error", "Failed to generate response handling report: " + e.getMessage()));
+        }
+    }
+
     @GetMapping("/{jobId}/demographics/pdf")
     @PreAuthorize("hasAnyRole('ADMIN', 'HR_MANAGER')")
     public ResponseEntity<?> downloadDemographicsReportPdf(@PathVariable String jobId) {

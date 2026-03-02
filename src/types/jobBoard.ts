@@ -39,6 +39,14 @@ export interface AvailableBoard {
   requiresApiIntegration: boolean;
 }
 
+export interface BatchPostResult {
+  boardType: string;
+  boardDisplayName: string;
+  success: boolean;
+  posting?: JobBoardPosting;
+  error?: string;
+}
+
 export function getBoardDisplayName(type: JobBoardType): string {
   switch (type) {
     case JobBoardType.LINKEDIN: return 'LinkedIn';

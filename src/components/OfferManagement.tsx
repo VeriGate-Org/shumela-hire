@@ -4,6 +4,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { apiFetch } from '@/lib/api-fetch';
 import { useToast } from '@/components/Toast';
+import { eSignatureService, ESignatureStatus } from '@/services/eSignatureService';
 
 interface Offer {
   id: number;
@@ -94,6 +95,10 @@ export default function OfferManagement() {
   const [actionData, setActionData] = useState<any>({});
   const [currentPage, setCurrentPage] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
+  const [showESignModal, setShowESignModal] = useState(false);
+  const [eSignOffer, setESignOffer] = useState<Offer | null>(null);
+  const [eSignLoading, setESignLoading] = useState(false);
+  const [eSignStatuses, setESignStatuses] = useState<Record<number, string>>({});
 
   const loadOffers = useCallback(async () => {
     try {
@@ -131,10 +136,34 @@ export default function OfferManagement() {
     }
   }, []);
 
+  const loadESignStatuses = useCallback(async (offersList: Offer[]) => {
+    const relevantOffers = offersList.filter(o =>
+      ['SENT', 'ACCEPTED', 'UNDER_NEGOTIATION'].includes(o.status)
+    );
+    const statuses: Record<number, string> = {};
+    await Promise.allSettled(
+      relevantOffers.map(async (offer) => {
+        try {
+          const result = await eSignatureService.getStatus(offer.id);
+          statuses[offer.id] = result.status;
+        } catch {
+          // ignore - status will just not show
+        }
+      })
+    );
+    setESignStatuses(statuses);
+  }, []);
+
   useEffect(() => {
     loadOffers();
     loadDashboardCounts();
   }, [loadOffers, loadDashboardCounts]);
+
+  useEffect(() => {
+    if (offers.length > 0) {
+      loadESignStatuses(offers);
+    }
+  }, [offers, loadESignStatuses]);
 
   const handleOfferAction = async (offer: Offer, action: string) => {
     setSelectedOffer(offer);
@@ -218,6 +247,46 @@ export default function OfferManagement() {
         return offer.status === 'SENT' && userRole === 'APPLICANT';
       default:
         return false;
+    }
+  };
+
+  const handleSendForSignature = async () => {
+    if (!eSignOffer) return;
+    setESignLoading(true);
+    try {
+      await eSignatureService.sendForSignature(eSignOffer.id, {
+        signerEmail: eSignOffer.application.applicant.email,
+        signerName: `${eSignOffer.application.applicant.firstName} ${eSignOffer.application.applicant.lastName}`,
+      });
+      toast('Offer sent for e-signature via DocuSign', 'success');
+      setShowESignModal(false);
+      setESignOffer(null);
+      loadOffers();
+    } catch (error) {
+      console.error('Error sending for signature:', error);
+      toast('Failed to send for e-signature. Please try again.', 'error');
+    } finally {
+      setESignLoading(false);
+    }
+  };
+
+  const handleDownloadSigned = async (offerId: number) => {
+    try {
+      await eSignatureService.downloadSignedDocument(offerId);
+    } catch (error) {
+      console.error('Error downloading signed document:', error);
+      toast('Failed to download signed document.', 'error');
+    }
+  };
+
+  const getESignBadgeColor = (status: string) => {
+    switch (status) {
+      case 'completed': return 'bg-green-100 text-green-800';
+      case 'sent': return 'bg-blue-100 text-blue-800';
+      case 'delivered': return 'bg-indigo-100 text-indigo-800';
+      case 'declined': return 'bg-red-100 text-red-800';
+      case 'voided': return 'bg-gray-100 text-gray-800';
+      default: return 'bg-gray-100 text-gray-600';
     }
   };
 
@@ -454,6 +523,11 @@ export default function OfferManagement() {
                         <span className="mr-1">{offer.statusIcon}</span>
                         {offer.statusDisplayName}
                       </span>
+                      {eSignStatuses[offer.id] && eSignStatuses[offer.id] !== 'not_sent' && (
+                        <span className={`mt-1 inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium ${getESignBadgeColor(eSignStatuses[offer.id])}`}>
+                          DocuSign: {eSignStatuses[offer.id]}
+                        </span>
+                      )}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div>
@@ -528,6 +602,22 @@ export default function OfferManagement() {
                             className="text-orange-600 hover:text-orange-900"
                           >
                             Withdraw
+                          </button>
+                        )}
+                        {offer.status === 'SENT' && (!eSignStatuses[offer.id] || eSignStatuses[offer.id] === 'not_sent') && (
+                          <button
+                            onClick={() => { setESignOffer(offer); setShowESignModal(true); }}
+                            className="text-violet-600 hover:text-violet-900"
+                          >
+                            E-Sign
+                          </button>
+                        )}
+                        {eSignStatuses[offer.id] === 'completed' && (
+                          <button
+                            onClick={() => handleDownloadSigned(offer.id)}
+                            className="text-green-600 hover:text-green-900"
+                          >
+                            Download Signed
                           </button>
                         )}
                       </div>
@@ -626,6 +716,56 @@ export default function OfferManagement() {
                 className="px-4 py-2 bg-gold-500 text-violet-950 rounded-sm hover:bg-gold-600"
               >
                 Confirm {actionType.charAt(0).toUpperCase() + actionType.slice(1)}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+      {/* E-Sign Modal */}
+      {showESignModal && eSignOffer && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-sm shadow-xl max-w-md w-full m-4">
+            <div className="px-6 py-4 border-b border-gray-200">
+              <h3 className="text-lg font-medium text-gray-900">
+                Send for E-Signature
+              </h3>
+            </div>
+
+            <div className="p-6">
+              <div className="mb-4">
+                <p className="text-sm text-gray-600">
+                  Offer: {eSignOffer.offerNumber} - {eSignOffer.jobTitle}
+                </p>
+                <p className="text-sm text-gray-600">
+                  Candidate: {eSignOffer.application.applicant.firstName} {eSignOffer.application.applicant.lastName}
+                </p>
+              </div>
+
+              <div className="mb-4 rounded-sm border border-gray-200 bg-gray-50 p-4">
+                <p className="text-sm font-medium text-gray-700 mb-2">DocuSign will send to:</p>
+                <p className="text-sm text-gray-900">{eSignOffer.application.applicant.firstName} {eSignOffer.application.applicant.lastName}</p>
+                <p className="text-sm text-gray-500">{eSignOffer.application.applicant.email}</p>
+              </div>
+
+              <p className="text-xs text-gray-500">
+                The offer letter will be sent via DocuSign for electronic signature. The candidate will receive an email with a link to review and sign the document.
+              </p>
+            </div>
+
+            <div className="px-6 py-4 bg-gray-50 flex justify-end space-x-3">
+              <button
+                onClick={() => { setShowESignModal(false); setESignOffer(null); }}
+                disabled={eSignLoading}
+                className="px-4 py-2 text-gray-700 border border-gray-300 rounded-sm hover:bg-gray-50"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleSendForSignature}
+                disabled={eSignLoading}
+                className="px-4 py-2 bg-gold-500 text-violet-950 rounded-sm hover:bg-gold-600 disabled:opacity-50"
+              >
+                {eSignLoading ? 'Sending...' : 'Send for Signature'}
               </button>
             </div>
           </div>

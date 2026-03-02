@@ -13,7 +13,7 @@ export default function VacancyReportActions({ jobId, showDemographics = false }
   const { toast } = useToast();
   const [downloading, setDownloading] = useState<string | null>(null);
 
-  const handleDownload = async (type: 'summary' | 'shortlist' | 'demographics') => {
+  const handleDownload = async (type: 'summary' | 'shortlist' | 'response-handling' | 'demographics') => {
     setDownloading(type);
     try {
       switch (type) {
@@ -22,6 +22,9 @@ export default function VacancyReportActions({ jobId, showDemographics = false }
           break;
         case 'shortlist':
           await vacancyReportService.downloadShortlistPackPdf(jobId);
+          break;
+        case 'response-handling':
+          await vacancyReportService.downloadResponseHandlingPdf(jobId);
           break;
         case 'demographics':
           await vacancyReportService.downloadDemographicsReportPdf(jobId);
@@ -56,6 +59,14 @@ export default function VacancyReportActions({ jobId, showDemographics = false }
           className="inline-flex items-center px-3 py-2 text-sm font-medium text-violet-700 bg-gold-50 border border-violet-200 rounded-sm hover:bg-gold-100 disabled:opacity-50 disabled:cursor-not-allowed"
         >
           {downloading === 'shortlist' ? 'Generating...' : 'Shortlist Pack'}
+        </button>
+
+        <button
+          onClick={() => handleDownload('response-handling')}
+          disabled={downloading !== null}
+          className="inline-flex items-center px-3 py-2 text-sm font-medium text-violet-700 bg-gold-50 border border-violet-200 rounded-sm hover:bg-gold-100 disabled:opacity-50 disabled:cursor-not-allowed"
+        >
+          {downloading === 'response-handling' ? 'Generating...' : 'Response Handling'}
         </button>
 
         {showDemographics && (
