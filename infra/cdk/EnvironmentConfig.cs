@@ -42,7 +42,7 @@ public sealed class EnvironmentConfig
 
     public string[] OAuthCallbackUrls => EnvironmentName switch
     {
-        "prod" => new[] { $"https://{DomainName}/login" },
+        "prod" => new[] { $"https://{DomainName}/login", $"https://idc-demo.{DomainName}/login" },
         "dev" => new[] { $"https://dev.{DomainName}/login", "http://localhost:3000/login" },
         "sbx" => new[] { $"https://sbx.{DomainName}/login", $"https://idc-demo.{DomainName}/login" },
         _ => new[] { $"https://{EnvironmentName}.{DomainName}/login" }
@@ -50,7 +50,7 @@ public sealed class EnvironmentConfig
 
     public string[] OAuthSignOutUrls => EnvironmentName switch
     {
-        "prod" => new[] { $"https://{DomainName}/login" },
+        "prod" => new[] { $"https://{DomainName}/login", $"https://idc-demo.{DomainName}/login" },
         "dev" => new[] { $"https://dev.{DomainName}/login", "http://localhost:3000/login" },
         "sbx" => new[] { $"https://sbx.{DomainName}/login", $"https://idc-demo.{DomainName}/login" },
         _ => new[] { $"https://{EnvironmentName}.{DomainName}/login" }
