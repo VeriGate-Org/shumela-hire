@@ -127,7 +127,7 @@ export default function TalentPoolsPage() {
   const loadPools = useCallback(async () => {
     try {
       setPoolsLoading(true);
-      const data = await apiFetch('/api/talent-pools');
+      const data = await apiFetch('/api/talent-pools').then((r) => r.json());
       setPools(Array.isArray(data) ? data : data.content ?? []);
     } catch {
       toast('Failed to load talent pools', 'error');
@@ -143,8 +143,8 @@ export default function TalentPoolsPage() {
       setAnalytics(null);
       try {
         const [entriesData, analyticsData] = await Promise.all([
-          apiFetch(`/api/talent-pools/${pool.id}/entries`),
-          apiFetch(`/api/talent-pools/${pool.id}/analytics`),
+          apiFetch(`/api/talent-pools/${pool.id}/entries`).then((r) => r.json()),
+          apiFetch(`/api/talent-pools/${pool.id}/analytics`).then((r) => r.json()),
         ]);
         setEntries(Array.isArray(entriesData) ? entriesData : entriesData.content ?? []);
         setAnalytics(analyticsData);

@@ -67,21 +67,6 @@ const STATUS_LABEL: Record<AgencyStatus, string> = {
   TERMINATED: 'Terminated',
 };
 
-const SUBMISSION_BADGE: Record<SubmissionStatus, string> = {
-  SUBMITTED: 'bg-blue-50 text-blue-700',
-  UNDER_REVIEW: 'bg-yellow-50 text-yellow-700',
-  ACCEPTED: 'bg-green-100 text-green-700',
-  REJECTED: 'bg-red-100 text-red-600',
-  WITHDRAWN: 'bg-gray-100 text-gray-500',
-};
-
-const SUBMISSION_LABEL: Record<SubmissionStatus, string> = {
-  SUBMITTED: 'Submitted',
-  UNDER_REVIEW: 'Under Review',
-  ACCEPTED: 'Accepted',
-  REJECTED: 'Rejected',
-  WITHDRAWN: 'Withdrawn',
-};
 
 // ─── Default form values ──────────────────────────────────────────────────────
 
@@ -119,13 +104,12 @@ export default function AgenciesPage() {
 
   // Selected agency detail
   const [selectedAgency, setSelectedAgency] = useState<Agency | null>(null);
-  const [submissions, setSubmissions] = useState<AgencySubmission[]>([]);
   const [submissionsLoading, setSubmissionsLoading] = useState(false);
   const [dashboard, setDashboard] = useState<AgencyDashboard | null>(null);
 
   // Modals
   const [modal, setModal] = useState<ModalType>(null);
-  const [editingAgency, setEditingAgency] = useState<Agency | null>(null);
+  const [, setEditingAgency] = useState<Agency | null>(null);
   const [reviewingSubmission, setReviewingSubmission] = useState<AgencySubmission | null>(null);
   const [actionLoading, setActionLoading] = useState(false);
   const [statusActionLoading, setStatusActionLoading] = useState<number | null>(null);
@@ -139,7 +123,7 @@ export default function AgenciesPage() {
   const loadAgencies = useCallback(async () => {
     try {
       setAgenciesLoading(true);
-      const data = await apiFetch('/api/agencies');
+      const data = await apiFetch('/api/agencies').then((r) => r.json());
       setAgencies(Array.isArray(data) ? data : data.content ?? []);
     } catch {
       toast('Failed to load agencies', 'error');
@@ -151,10 +135,9 @@ export default function AgenciesPage() {
   const loadAgencyDetail = useCallback(
     async (agency: Agency) => {
       setSubmissionsLoading(true);
-      setSubmissions([]);
       setDashboard(null);
       try {
-        const dashboardData = await apiFetch(`/api/agencies/${agency.id}/dashboard`);
+        const dashboardData = await apiFetch(`/api/agencies/${agency.id}/dashboard`).then((r) => r.json());
         setDashboard(dashboardData);
         // Submissions list is not a separate endpoint — we derive counts from dashboard
         // and show submission form separately
@@ -237,7 +220,7 @@ export default function AgenciesPage() {
   const handleApprove = async (agency: Agency) => {
     try {
       setStatusActionLoading(agency.id);
-      const updated: Agency = await apiFetch(`/api/agencies/${agency.id}/approve`, { method: 'POST' });
+      const updated: Agency = await apiFetch(`/api/agencies/${agency.id}/approve`, { method: 'POST' }).then((r) => r.json());
       toast('Agency approved', 'success');
       setAgencies((prev) => prev.map((a) => (a.id === agency.id ? updated : a)));
       if (selectedAgency?.id === agency.id) {
@@ -254,7 +237,7 @@ export default function AgenciesPage() {
   const handleSuspend = async (agency: Agency) => {
     try {
       setStatusActionLoading(agency.id);
-      const updated: Agency = await apiFetch(`/api/agencies/${agency.id}/suspend`, { method: 'POST' });
+      const updated: Agency = await apiFetch(`/api/agencies/${agency.id}/suspend`, { method: 'POST' }).then((r) => r.json());
       toast('Agency suspended', 'success');
       setAgencies((prev) => prev.map((a) => (a.id === agency.id ? updated : a)));
       if (selectedAgency?.id === agency.id) {
@@ -308,11 +291,6 @@ export default function AgenciesPage() {
   };
 
   // ─── Review submission ─────────────────────────────────────────────────────
-
-  const openReview = (submission: AgencySubmission) => {
-    setReviewingSubmission(submission);
-    setModal('reviewSubmission');
-  };
 
   const handleReview = async (accept: boolean) => {
     if (!reviewingSubmission) return;
