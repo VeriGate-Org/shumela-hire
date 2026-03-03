@@ -3,6 +3,7 @@
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { apiFetch } from '@/lib/api-fetch';
+import { useDepartments } from '@/hooks/useDepartments';
 
 interface JobPostingFormProps {
   jobPostingId?: number;
@@ -59,29 +60,10 @@ const EXPERIENCE_LEVELS = [
   { value: 'EXPERT', label: 'Expert (15+ years)' }
 ];
 
-// TODO: Replace hardcoded departments with data from GET /api/employees/departments
-const DEPARTMENTS = [
-  'Engineering',
-  'Marketing',
-  'Sales',
-  'Human Resources',
-  'Finance',
-  'Operations',
-  'Customer Support',
-  'Product',
-  'Design',
-  'Analytics',
-  'Legal',
-  'Administration',
-  'Corporate Affairs',
-  'Strategy',
-  'Risk Management',
-  'Information Technology',
-  'Business Development',
-];
 
 export default function JobPostingForm({ jobPostingId, currentUserId, onSuccess, onCancel }: JobPostingFormProps) {
   const { user } = useAuth();
+  const { departments: DEPARTMENTS } = useDepartments();
   const [formData, setFormData] = useState<JobPostingData>({
     title: '',
     department: '',

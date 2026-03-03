@@ -167,6 +167,13 @@ const DashboardNavigation: React.FC = () => {
       href: '/internal/jobs',
       icon: '🏢',
       description: 'Internal job board and applications'
+    },
+    {
+      id: 'departments',
+      label: 'Departments',
+      href: '/admin/departments',
+      icon: '🏛️',
+      description: 'Manage organisational departments'
     }
   ];
 
