@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import { apiFetch } from '@/lib/api-fetch';
 import { useToast } from '@/components/Toast';
+import { useDepartments } from '@/hooks/useDepartments';
 
 interface RequisitionFormData {
   jobTitle: string;
@@ -38,6 +39,7 @@ const RequisitionForm: React.FC<RequisitionFormProps> = ({
   onSuccess
 }) => {
   const { toast } = useToast();
+  const { departments } = useDepartments();
   const [formData, setFormData] = useState<RequisitionFormData>({
     jobTitle: initialData.jobTitle || '',
     department: initialData.department || '',
@@ -273,15 +275,12 @@ const RequisitionForm: React.FC<RequisitionFormProps> = ({
               }`}
             >
               <option value="">Select Department</option>
-              <option value="Engineering">Engineering</option>
-              <option value="Product">Product</option>
-              <option value="Design">Design</option>
-              <option value="Marketing">Marketing</option>
-              <option value="Sales">Sales</option>
-              <option value="Human Resources">Human Resources</option>
-              <option value="Finance">Finance</option>
-              <option value="Operations">Operations</option>
-              <option value="Customer Success">Customer Success</option>
+              {(formData.department && !departments.includes(formData.department)
+                ? [formData.department, ...departments]
+                : departments
+              ).map(dept => (
+                <option key={dept} value={dept}>{dept}</option>
+              ))}
             </select>
             {errors.department && (
               <p id="department-error" role="alert" className="mt-1 text-sm text-red-600">{errors.department}</p>
