@@ -61,8 +61,8 @@ const defaultAdminMetrics: MetricItem[] = [
   {
     id: 'total-users',
     label: 'Total System Users',
-    value: 147,
-    previousValue: 139,
+    value: 0,
+    previousValue: 0,
     target: 900,
     unit: 'number',
     trend: 'up',
@@ -136,9 +136,10 @@ export default function AdminDashboard({ selectedTimeframe, onTimeframeChange: _
       setLoading(true);
 
       try {
-        const [dashboardResponse, events] = await Promise.allSettled([
+        const [dashboardResponse, events, usersResponse] = await Promise.allSettled([
           apiFetch('/api/analytics/dashboard?role=ADMIN'),
           auditLogService.getRecentAuditLogs(10),
+          apiFetch('/api/admin/users?page=0&size=1'),
         ]);
 
         if (cancelled) return;
@@ -157,6 +158,17 @@ export default function AdminDashboard({ selectedTimeframe, onTimeframeChange: _
 
         if (events.status === 'fulfilled') {
           setRecentEvents(events.value);
+        }
+
+        if (usersResponse.status === 'fulfilled' && usersResponse.value.ok) {
+          const usersData = await usersResponse.value.json();
+          if (typeof usersData?.totalElements === 'number') {
+            setAdminMetrics(prev =>
+              prev.map(m =>
+                m.id === 'total-users' ? { ...m, value: usersData.totalElements } : m
+              )
+            );
+          }
         }
       } catch {
         // Keep default values on error

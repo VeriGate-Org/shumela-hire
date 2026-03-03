@@ -100,7 +100,7 @@ export default function AdminPermissionsPage() {
 
       if (usersRes.status === 'fulfilled' && usersRes.value.ok) {
         const data = await usersRes.value.json();
-        setUsers(Array.isArray(data) ? data : data.data || []);
+        setUsers(Array.isArray(data) ? data : data.content || data.data || []);
         anySuccess = true;
       }
 
