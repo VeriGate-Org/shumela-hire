@@ -8,7 +8,13 @@ import { useAuth } from '@/contexts/AuthContext';
 export default function RecruiterDashboardPage() {
   const { user } = useAuth();
 
-  const hasAccess = user && (user.role === 'RECRUITER' || user.role === 'HIRING_MANAGER' || user.role === 'HR_MANAGER');
+  const hasAccess = user && (
+    user.role === 'ADMIN' ||
+    user.role === 'RECRUITER' ||
+    user.role === 'HIRING_MANAGER' ||
+    user.role === 'HR_MANAGER' ||
+    user.permissions?.includes('view_recruiter_analytics')
+  );
 
   if (!hasAccess) {
     return (

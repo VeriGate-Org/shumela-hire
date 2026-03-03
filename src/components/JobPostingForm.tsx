@@ -72,7 +72,12 @@ const DEPARTMENTS = [
   'Design',
   'Analytics',
   'Legal',
-  'Administration'
+  'Administration',
+  'Corporate Affairs',
+  'Strategy',
+  'Risk Management',
+  'Information Technology',
+  'Business Development',
 ];
 
 export default function JobPostingForm({ jobPostingId, currentUserId, onSuccess, onCancel }: JobPostingFormProps) {
@@ -323,7 +328,10 @@ export default function JobPostingForm({ jobPostingId, currentUserId, onSuccess,
                   className={`w-full rounded-md border p-3 focus:border-violet-400 focus:ring-2 focus:ring-gold-500/60 ${errors.department ? 'border-red-500' : 'border-gray-300'}`}
                 >
                   <option value="">Select Department</option>
-                  {DEPARTMENTS.map(dept => (
+                  {(formData.department && !DEPARTMENTS.includes(formData.department)
+                    ? [formData.department, ...DEPARTMENTS]
+                    : DEPARTMENTS
+                  ).map(dept => (
                     <option key={dept} value={dept}>{dept}</option>
                   ))}
                 </select>

@@ -108,11 +108,13 @@ export default function ApplicantsPage() {
   const handleCreateNew = () => {
     setSelectedApplicantId(undefined);
     setView('create');
+    window.scrollTo(0, 0);
   };
 
   const handleEdit = (applicantId: number) => {
     setSelectedApplicantId(applicantId);
     setView('edit');
+    window.scrollTo(0, 0);
   };
 
   const handleBackToList = () => {
@@ -228,7 +230,10 @@ export default function ApplicantsPage() {
                                 </span>
                               </div>
                               <div className="ml-3">
-                                <p className="text-sm font-medium text-gray-900">{applicant.name} {applicant.surname}</p>
+                                <p
+                                  className="text-sm font-medium text-gray-900 cursor-pointer hover:text-[#05527E] transition-colors"
+                                  onClick={() => handleEdit(applicant.id)}
+                                >{applicant.name} {applicant.surname}</p>
                               </div>
                             </div>
                           </td>

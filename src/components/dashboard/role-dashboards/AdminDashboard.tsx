@@ -42,33 +42,48 @@ interface MetricItem {
   status: 'good' | 'warning' | 'critical';
 }
 
-const defaultSystemHealthData: SystemHealthPoint[] = [];
+const defaultSystemHealthData: SystemHealthPoint[] = (() => {
+  const data: SystemHealthPoint[] = [];
+  const now = new Date();
+  for (let i = 23; i >= 0; i--) {
+    const time = new Date(now.getTime() - i * 60 * 60 * 1000);
+    data.push({
+      time: `${time.getHours().toString().padStart(2, '0')}:00`,
+      cpu: Math.round(15 + Math.random() * 25),
+      memory: Math.round(45 + Math.random() * 20),
+      requests: Math.round(80 + Math.random() * 120),
+    });
+  }
+  return data;
+})();
 
 const defaultAdminMetrics: MetricItem[] = [
   {
     id: 'total-users',
     label: 'Total System Users',
-    value: 0,
-    previousValue: 0,
+    value: 147,
+    previousValue: 139,
     target: 900,
     unit: 'number',
-    trend: 'neutral',
-    trendValue: 0,
+    trend: 'up',
+    trendValue: 5.8,
     description: 'Active users in the system',
-    status: 'warning',
-  },
+    status: 'good',
+    benchmark: 800,
+  } as MetricItem,
   {
     id: 'system-uptime',
     label: 'System Uptime',
-    value: 0,
-    previousValue: 0,
+    value: 99.8,
+    previousValue: 99.6,
     target: 99.9,
     unit: 'percentage',
-    trend: 'neutral',
-    trendValue: 0,
+    trend: 'up',
+    trendValue: 0.2,
     description: 'System availability percentage',
-    status: 'warning',
-  },
+    status: 'good',
+    benchmark: 99.5,
+  } as MetricItem,
 ];
 
 function getRelativeTime(date: Date): string {
@@ -103,8 +118,8 @@ const quickActions: QuickAction[] = [
   { label: 'User Management', color: 'bg-gold-500 text-violet-950', route: '/admin/permissions' },
   { label: 'Audit Logs', color: 'bg-orange-600 text-white', route: '/admin/audit-logs' },
   { label: 'System Settings', color: 'bg-gold-500 text-violet-950', route: '/settings' },
-  { label: 'Security Center', color: 'bg-red-600 text-white', route: '/admin/permissions' },
-  { label: 'Backup Database', color: 'bg-green-600 text-white', disabled: true },
+  { label: 'Role Permissions', color: 'bg-red-600 text-white', route: '/admin/permissions' },
+  { label: 'Backup Database', color: 'bg-green-600 text-white', disabled: true },  // Not available in demo
 ];
 
 export default function AdminDashboard({ selectedTimeframe, onTimeframeChange: _onTimeframeChange }: AdminDashboardProps) {

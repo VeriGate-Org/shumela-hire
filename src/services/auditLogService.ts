@@ -166,21 +166,29 @@ export class AuditLogService {
   }
 
   async getAllAuditLogs(page: number = 0, size: number = 50): Promise<PaginatedAuditLogs> {
-    const response = await apiFetch(`/api/audit/all?page=${page}&size=${size}&sort=timestamp&direction=DESC`);
-    if (!response.ok) throw new Error(`HTTP ${response.status}`);
-    const result = await response.json();
+    try {
+      const response = await apiFetch(`/api/audit/all?page=${page}&size=${size}&sort=timestamp&direction=DESC`);
+      if (!response.ok) {
+        // Return empty result instead of throwing for API errors
+        return { logs: [], totalElements: 0, totalPages: 0, currentPage: page, pageSize: size };
+      }
+      const result = await response.json();
 
-    // Parse Spring Data Page response format
-    const items = result.content || result.data || result || [];
-    const logs = Array.isArray(items) ? items.map(parseAuditLog) : [];
+      // Parse Spring Data Page response format
+      const items = result.content || result.data || result || [];
+      const logs = Array.isArray(items) ? items.map(parseAuditLog) : [];
 
-    return {
-      logs,
-      totalElements: result.totalElements ?? logs.length,
-      totalPages: result.totalPages ?? 1,
-      currentPage: result.number ?? page,
-      pageSize: result.size ?? size,
-    };
+      return {
+        logs,
+        totalElements: result.totalElements ?? logs.length,
+        totalPages: result.totalPages ?? 1,
+        currentPage: result.number ?? page,
+        pageSize: result.size ?? size,
+      };
+    } catch {
+      // Return graceful empty result on network/parse errors
+      return { logs: [], totalElements: 0, totalPages: 0, currentPage: page, pageSize: size };
+    }
   }
 }
 

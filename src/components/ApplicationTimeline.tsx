@@ -159,7 +159,7 @@ export default function ApplicationTimeline({ application, onClose, onStageTrans
           <div>
             <h2 className="text-xl font-bold text-gray-900">Application Timeline</h2>
             <p className="text-sm text-gray-600">
-              {application.applicant.firstName} {application.applicant.lastName} - {application.jobPosting.title}
+              {((application.applicant?.firstName ?? '') + ' ' + (application.applicant?.lastName ?? '')).trim() || 'Unknown Candidate'} - {application.jobPosting?.title || 'Unknown Position'}
             </p>
           </div>
           <button

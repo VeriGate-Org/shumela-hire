@@ -124,17 +124,39 @@ export default function OfferManagement() {
     }
   }, [filters, currentPage]);
 
+  const computeClientSideCounts = useCallback((offersList: Offer[]): DashboardCounts => {
+    const now = new Date();
+    const sevenDaysFromNow = new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000);
+    return {
+      pendingApproval: offersList.filter(o => o.status === 'PENDING_APPROVAL').length,
+      nearExpiry: offersList.filter(o => {
+        if (o.status !== 'SENT' || !o.offerExpiryDate) return false;
+        return new Date(o.offerExpiryDate) <= sevenDaysFromNow && new Date(o.offerExpiryDate) > now;
+      }).length,
+      activeNegotiations: offersList.filter(o => o.status === 'UNDER_NEGOTIATION' || o.status === 'NEGOTIATION').length,
+      recentAcceptances: offersList.filter(o => o.status === 'ACCEPTED').length,
+    };
+  }, []);
+
   const loadDashboardCounts = useCallback(async () => {
     try {
       const response = await apiFetch('/api/offers/dashboard');
       if (response.ok) {
         const counts = await response.json();
-        setDashboardCounts(counts);
+        const hasData = counts.pendingApproval || counts.nearExpiry || counts.activeNegotiations || counts.recentAcceptances;
+        if (hasData) {
+          setDashboardCounts(counts);
+          return;
+        }
       }
     } catch (error) {
       console.error('Error loading dashboard counts:', error);
     }
-  }, []);
+    // Fallback: compute from loaded offers
+    if (offers.length > 0) {
+      setDashboardCounts(computeClientSideCounts(offers));
+    }
+  }, [offers, computeClientSideCounts]);
 
   const loadESignStatuses = useCallback(async (offersList: Offer[]) => {
     const relevantOffers = offersList.filter(o =>
@@ -255,8 +277,8 @@ export default function OfferManagement() {
     setESignLoading(true);
     try {
       await eSignatureService.sendForSignature(eSignOffer.id, {
-        signerEmail: eSignOffer.application.applicant.email,
-        signerName: `${eSignOffer.application.applicant.firstName} ${eSignOffer.application.applicant.lastName}`,
+        signerEmail: eSignOffer.application?.applicant?.email || '',
+        signerName: `${eSignOffer.application?.applicant?.firstName ?? ''} ${eSignOffer.application?.applicant?.lastName ?? ''}`.trim() || 'Unknown Candidate',
       });
       toast('Offer sent for e-signature via DocuSign', 'success');
       setShowESignModal(false);
@@ -491,10 +513,10 @@ export default function OfferManagement() {
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div>
                         <div className="text-sm font-medium text-gray-900">
-                          {offer.application.applicant.firstName} {offer.application.applicant.lastName}
+                          {((offer.application?.applicant?.firstName ?? '') + ' ' + (offer.application?.applicant?.lastName ?? '')).trim() || 'Unknown Candidate'}
                         </div>
                         <div className="text-sm text-gray-500">
-                          {offer.application.applicant.email}
+                          {offer.application?.applicant?.email || ''}
                         </div>
                       </div>
                     </td>
@@ -671,7 +693,7 @@ export default function OfferManagement() {
                   Offer: {selectedOffer.offerNumber} - {selectedOffer.jobTitle}
                 </p>
                 <p className="text-sm text-gray-600">
-                  Candidate: {selectedOffer.application.applicant.firstName} {selectedOffer.application.applicant.lastName}
+                  Candidate: {((selectedOffer.application?.applicant?.firstName ?? '') + ' ' + (selectedOffer.application?.applicant?.lastName ?? '')).trim() || 'Unknown Candidate'}
                 </p>
               </div>
               
@@ -737,14 +759,14 @@ export default function OfferManagement() {
                   Offer: {eSignOffer.offerNumber} - {eSignOffer.jobTitle}
                 </p>
                 <p className="text-sm text-gray-600">
-                  Candidate: {eSignOffer.application.applicant.firstName} {eSignOffer.application.applicant.lastName}
+                  Candidate: {((eSignOffer.application?.applicant?.firstName ?? '') + ' ' + (eSignOffer.application?.applicant?.lastName ?? '')).trim() || 'Unknown Candidate'}
                 </p>
               </div>
 
               <div className="mb-4 rounded-sm border border-gray-200 bg-gray-50 p-4">
                 <p className="text-sm font-medium text-gray-700 mb-2">DocuSign will send to:</p>
-                <p className="text-sm text-gray-900">{eSignOffer.application.applicant.firstName} {eSignOffer.application.applicant.lastName}</p>
-                <p className="text-sm text-gray-500">{eSignOffer.application.applicant.email}</p>
+                <p className="text-sm text-gray-900">{((eSignOffer.application?.applicant?.firstName ?? '') + ' ' + (eSignOffer.application?.applicant?.lastName ?? '')).trim() || 'Unknown Candidate'}</p>
+                <p className="text-sm text-gray-500">{eSignOffer.application?.applicant?.email || ''}</p>
               </div>
 
               <p className="text-xs text-gray-500">

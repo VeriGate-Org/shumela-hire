@@ -70,7 +70,10 @@ const ModernSidebar: React.FC<ModernSidebarProps> = ({
   };
 
   const renderNavigationItem = (item: NavigationEntry) => {
-    const isActive = isActiveRoute(item.href);
+    // Check for more specific nav match — if a sibling route better matches, don't highlight this one
+    const isActive = isActiveRoute(item.href) && !filteredItems.some(other =>
+      other.href !== item.href && other.href.startsWith(item.href) && pathname.startsWith(other.href)
+    );
     const IconComponent = isActive && item.iconSolid ? item.iconSolid : item.icon;
 
     return (
@@ -104,7 +107,7 @@ const ModernSidebar: React.FC<ModernSidebarProps> = ({
               )}
 
               {keyShortcutMap[item.href] && (
-                <span className="hidden group-hover:inline text-[10px] text-muted-foreground ml-auto">
+                <span className="opacity-0 group-hover:opacity-100 transition-opacity text-[10px] text-muted-foreground ml-auto">
                   {keyShortcutMap[item.href]}
                 </span>
               )}
@@ -168,6 +171,13 @@ const ModernSidebar: React.FC<ModernSidebarProps> = ({
             </nav>
           </div>
         ))}
+
+        {searchQuery && filteredItems.length === 0 && !isCollapsed && (
+          <div className="px-5 py-4 text-center">
+            <p className="text-xs text-muted-foreground">No pages matching &ldquo;{searchQuery}&rdquo;</p>
+            <button onClick={() => setSearchQuery('')} className="text-xs text-cta mt-1 hover:underline">Clear search</button>
+          </div>
+        )}
       </div>
 
       {onToggleCollapse && (

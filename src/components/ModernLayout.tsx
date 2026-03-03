@@ -114,7 +114,7 @@ const ModernLayout: React.FC<ModernLayoutProps> = ({
                   )}
                 </div>
                 {actions && (
-                  <div className="shrink-0">{actions}</div>
+                  <div className="shrink-0 flex flex-wrap gap-2 items-center">{actions}</div>
                 )}
               </div>
             </section>
