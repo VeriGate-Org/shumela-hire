@@ -198,38 +198,59 @@ export default function PipelinePage() {
       const result = await response.json();
       const items = result.content || result.data || result || [];
       const mapped: Application[] = items.map((a: any) => {
-        const nameParts = (a.applicantName || '').split(' ');
-        const firstName = nameParts[0] || '';
-        const lastName = nameParts.slice(1).join(' ') || '';
+        // Handle both DTO shape (applicantName) and raw entity shape (applicant.firstName)
+        let firstName = '';
+        let lastName = '';
+        if (a.applicantName) {
+          const nameParts = a.applicantName.split(' ');
+          firstName = nameParts[0] || '';
+          lastName = nameParts.slice(1).join(' ') || '';
+        } else if (a.applicant) {
+          firstName = a.applicant.firstName || a.applicant.given_name || '';
+          lastName = a.applicant.lastName || a.applicant.family_name || '';
+        }
+
         const backendStage = a.pipelineStage || a.status || 'APPLICATION_RECEIVED';
         const currentStage = BACKEND_STAGE_TO_GROUP[backendStage] || 'applied';
         const stageIndex = STAGE_GROUPS.findIndex(s => s.id === currentStage);
-        const daysInStage = a.updatedAt
-          ? Math.floor((Date.now() - new Date(a.updatedAt).getTime()) / (1000 * 60 * 60 * 24))
+        const updatedAt = a.updatedAt || a.pipelineStageEnteredAt;
+        const daysInStage = updatedAt
+          ? Math.floor((Date.now() - new Date(updatedAt).getTime()) / (1000 * 60 * 60 * 24))
           : 0;
+
+        // Handle both DTO (applicantEmail, jobTitle) and raw entity (applicant.email, jobPosting.title)
+        const email = a.applicantEmail || a.applicant?.email || '';
+        const applicantId = a.applicantId || a.applicant?.id || '';
+        const jobId = a.jobPostingId || a.jobPosting?.id || '';
+        const jobTitle = a.jobTitle || a.jobPosting?.title || '';
+        const department = a.department || a.jobPosting?.department || '';
+
+        // status may be an enum string (from raw entity) or already mapped
+        const statusKey = typeof a.status === 'string' ? a.status : '';
+
         return {
           id: a.id,
           candidate: {
-            id: a.applicantId || '',
+            id: applicantId,
             firstName,
             lastName,
-            email: a.applicantEmail || '',
-            phone: '',
+            email,
+            phone: a.applicant?.phone || '',
           },
           job: {
-            id: a.jobPostingId || '',
-            title: a.jobTitle || '',
-            department: a.department || '',
-            location: '',
-            type: '',
+            id: jobId,
+            title: jobTitle,
+            department,
+            location: a.jobPosting?.location || '',
+            type: a.jobPosting?.type || '',
           },
           currentStage,
           backendStage,
           submittedAt: a.submittedAt || a.createdAt || new Date().toISOString(),
-          lastActivity: a.updatedAt || a.submittedAt || new Date().toISOString(),
+          lastActivity: updatedAt || a.submittedAt || new Date().toISOString(),
           daysInStage,
           progress: stageIndex >= 0 ? (stageIndex / Math.max(STAGE_GROUPS.length - 1, 1)) * 100 : 0,
-          status: statusMap[a.status] || 'active',
+          status: statusMap[statusKey] || 'active',
           priority: (a.priority || 'medium').toLowerCase() as Application['priority'],
           notes: [],
           timeline: [],
@@ -245,18 +266,25 @@ export default function PipelinePage() {
   }, []);
 
   // P5: Fetch backend analytics
+  // Note: the backend /api/pipeline/analytics returns { funnel, averageStageDurations, conversions, ... }
+  // which doesn't match the PipelineMetrics shape. Only use it if it actually has the expected keys;
+  // otherwise fall through to client-side computation from loaded applications.
   const loadAnalytics = useCallback(async () => {
     try {
       const response = await apiFetch('/api/pipeline/analytics');
       if (response.ok) {
         const data = await response.json();
-        setBackendMetrics({
-          totalApplications: data.totalApplications ?? 0,
-          activeApplications: data.activeApplications ?? 0,
-          averageTimeToHire: data.averageTimeToHire ?? 0,
-          conversionRate: data.conversionRate ?? 0,
-          stageMetrics: data.stageMetrics ?? {},
-        });
+        // Only use backend metrics if the response matches the expected shape
+        if (typeof data.totalApplications === 'number' && typeof data.stageMetrics === 'object' && data.stageMetrics !== null) {
+          setBackendMetrics({
+            totalApplications: data.totalApplications,
+            activeApplications: data.activeApplications ?? 0,
+            averageTimeToHire: data.averageTimeToHire ?? 0,
+            conversionRate: data.conversionRate ?? 0,
+            stageMetrics: data.stageMetrics,
+          });
+        }
+        // else: response has different shape (funnel, conversions, etc.) — skip and use client-side fallback
       }
     } catch {
       // Fall back to client-side computation
