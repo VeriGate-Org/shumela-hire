@@ -63,13 +63,17 @@ ID_TOKEN=$(echo "$AUTH_RESULT" | jq -r '.AuthenticationResult.IdToken')
 ok "Authenticated. Token expires in $(echo "$AUTH_RESULT" | jq -r '.AuthenticationResult.ExpiresIn')s"
 
 # Extract tenant_id from ID token (JWT payload is the second base64 segment)
-# macOS uses -D for base64 decode, Linux uses -d; try both
-JWT_PAYLOAD=$(echo "$ID_TOKEN" | cut -d. -f2 | tr '_-' '/+' | { base64 -d 2>/dev/null || base64 -D 2>/dev/null; })
+# Add proper base64 padding (= chars) before decoding
+JWT_B64=$(echo "$ID_TOKEN" | cut -d. -f2 | tr '_-' '/+')
+JWT_PAD=$((4 - ${#JWT_B64} % 4))
+[ "$JWT_PAD" -lt 4 ] && JWT_B64="${JWT_B64}$(printf '=%.0s' $(seq 1 $JWT_PAD))"
+JWT_PAYLOAD=$(echo "$JWT_B64" | base64 -d 2>/dev/null || echo "$JWT_B64" | base64 -D 2>/dev/null || echo "{}")
 TENANT_ID=$(echo "$JWT_PAYLOAD" | jq -r '.["custom:tenant_id"] // empty' 2>/dev/null)
 if [ -z "$TENANT_ID" ]; then
-  warn "No custom:tenant_id in JWT. Will rely on API subdomain resolution."
-  TENANT_ID=""
+  warn "No custom:tenant_id in JWT. Defaulting to 'default'."
+  TENANT_ID="default"
 fi
+ok "Tenant ID: $TENANT_ID"
 
 # ============================================================
 # Helper: API call function
