@@ -322,8 +322,9 @@ export default function PipelinePage() {
     if (backendMetrics) return backendMetrics;
 
     const totalApplications = applications.length;
-    const terminalStatuses = ['WITHDRAWN', 'REJECTED', 'OFFER_DECLINED', 'NO_SHOW', 'DUPLICATE', 'CLOSED'];
-    const activeApplications = applications.filter(app => !terminalStatuses.includes(app.status?.toUpperCase())).length;
+    const activeApplications = applications.filter(app =>
+      app.status === 'active'
+    ).length;
     const hiredApplications = applications.filter(app => app.status?.toUpperCase() === 'HIRED' || app.currentStage === 'HIRED').length;
 
     const averageTimeToHire = applications
@@ -337,15 +338,27 @@ export default function PipelinePage() {
 
     const stageMetrics: Record<string, { count: number; averageDays: number; conversionRate: number }> = {};
 
-    STAGE_GROUPS.forEach(stage => {
-      const stageApplications = applications.filter(app => app.currentStage === stage.id);
+    // Exclude terminal-stage applications from per-stage counts so that
+    // the dropdown, funnel, and kanban views all show consistent numbers.
+    const nonTerminalApplications = applications.filter(app => !TERMINAL_STAGES.has(app.backendStage));
+
+    let previousStageCount = 0;
+    STAGE_GROUPS.forEach((stage, index) => {
+      const stageApplications = nonTerminalApplications.filter(app => app.currentStage === stage.id);
       const averageDays = stageApplications.reduce((sum, app) => sum + app.daysInStage, 0) / Math.max(stageApplications.length, 1);
+
+      // Stage-to-stage conversion: percentage of previous stage that reached this one.
+      // First stage shows percentage of total applications.
+      const basis = index === 0 ? totalApplications : previousStageCount;
+      const conversionRate = basis > 0 ? (stageApplications.length / basis) * 100 : 0;
 
       stageMetrics[stage.id] = {
         count: stageApplications.length,
         averageDays: Math.round(averageDays),
-        conversionRate: totalApplications > 0 ? (stageApplications.length / totalApplications) * 100 : 0
+        conversionRate: Math.round(conversionRate * 10) / 10,
       };
+
+      previousStageCount = stageApplications.length;
     });
 
     return {
@@ -588,7 +601,10 @@ export default function PipelinePage() {
         {/* Pipeline Views */}
         {viewMode === 'funnel' && (
           <div className="bg-white rounded-sm shadow p-6">
-            <h3 className="text-lg font-semibold text-gray-900 mb-6">Pipeline Funnel</h3>
+            <div className="flex items-baseline justify-between mb-6">
+              <h3 className="text-lg font-semibold text-gray-900">Pipeline Funnel</h3>
+              <p className="text-xs text-gray-400">Percentages show stage-to-stage conversion</p>
+            </div>
             <div className="space-y-4">
               {STAGE_GROUPS.map((stage) => {
                 const metrics = pipelineMetrics.stageMetrics[stage.id] || { count: 0, averageDays: 0, conversionRate: 0 };
