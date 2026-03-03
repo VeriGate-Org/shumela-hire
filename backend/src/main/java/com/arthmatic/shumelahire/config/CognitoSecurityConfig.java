@@ -6,6 +6,7 @@ import com.arthmatic.shumelahire.security.CognitoJwtConverter;
 import com.arthmatic.shumelahire.security.CognitoUserProvisioningFilter;
 import com.arthmatic.shumelahire.security.RateLimitFilter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
@@ -185,5 +186,20 @@ public class CognitoSecurityConfig {
         http.addFilterAfter(cognitoUserProvisioningFilter, BearerTokenAuthenticationFilter.class);
 
         return http.build();
+    }
+
+    /**
+     * Prevent CognitoUserProvisioningFilter from being auto-registered as a servlet filter
+     * by Spring Boot. It is already registered in the Spring Security filter chain via
+     * addFilterAfter() above. Double-registration causes a NullPointerException during
+     * Tomcat filter init because the servlet container tries to init it before Spring
+     * has fully wired GenericFilterBean's logger.
+     */
+    @Bean
+    public FilterRegistrationBean<CognitoUserProvisioningFilter> disableCognitoFilterAutoRegistration(
+            CognitoUserProvisioningFilter filter) {
+        FilterRegistrationBean<CognitoUserProvisioningFilter> registration = new FilterRegistrationBean<>(filter);
+        registration.setEnabled(false);
+        return registration;
     }
 }
