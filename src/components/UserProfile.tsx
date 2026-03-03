@@ -19,13 +19,6 @@ const UserProfile: React.FC<UserProfileProps> = ({ user }) => {
   const { logout } = useAuth();
   const router = useRouter();
 
-  // Default user if none provided
-  const currentUser = user || {
-    name: 'John Doe',
-    email: 'john.doe@company.com',
-    role: 'HR_MANAGER'
-  };
-
   const getInitials = (name: string) => {
     return name
       .split(' ')
@@ -34,6 +27,23 @@ const UserProfile: React.FC<UserProfileProps> = ({ user }) => {
       .toUpperCase()
       .slice(0, 2);
   };
+
+  // Show loading skeleton when user data hasn't resolved yet
+  if (!user) {
+    return (
+      <div className="flex items-center space-x-3 p-2">
+        <div className="flex-shrink-0">
+          <div className="h-8 w-8 bg-gray-200 rounded-full animate-pulse" />
+        </div>
+        <div className="hidden md:block flex-1 min-w-0 space-y-1.5">
+          <div className="h-3.5 w-24 bg-gray-200 rounded animate-pulse" />
+          <div className="h-3 w-16 bg-gray-200 rounded animate-pulse" />
+        </div>
+      </div>
+    );
+  }
+
+  const currentUser = user;
 
   const menuItems = [
     {

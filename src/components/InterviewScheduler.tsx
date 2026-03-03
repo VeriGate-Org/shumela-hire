@@ -374,7 +374,7 @@ export default function InterviewScheduler({ interviewId, onSuccess, onCancel }:
                 <option value={0}>Select an application...</option>
                 {applications.map((application) => (
                   <option key={application.id} value={application.id}>
-                    {application.applicant.firstName} {application.applicant.lastName} - {application.jobPosting.title} ({application.jobPosting.department})
+                    {((application.applicant?.firstName ?? '') + ' ' + (application.applicant?.lastName ?? '')).trim() || 'Unknown'} - {application.jobPosting?.title || 'Unknown'} ({application.jobPosting?.department || 'Unknown'})
                   </option>
                 ))}
               </select>

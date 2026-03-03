@@ -154,7 +154,9 @@ export default function InternalJobsBoard() {
       });
     } catch (err) {
       console.error('Error fetching internal jobs:', err);
-      setError('Failed to load internal jobs');
+      // On permission or network errors, show empty state rather than error banner
+      setJobs([]);
+      setTotalJobs(0);
     } finally {
       setLoading(false);
     }

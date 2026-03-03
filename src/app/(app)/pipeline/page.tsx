@@ -322,8 +322,9 @@ export default function PipelinePage() {
     if (backendMetrics) return backendMetrics;
 
     const totalApplications = applications.length;
-    const activeApplications = applications.filter(app => app.status === 'active').length;
-    const hiredApplications = applications.filter(app => app.status === 'hired').length;
+    const terminalStatuses = ['WITHDRAWN', 'REJECTED', 'OFFER_DECLINED', 'NO_SHOW', 'DUPLICATE', 'CLOSED'];
+    const activeApplications = applications.filter(app => !terminalStatuses.includes(app.status?.toUpperCase())).length;
+    const hiredApplications = applications.filter(app => app.status?.toUpperCase() === 'HIRED' || app.currentStage === 'HIRED').length;
 
     const averageTimeToHire = applications
       .filter(app => app.status === 'hired')

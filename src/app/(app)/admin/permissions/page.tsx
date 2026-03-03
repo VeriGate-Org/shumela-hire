@@ -601,6 +601,15 @@ export default function AdminPermissionsPage() {
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-gray-200">
+                    {filteredUsers.length === 0 && (
+                      <tr>
+                        <td colSpan={6} className="px-6 py-12 text-center">
+                          <UsersIcon className="w-12 h-12 text-gray-300 mx-auto mb-3" />
+                          <p className="text-sm font-medium text-gray-900 mb-1">No users loaded</p>
+                          <p className="text-sm text-gray-500">Users are synchronized from the authentication provider. New users will appear here after their first sign-in.</p>
+                        </td>
+                      </tr>
+                    )}
                     {filteredUsers.map(user => {
                       const userRole = roles.find(r => r.id === user.roleId);
                       const isEditing = editingUserId === user.id;

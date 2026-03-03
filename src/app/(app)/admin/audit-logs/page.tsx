@@ -554,8 +554,10 @@ export default function AuditLogsPage() {
         {!loadError && filteredLogs.length === 0 ? (
           <EmptyState
             icon={ShieldCheckIcon}
-            title="No audit logs"
-            description="No audit logs match your current filters. Try adjusting your search or filter criteria."
+            title="No audit logs recorded yet"
+            description={auditLogs.length === 0
+              ? "Audit logging is active. Events will appear here as users interact with the system."
+              : "No audit logs match your current filters. Try adjusting your search or filter criteria."}
           />
         ) : (
         <div className="bg-white rounded-sm shadow overflow-hidden">

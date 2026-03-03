@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect, useMemo, useCallback, useRef } from 'react';
+import { useSearchParams } from 'next/navigation';
 import PageWrapper from '@/components/PageWrapper';
 import EmptyState from '@/components/EmptyState';
 import JobPostingForm from '@/components/JobPostingForm';
@@ -95,10 +96,19 @@ export default function JobPostingsPage() {
   // Debounce timer ref
   const debounceRef = useRef<NodeJS.Timeout | null>(null);
 
+  const searchParams = useSearchParams();
+
   // Set theme to admin for job postings page
   useEffect(() => {
     setCurrentRole('ADMIN');
   }, [setCurrentRole]);
+
+  // Handle ?action=create from dashboard "Create Position" button
+  useEffect(() => {
+    if (searchParams.get('action') === 'create') {
+      setView('create');
+    }
+  }, [searchParams]);
 
   const loadJobPostings = useCallback(async (page = currentPage) => {
     try {
@@ -332,7 +342,10 @@ export default function JobPostingsPage() {
                         <div className="flex justify-between items-start">
                           <div className="flex-1">
                             <div className="flex items-center space-x-3 mb-2">
-                              <h3 className="text-lg font-medium text-gray-900">{jobPosting.title}</h3>
+                              <h3
+                                className="text-lg font-medium text-gray-900 cursor-pointer hover:text-[#05527E] transition-colors"
+                                onClick={() => { setSelectedJobPosting(jobPosting); setView('workflow'); window.scrollTo(0, 0); }}
+                              >{jobPosting.title}</h3>
                               {jobPosting.featured && (
                                 <span className="inline-flex items-center rounded-full border border-yellow-300 bg-yellow-50 px-2 py-1 text-xs font-medium text-yellow-800">
                                   Featured
@@ -380,6 +393,7 @@ export default function JobPostingsPage() {
                                   onClick={() => {
                                     setSelectedJobPosting(jobPosting);
                                     setView('edit');
+                                    window.scrollTo(0, 0);
                                   }}
                                   className="text-gold-600 hover:text-gold-800 text-sm font-medium"
                                 >
@@ -391,6 +405,7 @@ export default function JobPostingsPage() {
                                 onClick={() => {
                                   setSelectedJobPosting(jobPosting);
                                   setView('workflow');
+                                  window.scrollTo(0, 0);
                                 }}
                                 className="text-violet-600 hover:text-violet-800 text-sm font-medium"
                               >

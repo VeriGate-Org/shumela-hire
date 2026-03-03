@@ -220,6 +220,37 @@ export const AdvancedAnalyticsDashboard: React.FC<AdvancedAnalyticsDashboardProp
 
       const [dashboardJson, kpiJson] = await Promise.all([dashboardRes.json(), kpiRes.json()]);
       const mapped = mapDashboardResponse(dashboardJson, kpiJson);
+
+      // If all summary stats are zero, try computing from raw list data
+      if (mapped.summary.totalApplications === 0 && mapped.summary.totalHires === 0) {
+        try {
+          const [appRes, intRes, offerRes] = await Promise.allSettled([
+            apiFetch('/api/applications?size=1'),
+            apiFetch('/api/interviews?size=1'),
+            apiFetch('/api/offers?size=1'),
+          ]);
+          const getTotal = (r: PromiseSettledResult<Response>) => {
+            if (r.status === 'fulfilled' && r.value.ok) {
+              return r.value.json().then((d: Record<string, unknown>) => Number((d as Record<string, unknown>).totalElements) || 0);
+            }
+            return Promise.resolve(0);
+          };
+          const [totalApps, totalInt, totalOffers] = await Promise.all([getTotal(appRes), getTotal(intRes), getTotal(offerRes)]);
+          if (totalApps > 0 || totalInt > 0 || totalOffers > 0) {
+            mapped.summary.totalApplications = totalApps;
+            mapped.summary.totalHires = totalOffers;
+            mapped.summary.activePositions = totalInt;
+            mapped.summary.conversionRate = totalApps > 0 ? Math.round((totalOffers / totalApps) * 1000) / 10 : 0;
+            mapped.summary.pipelineValue = totalApps;
+            if (mapped.pipeline.length > 0 && mapped.pipeline.every(p => p.count === 0)) {
+              mapped.pipeline[0].count = totalApps;
+            }
+          }
+        } catch {
+          // Keep original mapped data
+        }
+      }
+
       setData(mapped);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to load analytics data');

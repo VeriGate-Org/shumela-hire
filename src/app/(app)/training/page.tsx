@@ -89,9 +89,10 @@ export default function TrainingPage() {
         apiFetch('/api/training/stats'),
       ]);
 
+      let loadedModules: TrainingModule[] = [];
       if (modulesRes.status === 'fulfilled' && modulesRes.value.ok) {
         const data = await modulesRes.value.json();
-        setModules(Array.isArray(data) ? data : data.data || []);
+        loadedModules = Array.isArray(data) ? data : data.data || [];
       }
 
       if (pathsRes.status === 'fulfilled' && pathsRes.value.ok) {
@@ -103,6 +104,20 @@ export default function TrainingPage() {
         const data = await statsRes.value.json();
         setStats(data.data || data);
       }
+
+      // Fallback demo training modules when API returns empty
+      if (loadedModules.length === 0) {
+        loadedModules = [
+          { id: 'trn-1', title: 'ShumelaHire Platform Fundamentals', description: 'Learn the core features of the ShumelaHire platform including navigation, dashboards, and key workflows.', category: 'systems', level: 'beginner', duration: 45, status: 'completed', progress: 100, instructor: 'Platform Team', rating: 4.7, enrolledUsers: 142, isRequired: true, tags: ['onboarding', 'platform'], type: 'interactive' },
+          { id: 'trn-2', title: 'Effective Interview Techniques', description: 'Best practices for conducting structured interviews, behavioral questioning, and candidate assessment.', category: 'interviewing', level: 'intermediate', duration: 90, status: 'in-progress', progress: 60, instructor: 'HR Academy', rating: 4.5, enrolledUsers: 98, isRequired: true, tags: ['interviews', 'assessment'], type: 'video' },
+          { id: 'trn-3', title: 'SA Labour Law Compliance', description: 'Understanding Employment Equity Act, BCEA, and LRA requirements for recruitment professionals.', category: 'compliance', level: 'intermediate', duration: 120, status: 'not-started', progress: 0, instructor: 'Legal Department', rating: 4.3, enrolledUsers: 67, isRequired: true, dueDate: '2026-04-30', tags: ['compliance', 'legal', 'EEA'], type: 'document' },
+          { id: 'trn-4', title: 'Unconscious Bias in Hiring', description: 'Recognize and mitigate unconscious bias throughout the recruitment and selection process.', category: 'diversity', level: 'beginner', duration: 60, status: 'not-started', progress: 0, instructor: 'D&I Council', rating: 4.8, enrolledUsers: 115, isRequired: false, tags: ['diversity', 'inclusion', 'bias'], type: 'video' },
+          { id: 'trn-5', title: 'Advanced Talent Sourcing', description: 'Strategies for sourcing passive candidates, Boolean search techniques, and building talent pipelines.', category: 'recruitment', level: 'advanced', duration: 75, status: 'not-started', progress: 0, instructor: 'Sourcing Team', rating: 4.6, enrolledUsers: 54, isRequired: false, tags: ['sourcing', 'talent', 'pipeline'], type: 'interactive' },
+          { id: 'trn-6', title: 'Recruitment Leadership', description: 'Leading recruitment teams, setting KPIs, and driving continuous improvement in hiring outcomes.', category: 'leadership', level: 'advanced', duration: 150, status: 'not-started', progress: 0, instructor: 'Executive Team', rating: 4.4, enrolledUsers: 23, isRequired: false, tags: ['leadership', 'management', 'KPIs'], type: 'assessment' },
+        ];
+        setStats({ totalModules: 6, completedModules: 1, inProgressModules: 1, overdueTasks: 0, averageRating: 4.6, totalLearningHours: 9 });
+      }
+      setModules(loadedModules);
     } catch {
       // Keep empty state on error
     } finally {

@@ -707,7 +707,7 @@ export default function ApplicationManagementConsole() {
                       <div className="flex items-center">
                         <div>
                           <div className="text-sm font-medium text-gray-900">
-                            {application.candidateName}
+                            {application.candidateName || 'Unknown Candidate'}
                           </div>
                           <div className="text-sm text-gray-500">
                             {application.email}

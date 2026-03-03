@@ -230,8 +230,8 @@ export default function InterviewFeedbackForm({ interview, onSuccess, onCancel }
         <h2 className="text-2xl font-bold text-foreground">Interview Feedback</h2>
         <div className="mt-2 text-sm text-muted-foreground">
           <p><strong className="text-foreground">Interview:</strong> {interview.title}</p>
-          <p><strong className="text-foreground">Candidate:</strong> {interview.application.applicant.firstName} {interview.application.applicant.lastName}</p>
-          <p><strong className="text-foreground">Position:</strong> {interview.application.jobPosting.title}</p>
+          <p><strong className="text-foreground">Candidate:</strong> {((interview.application?.applicant?.firstName ?? '') + ' ' + (interview.application?.applicant?.lastName ?? '')).trim() || 'Unknown Candidate'}</p>
+          <p><strong className="text-foreground">Position:</strong> {interview.application?.jobPosting?.title || 'Unknown Position'}</p>
           <p><strong className="text-foreground">Date:</strong> {new Date(interview.scheduledAt).toLocaleString()}</p>
         </div>
       </div>

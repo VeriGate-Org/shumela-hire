@@ -107,11 +107,11 @@ export default function InterviewsPage() {
   const filteredInterviews = useMemo(() => interviews.filter((interview) => {
     const normalizedSearch = searchTerm.toLowerCase();
     const matchesSearch = !searchTerm
-      || interview.title.toLowerCase().includes(normalizedSearch)
-      || interview.application.applicant.firstName.toLowerCase().includes(normalizedSearch)
-      || interview.application.applicant.lastName.toLowerCase().includes(normalizedSearch)
-      || interview.application.jobPosting.title.toLowerCase().includes(normalizedSearch)
-      || interview.application.jobPosting.department.toLowerCase().includes(normalizedSearch);
+      || interview.title?.toLowerCase().includes(normalizedSearch)
+      || (interview.application?.applicant?.firstName ?? '').toLowerCase().includes(normalizedSearch)
+      || (interview.application?.applicant?.lastName ?? '').toLowerCase().includes(normalizedSearch)
+      || (interview.application?.jobPosting?.title ?? '').toLowerCase().includes(normalizedSearch)
+      || (interview.application?.jobPosting?.department ?? '').toLowerCase().includes(normalizedSearch);
 
     const matchesStatus = statusFilter === 'ALL' || interview.status === statusFilter;
     const matchesType = typeFilter === 'ALL' || interview.type === typeFilter;
@@ -121,9 +121,22 @@ export default function InterviewsPage() {
 
   const statusOptions = useMemo(() => [...new Set(interviews.map((interview) => interview.status))], [interviews]);
   const typeOptions = useMemo(() => [...new Set(interviews.map((interview) => interview.type))], [interviews]);
-  const upcomingInterviews = useMemo(() => interviews.filter((interview) => interview.isUpcoming).slice(0, 5), [interviews]);
-  const overdueInterviews = useMemo(() => interviews.filter((interview) => interview.isOverdue), [interviews]);
-  const pendingFeedback = useMemo(() => interviews.filter((interview) => interview.requiresFeedback), [interviews]);
+  const upcomingInterviews = useMemo(() => {
+    const now = new Date();
+    return interviews.filter((interview) =>
+      interview.isUpcoming || (interview.status === 'SCHEDULED' && new Date(interview.scheduledAt) > now)
+    ).slice(0, 5);
+  }, [interviews]);
+  const overdueInterviews = useMemo(() => {
+    const now = new Date();
+    return interviews.filter((interview) =>
+      interview.isOverdue || (interview.status === 'SCHEDULED' && new Date(interview.scheduledAt) < now)
+    );
+  }, [interviews]);
+  const pendingFeedback = useMemo(() =>
+    interviews.filter((interview) =>
+      interview.requiresFeedback || (interview.status === 'COMPLETED' && !interview.feedback)
+    ), [interviews]);
 
   const getPageTitle = () => {
     switch (view) {
@@ -243,6 +256,7 @@ export default function InterviewsPage() {
                 onClick={() => {
                   setSelectedInterview(null);
                   setView('schedule');
+                  window.scrollTo(0, 0);
                 }}
                 className="inline-flex items-center gap-2 px-4 py-2 bg-transparent border-2 border-cta text-primary hover:bg-cta hover:text-cta-foreground uppercase tracking-wider rounded-full text-sm font-medium"
               >
@@ -330,6 +344,7 @@ export default function InterviewsPage() {
                 onClick={() => {
                   setSelectedInterview(null);
                   setView('schedule');
+                  window.scrollTo(0, 0);
                 }}
                 className="inline-flex items-center gap-2 px-4 py-2 bg-transparent border-2 border-cta text-primary hover:bg-cta hover:text-cta-foreground uppercase tracking-wider rounded-full text-sm font-medium"
               >
@@ -432,8 +447,8 @@ export default function InterviewsPage() {
 
                           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-muted-foreground">
                             <div>
-                              <p><span className="font-medium text-foreground">Candidate:</span> {interview.application.applicant.firstName} {interview.application.applicant.lastName}</p>
-                              <p><span className="font-medium text-foreground">Position:</span> {interview.application.jobPosting.title}</p>
+                              <p><span className="font-medium text-foreground">Candidate:</span> {((interview.application?.applicant?.firstName ?? '') + ' ' + (interview.application?.applicant?.lastName ?? '')).trim() || (interview as any).candidateName || 'Unknown Candidate'}</p>
+                              <p><span className="font-medium text-foreground">Position:</span> {interview.application?.jobPosting?.title || 'Unknown Position'}</p>
                               <p><span className="font-medium text-foreground">Type:</span> {interview.typeDisplayName}</p>
                             </div>
                             <div>
