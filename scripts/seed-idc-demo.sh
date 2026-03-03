@@ -44,10 +44,15 @@ fail() { echo -e "${RED}  FAIL${NC} $*" >&2; exit 1; }
 # ============================================================
 log "Authenticating as ${ADMIN_EMAIL}..."
 
+# Use --cli-input-json to avoid shell escaping issues with special chars in passwords
+AUTH_INPUT=$(jq -n \
+  --arg clientId "$COGNITO_CLIENT_ID" \
+  --arg username "$ADMIN_EMAIL" \
+  --arg password "$ADMIN_PASSWORD" \
+  '{ClientId:$clientId, AuthFlow:"USER_PASSWORD_AUTH", AuthParameters:{USERNAME:$username, PASSWORD:$password}}')
+
 AUTH_RESULT=$(aws cognito-idp initiate-auth \
-  --client-id "$COGNITO_CLIENT_ID" \
-  --auth-flow USER_PASSWORD_AUTH \
-  --auth-parameters USERNAME="$ADMIN_EMAIL",PASSWORD="$ADMIN_PASSWORD" \
+  --cli-input-json "$AUTH_INPUT" \
   --region "$AWS_REGION" \
   --output json 2>&1) || fail "Cognito auth failed: $AUTH_RESULT"
 
@@ -101,21 +106,48 @@ api_put()  { api PUT "$@"; }
 # ============================================================
 log "Verifying API connectivity..."
 ME=$(api_get "/api/auth/me") || fail "Cannot reach API at $API_BASE_URL"
-ADMIN_USER_ID=$(echo "$ME" | jq -r '.id')
-ok "Connected as user ID=$ADMIN_USER_ID ($(echo "$ME" | jq -r '.email'))"
+ok "Connected as $(echo "$ME" | jq -r '.email')"
+
+# ============================================================
+# Step 2b: Reset old data (if RESET_FIRST=1)
+# ============================================================
+RESET_FIRST="${RESET_FIRST:-0}"
+if [ "$RESET_FIRST" = "1" ]; then
+  log "Clearing old demo data via /api/admin/demo-reset..."
+  RESET_RESULT=$(api_post "/api/admin/demo-reset?confirm=true" 2>&1) || warn "Demo reset failed: $RESET_RESULT"
+  if [ -n "$RESET_RESULT" ] && echo "$RESET_RESULT" | jq -e '._total_deleted' >/dev/null 2>&1; then
+    TOTAL_DELETED=$(echo "$RESET_RESULT" | jq -r '._total_deleted')
+    ok "Cleared $TOTAL_DELETED rows of old data"
+    echo "$RESET_RESULT" | jq 'del(._total_deleted, ._tenant)' >&2
+  else
+    warn "Reset response: $RESET_RESULT"
+  fi
+fi
 
 # ============================================================
 # Step 3: Get all users for interviewer/creator assignments
 # ============================================================
 log "Fetching user list..."
-USERS=$(api_get "/api/admin/users") || warn "Could not fetch users list"
+USERS_RAW=$(api_get "/api/admin/users?page=0&size=100") || warn "Could not fetch users list"
+# Handle both paginated {content:[...]} and plain array [...] responses
+USERS=$(echo "$USERS_RAW" | jq 'if type == "object" then .content else . end' 2>/dev/null)
 USER_COUNT=$(echo "$USERS" | jq 'length')
 ok "Found $USER_COUNT users"
 
-# Map user IDs by role (best-effort)
+# Map user IDs by role/email (best-effort)
 get_user_id_by_email() {
   echo "$USERS" | jq -r --arg email "$1" '.[] | select(.email == $email) | .id' | head -1
 }
+
+get_user_id_by_role() {
+  echo "$USERS" | jq -r --arg role "$1" '.[] | select(.roleName == $role) | .id' | head -1
+}
+
+# Get admin DB user ID from user list
+ADMIN_USER_ID=$(get_user_id_by_role "Administrator")
+[ -z "$ADMIN_USER_ID" ] && ADMIN_USER_ID=$(get_user_id_by_email "$ADMIN_EMAIL")
+[ -z "$ADMIN_USER_ID" ] && ADMIN_USER_ID="1"
+ok "Admin DB user ID=$ADMIN_USER_ID"
 
 # We'll use admin ID as fallback for createdBy
 CREATED_BY="$ADMIN_USER_ID"
@@ -322,9 +354,9 @@ log "Updating job posting statuses..."
 
 publish_job() {
   local id="$1"
-  api_post "/api/job-postings/$id/submit-for-approval" >/dev/null 2>&1 || true
-  api_post "/api/job-postings/$id/approve" >/dev/null 2>&1 || true
-  api_post "/api/job-postings/$id/publish" >/dev/null 2>&1 || true
+  api_post "/api/job-postings/$id/submit-for-approval?submittedBy=$CREATED_BY" >/dev/null 2>&1 || true
+  api_post "/api/job-postings/$id/approve?approvedBy=$CREATED_BY" >/dev/null 2>&1 || true
+  api_post "/api/job-postings/$id/publish?publishedBy=$CREATED_BY" >/dev/null 2>&1 || true
   ok "Published job #$id"
 }
 
@@ -334,7 +366,7 @@ for i in 1 2 3 4 5 8 10; do
 done
 
 # Job 6 (HR Business Partner): PENDING_APPROVAL
-api_post "/api/job-postings/${JOB_IDS[6]}/submit-for-approval" >/dev/null 2>&1 || true
+api_post "/api/job-postings/${JOB_IDS[6]}/submit-for-approval?submittedBy=$CREATED_BY" >/dev/null 2>&1 || true
 ok "Job #${JOB_IDS[6]} (HR Business Partner): PENDING_APPROVAL"
 
 # Job 7 (Communications Specialist): stays DRAFT
@@ -342,7 +374,7 @@ ok "Job #${JOB_IDS[7]} (Communications Specialist): DRAFT"
 
 # Job 9 (Data Analyst): CLOSED
 publish_job "${JOB_IDS[9]}"
-api_post "/api/job-postings/${JOB_IDS[9]}/close" >/dev/null 2>&1 || true
+api_post "/api/job-postings/${JOB_IDS[9]}/close?closedBy=$CREATED_BY" >/dev/null 2>&1 || true
 ok "Job #${JOB_IDS[9]} (Data Analyst): CLOSED"
 
 # ============================================================
@@ -607,44 +639,69 @@ update_status() {
   ok "Application #$app_id -> $status"
 }
 
+# Walk through valid transitions: SUBMITTED -> SCREENING -> INTERVIEW_SCHEDULED -> INTERVIEW_COMPLETED -> OFFER_PENDING -> ...
+
 # Senior Investment Analyst applications
-update_status "${APPLICATION_IDS[1]}" "INTERVIEW_SCHEDULED" "Strong CFA candidate. Scheduled first round interview."
+update_status "${APPLICATION_IDS[1]}" "SCREENING" "Strong CFA candidate."
+update_status "${APPLICATION_IDS[1]}" "INTERVIEW_SCHEDULED" "Scheduled first round interview."
 update_status "${APPLICATION_IDS[2]}" "SCREENING" "Under review - solid investment background"
 update_status "${APPLICATION_IDS[3]}" "SCREENING" "Reviewing qualifications and experience"
+update_status "${APPLICATION_IDS[4]}" "SCREENING" "Reviewing actuarial background."
 update_status "${APPLICATION_IDS[4]}" "REJECTED" "Does not meet minimum experience requirements for senior role"
 # APPLICATION_IDS[5] stays SUBMITTED
 
 # Software Developer applications
+update_status "${APPLICATION_IDS[6]}" "SCREENING" "Strong technical profile."
+update_status "${APPLICATION_IDS[6]}" "INTERVIEW_SCHEDULED" "Technical interview scheduled."
+update_status "${APPLICATION_IDS[6]}" "INTERVIEW_COMPLETED" "Outstanding technical interview."
 update_status "${APPLICATION_IDS[6]}" "OFFER_PENDING" "Excellent candidate. Preparing offer."
+update_status "${APPLICATION_IDS[7]}" "SCREENING" "Reviewing experience."
+update_status "${APPLICATION_IDS[7]}" "INTERVIEW_SCHEDULED" "Technical interview scheduled."
 update_status "${APPLICATION_IDS[7]}" "INTERVIEW_COMPLETED" "Strong technical interview. Awaiting panel feedback."
 update_status "${APPLICATION_IDS[8]}" "SCREENING" "Reviewing portfolio and code samples"
 # APPLICATION_IDS[9] stays SUBMITTED
 
 # Risk Manager applications
-update_status "${APPLICATION_IDS[10]}" "INTERVIEW_SCHEDULED" "FRM certified. Strong DFI experience. Scheduled panel interview."
+update_status "${APPLICATION_IDS[10]}" "SCREENING" "FRM certified. Strong DFI experience."
+update_status "${APPLICATION_IDS[10]}" "INTERVIEW_SCHEDULED" "Scheduled panel interview."
 update_status "${APPLICATION_IDS[11]}" "SCREENING" "Reviewing risk management qualifications"
 # APPLICATION_IDS[12] stays SUBMITTED
 
 # Legal Advisor applications
+update_status "${APPLICATION_IDS[13]}" "SCREENING" "Impressive credentials."
+update_status "${APPLICATION_IDS[13]}" "INTERVIEW_SCHEDULED" "Interview scheduled."
 update_status "${APPLICATION_IDS[13]}" "INTERVIEW_COMPLETED" "Impressive credentials and deal experience."
 update_status "${APPLICATION_IDS[14]}" "SCREENING" "Checking references"
+update_status "${APPLICATION_IDS[15]}" "SCREENING" "Reviewing qualifications."
 update_status "${APPLICATION_IDS[15]}" "REJECTED" "Does not have required legal qualifications for this role"
 
 # Financial Accountant applications
-update_status "${APPLICATION_IDS[16]}" "HIRED" "Exceptional CA(SA) candidate with DFI experience. Offer accepted and onboarded."
-update_status "${APPLICATION_IDS[17]}" "OFFER_ACCEPTED" "Strong CGMA candidate. Accepted offer, pending start date."
-update_status "${APPLICATION_IDS[18]}" "INTERVIEW_SCHEDULED" "Solid financial background. Scheduled technical assessment."
+update_status "${APPLICATION_IDS[16]}" "SCREENING" "CA(SA) with DFI experience."
+update_status "${APPLICATION_IDS[16]}" "INTERVIEW_SCHEDULED" "Interview scheduled."
+update_status "${APPLICATION_IDS[16]}" "INTERVIEW_COMPLETED" "Outstanding interview performance."
+update_status "${APPLICATION_IDS[16]}" "OFFER_PENDING" "Preparing offer."
+update_status "${APPLICATION_IDS[17]}" "SCREENING" "CGMA candidate."
+update_status "${APPLICATION_IDS[17]}" "INTERVIEW_SCHEDULED" "Interview scheduled."
+update_status "${APPLICATION_IDS[17]}" "INTERVIEW_COMPLETED" "Strong interview."
+update_status "${APPLICATION_IDS[17]}" "OFFER_PENDING" "Preparing offer."
+update_status "${APPLICATION_IDS[18]}" "SCREENING" "Solid financial background."
+update_status "${APPLICATION_IDS[18]}" "INTERVIEW_SCHEDULED" "Scheduled technical assessment."
 # APPLICATION_IDS[19] stays SUBMITTED
 
 # Project Manager applications
-update_status "${APPLICATION_IDS[20]}" "INTERVIEW_SCHEDULED" "PMP certified with DBSA experience. Scheduled panel interview."
+update_status "${APPLICATION_IDS[20]}" "SCREENING" "PMP certified with DBSA experience."
+update_status "${APPLICATION_IDS[20]}" "INTERVIEW_SCHEDULED" "Scheduled panel interview."
 update_status "${APPLICATION_IDS[21]}" "SCREENING" "Assessing project management credentials"
 # APPLICATION_IDS[22] stays SUBMITTED
 
 # Data Analyst applications (CLOSED job)
-update_status "${APPLICATION_IDS[23]}" "HIRED" "Outstanding candidate. Successfully onboarded."
+update_status "${APPLICATION_IDS[23]}" "SCREENING" "Outstanding data analysis skills."
+update_status "${APPLICATION_IDS[23]}" "INTERVIEW_SCHEDULED" "Technical interview scheduled."
+update_status "${APPLICATION_IDS[23]}" "INTERVIEW_COMPLETED" "Excellent interview."
+update_status "${APPLICATION_IDS[23]}" "OFFER_PENDING" "Top candidate."
+update_status "${APPLICATION_IDS[24]}" "SCREENING" "Good candidate."
 update_status "${APPLICATION_IDS[24]}" "REJECTED" "Good candidate but position filled."
-update_status "${APPLICATION_IDS[25]}" "WITHDRAWN" ""
+# APPLICATION_IDS[25] stays SUBMITTED (WITHDRAWN not a valid direct transition)
 
 # Executive Assistant applications
 update_status "${APPLICATION_IDS[26]}" "SCREENING" "Strong executive support background"
@@ -668,45 +725,46 @@ schedule_interview() {
   fi
 }
 
-# Interview dates: mix of past (completed) and future (scheduled)
-PAST_DATE_1="2026-02-10T10:00:00"
-PAST_DATE_2="2026-02-12T14:00:00"
-PAST_DATE_3="2026-02-14T09:00:00"
-PAST_DATE_4="2026-02-17T11:00:00"
-FUTURE_DATE_1="2026-02-25T10:00:00"
-FUTURE_DATE_2="2026-02-26T14:00:00"
-FUTURE_DATE_3="2026-02-27T09:00:00"
-FUTURE_DATE_4="2026-03-02T11:00:00"
-FUTURE_DATE_5="2026-03-03T10:00:00"
+# All interview dates must be in the future (backend rejects past dates)
+# We schedule them, then immediately start/complete the ones that should appear "done"
+DATE_1="2026-03-04T10:00:00"
+DATE_2="2026-03-04T14:00:00"
+DATE_3="2026-03-05T09:00:00"
+DATE_4="2026-03-05T11:00:00"
+DATE_5="2026-03-06T10:00:00"
+DATE_6="2026-03-06T14:00:00"
+DATE_7="2026-03-07T09:00:00"
+DATE_8="2026-03-10T11:00:00"
+DATE_9="2026-03-10T10:00:00"
 
 # Senior Investment Analyst - Thabo Mokoena (INTERVIEW_SCHEDULED)
-schedule_interview "${APPLICATION_IDS[1]}" "$FUTURE_DATE_1" "$CREATED_BY" "PANEL" "FIRST_ROUND" "IDC Boardroom A, 19 Fredman Drive, Sandton"
+schedule_interview "${APPLICATION_IDS[1]}" "$DATE_5" "$CREATED_BY" "PANEL" "FIRST_ROUND" "IDC Boardroom A, 19 Fredman Drive, Sandton"
 
-# Software Developer - Naledi Dlamini (OFFER_PENDING - interviews already done)
-schedule_interview "${APPLICATION_IDS[6]}" "$PAST_DATE_1" "$CREATED_BY" "TECHNICAL" "TECHNICAL" "IDC IT Lab, 19 Fredman Drive, Sandton"
-schedule_interview "${APPLICATION_IDS[6]}" "$PAST_DATE_3" "$CREATED_BY" "PANEL" "SECOND_ROUND" "IDC Boardroom B, 19 Fredman Drive, Sandton"
+# Software Developer - Naledi Dlamini (OFFER_PENDING)
+schedule_interview "${APPLICATION_IDS[6]}" "$DATE_1" "$CREATED_BY" "TECHNICAL" "TECHNICAL" "IDC IT Lab, 19 Fredman Drive, Sandton"
+schedule_interview "${APPLICATION_IDS[6]}" "$DATE_3" "$CREATED_BY" "PANEL" "SECOND_ROUND" "IDC Boardroom B, 19 Fredman Drive, Sandton"
 
 # Software Developer - Ravi Naidoo (INTERVIEW_COMPLETED)
-schedule_interview "${APPLICATION_IDS[7]}" "$PAST_DATE_2" "$CREATED_BY" "TECHNICAL" "TECHNICAL" "IDC IT Lab, 19 Fredman Drive, Sandton"
+schedule_interview "${APPLICATION_IDS[7]}" "$DATE_2" "$CREATED_BY" "TECHNICAL" "TECHNICAL" "IDC IT Lab, 19 Fredman Drive, Sandton"
 
 # Risk Manager - Pieter van der Merwe (INTERVIEW_SCHEDULED)
-schedule_interview "${APPLICATION_IDS[10]}" "$FUTURE_DATE_2" "$CREATED_BY" "PANEL" "FIRST_ROUND" "IDC Boardroom A, 19 Fredman Drive, Sandton"
+schedule_interview "${APPLICATION_IDS[10]}" "$DATE_6" "$CREATED_BY" "PANEL" "FIRST_ROUND" "IDC Boardroom A, 19 Fredman Drive, Sandton"
 
 # Legal Advisor - Ayanda Nkosi (INTERVIEW_COMPLETED)
-schedule_interview "${APPLICATION_IDS[13]}" "$PAST_DATE_4" "$CREATED_BY" "IN_PERSON" "FIRST_ROUND" "IDC Boardroom B, 19 Fredman Drive, Sandton"
+schedule_interview "${APPLICATION_IDS[13]}" "$DATE_4" "$CREATED_BY" "IN_PERSON" "FIRST_ROUND" "IDC Boardroom B, 19 Fredman Drive, Sandton"
 
 # Financial Accountant - Nomsa Mahlangu (INTERVIEW_SCHEDULED)
-schedule_interview "${APPLICATION_IDS[18]}" "$FUTURE_DATE_3" "$CREATED_BY" "TECHNICAL" "TECHNICAL" "IDC Finance Meeting Room, 19 Fredman Drive, Sandton"
+schedule_interview "${APPLICATION_IDS[18]}" "$DATE_7" "$CREATED_BY" "TECHNICAL" "TECHNICAL" "IDC Finance Meeting Room, 19 Fredman Drive, Sandton"
 
-# Financial Accountant - Fatima Patel (HIRED - all interviews completed)
-schedule_interview "${APPLICATION_IDS[16]}" "$PAST_DATE_1" "$CREATED_BY" "IN_PERSON" "FIRST_ROUND" "IDC Boardroom A, 19 Fredman Drive, Sandton"
-schedule_interview "${APPLICATION_IDS[16]}" "$PAST_DATE_3" "$CREATED_BY" "PANEL" "SECOND_ROUND" "IDC Boardroom B, 19 Fredman Drive, Sandton"
+# Financial Accountant - Fatima Patel (OFFER_PENDING)
+schedule_interview "${APPLICATION_IDS[16]}" "$DATE_1" "$CREATED_BY" "IN_PERSON" "FIRST_ROUND" "IDC Boardroom A, 19 Fredman Drive, Sandton"
+schedule_interview "${APPLICATION_IDS[16]}" "$DATE_3" "$CREATED_BY" "PANEL" "SECOND_ROUND" "IDC Boardroom B, 19 Fredman Drive, Sandton"
 
 # Project Manager - Bongani Zwane (INTERVIEW_SCHEDULED)
-schedule_interview "${APPLICATION_IDS[20]}" "$FUTURE_DATE_4" "$CREATED_BY" "PANEL" "FIRST_ROUND" "IDC Boardroom A, 19 Fredman Drive, Sandton"
+schedule_interview "${APPLICATION_IDS[20]}" "$DATE_8" "$CREATED_BY" "PANEL" "FIRST_ROUND" "IDC Boardroom A, 19 Fredman Drive, Sandton"
 
-# Data Analyst - Zanele Khumalo (HIRED - all interviews completed)
-schedule_interview "${APPLICATION_IDS[23]}" "$PAST_DATE_2" "$CREATED_BY" "TECHNICAL" "TECHNICAL" "IDC IT Lab, 19 Fredman Drive, Sandton"
+# Data Analyst - Zanele Khumalo (OFFER_PENDING)
+schedule_interview "${APPLICATION_IDS[23]}" "$DATE_2" "$CREATED_BY" "TECHNICAL" "TECHNICAL" "IDC IT Lab, 19 Fredman Drive, Sandton"
 
 # ============================================================
 # Step 10: Complete past interviews and submit feedback
@@ -745,7 +803,8 @@ fi
 log "Creating offers..."
 
 # Offer 1: Financial Accountant - Fatima Patel (ACCEPTED/HIRED)
-OFFER1_BODY=$(jq -n '{
+OFFER1_BODY=$(jq -n --argjson appId "${APPLICATION_IDS[16]}" '{
+  application: {id: $appId},
   jobTitle: "Financial Accountant",
   department: "Finance",
   offerType: "FULL_TIME_PERMANENT",
@@ -782,7 +841,8 @@ if [ -n "$OFFER1" ] && echo "$OFFER1" | jq -e '.id' >/dev/null 2>&1; then
 fi
 
 # Offer 2: Software Developer - Naledi Dlamini (SENT/PENDING)
-OFFER2_BODY=$(jq -n '{
+OFFER2_BODY=$(jq -n --argjson appId "${APPLICATION_IDS[6]}" '{
+  application: {id: $appId},
   jobTitle: "Software Developer",
   department: "Information Technology",
   offerType: "FULL_TIME_PERMANENT",
@@ -818,7 +878,8 @@ if [ -n "$OFFER2" ] && echo "$OFFER2" | jq -e '.id' >/dev/null 2>&1; then
 fi
 
 # Offer 3: Financial Accountant - David Ndlovu (DRAFT)
-OFFER3_BODY=$(jq -n '{
+OFFER3_BODY=$(jq -n --argjson appId "${APPLICATION_IDS[17]}" '{
+  application: {id: $appId},
   jobTitle: "Financial Accountant",
   department: "Finance",
   offerType: "FULL_TIME_PERMANENT",
@@ -931,6 +992,189 @@ REQ4_ID=$(create_requisition \
 [ -n "$REQ4_ID" ] && ok "Requisition #$REQ4_ID -> DRAFT"
 
 # ============================================================
+# Step 13: Seed IDC Departments
+# ============================================================
+log "Creating IDC departments..."
+
+DEPT_COUNT=0
+
+create_department() {
+  local name="$1" description="$2"
+  local body
+  body=$(jq -n --arg name "$name" --arg description "$description" '{name:$name, description:$description}')
+
+  local result
+  result=$(api_post "/api/departments" -d "$body") || { warn "Failed to create department: $name"; return 1; }
+  local id
+  id=$(echo "$result" | jq -r '.id')
+  DEPT_COUNT=$((DEPT_COUNT + 1))
+  ok "Department #$id: $name"
+  echo "$id"
+}
+
+create_department "Agro-Processing & Agriculture" \
+  "Food, beverage, forestry, and aquaculture value chain investments supporting sustainable agriculture and agro-processing in South Africa."
+
+create_department "Automotive & Transport Equipment" \
+  "Automotive, rail, and aerospace manufacturing investments aimed at growing South Africa's transport equipment production capacity."
+
+create_department "Chemicals, Medical & Industrial Mineral Products" \
+  "Chemicals, pharmaceuticals, and mineral beneficiation investments contributing to industrial diversification and import replacement."
+
+create_department "Infrastructure" \
+  "Water, sanitation, telecommunications, and logistics infrastructure investments supporting economic development and service delivery."
+
+create_department "Machinery, Equipment & Electronics" \
+  "Capital equipment and electronics manufacturing investments enabling local production capability and technology transfer."
+
+create_department "Media & Audio-Visual" \
+  "Film and media value chain investments supporting the creative industries and South Africa's position as a filming destination."
+
+create_department "Mining & Metals" \
+  "Mining operations and metals processing investments promoting beneficiation and value addition in the minerals sector."
+
+create_department "Textiles & Wood Products" \
+  "Clothing, leather, and home decor manufacturing investments supporting labour-intensive industries and job creation."
+
+create_department "Tourism & Services" \
+  "Accommodation, business hotels, and healthcare investments supporting South Africa's tourism and services sectors."
+
+create_department "Small Business Finance & Regions (SBF)" \
+  "Regional offices servicing smaller businesses with funding up to R15m-R20m, promoting inclusive economic participation across provinces."
+
+create_department "Partnership Programmes Department" \
+  "Tailored funding products delivered through partnership and intermediary models to broaden the reach of IDC funding."
+
+create_department "Human Capital Division" \
+  "Talent acquisition, staff development, and organisational effectiveness supporting the IDC's people strategy."
+
+log "Created $DEPT_COUNT departments"
+
+# ============================================================
+# Step 14: Create Talent Pool
+# ============================================================
+log "Creating talent pool..."
+
+POOL_BODY=$(jq -n \
+  --argjson createdBy "$CREATED_BY" \
+  '{
+    poolName: "Critical: Senior Investment Analysts",
+    description: "Pre-identified candidates for the IDC critical role of Senior Investment Analyst. Candidates sourced from applications, referrals, and proactive talent mapping across development finance and investment banking sectors.",
+    department: "Strategic Business Unit",
+    skillsCriteria: "Investment analysis, Financial modelling, Project finance, CFA/CA(SA), Development finance, Due diligence",
+    experienceLevel: "SENIOR",
+    isActive: true,
+    autoAddEnabled: false,
+    createdBy: $createdBy
+  }')
+
+POOL_RESULT=$(api_post "/api/talent-pools" -d "$POOL_BODY" 2>&1) || warn "Failed to create talent pool"
+POOL_ID=""
+if [ -n "$POOL_RESULT" ] && echo "$POOL_RESULT" | jq -e '.id' >/dev/null 2>&1; then
+  POOL_ID=$(echo "$POOL_RESULT" | jq -r '.id')
+  ok "Talent Pool #$POOL_ID: Critical: Senior Investment Analysts"
+else
+  warn "Talent pool creation failed, skipping entries"
+fi
+
+if [ -n "$POOL_ID" ]; then
+  log "Adding entries to talent pool..."
+
+  add_pool_entry() {
+    local pool_id="$1" applicant_id="$2" rating="$3" notes="$4"
+    [ -z "$applicant_id" ] && { warn "Empty applicant ID, skipping pool entry"; return 1; }
+
+    local body
+    body=$(jq -n \
+      --argjson poolId "$pool_id" \
+      --argjson applicantId "$applicant_id" \
+      --argjson rating "$rating" \
+      --argjson addedBy "$CREATED_BY" \
+      --arg notes "$notes" \
+      --arg sourceType "MANUAL" \
+      '{
+        talentPool: {id: $poolId},
+        applicant: {id: $applicantId},
+        sourceType: $sourceType,
+        rating: $rating,
+        notes: $notes,
+        isAvailable: true,
+        addedBy: $addedBy
+      }')
+
+    local result
+    result=$(api_post "/api/talent-pools/$pool_id/entries" -d "$body") || { warn "Failed to add pool entry for applicant #$applicant_id"; return 1; }
+    local id
+    id=$(echo "$result" | jq -r '.id')
+    ok "Pool entry #$id: Applicant #$applicant_id (rating: $rating)"
+  }
+
+  # Add 5 applicants who applied for Senior Investment Analyst
+  add_pool_entry "$POOL_ID" "${APP_IDS[1]}" 5 "Top candidate. CFA charter holder with 6+ years at Nedbank Capital. Strong financial modelling and project finance skills."
+  add_pool_entry "$POOL_ID" "${APP_IDS[6]}" 4 "Strong investment analysis background at Ashburton. CFA Level II in progress. Good development finance potential."
+  add_pool_entry "$POOL_ID" "${APP_IDS[13]}" 4 "Promising analyst from Coronation Fund Managers. Strong academic record from UJ. Growing equity valuation expertise."
+  add_pool_entry "$POOL_ID" "${APP_IDS[8]}" 4 "PMP-certified Project Manager at DBSA. Deep understanding of post-investment landscape in development finance."
+  add_pool_entry "$POOL_ID" "${APP_IDS[10]}" 3 "Actuarial background provides unique quantitative perspective. Risk analysis experience at Sanlam. Cross-functional potential."
+
+  ok "Added 5 entries to talent pool"
+fi
+
+# ============================================================
+# Step 15: Register Agency and Submit Candidate
+# ============================================================
+log "Registering recruitment agency..."
+
+AGENCY_BODY=$(jq -n '{
+  agencyName: "Kgotla Executive Search",
+  registrationNumber: "2019/045678/07",
+  contactPerson: "Lerato Moloi",
+  contactEmail: "lerato@kgotla-search.co.za",
+  contactPhone: "+27 11 884 5500",
+  specializations: "Executive Search, Development Finance, Investment Banking, Public Sector, Board Appointments",
+  feePercentage: 15.00,
+  contractStartDate: "2025-06-01",
+  contractEndDate: "2026-05-31",
+  beeLevel: 1
+}')
+
+AGENCY_RESULT=$(api_post "/api/agencies/register" -d "$AGENCY_BODY" 2>&1) || warn "Failed to register agency"
+AGENCY_ID=""
+if [ -n "$AGENCY_RESULT" ] && echo "$AGENCY_RESULT" | jq -e '.id' >/dev/null 2>&1; then
+  AGENCY_ID=$(echo "$AGENCY_RESULT" | jq -r '.id')
+  ok "Agency #$AGENCY_ID: Kgotla Executive Search"
+
+  # Approve the agency
+  api_post "/api/agencies/$AGENCY_ID/approve" >/dev/null 2>&1 && ok "Agency #$AGENCY_ID -> ACTIVE" || warn "Failed to approve agency"
+
+  # Submit a candidate for the Senior Investment Analyst role
+  if [ -n "${JOB_IDS[1]}" ]; then
+    SUBMISSION_BODY=$(jq -n \
+      --argjson jobPostingId "${JOB_IDS[1]}" \
+      '{
+        jobPosting: {id: $jobPostingId},
+        candidateName: "Thandi Moloi",
+        candidateEmail: "thandi.moloi@gmail.com",
+        candidatePhone: "+27 82 555 1234",
+        coverNote: "Thandi is a highly qualified investment professional with 8 years of experience in development finance at both the DBSA and AfDB. She holds a CFA charter and MCom in Development Finance from UCT. She has led investment appraisals exceeding R2 billion in aggregate value across infrastructure, agro-processing, and mining sectors. She is currently based in Johannesburg and available to start within 30 days."
+      }')
+
+    SUBMISSION_RESULT=$(api_post "/api/agencies/$AGENCY_ID/submissions" -d "$SUBMISSION_BODY" 2>&1) || warn "Failed to submit candidate"
+    if [ -n "$SUBMISSION_RESULT" ] && echo "$SUBMISSION_RESULT" | jq -e '.id' >/dev/null 2>&1; then
+      SUB_ID=$(echo "$SUBMISSION_RESULT" | jq -r '.id')
+      ok "Agency submission #$SUB_ID: Thandi Moloi for Senior Investment Analyst"
+    fi
+  fi
+else
+  warn "Agency registration failed, skipping submission"
+fi
+
+# ============================================================
+# Step 16: Call Demo Reset Cleanup (clear stale data from previous runs)
+# ============================================================
+# This step is intentionally at the END — it only runs if RESET_FIRST=1 is set
+# Normally the reset is run BEFORE seeding via a separate curl call
+
+# ============================================================
 # Summary
 # ============================================================
 echo ""
@@ -938,13 +1182,23 @@ echo -e "${GREEN}============================================================${N
 echo -e "${GREEN}  IDC Demo Data Seeding Complete${NC}"
 echo -e "${GREEN}============================================================${NC}"
 echo ""
-echo "  Job Postings:  ${#JOB_IDS[@]} created"
+echo "  Departments:   $DEPT_COUNT created (12 IDC divisions)"
+echo "  Job Postings:  ${#JOB_IDS[@]} created (7 published, 1 pending, 1 draft, 1 closed)"
 echo "  Applicants:    ${#APP_IDS[@]} created"
-echo "  Applications:  $APP_COUNTER created"
-echo "  Interviews:    Scheduled and completed"
+echo "  Applications:  $APP_COUNTER created across multiple jobs"
+echo "  Interviews:    Scheduled across 6 jobs"
 echo "  Offers:        3 created (1 accepted, 1 sent, 1 draft)"
 echo "  Requisitions:  4 created (2 approved, 1 submitted, 1 draft)"
+echo "  Talent Pools:  1 created with 5 entries"
+echo "  Agencies:      1 registered with 1 candidate submission"
 echo ""
 echo "  Verify at: https://idc-demo.shumelahire.co.za"
 echo "  Login as:  $ADMIN_EMAIL"
+echo ""
+echo "  Demo user credentials (password: Demo@2026):"
+echo "    hr.manager@idc-demo.shumelahire.co.za   (HR Manager)"
+echo "    hiring.manager@idc-demo.shumelahire.co.za (Hiring Manager)"
+echo "    recruiter@idc-demo.shumelahire.co.za     (Recruiter)"
+echo "    interviewer@idc-demo.shumelahire.co.za   (Interviewer)"
+echo "    employee@idc-demo.shumelahire.co.za      (Employee)"
 echo ""
