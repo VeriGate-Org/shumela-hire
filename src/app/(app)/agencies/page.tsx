@@ -8,7 +8,7 @@ import { useAuth } from '@/contexts/AuthContext';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
-type AgencyStatus = 'PENDING_APPROVAL' | 'ACTIVE' | 'SUSPENDED' | 'TERMINATED';
+type AgencyStatus = 'PENDING_APPROVAL' | 'APPROVED' | 'SUSPENDED' | 'TERMINATED';
 type SubmissionStatus = 'SUBMITTED' | 'UNDER_REVIEW' | 'ACCEPTED' | 'REJECTED' | 'WITHDRAWN';
 
 interface Agency {
@@ -56,14 +56,14 @@ type ModalType = null | 'register' | 'edit' | 'submitCandidate' | 'reviewSubmiss
 
 const STATUS_BADGE: Record<AgencyStatus, string> = {
   PENDING_APPROVAL: 'bg-yellow-100 text-yellow-800',
-  ACTIVE: 'bg-green-100 text-green-700',
+  APPROVED: 'bg-green-100 text-green-700',
   SUSPENDED: 'bg-orange-100 text-orange-700',
   TERMINATED: 'bg-red-100 text-red-700',
 };
 
 const STATUS_LABEL: Record<AgencyStatus, string> = {
   PENDING_APPROVAL: 'Pending Approval',
-  ACTIVE: 'Active',
+  APPROVED: 'Approved',
   SUSPENDED: 'Suspended',
   TERMINATED: 'Terminated',
 };
@@ -380,7 +380,7 @@ export default function AgenciesPage() {
           >
             <option value="ALL">All Statuses</option>
             <option value="PENDING_APPROVAL">Pending Approval</option>
-            <option value="ACTIVE">Active</option>
+            <option value="APPROVED">Approved</option>
             <option value="SUSPENDED">Suspended</option>
             <option value="TERMINATED">Terminated</option>
           </select>
@@ -524,7 +524,7 @@ export default function AgenciesPage() {
                         {statusActionLoading === selectedAgency.id ? '...' : 'Approve'}
                       </button>
                     )}
-                    {selectedAgency.status === 'ACTIVE' && (
+                    {selectedAgency.status === 'APPROVED' && (
                       <button
                         onClick={() => handleSuspend(selectedAgency)}
                         disabled={statusActionLoading === selectedAgency.id}
@@ -562,7 +562,7 @@ export default function AgenciesPage() {
                   </div>
 
                   {/* Submit candidate action */}
-                  {selectedAgency.status === 'ACTIVE' && (
+                  {selectedAgency.status === 'APPROVED' && (
                     <div className="bg-white rounded-[10px] border border-gray-200 p-4 flex items-center justify-between">
                       <div>
                         <p className="text-sm font-medium text-gray-800">Submit a candidate</p>
