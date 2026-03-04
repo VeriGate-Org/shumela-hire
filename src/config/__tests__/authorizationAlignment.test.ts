@@ -1,0 +1,45 @@
+import { navigationRegistry } from '@/config/navigationRegistry';
+import { rolePermissions } from '@/config/permissions';
+import type { UserRole } from '@/contexts/AuthContext';
+
+const ALL_ROLES = Object.keys(rolePermissions) as UserRole[];
+
+function rolesWithPermissions(requiredPermissions: string[]): UserRole[] {
+  return ALL_ROLES.filter((role) =>
+    requiredPermissions.every((permission) => rolePermissions[role].includes(permission)),
+  );
+}
+
+function expectNavRoles(navId: string, expected: UserRole[]) {
+  const entry = navigationRegistry.find((item) => item.id === navId);
+  expect(entry).toBeDefined();
+
+  const actual = rolesWithPermissions(entry!.requiredPermissions).sort();
+  const sortedExpected = [...expected].sort();
+  expect(actual).toEqual(sortedExpected);
+}
+
+describe('Authorization alignment', () => {
+  it('keeps high-risk navigation routes aligned with backend role policies', () => {
+    expectNavRoles('agencies', ['ADMIN', 'HR_MANAGER', 'RECRUITER']);
+    expectNavRoles('talent-pools', ['ADMIN', 'HR_MANAGER', 'RECRUITER']);
+    expectNavRoles('offers', ['ADMIN', 'HR_MANAGER']);
+    expectNavRoles('workflow', ['ADMIN', 'HR_MANAGER']);
+    expectNavRoles('application-management', ['ADMIN', 'HR_MANAGER', 'RECRUITER']);
+    expectNavRoles('integrations', ['ADMIN', 'HR_MANAGER']);
+    expectNavRoles('reports', ['ADMIN', 'EXECUTIVE', 'HR_MANAGER']);
+    expectNavRoles('audit-logs', ['ADMIN']);
+    expectNavRoles('permissions', ['ADMIN']);
+    expectNavRoles('recruiter-dashboard', ['ADMIN', 'HR_MANAGER', 'RECRUITER']);
+    expectNavRoles('analytics', ['ADMIN', 'EXECUTIVE', 'HIRING_MANAGER', 'HR_MANAGER', 'RECRUITER']);
+  });
+
+  it('restricts platform owner to platform administration permissions', () => {
+    expect(rolePermissions.PLATFORM_OWNER).toEqual([
+      'view_dashboard',
+      'platform_admin',
+      'manage_features',
+      'manage_tenants',
+    ]);
+  });
+});

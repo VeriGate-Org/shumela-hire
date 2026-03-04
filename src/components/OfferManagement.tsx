@@ -4,7 +4,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { apiFetch } from '@/lib/api-fetch';
 import { useToast } from '@/components/Toast';
-import { eSignatureService, ESignatureStatus } from '@/services/eSignatureService';
+import { eSignatureService } from '@/services/eSignatureService';
 
 interface Offer {
   id: number;
@@ -79,7 +79,8 @@ const OFFER_TYPES = [
 export default function OfferManagement() {
   const { user } = useAuth();
   const { toast } = useToast();
-  const currentRole = user?.role || 'recruiter';
+  const currentRole = user?.role || 'RECRUITER';
+  const canManageOffers = currentRole === 'ADMIN' || currentRole === 'HR_MANAGER';
   const [offers, setOffers] = useState<Offer[]>([]);
   const [loading, setLoading] = useState(false);
   const [selectedOffer, setSelectedOffer] = useState<Offer | null>(null);
@@ -179,8 +180,10 @@ export default function OfferManagement() {
   }, []);
 
   useEffect(() => {
-    loadOffers();
-  }, [loadOffers]);
+    if (canManageOffers) {
+      loadOffers();
+    }
+  }, [canManageOffers, loadOffers]);
 
   useEffect(() => {
     if (offers.length > 0) {
@@ -252,10 +255,10 @@ export default function OfferManagement() {
     switch (action) {
       case 'approve':
         return offer.status === 'PENDING_APPROVAL' &&
-               ['ADMIN', 'HR_MANAGER', 'HIRING_MANAGER'].includes(userRole);
+               ['ADMIN', 'HR_MANAGER'].includes(userRole);
       case 'send':
         return offer.status === 'APPROVED' &&
-               ['ADMIN', 'HR_MANAGER', 'HIRING_MANAGER'].includes(userRole);
+               ['ADMIN', 'HR_MANAGER'].includes(userRole);
       case 'withdraw':
         return ['SENT', 'UNDER_NEGOTIATION'].includes(offer.status) &&
                ['ADMIN', 'HR_MANAGER', 'HIRING_MANAGER'].includes(userRole);
@@ -271,6 +274,17 @@ export default function OfferManagement() {
         return false;
     }
   };
+
+  if (!canManageOffers) {
+    return (
+      <div className="bg-white rounded-[10px] border border-gray-200 p-8 text-center">
+        <h3 className="text-lg font-semibold text-gray-900">Access denied</h3>
+        <p className="text-sm text-gray-500 mt-2">
+          Offer management is available to administrators and HR managers.
+        </p>
+      </div>
+    );
+  }
 
   const handleSendForSignature = async () => {
     if (!eSignOffer) return;

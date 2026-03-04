@@ -120,7 +120,7 @@ public class CognitoSecurityConfig {
                 // HR Manager endpoints
                 .requestMatchers(new AntPathRequestMatcher("/api/requisitions/approve/**")).hasAnyRole("ADMIN", "HR_MANAGER", "HIRING_MANAGER")
                 .requestMatchers(new AntPathRequestMatcher("/api/job-postings/**")).hasAnyRole("ADMIN", "HR_MANAGER", "RECRUITER", "HIRING_MANAGER")
-                .requestMatchers(new AntPathRequestMatcher("/api/analytics/**")).hasAnyRole("ADMIN", "HR_MANAGER", "RECRUITER", "EXECUTIVE")
+                .requestMatchers(new AntPathRequestMatcher("/api/analytics/**")).hasAnyRole("ADMIN", "HR_MANAGER", "RECRUITER", "HIRING_MANAGER", "EXECUTIVE")
 
                 // Interview endpoints
                 .requestMatchers(new AntPathRequestMatcher("/api/interviews/assigned/**")).hasAnyRole("ADMIN", "HR_MANAGER", "RECRUITER", "HIRING_MANAGER", "INTERVIEWER")
@@ -143,10 +143,10 @@ public class CognitoSecurityConfig {
                 .requestMatchers(new AntPathRequestMatcher("/api/integrations/**")).hasAnyRole("ADMIN", "HR_MANAGER")
 
                 // Offer endpoints
-                .requestMatchers(new AntPathRequestMatcher("/api/offers/**")).hasAnyRole("ADMIN", "HR_MANAGER")
+                .requestMatchers(new AntPathRequestMatcher("/api/offers/**")).hasAnyRole("ADMIN", "HR_MANAGER", "APPLICANT")
 
-                // Agency endpoints — temporarily permitAll to debug 403
-                .requestMatchers(new AntPathRequestMatcher("/api/agencies/**")).permitAll()
+                // Agency endpoints
+                .requestMatchers(new AntPathRequestMatcher("/api/agencies/**")).hasAnyRole("ADMIN", "HR_MANAGER", "RECRUITER")
 
                 // AI endpoints
                 .requestMatchers(new AntPathRequestMatcher("/api/ai/**")).hasAnyRole("ADMIN", "HR_MANAGER", "RECRUITER", "HIRING_MANAGER", "INTERVIEWER")

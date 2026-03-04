@@ -94,6 +94,7 @@ export default function IntegrationsPage() {
   const { toast } = useToast();
   const { user } = useAuth();
   const searchParams = useSearchParams();
+  const hasAccess = user?.role === 'ADMIN' || user?.role === 'HR_MANAGER';
 
   const loadLinkedInStatus = useCallback(async () => {
     try {
@@ -188,6 +189,21 @@ export default function IntegrationsPage() {
       </button>
     </div>
   );
+
+  if (!hasAccess) {
+    return (
+      <PageWrapper
+        title="Access Denied"
+        subtitle="You do not have permission to manage integrations"
+      >
+        <div className="bg-white rounded-sm shadow p-8 text-center border border-gray-200">
+          <p className="text-sm text-gray-600">
+            Integrations can be managed by administrators and HR managers.
+          </p>
+        </div>
+      </PageWrapper>
+    );
+  }
 
   return (
     <PageWrapper
