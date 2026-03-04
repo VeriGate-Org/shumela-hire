@@ -51,10 +51,6 @@ springdoc:
 storage:
   provider: ${STORAGE_PROVIDER:s3}
 
-ai:
-  enabled: true
-  provider: ${AI_PROVIDER:mock}
-
 logging:
   level:
     com.arthmatic.shumelahire: INFO
