@@ -647,13 +647,22 @@ export default function TalentPoolsPage() {
                 />
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">Experience Level</label>
-                  <input
-                    type="text"
+                  <select
                     value={poolForm.experienceLevel}
                     onChange={(e) => setPoolForm((f) => ({ ...f, experienceLevel: e.target.value }))}
                     className="w-full px-3 py-2 text-sm border border-gray-300 rounded-sm focus:outline-none focus:ring-2 focus:ring-gold-400"
-                    placeholder="Senior"
-                  />
+                  >
+                    <option value="">Select level</option>
+                    <option value="Intern">Intern</option>
+                    <option value="Junior">Junior</option>
+                    <option value="Mid-Level">Mid-Level</option>
+                    <option value="Senior">Senior</option>
+                    <option value="Lead">Lead</option>
+                    <option value="Principal">Principal</option>
+                    <option value="Manager">Manager</option>
+                    <option value="Director">Director</option>
+                    <option value="Executive">Executive</option>
+                  </select>
                 </div>
               </div>
               <SearchableDropdown
