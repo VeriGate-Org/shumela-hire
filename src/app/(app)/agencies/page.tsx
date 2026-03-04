@@ -3,7 +3,8 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import PageWrapper from '@/components/PageWrapper';
 import { useToast } from '@/components/Toast';
-import { apiFetch, apiFetchJson } from '@/lib/api-fetch';
+import { apiFetchJson } from '@/lib/api-fetch';
+import { useAuth } from '@/contexts/AuthContext';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -95,6 +96,8 @@ const EMPTY_SUBMISSION_FORM = {
 
 export default function AgenciesPage() {
   const { toast } = useToast();
+  const { user, isLoading } = useAuth();
+  const hasAccess = user?.role === 'ADMIN' || user?.role === 'HR_MANAGER' || user?.role === 'RECRUITER';
 
   // Agency list
   const [agencies, setAgencies] = useState<Agency[]>([]);
@@ -201,7 +204,7 @@ export default function AgenciesPage() {
         contactPhone: agencyForm.contactPhone || undefined,
         specializations: agencyForm.specializations || undefined,
       };
-      await apiFetch('/api/agencies/register', {
+      await apiFetchJson('/api/agencies/register', {
         method: 'POST',
         body: JSON.stringify(payload),
       });
@@ -270,7 +273,7 @@ export default function AgenciesPage() {
     }
     try {
       setActionLoading(true);
-      await apiFetch(`/api/agencies/${selectedAgency.id}/submissions`, {
+      await apiFetchJson(`/api/agencies/${selectedAgency.id}/submissions`, {
         method: 'POST',
         body: JSON.stringify({
           jobPosting: { id: Number(submissionForm.jobPostingId) },
@@ -296,7 +299,7 @@ export default function AgenciesPage() {
     if (!reviewingSubmission) return;
     try {
       setActionLoading(true);
-      await apiFetch(`/api/agencies/submissions/${reviewingSubmission.id}/review`, {
+      await apiFetchJson(`/api/agencies/submissions/${reviewingSubmission.id}/review`, {
         method: 'POST',
         body: JSON.stringify({ accept }),
       });
@@ -323,6 +326,28 @@ export default function AgenciesPage() {
   });
 
   // ─── Render ────────────────────────────────────────────────────────────────
+
+  if (isLoading) {
+    return (
+      <PageWrapper title="Recruitment Agencies" subtitle="Register and manage your recruitment agency partners">
+        <div className="flex justify-center py-12">
+          <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-gold-500" />
+        </div>
+      </PageWrapper>
+    );
+  }
+
+  if (!hasAccess) {
+    return (
+      <PageWrapper title="Access Denied" subtitle="You do not have permission to manage agencies.">
+        <div className="bg-white rounded-[10px] border border-gray-200 p-8 text-center">
+          <p className="text-gray-500 text-sm">
+            Agencies can be managed by administrators, HR managers, and recruiters.
+          </p>
+        </div>
+      </PageWrapper>
+    );
+  }
 
   return (
     <PageWrapper

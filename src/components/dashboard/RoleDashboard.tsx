@@ -10,6 +10,7 @@ import InterviewerDashboard from './role-dashboards/InterviewerDashboard';
 import EmployeeDashboard from './role-dashboards/EmployeeDashboard';
 import ApplicantDashboard from './role-dashboards/ApplicantDashboard';
 import ExecutiveDashboard from './role-dashboards/ExecutiveDashboard';
+import PlatformOwnerDashboard from './role-dashboards/PlatformOwnerDashboard';
 
 interface RoleDashboardProps {
   role: UserRole;
@@ -41,6 +42,8 @@ const RoleDashboard: React.FC<RoleDashboardProps> = ({
       return <ApplicantDashboard {...dashboardProps} />;
     case 'EXECUTIVE':
       return <ExecutiveDashboard {...dashboardProps} />;
+    case 'PLATFORM_OWNER':
+      return <PlatformOwnerDashboard {...dashboardProps} />;
     default:
       return <EmployeeDashboard {...dashboardProps} />;
   }

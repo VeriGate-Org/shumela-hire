@@ -2,12 +2,7 @@ import { UserRole } from '@/contexts/AuthContext';
 
 export const rolePermissions: Record<UserRole, string[]> = {
   PLATFORM_OWNER: [
-    'view_dashboard', 'manage_jobs', 'view_applications', 'view_applicants',
-    'manage_pipeline', 'view_interviews', 'manage_offers', 'view_internal_jobs',
-    'manage_applications', 'manage_workflow', 'view_salary_data',
-    'view_analytics', 'view_recruiter_analytics', 'view_reports',
-    'manage_permissions', 'view_audit_logs', 'manage_departments',
-    'view_training', 'manage_integrations',
+    'view_dashboard',
     'platform_admin', 'manage_features', 'manage_tenants',
   ],
   ADMIN: [
@@ -19,8 +14,7 @@ export const rolePermissions: Record<UserRole, string[]> = {
     'view_training', 'manage_integrations',
   ],
   EXECUTIVE: [
-    'view_dashboard', 'view_applications', 'view_internal_jobs',
-    'manage_workflow', 'manage_offers',
+    'view_dashboard', 'view_internal_jobs',
     'view_analytics', 'view_reports',
   ],
   HR_MANAGER: [
@@ -28,18 +22,17 @@ export const rolePermissions: Record<UserRole, string[]> = {
     'manage_pipeline', 'view_interviews', 'manage_offers', 'view_internal_jobs',
     'manage_applications', 'manage_workflow', 'view_salary_data',
     'view_analytics', 'view_recruiter_analytics', 'view_reports',
-    'view_training', 'manage_departments',
+    'view_training', 'manage_departments', 'manage_integrations',
   ],
   HIRING_MANAGER: [
     'view_dashboard', 'manage_jobs', 'view_applications',
-    'manage_pipeline', 'view_interviews', 'manage_offers', 'view_internal_jobs',
-    'manage_applications', 'manage_workflow',
-    'view_analytics', 'view_recruiter_analytics',
+    'manage_pipeline', 'view_interviews', 'view_internal_jobs',
+    'view_analytics',
   ],
   RECRUITER: [
     'view_dashboard', 'manage_jobs', 'view_applications', 'view_applicants',
-    'manage_pipeline', 'view_interviews', 'manage_offers', 'view_internal_jobs',
-    'manage_applications', 'manage_workflow', 'view_salary_data',
+    'manage_pipeline', 'view_interviews', 'view_internal_jobs',
+    'manage_applications', 'view_salary_data',
     'view_analytics', 'view_recruiter_analytics',
   ],
   INTERVIEWER: [
