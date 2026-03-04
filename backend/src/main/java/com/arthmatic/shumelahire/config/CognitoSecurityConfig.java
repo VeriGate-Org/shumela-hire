@@ -98,6 +98,9 @@ public class CognitoSecurityConfig {
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             )
             .authorizeHttpRequests(authz -> authz
+                // Error endpoint (forwarded by servlet container on unhandled exceptions)
+                .requestMatchers(new AntPathRequestMatcher("/error")).permitAll()
+
                 // Public endpoints
                 .requestMatchers(new AntPathRequestMatcher("/api/auth/me")).authenticated()
                 .requestMatchers(new AntPathRequestMatcher("/api/auth/**")).permitAll()
