@@ -177,6 +177,8 @@ export default function PipelinePage() {
     performedBy?: string;
   }>>([]);
   const [backendMetrics, setBackendMetrics] = useState<PipelineMetrics | null>(null);
+  const [payrollExporting, setPayrollExporting] = useState(false);
+  const [payrollExported, setPayrollExported] = useState<Set<string>>(new Set());
 
   // --- Status mapping covering all 12 ApplicationStatus enum values ---
   const statusMap: Record<string, Application['status']> = {
@@ -436,6 +438,18 @@ export default function PipelinePage() {
     } catch (error: any) {
       toast(`Failed to progress candidate: ${error.message || 'Unknown error'}`, 'error');
     }
+  };
+
+  // Simulate payroll export for demo
+  const handlePayrollExport = async (application: Application) => {
+    setPayrollExporting(true);
+    await new Promise(resolve => setTimeout(resolve, 2200));
+    setPayrollExporting(false);
+    setPayrollExported(prev => new Set(prev).add(application.id));
+    toast(
+      `${application.candidate.firstName} ${application.candidate.lastName} exported to payroll successfully`,
+      'success'
+    );
   };
 
   // P3: Persist bulk move via backend
@@ -1042,7 +1056,35 @@ export default function PipelinePage() {
                   )}
                 </div>
 
-                <div className="flex justify-end mt-6 pt-6 border-t">
+                <div className="flex items-center justify-between mt-6 pt-6 border-t">
+                  <div>
+                    {selectedApplication.backendStage === 'HIRED' && (
+                      payrollExported.has(selectedApplication.id) ? (
+                        <span className="inline-flex items-center gap-2 text-sm text-green-700 bg-green-50 border border-green-200 px-4 py-2 rounded-full">
+                          <CheckCircleIcon className="w-4 h-4" />
+                          Exported to Payroll
+                        </span>
+                      ) : (
+                        <button
+                          onClick={() => handlePayrollExport(selectedApplication)}
+                          disabled={payrollExporting}
+                          className="inline-flex items-center gap-2 px-4 py-2 bg-shumelahire-500 text-white rounded-full hover:bg-shumelahire-600 disabled:opacity-60 text-sm font-medium transition-colors"
+                        >
+                          {payrollExporting ? (
+                            <>
+                              <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                              Exporting...
+                            </>
+                          ) : (
+                            <>
+                              <ArrowRightIcon className="w-4 h-4" />
+                              Export to Payroll
+                            </>
+                          )}
+                        </button>
+                      )
+                    )}
+                  </div>
                   <button
                     onClick={() => setSelectedApplication(null)}
                     className="px-4 py-2 bg-gray-600 text-white rounded-full hover:bg-gray-700"
