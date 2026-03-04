@@ -153,7 +153,7 @@ export default function AiJobDescriptionWriter({ onApply, initialTitle, initialD
       </div>
 
       <button onClick={handleGenerate} disabled={loading || !form.title}
-        className="px-4 py-2 text-sm bg-gold-500 text-violet-950 rounded-sm hover:bg-gold-600 disabled:opacity-50 disabled:cursor-not-allowed">
+        className="px-4 py-2 text-sm bg-gold-500 text-gray-900 rounded-sm hover:bg-gold-600 disabled:opacity-50 disabled:cursor-not-allowed">
         {loading ? 'Generating...' : 'Generate Job Description'}
       </button>
 
@@ -243,7 +243,7 @@ export default function AiJobDescriptionWriter({ onApply, initialTitle, initialD
             </button>
             {onApply && (
               <button onClick={() => onApply(result)}
-                className="px-3 py-1.5 text-xs bg-gold-500 text-violet-950 rounded-sm hover:bg-gold-600">
+                className="px-3 py-1.5 text-xs bg-gold-500 text-gray-900 rounded-sm hover:bg-gold-600">
                 Apply to Job Posting
               </button>
             )}

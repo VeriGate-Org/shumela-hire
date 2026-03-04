@@ -314,7 +314,7 @@ export default async function JobDetailPage({ params }: { params: Promise<{ slug
               {isActive && (
                 <div className="mb-8 p-6 bg-gold-50 rounded-sm border border-violet-200">
                   <div className="text-center">
-                    <h2 className="text-xl font-semibold text-violet-900 mb-2">Ready to Apply?</h2>
+                    <h2 className="text-xl font-semibold text-violet-900 dark:text-gold-400 mb-2">Ready to Apply?</h2>
                     <p className="text-violet-700 mb-4">
                       Take the next step in your career journey with us.
                     </p>

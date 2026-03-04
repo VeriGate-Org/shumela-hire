@@ -771,7 +771,7 @@ export default function ApplicationManagementConsole() {
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                       <button
                         onClick={() => handleViewApplication(application.id)}
-                        className="text-gold-600 hover:text-violet-900 mr-3"
+                        className="text-gold-600 hover:text-violet-900 dark:text-gold-400 mr-3"
                       >
                         View
                       </button>

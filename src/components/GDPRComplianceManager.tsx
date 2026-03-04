@@ -257,7 +257,7 @@ const GDPRComplianceManager: React.FC = () => {
                   <p className="text-sm text-gray-600 mt-2">{item.description}</p>
                   <button
                     onClick={item.action}
-                    className="mt-3 inline-flex items-center px-3 py-2 border-2 border-gold-500 text-sm leading-4 font-medium rounded-full text-violet-900 bg-transparent hover:bg-gold-500 hover:text-violet-950 uppercase tracking-wider"
+                    className="mt-3 inline-flex items-center px-3 py-2 border-2 border-gold-500 text-sm leading-4 font-medium rounded-full text-violet-900 dark:text-gold-400 bg-transparent hover:bg-gold-500 hover:text-violet-950 uppercase tracking-wider"
                   >
                     Submit Request
                   </button>
@@ -311,7 +311,7 @@ const GDPRComplianceManager: React.FC = () => {
                           {new Date(request.date).toLocaleDateString()}
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                          <button className="text-gold-600 hover:text-violet-900 rounded-full">
+                          <button className="text-gold-600 hover:text-violet-900 dark:text-gold-400 rounded-full">
                             View Details
                           </button>
                         </td>

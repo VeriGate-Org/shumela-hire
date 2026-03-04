@@ -294,7 +294,7 @@ export default function AdminPermissionsPage() {
       </button>
       <button
         onClick={() => setShowInviteModal(true)}
-        className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-full shadow-sm text-violet-900 bg-transparent border-2 border-gold-500 hover:bg-gold-500 hover:text-violet-950 uppercase tracking-wider"
+        className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-full shadow-sm text-violet-900 dark:text-gold-400 bg-transparent border-2 border-gold-500 hover:bg-gold-500 hover:text-violet-950 uppercase tracking-wider"
       >
         <PlusIcon className="w-4 h-4 mr-2" />
         Invite User
@@ -682,7 +682,7 @@ export default function AdminPermissionsPage() {
                             <div className="flex gap-2">
                               <button
                                 onClick={() => { setEditingUserId(user.id); setEditingUserRole(user.roleId); }}
-                                className="text-gold-600 hover:text-violet-900 rounded-full"
+                                className="text-gold-600 hover:text-violet-900 dark:text-gold-400 rounded-full"
                               >
                                 <PencilIcon className="w-4 h-4" />
                               </button>

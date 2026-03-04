@@ -310,7 +310,7 @@ const ReportVisualization: React.FC = () => {
 
       {/* Help Section */}
       <div className="bg-gold-50 border border-violet-200 rounded-sm p-6">
-        <h3 className="text-lg font-medium text-violet-900 mb-2">📊 Visualization Guide</h3>
+        <h3 className="text-lg font-medium text-violet-900 dark:text-gold-400 mb-2">📊 Visualization Guide</h3>
         <div className="text-sm text-violet-800 space-y-1">
           <p>• <strong>KPI Widgets:</strong> Key performance indicators with progress bars and trend indicators</p>
           <p>• <strong>Charts:</strong> Visual representations of recruitment data including status distribution, timeline trends, and performance metrics</p>

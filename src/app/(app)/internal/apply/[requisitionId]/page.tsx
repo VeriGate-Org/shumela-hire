@@ -172,7 +172,7 @@ export default function InternalApplicationPage() {
 
           {/* Internal Application Benefits */}
           <div className="px-8 py-6 bg-gold-50 border-b border-gray-200">
-            <h2 className="text-lg font-semibold text-violet-900 mb-3">Internal Application Advantages</h2>
+            <h2 className="text-lg font-semibold text-violet-900 dark:text-gold-400 mb-3">Internal Application Advantages</h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div className="flex items-center">
                 <div className="w-8 h-8 bg-gold-500 rounded-full flex items-center justify-center mr-3">

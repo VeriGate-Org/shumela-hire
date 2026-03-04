@@ -239,7 +239,7 @@ const AdvancedReportBuilder: React.FC<AdvancedReportBuilderProps> = ({
 
       {config.fields.length > 0 && (
         <div className="bg-gold-50 p-3 rounded-sm">
-          <div className="text-sm font-medium text-violet-900 mb-2">Selected Fields ({config.fields.length}):</div>
+          <div className="text-sm font-medium text-violet-900 dark:text-gold-400 mb-2">Selected Fields ({config.fields.length}):</div>
           <div className="flex flex-wrap gap-2">
             {config.fields.map((field) => (
               <span

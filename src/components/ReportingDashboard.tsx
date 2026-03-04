@@ -557,7 +557,7 @@ const ReportingDashboard: React.FC = () => {
 
       {/* Help Section */}
       <div className="mt-8 bg-gold-50 border border-violet-200 rounded-sm p-6">
-        <h3 className="text-lg font-medium text-violet-900 mb-2">📖 Reporting Help</h3>
+        <h3 className="text-lg font-medium text-violet-900 dark:text-gold-400 mb-2">📖 Reporting Help</h3>
         <div className="text-sm text-violet-800 space-y-1">
           <p>• <strong>Quick Reports:</strong> Download pre-configured reports instantly</p>
           <p>• <strong>Custom Builder:</strong> Select specific fields and date ranges for tailored reports</p>

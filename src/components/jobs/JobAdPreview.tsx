@@ -114,7 +114,7 @@ const JobAdPreview: React.FC<JobAdPreviewProps> = ({
 
           {/* Apply button */}
           <div className="ml-6">
-            <button className="bg-transparent border-2 border-gold-500 text-violet-900 hover:bg-gold-500 hover:text-violet-950 uppercase tracking-wider px-6 py-3 rounded-full font-medium transition-colors">
+            <button className="bg-transparent border-2 border-gold-500 text-violet-900 dark:text-gold-400 hover:bg-gold-500 hover:text-violet-950 uppercase tracking-wider px-6 py-3 rounded-full font-medium transition-colors">
               Apply Now
             </button>
           </div>
@@ -178,7 +178,7 @@ const JobAdPreview: React.FC<JobAdPreviewProps> = ({
               <span>Send applications to: <strong>{data.contactEmail}</strong></span>
             </div>
             
-            <button className="bg-transparent border-2 border-gold-500 text-violet-900 hover:bg-gold-500 hover:text-violet-950 uppercase tracking-wider px-6 py-2 rounded-full font-medium transition-colors">
+            <button className="bg-transparent border-2 border-gold-500 text-violet-900 dark:text-gold-400 hover:bg-gold-500 hover:text-violet-950 uppercase tracking-wider px-6 py-2 rounded-full font-medium transition-colors">
               Apply Now
             </button>
           </div>
@@ -202,7 +202,7 @@ const JobAdPreview: React.FC<JobAdPreviewProps> = ({
       {/* Internal only: Analytics preview */}
       {isInternal && jobAd && (
         <div className="mt-6 p-4 bg-gold-50 rounded-sm">
-          <h4 className="text-sm font-semibold text-violet-900 mb-2">Performance Metrics</h4>
+          <h4 className="text-sm font-semibold text-violet-900 dark:text-gold-400 mb-2">Performance Metrics</h4>
           <div className="grid grid-cols-2 gap-4 text-sm">
             <div>
               <span className="text-violet-700">Views:</span>

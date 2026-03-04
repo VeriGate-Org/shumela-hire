@@ -342,7 +342,7 @@ export default function PipelineAnalytics({ analytics, onRefresh }: PipelineAnal
 
       {/* Recommendations */}
       <div className="bg-gold-50 border border-violet-200 rounded-sm p-4">
-        <h4 className="font-medium text-violet-900 mb-2">💡 Recommendations</h4>
+        <h4 className="font-medium text-violet-900 dark:text-gold-400 mb-2">💡 Recommendations</h4>
         <ul className="text-sm text-violet-800 space-y-1">
           {performance.worst.rate < 50 && (
             <li>• Review the {performance.worst.stage} stage process to improve success rates</li>
