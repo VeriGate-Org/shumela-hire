@@ -69,19 +69,19 @@ export default function AiJobDescriptionWriter({ onApply, initialTitle, initialD
     <div className="space-y-6">
       <div className="grid grid-cols-2 gap-4">
         <div>
-          <label className="block text-xs font-medium text-gray-600 uppercase tracking-wider mb-1">Title</label>
+          <label className="block text-xs font-medium text-gray-600 dark:text-gray-400 uppercase tracking-wider mb-1">Title</label>
           <input type="text" value={form.title} onChange={e => setForm(prev => ({ ...prev, title: e.target.value }))}
-            className="w-full text-sm p-2 border border-gray-300 rounded-sm" placeholder="e.g. Senior Software Engineer" />
+            className="w-full text-sm p-2 border border-gray-300 dark:border-gray-600 rounded-sm bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100" placeholder="e.g. Senior Software Engineer" />
         </div>
         <div>
-          <label className="block text-xs font-medium text-gray-600 uppercase tracking-wider mb-1">Department</label>
+          <label className="block text-xs font-medium text-gray-600 dark:text-gray-400 uppercase tracking-wider mb-1">Department</label>
           <input type="text" value={form.department} onChange={e => setForm(prev => ({ ...prev, department: e.target.value }))}
-            className="w-full text-sm p-2 border border-gray-300 rounded-sm" placeholder="e.g. Engineering" />
+            className="w-full text-sm p-2 border border-gray-300 dark:border-gray-600 rounded-sm bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100" placeholder="e.g. Engineering" />
         </div>
         <div>
-          <label className="block text-xs font-medium text-gray-600 uppercase tracking-wider mb-1">Level</label>
+          <label className="block text-xs font-medium text-gray-600 dark:text-gray-400 uppercase tracking-wider mb-1">Level</label>
           <select value={form.level} onChange={e => setForm(prev => ({ ...prev, level: e.target.value }))}
-            className="w-full text-sm p-2 border border-gray-300 rounded-sm">
+            className="w-full text-sm p-2 border border-gray-300 dark:border-gray-600 rounded-sm bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100">
             <option value="">Select level</option>
             <option value="Junior">Junior</option>
             <option value="Mid-Level">Mid-Level</option>
@@ -92,9 +92,9 @@ export default function AiJobDescriptionWriter({ onApply, initialTitle, initialD
           </select>
         </div>
         <div>
-          <label className="block text-xs font-medium text-gray-600 uppercase tracking-wider mb-1">Employment Type</label>
+          <label className="block text-xs font-medium text-gray-600 dark:text-gray-400 uppercase tracking-wider mb-1">Employment Type</label>
           <select value={form.employmentType} onChange={e => setForm(prev => ({ ...prev, employmentType: e.target.value }))}
-            className="w-full text-sm p-2 border border-gray-300 rounded-sm">
+            className="w-full text-sm p-2 border border-gray-300 dark:border-gray-600 rounded-sm bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100">
             <option value="Full-time">Full-time</option>
             <option value="Part-time">Part-time</option>
             <option value="Contract">Contract</option>
@@ -102,21 +102,21 @@ export default function AiJobDescriptionWriter({ onApply, initialTitle, initialD
           </select>
         </div>
         <div className="col-span-2">
-          <label className="block text-xs font-medium text-gray-600 uppercase tracking-wider mb-1">Location</label>
+          <label className="block text-xs font-medium text-gray-600 dark:text-gray-400 uppercase tracking-wider mb-1">Location</label>
           <input type="text" value={form.location} onChange={e => setForm(prev => ({ ...prev, location: e.target.value }))}
-            className="w-full text-sm p-2 border border-gray-300 rounded-sm" placeholder="e.g. Johannesburg, South Africa" />
+            className="w-full text-sm p-2 border border-gray-300 dark:border-gray-600 rounded-sm bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100" placeholder="e.g. Johannesburg, South Africa" />
         </div>
       </div>
 
       {/* Responsibilities */}
       <div>
-        <label className="block text-xs font-medium text-gray-600 uppercase tracking-wider mb-1">Key Responsibilities</label>
+        <label className="block text-xs font-medium text-gray-600 dark:text-gray-400 uppercase tracking-wider mb-1">Key Responsibilities</label>
         <div className="flex gap-2">
           <input type="text" value={responsibilityInput} onChange={e => setResponsibilityInput(e.target.value)}
             onKeyDown={e => e.key === 'Enter' && addItem('keyResponsibilities', responsibilityInput, setResponsibilityInput)}
-            className="flex-1 text-sm p-2 border border-gray-300 rounded-sm" placeholder="Add a responsibility" />
+            className="flex-1 text-sm p-2 border border-gray-300 dark:border-gray-600 rounded-sm bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100" placeholder="Add a responsibility" />
           <button onClick={() => addItem('keyResponsibilities', responsibilityInput, setResponsibilityInput)}
-            className="px-3 py-2 text-sm bg-gray-100 text-gray-700 rounded-sm hover:bg-gray-200">Add</button>
+            className="px-3 py-2 text-sm bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-sm hover:bg-gray-200 dark:hover:bg-gray-600">Add</button>
         </div>
         {form.keyResponsibilities.length > 0 && (
           <div className="flex flex-wrap gap-2 mt-2">
@@ -132,13 +132,13 @@ export default function AiJobDescriptionWriter({ onApply, initialTitle, initialD
 
       {/* Requirements */}
       <div>
-        <label className="block text-xs font-medium text-gray-600 uppercase tracking-wider mb-1">Key Requirements</label>
+        <label className="block text-xs font-medium text-gray-600 dark:text-gray-400 uppercase tracking-wider mb-1">Key Requirements</label>
         <div className="flex gap-2">
           <input type="text" value={requirementInput} onChange={e => setRequirementInput(e.target.value)}
             onKeyDown={e => e.key === 'Enter' && addItem('keyRequirements', requirementInput, setRequirementInput)}
-            className="flex-1 text-sm p-2 border border-gray-300 rounded-sm" placeholder="Add a requirement" />
+            className="flex-1 text-sm p-2 border border-gray-300 dark:border-gray-600 rounded-sm bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100" placeholder="Add a requirement" />
           <button onClick={() => addItem('keyRequirements', requirementInput, setRequirementInput)}
-            className="px-3 py-2 text-sm bg-gray-100 text-gray-700 rounded-sm hover:bg-gray-200">Add</button>
+            className="px-3 py-2 text-sm bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-sm hover:bg-gray-200 dark:hover:bg-gray-600">Add</button>
         </div>
         {form.keyRequirements.length > 0 && (
           <div className="flex flex-wrap gap-2 mt-2">
@@ -159,17 +159,17 @@ export default function AiJobDescriptionWriter({ onApply, initialTitle, initialD
 
       {/* Result Preview */}
       {result && (
-        <div className="border border-gray-200 rounded-sm p-4 space-y-4 bg-gray-50">
-          <h4 className="text-lg font-bold text-gray-900">{result.title}</h4>
-          {result.intro && <p className="text-sm text-gray-700 leading-relaxed">{result.intro}</p>}
+        <div className="border border-gray-200 dark:border-gray-700 rounded-sm p-4 space-y-4 bg-gray-50 dark:bg-gray-800/50">
+          <h4 className="text-lg font-bold text-gray-900 dark:text-gray-100">{result.title}</h4>
+          {result.intro && <p className="text-sm text-gray-700 dark:text-gray-300 leading-relaxed">{result.intro}</p>}
 
           {result.responsibilities && result.responsibilities.length > 0 && (
             <div>
-              <h5 className="text-xs font-semibold text-gray-600 uppercase tracking-wider mb-2">Responsibilities</h5>
+              <h5 className="text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wider mb-2">Responsibilities</h5>
               <ul className="space-y-1">
                 {result.responsibilities.map((r, i) => (
-                  <li key={i} className="text-sm text-gray-700 flex items-start gap-2">
-                    <span className="text-violet-500 mt-1">&#8226;</span>{r}
+                  <li key={i} className="text-sm text-gray-700 dark:text-gray-300 flex items-start gap-2">
+                    <span className="text-violet-500 dark:text-violet-400 mt-1">&#8226;</span>{r}
                   </li>
                 ))}
               </ul>
@@ -178,11 +178,11 @@ export default function AiJobDescriptionWriter({ onApply, initialTitle, initialD
 
           {result.requirements && result.requirements.length > 0 && (
             <div>
-              <h5 className="text-xs font-semibold text-gray-600 uppercase tracking-wider mb-2">Requirements</h5>
+              <h5 className="text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wider mb-2">Requirements</h5>
               <ul className="space-y-1">
                 {result.requirements.map((r, i) => (
-                  <li key={i} className="text-sm text-gray-700 flex items-start gap-2">
-                    <span className="text-violet-500 mt-1">&#8226;</span>{r}
+                  <li key={i} className="text-sm text-gray-700 dark:text-gray-300 flex items-start gap-2">
+                    <span className="text-violet-500 dark:text-violet-400 mt-1">&#8226;</span>{r}
                   </li>
                 ))}
               </ul>
@@ -191,11 +191,11 @@ export default function AiJobDescriptionWriter({ onApply, initialTitle, initialD
 
           {result.benefits && result.benefits.length > 0 && (
             <div>
-              <h5 className="text-xs font-semibold text-gray-600 uppercase tracking-wider mb-2">Benefits</h5>
+              <h5 className="text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wider mb-2">Benefits</h5>
               <ul className="space-y-1">
                 {result.benefits.map((b, i) => (
-                  <li key={i} className="text-sm text-gray-700 flex items-start gap-2">
-                    <span className="text-violet-500 mt-1">&#8226;</span>{b}
+                  <li key={i} className="text-sm text-gray-700 dark:text-gray-300 flex items-start gap-2">
+                    <span className="text-violet-500 dark:text-violet-400 mt-1">&#8226;</span>{b}
                   </li>
                 ))}
               </ul>
@@ -203,27 +203,27 @@ export default function AiJobDescriptionWriter({ onApply, initialTitle, initialD
           )}
 
           {result.biasWarnings && result.biasWarnings.length > 0 && (
-            <div className="bg-yellow-50 border border-yellow-200 rounded-sm p-3">
-              <h5 className="text-xs font-semibold text-yellow-800 uppercase tracking-wider mb-1">Bias Warnings</h5>
+            <div className="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-700/50 rounded-sm p-3">
+              <h5 className="text-xs font-semibold text-yellow-800 dark:text-yellow-300 uppercase tracking-wider mb-1">Bias Warnings</h5>
               {result.biasWarnings.map((w, i) => (
-                <p key={i} className="text-sm text-yellow-700">{w}</p>
+                <p key={i} className="text-sm text-yellow-700 dark:text-yellow-400">{w}</p>
               ))}
             </div>
           )}
 
           {biasResult && (
-            <div className={`border rounded-sm p-3 ${biasResult.biasWarnings && biasResult.biasWarnings.length > 0 ? 'bg-yellow-50 border-yellow-200' : 'bg-green-50 border-green-200'}`}>
-              <h5 className="text-xs font-semibold uppercase tracking-wider mb-1 text-gray-700">Bias Analysis</h5>
-              <p className="text-sm text-gray-700">{biasResult.overallAssessment}</p>
+            <div className={`border rounded-sm p-3 ${biasResult.biasWarnings && biasResult.biasWarnings.length > 0 ? 'bg-yellow-50 dark:bg-yellow-900/20 border-yellow-200 dark:border-yellow-700/50' : 'bg-green-50 dark:bg-green-900/20 border-green-200 dark:border-green-700/50'}`}>
+              <h5 className="text-xs font-semibold uppercase tracking-wider mb-1 text-gray-700 dark:text-gray-300">Bias Analysis</h5>
+              <p className="text-sm text-gray-700 dark:text-gray-300">{biasResult.overallAssessment}</p>
               {biasResult.biasWarnings && biasResult.biasWarnings.map((w, i) => (
-                <p key={i} className="text-sm text-yellow-700 mt-1">{w}</p>
+                <p key={i} className="text-sm text-yellow-700 dark:text-yellow-400 mt-1">{w}</p>
               ))}
             </div>
           )}
 
           <div className="flex gap-2 pt-2">
             <button onClick={handleBiasCheck} disabled={biasLoading}
-              className="px-3 py-1.5 text-xs border border-gray-300 rounded-sm text-gray-700 hover:bg-gray-100 disabled:opacity-50">
+              className="px-3 py-1.5 text-xs border border-gray-300 dark:border-gray-600 rounded-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 disabled:opacity-50">
               {biasLoading ? 'Checking...' : 'Check for Bias'}
             </button>
             <button onClick={() => {
@@ -238,7 +238,7 @@ export default function AiJobDescriptionWriter({ onApply, initialTitle, initialD
               ].filter(Boolean).join('\n');
               navigator.clipboard.writeText(text);
             }}
-              className="px-3 py-1.5 text-xs border border-gray-300 rounded-sm text-gray-700 hover:bg-gray-100">
+              className="px-3 py-1.5 text-xs border border-gray-300 dark:border-gray-600 rounded-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700">
               Copy Text
             </button>
             {onApply && (
