@@ -41,6 +41,10 @@ cognito:
     user-pool-id: ${COGNITO_USER_POOL_ID}
     region: af-south-1
 
+ai:
+  enabled: true
+  provider: ${AI_PROVIDER:mock}
+
 logging:
   level:
     com.arthmatic.shumelahire: INFO
