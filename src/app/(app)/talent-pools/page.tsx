@@ -1,10 +1,14 @@
 'use client';
 
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import PageWrapper from '@/components/PageWrapper';
 import { useToast } from '@/components/Toast';
 import { apiFetchJson } from '@/lib/api-fetch';
 import { useAuth } from '@/contexts/AuthContext';
+import SearchableDropdown from '@/components/SearchableDropdown';
+import type { DropdownOption } from '@/components/SearchableDropdown';
+import { useDepartments } from '@/hooks/useDepartments';
+import { useSkills } from '@/hooks/useSkills';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -85,6 +89,20 @@ export default function TalentPoolsPage() {
   const { toast } = useToast();
   const { user, isLoading } = useAuth();
   const hasAccess = user?.role === 'ADMIN' || user?.role === 'HR_MANAGER' || user?.role === 'RECRUITER';
+
+  // Department & Skills data
+  const { departments, loading: deptLoading } = useDepartments();
+  const { skills, loading: skillsLoading } = useSkills();
+
+  const departmentOptions: DropdownOption[] = useMemo(
+    () => departments.map((d) => ({ value: d, label: d })),
+    [departments],
+  );
+
+  const skillsOptions: DropdownOption[] = useMemo(
+    () => skills.map((s) => ({ value: s, label: s })),
+    [skills],
+  );
 
   // Pool list state
   const [pools, setPools] = useState<TalentPool[]>([]);
@@ -617,16 +635,16 @@ export default function TalentPoolsPage() {
                 />
               </div>
               <div className="grid grid-cols-2 gap-3">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Department</label>
-                  <input
-                    type="text"
-                    value={poolForm.department}
-                    onChange={(e) => setPoolForm((f) => ({ ...f, department: e.target.value }))}
-                    className="w-full px-3 py-2 text-sm border border-gray-300 rounded-sm focus:outline-none focus:ring-2 focus:ring-gold-400"
-                    placeholder="Engineering"
-                  />
-                </div>
+                <SearchableDropdown
+                  label="Department"
+                  options={departmentOptions}
+                  value={poolForm.department ? [poolForm.department] : []}
+                  onChange={(vals) => setPoolForm((f) => ({ ...f, department: vals[0] ?? '' }))}
+                  multi={false}
+                  loading={deptLoading}
+                  placeholder="Select department"
+                  searchPlaceholder="Search departments..."
+                />
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">Experience Level</label>
                   <input
@@ -638,16 +656,16 @@ export default function TalentPoolsPage() {
                   />
                 </div>
               </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Skills Criteria</label>
-                <textarea
-                  value={poolForm.skillsCriteria}
-                  onChange={(e) => setPoolForm((f) => ({ ...f, skillsCriteria: e.target.value }))}
-                  className="w-full px-3 py-2 text-sm border border-gray-300 rounded-sm focus:outline-none focus:ring-2 focus:ring-gold-400"
-                  rows={2}
-                  placeholder="Required skills or criteria..."
-                />
-              </div>
+              <SearchableDropdown
+                label="Skills Criteria"
+                options={skillsOptions}
+                value={poolForm.skillsCriteria ? poolForm.skillsCriteria.split(',').map((s) => s.trim()).filter(Boolean) : []}
+                onChange={(vals) => setPoolForm((f) => ({ ...f, skillsCriteria: vals.join(', ') }))}
+                multi={true}
+                loading={skillsLoading}
+                placeholder="Select skills..."
+                searchPlaceholder="Search skills..."
+              />
               <div className="flex gap-6">
                 <label className="flex items-center gap-2 text-sm text-gray-700 cursor-pointer">
                   <input
