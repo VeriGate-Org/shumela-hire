@@ -59,17 +59,22 @@ public class TalentPoolService {
     }
 
     @Transactional
-    public TalentPoolEntry addEntry(Long poolId, TalentPoolEntry entry) {
+    public TalentPoolEntry addEntry(Long poolId, Long applicantId, String sourceType, String notes) {
+        if (applicantId == null) {
+            throw new IllegalArgumentException("applicantId is required");
+        }
+
         TalentPool pool = getPool(poolId);
-        Applicant applicant = applicantRepository.findById(entry.getApplicant().getId())
-            .orElseThrow(() -> new RuntimeException("Applicant not found"));
+        Applicant applicant = applicantRepository.findById(applicantId)
+            .orElseThrow(() -> new RuntimeException("Applicant not found: " + applicantId));
+
+        TalentPoolEntry entry = new TalentPoolEntry();
 
         entry.setTalentPool(pool);
         entry.setApplicant(applicant);
         entry.setAddedAt(LocalDateTime.now());
-        if (entry.getSourceType() == null) {
-            entry.setSourceType("MANUAL");
-        }
+        entry.setSourceType(sourceType != null ? sourceType : "MANUAL");
+        entry.setNotes(notes);
 
         TalentPoolEntry saved = talentPoolEntryRepository.save(entry);
         logger.info("Added applicant {} to talent pool {}", applicant.getId(), pool.getPoolName());

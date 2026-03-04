@@ -249,8 +249,9 @@ export default function TalentPoolsPage() {
       setModal(null);
       setEntryForm({ applicantId: '', sourceType: 'MANUAL', notes: '' });
       await loadPoolDetail(selectedPool);
-    } catch {
-      toast('Failed to add entry', 'error');
+    } catch (error) {
+      const message = error instanceof Error ? error.message : 'Unknown error';
+      toast(`Failed to add entry (${message})`, 'error');
     } finally {
       setActionLoading(false);
     }
