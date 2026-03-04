@@ -116,22 +116,19 @@ public interface NotificationRepository extends JpaRepository<Notification, Long
            "AND n.recipientId = :recipientId ORDER BY n.createdAt DESC")
     List<Notification> findBatchDigestsByRecipient(@Param("recipientId") Long recipientId);
 
-    // Paginated query by recipient
-    Page<Notification> findByRecipientIdOrderByCreatedAtDesc(Long recipientId, Pageable pageable);
-
-    // Search and filtering — uses CAST to avoid PostgreSQL parameter type inference issues with NULL enums
+    // Search and filtering
     @Query("SELECT n FROM Notification n WHERE n.recipientId = :recipientId " +
-           "AND (:typeStr IS NULL OR CAST(n.type AS string) = :typeStr) " +
-           "AND (:channelStr IS NULL OR CAST(n.channel AS string) = :channelStr) " +
-           "AND (:priorityStr IS NULL OR CAST(n.priority AS string) = :priorityStr) " +
+           "AND (:type IS NULL OR n.type = :type) " +
+           "AND (:channel IS NULL OR n.channel = :channel) " +
+           "AND (:priority IS NULL OR n.priority = :priority) " +
            "AND (:isRead IS NULL OR n.isRead = :isRead) " +
            "AND (:startDate IS NULL OR n.createdAt >= :startDate) " +
            "AND (:endDate IS NULL OR n.createdAt <= :endDate) " +
            "ORDER BY n.createdAt DESC")
     Page<Notification> searchNotifications(@Param("recipientId") Long recipientId,
-                                          @Param("typeStr") String typeStr,
-                                          @Param("channelStr") String channelStr,
-                                          @Param("priorityStr") String priorityStr,
+                                          @Param("type") NotificationType type,
+                                          @Param("channel") NotificationChannel channel,
+                                          @Param("priority") NotificationPriority priority,
                                           @Param("isRead") Boolean isRead,
                                           @Param("startDate") LocalDateTime startDate,
                                           @Param("endDate") LocalDateTime endDate,

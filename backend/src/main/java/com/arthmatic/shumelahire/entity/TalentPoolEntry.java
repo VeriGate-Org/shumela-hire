@@ -1,6 +1,5 @@
 package com.arthmatic.shumelahire.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
@@ -8,7 +7,6 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "talent_pool_entries",
     uniqueConstraints = @UniqueConstraint(columnNames = {"talent_pool_id", "applicant_id"}))
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class TalentPoolEntry extends TenantAwareEntity {
 
     @Id
@@ -17,17 +15,14 @@ public class TalentPoolEntry extends TenantAwareEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "talent_pool_id", nullable = false)
-    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private TalentPool talentPool;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "applicant_id", nullable = false)
-    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private Applicant applicant;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "source_application_id")
-    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private Application sourceApplication;
 
     @Column(name = "source_type")
