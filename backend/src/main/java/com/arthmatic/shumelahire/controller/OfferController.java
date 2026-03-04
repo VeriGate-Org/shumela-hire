@@ -1,6 +1,7 @@
 package com.arthmatic.shumelahire.controller;
 
 import com.arthmatic.shumelahire.entity.*;
+import com.arthmatic.shumelahire.repository.ApplicantRepository;
 import com.arthmatic.shumelahire.repository.UserRepository;
 import com.arthmatic.shumelahire.service.OfferService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,11 +13,15 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.*;
 
 import jakarta.validation.Valid;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -25,8 +30,9 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/offers")
-@PreAuthorize("hasAnyRole('ADMIN', 'HR_MANAGER')")
 public class OfferController {
+
+    private static final Logger log = LoggerFactory.getLogger(OfferController.class);
 
     @Autowired
     private OfferService offerService;
@@ -34,9 +40,13 @@ public class OfferController {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private ApplicantRepository applicantRepository;
+
     // Create new offer
     @PostMapping("/applications/{applicationId}")
-    public ResponseEntity<Offer> createOffer(
+    @PreAuthorize("hasAnyRole('ADMIN', 'HR_MANAGER')")
+    public ResponseEntity<?> createOffer(
             @PathVariable Long applicationId,
             @Valid @RequestBody Offer offer,
             Authentication authentication) {
@@ -45,13 +55,18 @@ public class OfferController {
             Offer createdOffer = offerService.createOffer(applicationId, offer, userId);
             return ResponseEntity.status(HttpStatus.CREATED).body(createdOffer);
         } catch (RuntimeException e) {
-            return ResponseEntity.badRequest().build();
+            log.error("Failed to create offer for application {}: {}", applicationId, e.getMessage(), e);
+            return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
         }
     }
 
     // Get offer by ID
     @GetMapping("/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN', 'HR_MANAGER', 'APPLICANT')")
     public ResponseEntity<Offer> getOffer(@PathVariable Long id) {
+        if (isApplicant(authentication())) {
+            assertApplicantCanAccessOffer(authentication(), id);
+        }
         Optional<Offer> offer = offerService.getOfferById(id);
         return offer.map(ResponseEntity::ok)
                    .orElse(ResponseEntity.notFound().build());
@@ -59,6 +74,7 @@ public class OfferController {
 
     // Get offers for application
     @GetMapping("/applications/{applicationId}")
+    @PreAuthorize("hasAnyRole('ADMIN', 'HR_MANAGER')")
     public ResponseEntity<List<Offer>> getOffersByApplication(@PathVariable Long applicationId) {
         List<Offer> offers = offerService.getOffersByApplication(applicationId);
         return ResponseEntity.ok(offers);
@@ -66,14 +82,22 @@ public class OfferController {
 
     // Get offers for applicant (O6: single call, eliminates N+1)
     @GetMapping("/applicant/{applicantId}")
+    @PreAuthorize("hasAnyRole('ADMIN', 'HR_MANAGER', 'APPLICANT')")
     public ResponseEntity<List<Offer>> getOffersByApplicant(@PathVariable Long applicantId) {
+        if (isApplicant(authentication())) {
+            Long currentApplicantId = resolveApplicantId(authentication());
+            if (!currentApplicantId.equals(applicantId)) {
+                throw new AccessDeniedException("Applicants can only view their own offers");
+            }
+        }
         List<Offer> offers = offerService.getOffersByApplicant(applicantId);
         return ResponseEntity.ok(offers);
     }
 
     // Update offer
     @PutMapping("/{id}")
-    public ResponseEntity<Offer> updateOffer(
+    @PreAuthorize("hasAnyRole('ADMIN', 'HR_MANAGER')")
+    public ResponseEntity<?> updateOffer(
             @PathVariable Long id,
             @Valid @RequestBody Offer offer,
             Authentication authentication) {
@@ -82,13 +106,15 @@ public class OfferController {
             Offer updatedOffer = offerService.updateOffer(id, offer, userId);
             return ResponseEntity.ok(updatedOffer);
         } catch (RuntimeException e) {
-            return ResponseEntity.badRequest().build();
+            log.error("Failed to update offer {}: {}", id, e.getMessage(), e);
+            return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
         }
     }
 
     // Submit for approval
     @PostMapping("/{id}/submit-for-approval")
-    public ResponseEntity<Offer> submitForApproval(
+    @PreAuthorize("hasAnyRole('ADMIN', 'HR_MANAGER')")
+    public ResponseEntity<?> submitForApproval(
             @PathVariable Long id,
             Authentication authentication) {
         try {
@@ -96,13 +122,15 @@ public class OfferController {
             Offer offer = offerService.submitForApproval(id, userId);
             return ResponseEntity.ok(offer);
         } catch (RuntimeException e) {
-            return ResponseEntity.badRequest().build();
+            log.error("Failed to submit offer {} for approval: {}", id, e.getMessage(), e);
+            return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
         }
     }
 
     // Approve offer
     @PostMapping("/{id}/approve")
-    public ResponseEntity<Offer> approveOffer(
+    @PreAuthorize("hasAnyRole('ADMIN', 'HR_MANAGER')")
+    public ResponseEntity<?> approveOffer(
             @PathVariable Long id,
             @RequestBody Map<String, String> request,
             Authentication authentication) {
@@ -112,13 +140,15 @@ public class OfferController {
             Offer offer = offerService.approveOffer(id, approvalNotes, userId);
             return ResponseEntity.ok(offer);
         } catch (RuntimeException e) {
-            return ResponseEntity.badRequest().build();
+            log.error("Failed to approve offer {}: {}", id, e.getMessage(), e);
+            return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
         }
     }
 
     // Reject offer
     @PostMapping("/{id}/reject")
-    public ResponseEntity<Offer> rejectOffer(
+    @PreAuthorize("hasAnyRole('ADMIN', 'HR_MANAGER')")
+    public ResponseEntity<?> rejectOffer(
             @PathVariable Long id,
             @RequestBody Map<String, String> request,
             Authentication authentication) {
@@ -128,13 +158,15 @@ public class OfferController {
             Offer offer = offerService.rejectOffer(id, rejectionReason, userId);
             return ResponseEntity.ok(offer);
         } catch (RuntimeException e) {
-            return ResponseEntity.badRequest().build();
+            log.error("Failed to reject offer {}: {}", id, e.getMessage(), e);
+            return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
         }
     }
 
     // Send offer
     @PostMapping("/{id}/send")
-    public ResponseEntity<Offer> sendOffer(
+    @PreAuthorize("hasAnyRole('ADMIN', 'HR_MANAGER')")
+    public ResponseEntity<?> sendOffer(
             @PathVariable Long id,
             Authentication authentication) {
         try {
@@ -142,13 +174,15 @@ public class OfferController {
             Offer offer = offerService.sendOffer(id, userId);
             return ResponseEntity.ok(offer);
         } catch (RuntimeException e) {
-            return ResponseEntity.badRequest().build();
+            log.error("Failed to send offer {}: {}", id, e.getMessage(), e);
+            return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
         }
     }
 
     // Withdraw offer
     @PostMapping("/{id}/withdraw")
-    public ResponseEntity<Offer> withdrawOffer(
+    @PreAuthorize("hasAnyRole('ADMIN', 'HR_MANAGER')")
+    public ResponseEntity<?> withdrawOffer(
             @PathVariable Long id,
             @RequestBody Map<String, String> request,
             Authentication authentication) {
@@ -158,70 +192,92 @@ public class OfferController {
             Offer offer = offerService.withdrawOffer(id, withdrawalReason, userId);
             return ResponseEntity.ok(offer);
         } catch (RuntimeException e) {
-            return ResponseEntity.badRequest().build();
+            log.error("Failed to withdraw offer {}: {}", id, e.getMessage(), e);
+            return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
         }
     }
 
     // Record candidate viewed
     @PostMapping("/{id}/viewed")
-    public ResponseEntity<Offer> recordCandidateViewed(@PathVariable Long id) {
+    @PreAuthorize("hasAnyRole('ADMIN', 'HR_MANAGER', 'APPLICANT')")
+    public ResponseEntity<?> recordCandidateViewed(@PathVariable Long id) {
+        if (isApplicant(authentication())) {
+            assertApplicantCanAccessOffer(authentication(), id);
+        }
         try {
             Offer offer = offerService.recordCandidateViewed(id);
             return ResponseEntity.ok(offer);
         } catch (RuntimeException e) {
-            return ResponseEntity.badRequest().build();
+            log.error("Failed to record offer {} viewed: {}", id, e.getMessage(), e);
+            return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
         }
     }
 
     // Accept offer
     @PostMapping("/{id}/accept")
-    public ResponseEntity<Offer> acceptOffer(
+    @PreAuthorize("hasAnyRole('ADMIN', 'HR_MANAGER', 'APPLICANT')")
+    public ResponseEntity<?> acceptOffer(
             @PathVariable Long id,
             Authentication authentication) {
+        if (isApplicant(authentication)) {
+            assertApplicantCanAccessOffer(authentication, id);
+        }
         try {
             Long userId = resolveUserId(authentication);
             Offer offer = offerService.acceptOffer(id, userId);
             return ResponseEntity.ok(offer);
         } catch (RuntimeException e) {
-            return ResponseEntity.badRequest().build();
+            log.error("Failed to accept offer {}: {}", id, e.getMessage(), e);
+            return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
         }
     }
 
     // Decline offer
     @PostMapping("/{id}/decline")
-    public ResponseEntity<Offer> declineOffer(
+    @PreAuthorize("hasAnyRole('ADMIN', 'HR_MANAGER', 'APPLICANT')")
+    public ResponseEntity<?> declineOffer(
             @PathVariable Long id,
             @RequestBody Map<String, String> request,
             Authentication authentication) {
+        if (isApplicant(authentication)) {
+            assertApplicantCanAccessOffer(authentication, id);
+        }
         try {
             Long userId = resolveUserId(authentication);
             String declineReason = request.get("declineReason");
             Offer offer = offerService.declineOffer(id, declineReason, userId);
             return ResponseEntity.ok(offer);
         } catch (RuntimeException e) {
-            return ResponseEntity.badRequest().build();
+            log.error("Failed to decline offer {}: {}", id, e.getMessage(), e);
+            return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
         }
     }
 
     // Start negotiation
     @PostMapping("/{id}/negotiate")
-    public ResponseEntity<Offer> startNegotiation(
+    @PreAuthorize("hasAnyRole('ADMIN', 'HR_MANAGER', 'APPLICANT')")
+    public ResponseEntity<?> startNegotiation(
             @PathVariable Long id,
             @RequestBody Map<String, String> request,
             Authentication authentication) {
+        if (isApplicant(authentication)) {
+            assertApplicantCanAccessOffer(authentication, id);
+        }
         try {
             Long userId = resolveUserId(authentication);
             String candidateCounterOffer = request.get("candidateCounterOffer");
             Offer offer = offerService.startNegotiation(id, candidateCounterOffer, userId);
             return ResponseEntity.ok(offer);
         } catch (RuntimeException e) {
-            return ResponseEntity.badRequest().build();
+            log.error("Failed to start negotiation for offer {}: {}", id, e.getMessage(), e);
+            return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
         }
     }
 
     // Respond to negotiation
     @PostMapping("/{id}/negotiate/respond")
-    public ResponseEntity<Offer> respondToNegotiation(
+    @PreAuthorize("hasAnyRole('ADMIN', 'HR_MANAGER')")
+    public ResponseEntity<?> respondToNegotiation(
             @PathVariable Long id,
             @RequestBody Map<String, Object> request,
             Authentication authentication) {
@@ -234,13 +290,15 @@ public class OfferController {
             Offer offer = offerService.respondToNegotiation(id, companyResponse, status, userId);
             return ResponseEntity.ok(offer);
         } catch (RuntimeException e) {
-            return ResponseEntity.badRequest().build();
+            log.error("Failed to respond to negotiation for offer {}: {}", id, e.getMessage(), e);
+            return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
         }
     }
 
     // Escalate negotiation
     @PostMapping("/{id}/negotiate/escalate")
-    public ResponseEntity<Offer> escalateNegotiation(
+    @PreAuthorize("hasAnyRole('ADMIN', 'HR_MANAGER')")
+    public ResponseEntity<?> escalateNegotiation(
             @PathVariable Long id,
             @RequestBody Map<String, String> request,
             Authentication authentication) {
@@ -250,13 +308,15 @@ public class OfferController {
             Offer offer = offerService.escalateNegotiation(id, escalationReason, userId);
             return ResponseEntity.ok(offer);
         } catch (RuntimeException e) {
-            return ResponseEntity.badRequest().build();
+            log.error("Failed to escalate negotiation for offer {}: {}", id, e.getMessage(), e);
+            return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
         }
     }
 
     // Create new version
     @PostMapping("/{id}/new-version")
-    public ResponseEntity<Offer> createNewVersion(
+    @PreAuthorize("hasAnyRole('ADMIN', 'HR_MANAGER')")
+    public ResponseEntity<?> createNewVersion(
             @PathVariable Long id,
             @Valid @RequestBody Offer updatedOfferData,
             Authentication authentication) {
@@ -265,12 +325,14 @@ public class OfferController {
             Offer newVersion = offerService.createNewVersion(id, updatedOfferData, userId);
             return ResponseEntity.status(HttpStatus.CREATED).body(newVersion);
         } catch (RuntimeException e) {
-            return ResponseEntity.badRequest().build();
+            log.error("Failed to create new version for offer {}: {}", id, e.getMessage(), e);
+            return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
         }
     }
 
     // Search offers with pagination
     @GetMapping("/search")
+    @PreAuthorize("hasAnyRole('ADMIN', 'HR_MANAGER')")
     public ResponseEntity<Page<Offer>> searchOffers(
             @RequestParam(required = false) OfferStatus status,
             @RequestParam(required = false) OfferType offerType,
@@ -302,6 +364,7 @@ public class OfferController {
 
     // Get offer analytics
     @GetMapping("/analytics")
+    @PreAuthorize("hasAnyRole('ADMIN', 'HR_MANAGER')")
     public ResponseEntity<Map<String, Object>> getOfferAnalytics(
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime startDate,
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime endDate) {
@@ -312,6 +375,7 @@ public class OfferController {
 
     // Get dashboard counts
     @GetMapping("/dashboard")
+    @PreAuthorize("hasAnyRole('ADMIN', 'HR_MANAGER')")
     public ResponseEntity<Map<String, Long>> getDashboardCounts() {
         Map<String, Long> counts = offerService.getDashboardCounts();
         return ResponseEntity.ok(counts);
@@ -319,6 +383,7 @@ public class OfferController {
 
     // Get expired offers
     @GetMapping("/expired")
+    @PreAuthorize("hasAnyRole('ADMIN', 'HR_MANAGER')")
     public ResponseEntity<List<Offer>> getExpiredOffers() {
         List<Offer> expiredOffers = offerService.getExpiredOffers();
         return ResponseEntity.ok(expiredOffers);
@@ -326,6 +391,7 @@ public class OfferController {
 
     // Get offers near expiry
     @GetMapping("/near-expiry")
+    @PreAuthorize("hasAnyRole('ADMIN', 'HR_MANAGER')")
     public ResponseEntity<List<Offer>> getOffersNearExpiry(
             @RequestParam(defaultValue = "24") int hoursAhead) {
         List<Offer> nearExpiryOffers = offerService.getOffersNearExpiry(hoursAhead);
@@ -334,6 +400,7 @@ public class OfferController {
 
     // Process expired offers (admin/system endpoint)
     @PostMapping("/process-expired")
+    @PreAuthorize("hasAnyRole('ADMIN', 'HR_MANAGER')")
     public ResponseEntity<String> processExpiredOffers() {
         try {
             offerService.processExpiredOffers();
@@ -346,23 +413,32 @@ public class OfferController {
 
     // Get offer status options
     @GetMapping("/status-options")
+    @PreAuthorize("hasAnyRole('ADMIN', 'HR_MANAGER', 'APPLICANT')")
     public ResponseEntity<OfferStatus[]> getOfferStatusOptions() {
         return ResponseEntity.ok(OfferStatus.values());
     }
 
     // Get offer type options
     @GetMapping("/type-options")
+    @PreAuthorize("hasAnyRole('ADMIN', 'HR_MANAGER', 'APPLICANT')")
     public ResponseEntity<OfferType[]> getOfferTypeOptions() {
         return ResponseEntity.ok(OfferType.values());
     }
 
     // Get negotiation status options
     @GetMapping("/negotiation-status-options")
+    @PreAuthorize("hasAnyRole('ADMIN', 'HR_MANAGER', 'APPLICANT')")
     public ResponseEntity<NegotiationStatus[]> getNegotiationStatusOptions() {
         return ResponseEntity.ok(NegotiationStatus.values());
     }
 
     // Exception handler for validation errors
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity<Map<String, String>> handleAccessDenied(AccessDeniedException e) {
+        return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                .body(Map.of("error", e.getMessage()));
+    }
+
     @ExceptionHandler(Exception.class)
     public ResponseEntity<Map<String, String>> handleException(Exception e) {
         return ResponseEntity.badRequest()
@@ -381,5 +457,55 @@ public class OfferController {
             return user.getId();
         }
         throw new RuntimeException("Unable to resolve user from authentication");
+    }
+
+    private boolean isApplicant(Authentication authentication) {
+        if (authentication == null) return false;
+        for (GrantedAuthority authority : authentication.getAuthorities()) {
+            if ("ROLE_APPLICANT".equals(authority.getAuthority())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private void assertApplicantCanAccessOffer(Authentication authentication, Long offerId) {
+        String email = extractAuthenticatedEmail(authentication);
+        if (email == null) {
+            throw new AccessDeniedException("Applicant email missing from authentication");
+        }
+
+        Offer offer = offerService.getOfferById(offerId)
+                .orElseThrow(() -> new RuntimeException("Offer not found"));
+        String offerApplicantEmail = offer.getApplication().getApplicant().getEmail();
+        if (!email.equalsIgnoreCase(offerApplicantEmail)) {
+            throw new AccessDeniedException("Applicants can only access their own offers");
+        }
+    }
+
+    private Long resolveApplicantId(Authentication authentication) {
+        String email = extractAuthenticatedEmail(authentication);
+        if (email == null) {
+            throw new AccessDeniedException("Applicant email missing from authentication");
+        }
+
+        return applicantRepository.findByEmail(email)
+                .map(Applicant::getId)
+                .orElseThrow(() -> new AccessDeniedException("Applicant profile not found for authenticated user"));
+    }
+
+    private String extractAuthenticatedEmail(Authentication authentication) {
+        if (authentication == null) return null;
+        if (authentication.getPrincipal() instanceof Jwt jwt) {
+            return jwt.getClaimAsString("email");
+        }
+        if (authentication.getPrincipal() instanceof User user) {
+            return user.getEmail();
+        }
+        return null;
+    }
+
+    private Authentication authentication() {
+        return org.springframework.security.core.context.SecurityContextHolder.getContext().getAuthentication();
     }
 }

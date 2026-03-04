@@ -49,10 +49,10 @@ public class AgencyPortalService {
     @Transactional
     public AgencyProfile approveAgency(Long agencyId) {
         AgencyProfile agency = getAgency(agencyId);
-        if (!agency.getStatus().canTransitionTo(AgencyStatus.ACTIVE)) {
+        if (!agency.getStatus().canTransitionTo(AgencyStatus.APPROVED)) {
             throw new IllegalStateException("Cannot approve agency in status: " + agency.getStatus());
         }
-        agency.setStatus(AgencyStatus.ACTIVE);
+        agency.setStatus(AgencyStatus.APPROVED);
         return agencyProfileRepository.save(agency);
     }
 

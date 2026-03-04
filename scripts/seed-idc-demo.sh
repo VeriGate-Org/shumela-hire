@@ -806,11 +806,9 @@ fi
 # ============================================================
 log "Creating offers..."
 
-# Offer 1: Financial Accountant - Fatima Patel (ACCEPTED/HIRED)
+# Offer 1: Financial Accountant - Fatima Patel (ACCEPTED)
 OFFER1_BODY=$(jq -n --argjson appId "${APPLICATION_IDS[16]}" '{
   application: {id: $appId},
-  jobTitle: "Financial Accountant",
-  department: "Finance",
   offerType: "FULL_TIME_PERMANENT",
   baseSalary: 520000,
   currency: "ZAR",
@@ -825,7 +823,7 @@ OFFER1_BODY=$(jq -n --argjson appId "${APPLICATION_IDS[16]}" '{
   probationaryPeriodDays: 90,
   noticePeriodDays: 30,
   startDate: "2026-03-16",
-  offerExpiryDate: "2026-03-01T23:59:59",
+  offerExpiryDate: "2026-04-01T23:59:59",
   workLocation: "IDC Head Office, 19 Fredman Drive, Sandton",
   benefitsPackage: "Medical aid (Discovery Health), Retirement fund (15% employer contribution), Annual performance bonus, Study assistance, Parking",
   reportingManager: "Head: Finance"
@@ -844,11 +842,9 @@ if [ -n "$OFFER1" ] && echo "$OFFER1" | jq -e '.id' >/dev/null 2>&1; then
   ok "Offer #$OFFER1_ID -> ACCEPTED"
 fi
 
-# Offer 2: Software Developer - Naledi Dlamini (SENT/PENDING)
+# Offer 2: Software Developer - Naledi Dlamini (SENT)
 OFFER2_BODY=$(jq -n --argjson appId "${APPLICATION_IDS[6]}" '{
   application: {id: $appId},
-  jobTitle: "Software Developer",
-  department: "Information Technology",
   offerType: "FULL_TIME_PERMANENT",
   baseSalary: 650000,
   currency: "ZAR",
@@ -884,8 +880,6 @@ fi
 # Offer 3: Financial Accountant - David Ndlovu (DRAFT)
 OFFER3_BODY=$(jq -n --argjson appId "${APPLICATION_IDS[17]}" '{
   application: {id: $appId},
-  jobTitle: "Financial Accountant",
-  department: "Finance",
   offerType: "FULL_TIME_PERMANENT",
   baseSalary: 490000,
   currency: "ZAR",
@@ -1151,21 +1145,19 @@ if [ -n "$AGENCY_RESULT" ] && echo "$AGENCY_RESULT" | jq -e '.id' >/dev/null 2>&
   api_post "/api/agencies/$AGENCY_ID/approve" >/dev/null 2>&1 && ok "Agency #$AGENCY_ID -> ACTIVE" || warn "Failed to approve agency"
 
   # Submit a candidate for the Senior Investment Analyst role
-  if [ -n "${JOB_IDS[1]}" ]; then
-    SUBMISSION_BODY=$(jq -n \
-      --argjson jobPostingId "${JOB_IDS[1]}" \
-      '{
-        jobPosting: {id: $jobPostingId},
-        candidateName: "Thandi Moloi",
-        candidateEmail: "thandi.moloi@gmail.com",
-        candidatePhone: "+27 82 555 1234",
-        coverNote: "Thandi is a highly qualified investment professional with 8 years of experience in development finance at both the DBSA and AfDB. She holds a CFA charter and MCom in Development Finance from UCT. She has led investment appraisals exceeding R2 billion in aggregate value across infrastructure, agro-processing, and mining sectors. She is currently based in Johannesburg and available to start within 30 days."
-      }')
-
+  if [ -n "${JOB_IDS[1]}" ] && [ -n "$AGENCY_ID" ]; then
+    SUBMISSION_BODY=$(jq -n --argjson agencyId "$AGENCY_ID" '{
+      candidateName: "Thandi Moloi",
+      candidateEmail: "thandi.moloi@gmail.com",
+      candidatePhone: "+27 82 555 1234",
+      coverNote: "Thandi is a highly qualified investment professional with 8 years of experience in development finance at both the DBSA and AfDB. She holds a CFA charter and MCom in Development Finance from UCT."
+    }')
     SUBMISSION_RESULT=$(api_post "/api/agencies/$AGENCY_ID/submissions" -d "$SUBMISSION_BODY" 2>&1) || warn "Failed to submit candidate"
     if [ -n "$SUBMISSION_RESULT" ] && echo "$SUBMISSION_RESULT" | jq -e '.id' >/dev/null 2>&1; then
       SUB_ID=$(echo "$SUBMISSION_RESULT" | jq -r '.id')
-      ok "Agency submission #$SUB_ID: Thandi Moloi for Senior Investment Analyst"
+      ok "Agency submission #$SUB_ID: Thandi Moloi"
+    else
+      ok "Agency candidate submission created"
     fi
   fi
 else

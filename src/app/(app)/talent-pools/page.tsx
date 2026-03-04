@@ -3,8 +3,8 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import PageWrapper from '@/components/PageWrapper';
 import { useToast } from '@/components/Toast';
-import { apiFetch, apiFetchJson } from '@/lib/api-fetch';
-import { useDepartments } from '@/hooks/useDepartments';
+import { apiFetchJson } from '@/lib/api-fetch';
+import { useAuth } from '@/contexts/AuthContext';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -83,7 +83,8 @@ function StarRating({
 
 export default function TalentPoolsPage() {
   const { toast } = useToast();
-  const { departments } = useDepartments();
+  const { user, isLoading } = useAuth();
+  const hasAccess = user?.role === 'ADMIN' || user?.role === 'HR_MANAGER' || user?.role === 'RECRUITER';
 
   // Pool list state
   const [pools, setPools] = useState<TalentPool[]>([]);
@@ -206,13 +207,13 @@ export default function TalentPoolsPage() {
     try {
       setActionLoading(true);
       if (modal === 'editPool' && editingPool) {
-        await apiFetch(`/api/talent-pools/${editingPool.id}`, {
+        await apiFetchJson(`/api/talent-pools/${editingPool.id}`, {
           method: 'PUT',
           body: JSON.stringify(poolForm),
         });
         toast('Pool updated successfully', 'success');
       } else {
-        await apiFetch('/api/talent-pools', {
+        await apiFetchJson('/api/talent-pools', {
           method: 'POST',
           body: JSON.stringify(poolForm),
         });
@@ -236,7 +237,7 @@ export default function TalentPoolsPage() {
     }
     try {
       setActionLoading(true);
-      await apiFetch(`/api/talent-pools/${selectedPool.id}/entries`, {
+      await apiFetchJson(`/api/talent-pools/${selectedPool.id}/entries`, {
         method: 'POST',
         body: JSON.stringify({
           applicantId: Number(entryForm.applicantId),
@@ -248,8 +249,9 @@ export default function TalentPoolsPage() {
       setModal(null);
       setEntryForm({ applicantId: '', sourceType: 'MANUAL', notes: '' });
       await loadPoolDetail(selectedPool);
-    } catch {
-      toast('Failed to add entry', 'error');
+    } catch (error) {
+      const message = error instanceof Error ? error.message : 'Unknown error';
+      toast(`Failed to add entry (${message})`, 'error');
     } finally {
       setActionLoading(false);
     }
@@ -266,7 +268,7 @@ export default function TalentPoolsPage() {
     try {
       setActionLoading(true);
       const query = removeReason.trim() ? `?reason=${encodeURIComponent(removeReason)}` : '';
-      await apiFetch(`/api/talent-pools/entries/${removingEntry.id}${query}`, {
+      await apiFetchJson(`/api/talent-pools/entries/${removingEntry.id}${query}`, {
         method: 'DELETE',
       });
       toast('Entry removed', 'success');
@@ -284,7 +286,7 @@ export default function TalentPoolsPage() {
     if (!selectedPool) return;
     try {
       setRatingLoading(entry.id);
-      await apiFetch(`/api/talent-pools/entries/${entry.id}/rating`, {
+      await apiFetchJson(`/api/talent-pools/entries/${entry.id}/rating`, {
         method: 'PUT',
         body: JSON.stringify({ rating }),
       });
@@ -313,6 +315,28 @@ export default function TalentPoolsPage() {
   };
 
   // ─── Render ────────────────────────────────────────────────────────────────
+
+  if (isLoading) {
+    return (
+      <PageWrapper title="Talent Pools" subtitle="Build and manage reusable candidate pools">
+        <div className="flex justify-center py-12">
+          <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-gold-500" />
+        </div>
+      </PageWrapper>
+    );
+  }
+
+  if (!hasAccess) {
+    return (
+      <PageWrapper title="Access Denied" subtitle="You do not have permission to manage talent pools.">
+        <div className="bg-white rounded-[10px] border border-gray-200 p-8 text-center">
+          <p className="text-gray-500 text-sm">
+            Talent pools can be managed by administrators, HR managers, and recruiters.
+          </p>
+        </div>
+      </PageWrapper>
+    );
+  }
 
   return (
     <PageWrapper

@@ -339,6 +339,20 @@ export default function WorkflowPage() {
     );
   }
 
+  const canManageWorkflow = user.role === 'ADMIN' || user.role === 'HR_MANAGER';
+  if (!canManageWorkflow) {
+    return (
+      <PageWrapper title="Access Denied" subtitle="You do not have permission to manage workflows.">
+        <div className="flex items-center justify-center h-96">
+          <div className="text-center">
+            <h1 className="text-2xl font-semibold text-gray-900 mb-2">Access Denied</h1>
+            <p className="text-gray-600">Workflow management is available to administrators and HR managers.</p>
+          </div>
+        </div>
+      </PageWrapper>
+    );
+  }
+
   const actions = (
     <div className="flex items-center gap-3">
       {activeView !== 'builder' && (

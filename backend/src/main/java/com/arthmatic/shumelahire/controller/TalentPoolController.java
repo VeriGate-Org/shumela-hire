@@ -1,7 +1,7 @@
 package com.arthmatic.shumelahire.controller;
 
+import com.arthmatic.shumelahire.dto.AddTalentPoolEntryRequest;
 import com.arthmatic.shumelahire.entity.TalentPool;
-import com.arthmatic.shumelahire.entity.TalentPoolEntry;
 import com.arthmatic.shumelahire.service.TalentPoolService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -13,45 +13,52 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api/talent-pools")
-@PreAuthorize("hasAnyRole('ADMIN', 'HR_MANAGER', 'RECRUITER')")
 public class TalentPoolController {
 
     @Autowired
     private TalentPoolService talentPoolService;
 
     @PostMapping
+    @PreAuthorize("hasAnyRole('ADMIN', 'HR_MANAGER', 'RECRUITER', 'HIRING_MANAGER')")
     public ResponseEntity<?> createPool(@RequestBody TalentPool pool) {
         return ResponseEntity.status(HttpStatus.CREATED).body(talentPoolService.createPool(pool));
     }
 
     @GetMapping
+    @PreAuthorize("hasAnyRole('ADMIN', 'HR_MANAGER', 'RECRUITER', 'HIRING_MANAGER')")
     public ResponseEntity<?> getAllPools() {
         return ResponseEntity.ok(talentPoolService.getAllPools());
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN', 'HR_MANAGER', 'RECRUITER', 'HIRING_MANAGER')")
     public ResponseEntity<?> getPool(@PathVariable Long id) {
         return ResponseEntity.ok(talentPoolService.getPool(id));
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN', 'HR_MANAGER', 'RECRUITER', 'HIRING_MANAGER')")
     public ResponseEntity<?> updatePool(@PathVariable Long id, @RequestBody TalentPool pool) {
         return ResponseEntity.ok(talentPoolService.updatePool(id, pool));
     }
 
     @PostMapping("/{poolId}/entries")
+    @PreAuthorize("hasAnyRole('ADMIN', 'HR_MANAGER', 'RECRUITER', 'HIRING_MANAGER')")
     public ResponseEntity<?> addEntry(
             @PathVariable Long poolId,
-            @RequestBody TalentPoolEntry entry) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(talentPoolService.addEntry(poolId, entry));
+            @RequestBody AddTalentPoolEntryRequest request) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(
+                talentPoolService.addEntry(poolId, request.getApplicantId(), request.getSourceType(), request.getNotes()));
     }
 
     @GetMapping("/{poolId}/entries")
+    @PreAuthorize("hasAnyRole('ADMIN', 'HR_MANAGER', 'RECRUITER', 'HIRING_MANAGER')")
     public ResponseEntity<?> getEntries(@PathVariable Long poolId) {
         return ResponseEntity.ok(talentPoolService.getEntries(poolId));
     }
 
     @DeleteMapping("/entries/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN', 'HR_MANAGER', 'RECRUITER', 'HIRING_MANAGER')")
     public ResponseEntity<?> removeEntry(
             @PathVariable Long id,
             @RequestParam(defaultValue = "Removed by user") String reason) {
@@ -60,6 +67,7 @@ public class TalentPoolController {
     }
 
     @PutMapping("/entries/{id}/rating")
+    @PreAuthorize("hasAnyRole('ADMIN', 'HR_MANAGER', 'RECRUITER', 'HIRING_MANAGER')")
     public ResponseEntity<?> updateRating(
             @PathVariable Long id,
             @RequestBody Map<String, Integer> request) {
@@ -67,6 +75,7 @@ public class TalentPoolController {
     }
 
     @GetMapping("/{poolId}/analytics")
+    @PreAuthorize("hasAnyRole('ADMIN', 'HR_MANAGER', 'RECRUITER', 'HIRING_MANAGER')")
     public ResponseEntity<?> getPoolAnalytics(@PathVariable Long poolId) {
         return ResponseEntity.ok(talentPoolService.getPoolAnalytics(poolId));
     }
