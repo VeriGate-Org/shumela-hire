@@ -1,6 +1,8 @@
 package com.arthmatic.shumelahire.security;
 
 import com.arthmatic.shumelahire.config.tenant.TenantContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
@@ -18,6 +20,8 @@ import java.util.List;
  * mapping cognito:groups claim values to ROLE_* authorities.
  */
 public class CognitoJwtConverter implements Converter<Jwt, AbstractAuthenticationToken> {
+
+    private static final Logger logger = LoggerFactory.getLogger(CognitoJwtConverter.class);
 
     @Override
     public AbstractAuthenticationToken convert(Jwt jwt) {
@@ -57,12 +61,14 @@ public class CognitoJwtConverter implements Converter<Jwt, AbstractAuthenticatio
 
         // Map cognito:groups to ROLE_* authorities
         List<String> groups = jwt.getClaimAsStringList("cognito:groups");
+        logger.info("JWT sub={}, cognito:groups={}, all claims={}", jwt.getSubject(), groups, jwt.getClaims().keySet());
         if (groups != null && !groups.isEmpty()) {
             for (String group : groups) {
                 authorities.add(new SimpleGrantedAuthority("ROLE_" + group.toUpperCase()));
             }
         } else {
             // Federated users (e.g. LinkedIn) have no Cognito groups — default to APPLICANT
+            logger.warn("No cognito:groups found in JWT for sub={}, defaulting to ROLE_APPLICANT", jwt.getSubject());
             authorities.add(new SimpleGrantedAuthority("ROLE_APPLICANT"));
         }
 

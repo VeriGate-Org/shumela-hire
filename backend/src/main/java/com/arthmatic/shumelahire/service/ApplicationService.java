@@ -117,20 +117,27 @@ public class ApplicationService {
      * Search applications with pagination and optional status filter
      */
     @Transactional(readOnly = true)
-    public Page<ApplicationResponse> searchApplications(String searchTerm, ApplicationStatus status, Pageable pageable) {
+    public Page<ApplicationResponse> searchApplications(String searchTerm, List<ApplicationStatus> statuses, Pageable pageable) {
         Page<Application> applications;
 
-        if ((searchTerm == null || searchTerm.trim().isEmpty()) && status == null) {
+        boolean hasStatuses = statuses != null && !statuses.isEmpty();
+        boolean hasSearch = searchTerm != null && !searchTerm.trim().isEmpty();
+
+        if (!hasSearch && !hasStatuses) {
             applications = applicationRepository.findAll(pageable);
-        } else if (status == null) {
+        } else if (!hasStatuses) {
             applications = applicationRepository.searchApplications(searchTerm, pageable);
         } else {
             Specification<Application> spec = (root, query, criteriaBuilder) -> {
                 List<Predicate> predicates = new ArrayList<>();
 
-                predicates.add(criteriaBuilder.equal(root.get("status"), status));
+                if (statuses.size() == 1) {
+                    predicates.add(criteriaBuilder.equal(root.get("status"), statuses.get(0)));
+                } else {
+                    predicates.add(root.get("status").in(statuses));
+                }
 
-                if (searchTerm != null && !searchTerm.trim().isEmpty()) {
+                if (hasSearch) {
                     String likePattern = "%" + searchTerm.toLowerCase() + "%";
                     Predicate searchPredicate = criteriaBuilder.or(
                         criteriaBuilder.like(

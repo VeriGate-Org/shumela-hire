@@ -111,6 +111,7 @@ public class CognitoSecurityConfig {
                 // Admin endpoints
                 .requestMatchers("/api/admin/**").hasRole("ADMIN")
                 .requestMatchers("/api/audit/**").hasAnyRole("ADMIN", "HR_MANAGER")
+                .requestMatchers("/api/users/search-ad/**", "/api/users/provision-ad").hasAnyRole("ADMIN", "HR_MANAGER", "RECRUITER", "HIRING_MANAGER")
                 .requestMatchers("/api/users/manage/**").hasAnyRole("ADMIN", "HR_MANAGER")
 
                 // Executive endpoints

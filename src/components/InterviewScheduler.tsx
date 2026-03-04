@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { apiFetch } from '@/lib/api-fetch';
 
@@ -12,18 +12,14 @@ interface InterviewSchedulerProps {
 
 interface Application {
   id: number;
-  applicant: {
-    id: number;
-    firstName: string;
-    lastName: string;
-    email: string;
-  };
-  jobPosting: {
-    id: number;
-    title: string;
-    department: string;
-  };
+  applicantId: number;
+  applicantName: string;
+  applicantEmail: string;
+  jobAdId: number;
+  jobTitle: string;
+  department: string;
   status: string;
+  statusDisplayName: string;
 }
 
 interface InterviewData {
@@ -40,6 +36,7 @@ interface InterviewData {
   instructions: string;
   agenda: string;
   interviewerId: number;
+  additionalInterviewers: string;
   applicationId: number;
 }
 
@@ -81,11 +78,262 @@ interface Interviewer {
   name: string;
   email: string;
   role: string;
+  adObjectId?: string;
+  department?: string;
+}
+
+function getApplicationLabel(app: Application): string {
+  return `${app.applicantName || 'Unknown'} - ${app.jobTitle || 'Unknown'} (${app.department || 'Unknown'})`;
+}
+
+function ApplicationSearchSelect({
+  applications,
+  value,
+  onChange,
+  error,
+  search,
+  onSearchChange,
+  open,
+  onOpenChange,
+}: {
+  applications: Application[];
+  value: number;
+  onChange: (id: number) => void;
+  error?: string;
+  search: string;
+  onSearchChange: (s: string) => void;
+  open: boolean;
+  onOpenChange: (o: boolean) => void;
+}) {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  const selected = applications.find((a) => a.id === value);
+
+  const filtered = applications.filter((app) => {
+    if (!search) return true;
+    const label = getApplicationLabel(app).toLowerCase();
+    return label.includes(search.toLowerCase());
+  });
+
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (containerRef.current && !containerRef.current.contains(e.target as Node)) {
+        onOpenChange(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, [onOpenChange]);
+
+  return (
+    <div>
+      <label htmlFor="application-search" className="block text-sm font-medium text-foreground mb-1">
+        Select Application *
+      </label>
+      <div ref={containerRef} className="relative">
+        <input
+          ref={inputRef}
+          id="application-search"
+          type="text"
+          value={open ? search : (selected ? getApplicationLabel(selected) : '')}
+          onChange={(e) => {
+            onSearchChange(e.target.value);
+            if (!open) onOpenChange(true);
+          }}
+          onFocus={() => {
+            onOpenChange(true);
+            onSearchChange('');
+          }}
+          placeholder="Search by name, job title, or department..."
+          aria-required="true"
+          aria-invalid={!!error}
+          aria-describedby={error ? 'application-id-error' : undefined}
+          aria-expanded={open}
+          role="combobox"
+          aria-autocomplete="list"
+          autoComplete="off"
+          className={`w-full p-3 border rounded-control bg-card focus:ring-2 focus:ring-gold-500/60 focus:border-primary ${error ? 'border-red-500' : 'border-border'}`}
+        />
+        {selected && !open && (
+          <button
+            type="button"
+            onClick={() => {
+              onChange(0);
+              onSearchChange('');
+              onOpenChange(true);
+              inputRef.current?.focus();
+            }}
+            className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+            aria-label="Clear selection"
+          >
+            &#x2715;
+          </button>
+        )}
+        {open && (
+          <ul
+            role="listbox"
+            className="absolute z-50 w-full mt-1 max-h-60 overflow-auto bg-card border border-border rounded-control shadow-lg"
+          >
+            {filtered.length === 0 ? (
+              <li className="px-3 py-2 text-sm text-muted-foreground">No applications found</li>
+            ) : (
+              filtered.map((app) => (
+                <li
+                  key={app.id}
+                  role="option"
+                  aria-selected={app.id === value}
+                  onClick={() => {
+                    onChange(app.id);
+                    onSearchChange('');
+                    onOpenChange(false);
+                  }}
+                  className={`px-3 py-2 text-sm cursor-pointer hover:bg-gold-50 ${app.id === value ? 'bg-gold-100 font-medium' : ''}`}
+                >
+                  <span className="font-medium">{app.applicantName || 'Unknown'}</span>
+                  <span className="text-muted-foreground"> - {app.jobTitle || 'Unknown'}</span>
+                  <span className="text-muted-foreground text-xs ml-1">({app.department || 'Unknown'})</span>
+                  <span className="text-xs text-muted-foreground ml-2">{app.statusDisplayName}</span>
+                </li>
+              ))
+            )}
+          </ul>
+        )}
+      </div>
+      {error && <p id="application-id-error" role="alert" className="text-red-500 text-sm mt-1">{error}</p>}
+    </div>
+  );
+}
+
+function InterviewerMultiSelect({
+  selectedInterviewers,
+  onSelect,
+  onRemove,
+  error,
+  search,
+  onSearchChange,
+  open,
+  onOpenChange,
+  adResults,
+  searching,
+}: {
+  selectedInterviewers: Interviewer[];
+  onSelect: (interviewer: Interviewer) => void;
+  onRemove: (interviewer: Interviewer) => void;
+  error?: string;
+  search: string;
+  onSearchChange: (s: string) => void;
+  open: boolean;
+  onOpenChange: (o: boolean) => void;
+  adResults: Interviewer[];
+  searching: boolean;
+}) {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  const selectedEmails = new Set(selectedInterviewers.map((i) => i.email));
+  const filtered = adResults.filter((i) => !selectedEmails.has(i.email));
+
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (containerRef.current && !containerRef.current.contains(e.target as Node)) {
+        onOpenChange(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, [onOpenChange]);
+
+  return (
+    <div>
+      <label htmlFor="interviewer-search" className="block text-sm font-medium text-foreground mb-1">
+        Interview Panel *
+      </label>
+      <div ref={containerRef} className="relative">
+        <div
+          className={`w-full min-h-[48px] p-2 border rounded-control bg-card focus-within:ring-2 focus-within:ring-gold-500/60 focus-within:border-primary flex flex-wrap gap-1.5 items-center cursor-text ${error ? 'border-red-500' : 'border-border'}`}
+          onClick={() => inputRef.current?.focus()}
+        >
+          {selectedInterviewers.map((i) => (
+            <span
+              key={i.adObjectId || i.id}
+              className="inline-flex items-center gap-1 px-2 py-0.5 bg-gold-100 text-gold-800 rounded text-sm"
+            >
+              {i.name}
+              <button
+                type="button"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onRemove(i);
+                }}
+                className="text-gold-600 hover:text-gold-900 font-bold"
+                aria-label={`Remove ${i.name}`}
+              >
+                &#x2715;
+              </button>
+            </span>
+          ))}
+          <input
+            ref={inputRef}
+            id="interviewer-search"
+            type="text"
+            value={search}
+            onChange={(e) => {
+              onSearchChange(e.target.value);
+              if (!open) onOpenChange(true);
+            }}
+            onFocus={() => onOpenChange(true)}
+            placeholder={selectedInterviewers.length === 0 ? 'Search by name or email...' : ''}
+            className="flex-1 min-w-[120px] p-1 bg-transparent outline-none text-sm"
+            autoComplete="off"
+            role="combobox"
+            aria-expanded={open}
+            aria-autocomplete="list"
+          />
+        </div>
+        {open && (
+          <ul
+            role="listbox"
+            className="absolute z-50 w-full mt-1 max-h-60 overflow-auto bg-card border border-border rounded-control shadow-lg"
+          >
+            {searching ? (
+              <li className="px-3 py-2 text-sm text-muted-foreground">Searching...</li>
+            ) : filtered.length === 0 ? (
+              <li className="px-3 py-2 text-sm text-muted-foreground">
+                {search.length < 2 ? 'Type at least 2 characters to search' : 'No results found'}
+              </li>
+            ) : (
+              filtered.map((i) => (
+                <li
+                  key={i.adObjectId || i.id}
+                  role="option"
+                  aria-selected={false}
+                  onClick={() => {
+                    onSelect(i);
+                    onSearchChange('');
+                  }}
+                  className="px-3 py-2 text-sm cursor-pointer hover:bg-gold-50"
+                >
+                  <span className="font-medium">{i.name}</span>
+                  {i.role && <span className="text-muted-foreground ml-1">- {i.role}</span>}
+                  {i.department && <span className="text-muted-foreground text-xs ml-1">({i.department})</span>}
+                </li>
+              ))
+            )}
+          </ul>
+        )}
+      </div>
+      {error && <p role="alert" className="text-red-500 text-sm mt-1">{error}</p>}
+    </div>
+  );
 }
 
 export default function InterviewScheduler({ interviewId, onSuccess, onCancel }: InterviewSchedulerProps) {
   const { user } = useAuth();
-  const [interviewers, setInterviewers] = useState<Interviewer[]>([]);
+  const [selectedInterviewers, setSelectedInterviewers] = useState<Interviewer[]>([]);
+  const [adResults, setAdResults] = useState<Interviewer[]>([]);
+  const [adSearching, setAdSearching] = useState(false);
+  const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const [formData, setFormData] = useState<InterviewData>({
     title: '',
     type: 'VIDEO',
@@ -98,7 +346,8 @@ export default function InterviewScheduler({ interviewId, onSuccess, onCancel }:
     meetingRoom: '',
     instructions: '',
     agenda: '',
-    interviewerId: 1,
+    interviewerId: 0,
+    additionalInterviewers: '[]',
     applicationId: 0,
   });
 
@@ -107,6 +356,10 @@ export default function InterviewScheduler({ interviewId, onSuccess, onCancel }:
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [checkingAvailability, setCheckingAvailability] = useState(false);
+  const [appSearch, setAppSearch] = useState('');
+  const [appDropdownOpen, setAppDropdownOpen] = useState(false);
+  const [interviewerSearch, setInterviewerSearch] = useState('');
+  const [interviewerDropdownOpen, setInterviewerDropdownOpen] = useState(false);
 
   const getActorId = useCallback((): number | null => {
     const actorId = Number(user?.id);
@@ -119,7 +372,7 @@ export default function InterviewScheduler({ interviewId, onSuccess, onCancel }:
 
   const loadApplications = useCallback(async () => {
     try {
-      const response = await apiFetch('/api/applications?status=SCREENING,PHONE_INTERVIEW,FIRST_INTERVIEW,SECOND_INTERVIEW,TECHNICAL_ASSESSMENT,FINAL_INTERVIEW');
+      const response = await apiFetch('/api/applications?status=SUBMITTED,SCREENING,INTERVIEW_SCHEDULED,INTERVIEW_COMPLETED&size=200');
       if (response.ok) {
         const data = await response.json();
         setApplications(data.content || data);
@@ -140,8 +393,26 @@ export default function InterviewScheduler({ interviewId, onSuccess, onCancel }:
         setFormData({
           ...data,
           scheduledAt: new Date(data.scheduledAt).toISOString().slice(0, 16),
-          applicationId: data.application.id,
+          applicationId: data.application?.id ?? data.applicationId ?? 0,
+          additionalInterviewers: data.additionalInterviewers || '[]',
         });
+
+        // Load interviewers from internal user table for display
+        const interviewerIds: number[] = [];
+        if (data.interviewerId) interviewerIds.push(data.interviewerId);
+        try {
+          const additional: number[] = JSON.parse(data.additionalInterviewers || '[]');
+          interviewerIds.push(...additional);
+        } catch { /* ignore */ }
+
+        if (interviewerIds.length > 0) {
+          const intResponse = await apiFetch('/api/auth/interviewers');
+          if (intResponse.ok) {
+            const allInterviewers = await intResponse.json() as Interviewer[];
+            const selected = allInterviewers.filter((i: Interviewer) => interviewerIds.includes(i.id));
+            setSelectedInterviewers(selected);
+          }
+        }
       }
     } catch (error) {
       console.error('Error loading interview:', error);
@@ -150,28 +421,42 @@ export default function InterviewScheduler({ interviewId, onSuccess, onCancel }:
     }
   }, [interviewId]);
 
-  const loadInterviewers = useCallback(async () => {
+  const searchAdUsers = useCallback(async (query: string) => {
+    if (query.trim().length < 2) {
+      setAdResults([]);
+      return;
+    }
     try {
-      const response = await apiFetch('/api/auth/interviewers');
+      setAdSearching(true);
+      const response = await apiFetch(`/api/users/search-ad?q=${encodeURIComponent(query.trim())}`);
       if (response.ok) {
         const data = await response.json();
-        setInterviewers(data);
-        if (data.length > 0 && formData.interviewerId === 1) {
-          setFormData((prev) => ({ ...prev, interviewerId: data[0].id }));
-        }
+        setAdResults(
+          (data as Array<{ adObjectId: string; displayName: string; email: string; jobTitle: string; department: string }>).map(
+            (u) => ({
+              id: 0,
+              name: u.displayName || '',
+              email: u.email || '',
+              role: u.jobTitle || '',
+              adObjectId: u.adObjectId,
+              department: u.department || '',
+            }),
+          ),
+        );
       }
     } catch (error) {
-      console.error('Error loading interviewers:', error);
+      console.error('Error searching AD users:', error);
+    } finally {
+      setAdSearching(false);
     }
-  }, [formData.interviewerId]);
+  }, []);
 
   useEffect(() => {
     void loadApplications();
-    void loadInterviewers();
     if (interviewId) {
       void loadInterview();
     }
-  }, [interviewId, loadApplications, loadInterview, loadInterviewers]);
+  }, [interviewId, loadApplications, loadInterview]);
 
   useEffect(() => {
     if (formData.applicationId > 0 && formData.round) {
@@ -180,7 +465,7 @@ export default function InterviewScheduler({ interviewId, onSuccess, onCancel }:
         const roundLabel = INTERVIEW_ROUNDS.find((round) => round.value === formData.round)?.label || '';
         setFormData((prev) => ({
           ...prev,
-          title: `${roundLabel} - ${application.jobPosting.title}`,
+          title: `${roundLabel} - ${application.jobTitle || 'Unknown'}`,
         }));
       }
     }
@@ -193,15 +478,37 @@ export default function InterviewScheduler({ interviewId, onSuccess, onCancel }:
     }
   };
 
+  const handleInterviewerSelect = (interviewer: Interviewer) => {
+    setSelectedInterviewers((prev) => [...prev, interviewer]);
+    if (errors.interviewerId) {
+      setErrors((prev) => ({ ...prev, interviewerId: '' }));
+    }
+  };
+
+  const handleInterviewerRemove = (interviewer: Interviewer) => {
+    setSelectedInterviewers((prev) =>
+      prev.filter((i) => (i.adObjectId || i.email) !== (interviewer.adObjectId || interviewer.email)),
+    );
+  };
+
+  const handleInterviewerSearchChange = (query: string) => {
+    setInterviewerSearch(query);
+    if (debounceRef.current) clearTimeout(debounceRef.current);
+    debounceRef.current = setTimeout(() => {
+      void searchAdUsers(query);
+    }, 300);
+  };
+
   const checkAvailability = async () => {
-    if (!formData.scheduledAt || !formData.interviewerId) return;
+    const primaryInterviewer = selectedInterviewers[0];
+    if (!formData.scheduledAt || !primaryInterviewer || primaryInterviewer.id <= 0) return;
 
     try {
       setCheckingAvailability(true);
       const startTime = new Date(formData.scheduledAt).toISOString();
 
       const availabilityResponse = await apiFetch(
-        `/api/interviews/availability/interviewer/${formData.interviewerId}?startTime=${startTime}&durationMinutes=${formData.durationMinutes}`,
+        `/api/interviews/availability/interviewer/${primaryInterviewer.id}?startTime=${startTime}&durationMinutes=${formData.durationMinutes}`,
       );
 
       if (availabilityResponse.ok) {
@@ -214,7 +521,7 @@ export default function InterviewScheduler({ interviewId, onSuccess, onCancel }:
       }
 
       const suggestionsResponse = await apiFetch(
-        `/api/interviews/suggestions/interviewer/${formData.interviewerId}?preferredDate=${startTime}&durationMinutes=${formData.durationMinutes}&numberOfSuggestions=5`,
+        `/api/interviews/suggestions/interviewer/${primaryInterviewer.id}?preferredDate=${startTime}&durationMinutes=${formData.durationMinutes}&numberOfSuggestions=5`,
       );
 
       if (suggestionsResponse.ok) {
@@ -234,6 +541,7 @@ export default function InterviewScheduler({ interviewId, onSuccess, onCancel }:
     if (!formData.title.trim()) newErrors.title = 'Interview title is required';
     if (!formData.scheduledAt) newErrors.scheduledAt = 'Interview date and time is required';
     if (formData.applicationId === 0) newErrors.applicationId = 'Please select an application';
+    if (selectedInterviewers.length === 0) newErrors.interviewerId = 'Please select at least one interviewer';
     if (formData.durationMinutes < 15) newErrors.durationMinutes = 'Duration must be at least 15 minutes';
     if (formData.durationMinutes > 480) newErrors.durationMinutes = 'Duration cannot exceed 8 hours';
 
@@ -286,8 +594,39 @@ export default function InterviewScheduler({ interviewId, onSuccess, onCancel }:
     try {
       setLoading(true);
 
+      // Provision any AD users that don't have an internal ID yet
+      const provisionedIds: number[] = [];
+      for (const interviewer of selectedInterviewers) {
+        if (interviewer.id > 0) {
+          provisionedIds.push(interviewer.id);
+        } else {
+          const res = await apiFetch('/api/users/provision-ad', {
+            method: 'POST',
+            body: JSON.stringify({
+              adObjectId: interviewer.adObjectId,
+              displayName: interviewer.name,
+              email: interviewer.email,
+              jobTitle: interviewer.role,
+              department: interviewer.department,
+            }),
+          });
+          if (res.ok) {
+            const provisioned = await res.json() as { id: number };
+            provisionedIds.push(provisioned.id);
+          } else {
+            setErrors({ general: `Failed to provision user: ${interviewer.name}` });
+            setLoading(false);
+            return;
+          }
+        }
+      }
+
+      const [primaryId, ...restIds] = provisionedIds;
+
       const submitData: InterviewData = {
         ...formData,
+        interviewerId: primaryId ?? 0,
+        additionalInterviewers: JSON.stringify(restIds),
         scheduledAt: new Date(formData.scheduledAt).toISOString(),
       };
 
@@ -358,28 +697,16 @@ export default function InterviewScheduler({ interviewId, onSuccess, onCancel }:
 
         <div className="space-y-6">
           {!interviewId && (
-            <div>
-              <label htmlFor="application-id" className="block text-sm font-medium text-foreground mb-1">
-                Select Application *
-              </label>
-              <select
-                id="application-id"
-                value={formData.applicationId}
-                onChange={(event) => handleInputChange('applicationId', Number(event.target.value))}
-                aria-required="true"
-                aria-invalid={!!errors.applicationId}
-                aria-describedby={errors.applicationId ? 'application-id-error' : undefined}
-                className={`w-full p-3 border rounded-control bg-card focus:ring-2 focus:ring-gold-500/60 focus:border-primary ${errors.applicationId ? 'border-red-500' : 'border-border'}`}
-              >
-                <option value={0}>Select an application...</option>
-                {applications.map((application) => (
-                  <option key={application.id} value={application.id}>
-                    {((application.applicant?.firstName ?? '') + ' ' + (application.applicant?.lastName ?? '')).trim() || 'Unknown'} - {application.jobPosting?.title || 'Unknown'} ({application.jobPosting?.department || 'Unknown'})
-                  </option>
-                ))}
-              </select>
-              {errors.applicationId && <p id="application-id-error" role="alert" className="text-red-500 text-sm mt-1">{errors.applicationId}</p>}
-            </div>
+            <ApplicationSearchSelect
+              applications={applications}
+              value={formData.applicationId}
+              onChange={(id) => handleInputChange('applicationId', id)}
+              error={errors.applicationId}
+              search={appSearch}
+              onSearchChange={setAppSearch}
+              open={appDropdownOpen}
+              onOpenChange={setAppDropdownOpen}
+            />
           )}
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -436,22 +763,18 @@ export default function InterviewScheduler({ interviewId, onSuccess, onCancel }:
             </div>
 
             <div>
-              <label htmlFor="interviewer-id" className="block text-sm font-medium text-foreground mb-1">
-                Interviewer *
-              </label>
-              <select
-                id="interviewer-id"
-                value={formData.interviewerId}
-                onChange={(event) => handleInputChange('interviewerId', Number(event.target.value))}
-                aria-required="true"
-                className="w-full p-3 border border-border rounded-control bg-card focus:ring-2 focus:ring-gold-500/60 focus:border-primary"
-              >
-                {interviewers.map((interviewer) => (
-                  <option key={interviewer.id} value={interviewer.id}>
-                    {interviewer.name} ({interviewer.role})
-                  </option>
-                ))}
-              </select>
+              <InterviewerMultiSelect
+                selectedInterviewers={selectedInterviewers}
+                onSelect={handleInterviewerSelect}
+                onRemove={handleInterviewerRemove}
+                error={errors.interviewerId}
+                search={interviewerSearch}
+                onSearchChange={handleInterviewerSearchChange}
+                open={interviewerDropdownOpen}
+                onOpenChange={setInterviewerDropdownOpen}
+                adResults={adResults}
+                searching={adSearching}
+              />
             </div>
           </div>
 
