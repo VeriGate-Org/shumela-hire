@@ -4,6 +4,9 @@ import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { apiFetch } from '@/lib/api-fetch';
 import { useDepartments } from '@/hooks/useDepartments';
+import AiAssistPanel from '@/components/ai/AiAssistPanel';
+import AiJobDescriptionWriter from '@/components/ai/AiJobDescriptionWriter';
+import { JobDescriptionResult } from '@/types/ai';
 
 interface JobPostingFormProps {
   jobPostingId?: number;
@@ -214,6 +217,21 @@ export default function JobPostingForm({ jobPostingId, currentUserId, onSuccess,
       setErrors(prev => ({ ...prev, [field]: '' }));
     }
   };
+
+  const handleAiDescriptionApply = useCallback((result: JobDescriptionResult) => {
+    setFormData(prev => ({
+      ...prev,
+      description: result.intro,
+      responsibilities: result.responsibilities.join('\n'),
+      requirements: result.requirements.join('\n'),
+      benefits: result.benefits.join('\n'),
+    }));
+    setErrors(prev => {
+      const next = { ...prev };
+      delete next.description;
+      return next;
+    });
+  }, []);
 
   const tabs = [
     { id: 'basic', label: 'Basic Information' },
@@ -449,6 +467,14 @@ export default function JobPostingForm({ jobPostingId, currentUserId, onSuccess,
         {/* Job Details Tab */}
         {activeTab === 'details' && (
           <div className="space-y-6">
+            <AiAssistPanel title="Generate with AI" feature="AI_JOB_DESCRIPTION">
+              <AiJobDescriptionWriter
+                initialTitle={formData.title}
+                initialDepartment={formData.department}
+                onApply={handleAiDescriptionApply}
+              />
+            </AiAssistPanel>
+
             <div>
               <label htmlFor="job-description" className="block text-sm font-medium text-gray-700 mb-1">
                 Job Description *

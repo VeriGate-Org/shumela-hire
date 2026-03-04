@@ -18,6 +18,8 @@ import { apiFetch } from '@/lib/api-fetch';
 import InterviewScheduler from '@/components/InterviewScheduler';
 import InterviewCalendar, { type Interview as CalendarInterview } from '@/components/InterviewCalendar';
 import InterviewFeedbackForm from '@/components/InterviewFeedbackForm';
+import AiAssistPanel from '@/components/ai/AiAssistPanel';
+import AiInterviewQuestionGenerator from '@/components/ai/AiInterviewQuestionGenerator';
 
 interface Interview extends CalendarInterview {
   instructions?: string;
@@ -299,6 +301,12 @@ export default function InterviewsPage() {
                 setSelectedInterview(null);
               }}
             />
+
+            <AiAssistPanel title="AI Interview Questions" feature="AI_INTERVIEW_QUESTIONS">
+              <AiInterviewQuestionGenerator
+                jobTitle={selectedInterview?.application?.jobPosting?.title}
+              />
+            </AiAssistPanel>
           </section>
         )}
 

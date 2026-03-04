@@ -22,6 +22,7 @@ import {
   ServerStackIcon,
   QuestionMarkCircleIcon,
   UserGroupIcon,
+  SparklesIcon,
 } from '@heroicons/react/24/outline';
 import {
   HomeIcon as HomeIconSolid,
@@ -62,6 +63,7 @@ export const navigationRegistry: NavigationEntry[] = [
   { id: 'salary-recommendations', label: 'Salary Recommendations', href: '/salary-recommendations', icon: CurrencyDollarIcon, section: 'recruitment', requiredPermissions: ['view_salary_data'] },
   { id: 'talent-pools', label: 'Talent Pools', href: '/talent-pools', icon: UserGroupIcon, section: 'recruitment', requiredPermissions: ['view_applicants'] },
   { id: 'agencies', label: 'Agencies', href: '/agencies', icon: BuildingOffice2Icon, section: 'recruitment', requiredPermissions: ['view_applicants'] },
+  { id: 'ai-tools', label: 'AI Tools', href: '/ai-tools', icon: SparklesIcon, section: 'recruitment', requiredPermissions: ['view_dashboard'], requiredFeature: 'AI_ENABLED', badge: 'AI' },
 
   // Analytics
   { id: 'analytics', label: 'Analytics', href: '/analytics', icon: ChartBarIcon, iconSolid: ChartBarIconSolid, section: 'analytics', requiredPermissions: ['view_analytics'] },
