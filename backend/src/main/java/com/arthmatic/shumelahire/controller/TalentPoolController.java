@@ -1,7 +1,7 @@
 package com.arthmatic.shumelahire.controller;
 
+import com.arthmatic.shumelahire.dto.AddTalentPoolEntryRequest;
 import com.arthmatic.shumelahire.entity.TalentPool;
-import com.arthmatic.shumelahire.entity.TalentPoolEntry;
 import com.arthmatic.shumelahire.service.TalentPoolService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -13,7 +13,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api/talent-pools")
-@PreAuthorize("hasAnyRole('ADMIN', 'HR_MANAGER', 'RECRUITER')")
+@PreAuthorize("hasAnyRole('ADMIN', 'HR_MANAGER', 'RECRUITER', 'HIRING_MANAGER')")
 public class TalentPoolController {
 
     @Autowired
@@ -42,8 +42,9 @@ public class TalentPoolController {
     @PostMapping("/{poolId}/entries")
     public ResponseEntity<?> addEntry(
             @PathVariable Long poolId,
-            @RequestBody TalentPoolEntry entry) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(talentPoolService.addEntry(poolId, entry));
+            @RequestBody AddTalentPoolEntryRequest request) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(
+                talentPoolService.addEntry(poolId, request.getApplicantId(), request.getSourceType(), request.getNotes()));
     }
 
     @GetMapping("/{poolId}/entries")

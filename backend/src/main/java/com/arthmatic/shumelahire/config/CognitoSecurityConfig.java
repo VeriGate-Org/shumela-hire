@@ -168,7 +168,7 @@ public class CognitoSecurityConfig {
                 .requestMatchers(new AntPathRequestMatcher("/api/shortlisting/**")).hasAnyRole("ADMIN", "HR_MANAGER", "RECRUITER")
 
                 // Talent pool endpoints
-                .requestMatchers(new AntPathRequestMatcher("/api/talent-pools/**")).hasAnyRole("ADMIN", "HR_MANAGER", "RECRUITER")
+                .requestMatchers(new AntPathRequestMatcher("/api/talent-pools/**")).hasAnyRole("ADMIN", "HR_MANAGER", "RECRUITER", "HIRING_MANAGER")
 
                 // Compliance endpoints
                 .requestMatchers(new AntPathRequestMatcher("/api/compliance/**")).hasAnyRole("ADMIN", "HR_MANAGER", "EXECUTIVE")
