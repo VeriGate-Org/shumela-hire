@@ -38,7 +38,7 @@ public class AgencyPortalController {
     }
 
     @PostMapping("/{id}/approve")
-    // @PreAuthorize temporarily removed for debugging
+    @PreAuthorize("hasAnyRole('ADMIN', 'HR_MANAGER')")
     public ResponseEntity<?> approveAgency(@PathVariable Long id) {
         return ResponseEntity.ok(agencyPortalService.approveAgency(id));
     }

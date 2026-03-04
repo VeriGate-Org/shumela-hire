@@ -77,6 +77,17 @@ public class CognitoUserProvisioningFilter extends OncePerRequestFilter {
         } else {
             userRepository.findByEmailAndTenantId(email, tenantId).ifPresent(user -> {
                 user.setLastLogin(LocalDateTime.now());
+
+                // Sync role from JWT if it provides a more authoritative role
+                // than what's stored (e.g., user was JIT-provisioned as APPLICANT
+                // but has since been assigned a Cognito group).
+                User.Role jwtRole = extractRole(auth);
+                if (jwtRole != User.Role.APPLICANT && user.getRole() != jwtRole) {
+                    log.info("Syncing role for {} from {} to {} (tenant: {})",
+                            email, user.getRole(), jwtRole, tenantId);
+                    user.setRole(jwtRole);
+                }
+
                 userRepository.save(user);
             });
         }

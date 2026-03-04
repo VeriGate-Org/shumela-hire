@@ -83,27 +83,45 @@ public class CognitoJwtConverter implements Converter<Jwt, AbstractAuthenticatio
     }
 
     private Collection<GrantedAuthority> extractAuthorities(Jwt jwt) {
+        String principal = extractPrincipal(jwt);
         LinkedHashSet<String> roleAuthorities = new LinkedHashSet<>();
+        String resolvedVia = "DEFAULT";
 
         // Map cognito:groups to ROLE_* authorities
-        for (String group : extractGroups(jwt)) {
+        List<String> groups = extractGroups(jwt);
+        for (String group : groups) {
             normalizeRole(group).ifPresent(role -> roleAuthorities.add("ROLE_" + role));
+        }
+        if (!roleAuthorities.isEmpty()) {
+            resolvedVia = "cognito:groups=" + groups;
         }
 
         // Fallback to explicit role claims when groups are absent.
         if (roleAuthorities.isEmpty()) {
-            extractExplicitRole(jwt).ifPresent(role -> roleAuthorities.add("ROLE_" + role));
+            extractExplicitRole(jwt).ifPresent(role -> {
+                roleAuthorities.add("ROLE_" + role);
+            });
+            if (!roleAuthorities.isEmpty()) {
+                resolvedVia = "explicit-claim";
+            }
         }
 
         // Final fallback to role persisted in our tenant user record.
         if (roleAuthorities.isEmpty()) {
-            resolveRoleFromDatabase(jwt).ifPresent(role -> roleAuthorities.add("ROLE_" + role));
+            resolveRoleFromDatabase(jwt).ifPresent(role -> {
+                roleAuthorities.add("ROLE_" + role);
+            });
+            if (!roleAuthorities.isEmpty()) {
+                resolvedVia = "database";
+            }
         }
 
         if (roleAuthorities.isEmpty()) {
             // Federated users without resolved role default to APPLICANT.
             roleAuthorities.add("ROLE_APPLICANT");
         }
+
+        logger.info("Role resolution for [{}]: via={}, authorities={}", principal, resolvedVia, roleAuthorities);
 
         List<GrantedAuthority> authorities = new ArrayList<>();
         roleAuthorities.forEach(role -> authorities.add(new SimpleGrantedAuthority(role)));
