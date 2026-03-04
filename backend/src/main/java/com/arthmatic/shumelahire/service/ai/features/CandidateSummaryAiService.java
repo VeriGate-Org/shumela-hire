@@ -38,7 +38,7 @@ public class CandidateSummaryAiService {
         AiCompletionResponse response = aiService.complete(userId, "CANDIDATE_SUMMARY", systemPrompt, userPrompt.toString());
 
         try {
-            return objectMapper.readValue(response.getContent(), CandidateSummaryResult.class);
+            return objectMapper.readValue(response.getJsonContent(), CandidateSummaryResult.class);
         } catch (Exception e) {
             logger.error("Failed to parse candidate summary AI response", e);
             CandidateSummaryResult result = new CandidateSummaryResult();

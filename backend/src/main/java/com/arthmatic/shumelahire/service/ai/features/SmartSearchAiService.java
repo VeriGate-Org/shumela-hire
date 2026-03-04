@@ -36,7 +36,7 @@ public class SmartSearchAiService {
         AiCompletionResponse response = aiService.complete(userId, "SMART_SEARCH", systemPrompt, naturalLanguageQuery);
 
         try {
-            return objectMapper.readValue(response.getContent(), SmartSearchResult.class);
+            return objectMapper.readValue(response.getJsonContent(), SmartSearchResult.class);
         } catch (Exception e) {
             logger.error("Failed to parse smart search AI response", e);
             SmartSearchResult result = new SmartSearchResult();

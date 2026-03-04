@@ -41,7 +41,7 @@ public class OfferPredictionAiService {
         AiCompletionResponse response = aiService.complete(userId, "OFFER_PREDICTION", systemPrompt, userPrompt.toString());
 
         try {
-            return objectMapper.readValue(response.getContent(), OfferPredictionResult.class);
+            return objectMapper.readValue(response.getJsonContent(), OfferPredictionResult.class);
         } catch (Exception e) {
             logger.error("Failed to parse offer prediction AI response", e);
             OfferPredictionResult result = new OfferPredictionResult();

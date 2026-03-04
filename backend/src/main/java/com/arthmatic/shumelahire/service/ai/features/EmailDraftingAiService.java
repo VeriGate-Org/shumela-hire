@@ -46,7 +46,7 @@ public class EmailDraftingAiService {
         AiCompletionResponse response = aiService.complete(userId, "EMAIL_DRAFT", systemPrompt, userPrompt.toString());
 
         try {
-            return objectMapper.readValue(response.getContent(), EmailDraftResult.class);
+            return objectMapper.readValue(response.getJsonContent(), EmailDraftResult.class);
         } catch (Exception e) {
             logger.error("Failed to parse email draft AI response", e);
             EmailDraftResult result = new EmailDraftResult();

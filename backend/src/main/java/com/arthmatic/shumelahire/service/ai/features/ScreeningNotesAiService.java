@@ -43,7 +43,7 @@ public class ScreeningNotesAiService {
         AiCompletionResponse response = aiService.complete(userId, "SCREENING_NOTES_DRAFT", systemPrompt, userPrompt.toString());
 
         try {
-            return objectMapper.readValue(response.getContent(), ScreeningNotesResult.class);
+            return objectMapper.readValue(response.getJsonContent(), ScreeningNotesResult.class);
         } catch (Exception e) {
             logger.error("Failed to parse screening notes AI response", e);
             ScreeningNotesResult result = new ScreeningNotesResult();

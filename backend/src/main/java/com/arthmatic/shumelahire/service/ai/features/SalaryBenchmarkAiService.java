@@ -46,7 +46,7 @@ public class SalaryBenchmarkAiService {
         AiCompletionResponse response = aiService.complete(userId, "SALARY_BENCHMARK", systemPrompt, userPrompt.toString());
 
         try {
-            return objectMapper.readValue(response.getContent(), SalaryBenchmarkResult.class);
+            return objectMapper.readValue(response.getJsonContent(), SalaryBenchmarkResult.class);
         } catch (Exception e) {
             logger.error("Failed to parse salary benchmark AI response", e);
             SalaryBenchmarkResult result = new SalaryBenchmarkResult();

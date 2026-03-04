@@ -46,7 +46,7 @@ public class CvScreeningAiService {
         AiCompletionResponse response = aiService.complete(userId, "CV_SCREENING", systemPrompt, userPrompt.toString());
 
         try {
-            return objectMapper.readValue(response.getContent(), CvScreeningResult.class);
+            return objectMapper.readValue(response.getJsonContent(), CvScreeningResult.class);
         } catch (Exception e) {
             logger.error("Failed to parse CV screening AI response", e);
             CvScreeningResult result = new CvScreeningResult();
@@ -80,7 +80,7 @@ public class CvScreeningAiService {
         AiCompletionResponse response = aiService.complete(userId, "CV_RANKING", systemPrompt, userPrompt.toString());
 
         try {
-            return objectMapper.readValue(response.getContent(), CvRankingResult.class);
+            return objectMapper.readValue(response.getJsonContent(), CvRankingResult.class);
         } catch (Exception e) {
             logger.error("Failed to parse CV ranking AI response", e);
             return new CvRankingResult();

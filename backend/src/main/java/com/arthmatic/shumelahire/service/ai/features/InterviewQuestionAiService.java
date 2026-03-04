@@ -46,7 +46,7 @@ public class InterviewQuestionAiService {
         AiCompletionResponse response = aiService.complete(userId, "INTERVIEW_QUESTION_GENERATE", systemPrompt, userPrompt.toString());
 
         try {
-            return objectMapper.readValue(response.getContent(), InterviewQuestionsResult.class);
+            return objectMapper.readValue(response.getJsonContent(), InterviewQuestionsResult.class);
         } catch (Exception e) {
             logger.error("Failed to parse interview questions AI response", e);
             return new InterviewQuestionsResult();

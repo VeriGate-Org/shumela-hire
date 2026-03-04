@@ -226,9 +226,20 @@ export default function AiJobDescriptionWriter({ onApply, initialTitle, initialD
               className="px-3 py-1.5 text-xs border border-gray-300 rounded-sm text-gray-700 hover:bg-gray-100 disabled:opacity-50">
               {biasLoading ? 'Checking...' : 'Check for Bias'}
             </button>
-            <button onClick={() => navigator.clipboard.writeText(JSON.stringify(result, null, 2))}
+            <button onClick={() => {
+              const text = [
+                result.title,
+                '',
+                result.intro,
+                '',
+                result.responsibilities?.length ? 'Responsibilities:\n' + result.responsibilities.map(r => `• ${r}`).join('\n') : '',
+                result.requirements?.length ? '\nRequirements:\n' + result.requirements.map(r => `• ${r}`).join('\n') : '',
+                result.benefits?.length ? '\nBenefits:\n' + result.benefits.map(b => `• ${b}`).join('\n') : '',
+              ].filter(Boolean).join('\n');
+              navigator.clipboard.writeText(text);
+            }}
               className="px-3 py-1.5 text-xs border border-gray-300 rounded-sm text-gray-700 hover:bg-gray-100">
-              Copy JSON
+              Copy Text
             </button>
             {onApply && (
               <button onClick={() => onApply(result)}

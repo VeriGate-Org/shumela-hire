@@ -48,7 +48,7 @@ public class ReportNarrativeAiService {
         AiCompletionResponse response = aiService.complete(userId, "REPORT_NARRATIVE", systemPrompt, userPrompt.toString());
 
         try {
-            return objectMapper.readValue(response.getContent(), ReportNarrativeResult.class);
+            return objectMapper.readValue(response.getJsonContent(), ReportNarrativeResult.class);
         } catch (Exception e) {
             logger.error("Failed to parse report narrative AI response", e);
             ReportNarrativeResult result = new ReportNarrativeResult();

@@ -45,7 +45,7 @@ public class DuplicateDetectionService {
                         request.getFullName(), request.getEmail(), request.getPhone(), request.getIdNumber());
 
                 var response = aiService.complete(userId, "DUPLICATE_DETECTION", systemPrompt, userPrompt);
-                DuplicateCheckResult aiResult = objectMapper.readValue(response.getContent(), DuplicateCheckResult.class);
+                DuplicateCheckResult aiResult = objectMapper.readValue(response.getJsonContent(), DuplicateCheckResult.class);
                 if (aiResult.getDuplicates() != null) {
                     duplicates.addAll(aiResult.getDuplicates());
                 }

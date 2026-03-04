@@ -47,7 +47,7 @@ public class JobDescriptionAiService {
         AiCompletionResponse response = aiService.complete(userId, "JOB_DESCRIPTION_GENERATE", systemPrompt, userPrompt.toString());
 
         try {
-            return objectMapper.readValue(response.getContent(), JobDescriptionResult.class);
+            return objectMapper.readValue(response.getJsonContent(), JobDescriptionResult.class);
         } catch (Exception e) {
             logger.error("Failed to parse job description AI response", e);
             JobDescriptionResult result = new JobDescriptionResult();
@@ -66,7 +66,7 @@ public class JobDescriptionAiService {
         AiCompletionResponse response = aiService.complete(userId, "JOB_DESCRIPTION_BIAS_CHECK", systemPrompt, text);
 
         try {
-            return objectMapper.readValue(response.getContent(), BiasCheckResult.class);
+            return objectMapper.readValue(response.getJsonContent(), BiasCheckResult.class);
         } catch (Exception e) {
             logger.error("Failed to parse bias check AI response", e);
             BiasCheckResult result = new BiasCheckResult();
