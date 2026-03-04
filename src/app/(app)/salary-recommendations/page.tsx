@@ -3,6 +3,8 @@
 import React from 'react';
 import PageWrapper from '@/components/PageWrapper';
 import SalaryRecommendationManager from '@/components/SalaryRecommendationManager';
+import AiAssistPanel from '@/components/ai/AiAssistPanel';
+import AiSalaryBenchmark from '@/components/ai/AiSalaryBenchmark';
 
 export default function SalaryRecommendationsPage() {
   return (
@@ -10,7 +12,13 @@ export default function SalaryRecommendationsPage() {
       title="Salary Recommendations"
       subtitle="Request, review, and approve salary recommendations for candidates"
     >
-      <SalaryRecommendationManager />
+      <div className="space-y-6">
+        <AiAssistPanel title="AI Salary Benchmark" feature="AI_SALARY_BENCHMARK">
+          <AiSalaryBenchmark />
+        </AiAssistPanel>
+
+        <SalaryRecommendationManager />
+      </div>
     </PageWrapper>
   );
 }

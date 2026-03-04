@@ -22,6 +22,8 @@ import {
 import EmptyState from '@/components/EmptyState';
 import { useToast } from '@/components/Toast';
 import { apiFetch } from '@/lib/api-fetch';
+import AiAssistPanel from '@/components/ai/AiAssistPanel';
+import AiReportNarrative from '@/components/ai/AiReportNarrative';
 
 // Mock data for available fields
 const AVAILABLE_FIELDS: ReportField[] = [
@@ -394,12 +396,21 @@ export default function ReportsPage() {
           {activeTab === 'results' && (
             <div className="space-y-6">
               {currentResult ? (
-                <ReportViewer
-                  result={currentResult}
-                  onExport={handleExportResult}
-                  onShare={handleShareResult}
-                  onEdit={handleEditFromViewer}
-                />
+                <>
+                  <ReportViewer
+                    result={currentResult}
+                    onExport={handleExportResult}
+                    onShare={handleShareResult}
+                    onEdit={handleEditFromViewer}
+                  />
+
+                  <AiAssistPanel title="AI Report Narrative" feature="AI_REPORT_NARRATIVE">
+                    <AiReportNarrative
+                      reportType={currentResult.config.name}
+                      reportData={currentResult.data ? { rows: currentResult.data, rowCount: currentResult.rowCount } : undefined}
+                    />
+                  </AiAssistPanel>
+                </>
               ) : (
                 <EmptyState
                   icon={PlayIcon}

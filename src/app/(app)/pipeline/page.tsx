@@ -21,6 +21,10 @@ import {
   ShieldCheckIcon
 } from '@heroicons/react/24/outline';
 import { pipelineApplicationStatusConfig, getStatusConfig } from '@/utils/statusIcons';
+import AiCandidatePanel from '@/components/ai/AiCandidatePanel';
+import AiAssistPanel from '@/components/ai/AiAssistPanel';
+import AiCandidateRanking from '@/components/ai/AiCandidateRanking';
+import AiOfferPrediction from '@/components/ai/AiOfferPrediction';
 
 // --- Stage grouping: maps 16 backend PipelineStage enum values into 7 display columns ---
 
@@ -626,6 +630,20 @@ export default function PipelinePage() {
           </div>
         </div>
 
+        {/* AI Candidate Ranking — shown when viewing a single job's candidates */}
+        {(() => {
+          const jobIds = new Set(filteredApplications.map(a => a.job.id).filter(Boolean));
+          if (jobIds.size === 1) {
+            const jobId = [...jobIds][0];
+            return (
+              <AiAssistPanel title="AI Candidate Ranking" feature="AI_SCREENING_RANKING">
+                <AiCandidateRanking jobId={jobId} />
+              </AiAssistPanel>
+            );
+          }
+          return null;
+        })()}
+
         {/* Pipeline Views */}
         {viewMode === 'funnel' && (
           <div className="bg-white rounded-sm shadow p-6">
@@ -1007,6 +1025,21 @@ export default function PipelinePage() {
                       )}
                     </div>
                   </div>
+                </div>
+
+                {/* AI Candidate Assist */}
+                <div className="mt-6 pt-6 border-t border-gray-200 space-y-4">
+                  <AiCandidatePanel
+                    applicationId={selectedApplication.id}
+                    candidateName={`${selectedApplication.candidate.firstName} ${selectedApplication.candidate.lastName}`}
+                    jobTitle={selectedApplication.job.title}
+                  />
+
+                  {selectedApplication.backendStage.includes('OFFER') && (
+                    <AiAssistPanel title="AI Offer Prediction" feature="AI_OFFER_PREDICTION">
+                      <AiOfferPrediction applicationId={selectedApplication.id} />
+                    </AiAssistPanel>
+                  )}
                 </div>
 
                 <div className="flex justify-end mt-6 pt-6 border-t">

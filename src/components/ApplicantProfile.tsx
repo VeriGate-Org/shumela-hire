@@ -4,6 +4,8 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { apiFetch } from '@/lib/api-fetch';
 import { useToast } from '@/components/Toast';
+import AiAssistPanel from '@/components/ai/AiAssistPanel';
+import AiDuplicateDetectionPanel from '@/components/ai/AiDuplicateDetectionPanel';
 
 interface Education {
   institution: string;
@@ -351,6 +353,17 @@ export default function ApplicantProfile({ applicantId, onSave }: ApplicantProfi
           </div>
         </div>
         
+        {/* AI Duplicate Detection */}
+        <AiAssistPanel title="Duplicate Detection" feature="AI_DUPLICATE_DETECTION">
+          <AiDuplicateDetectionPanel
+            fullName={`${formData.name} ${formData.surname}`.trim()}
+            email={formData.email}
+            phone={formData.phone || undefined}
+            idNumber={formData.idPassportNumber || undefined}
+            autoCheck={false}
+          />
+        </AiAssistPanel>
+
         {/* Education Section */}
         <div>
           <div className="flex justify-between items-center mb-3">

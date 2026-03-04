@@ -35,6 +35,8 @@ import {
   ExclamationTriangleIcon as ExclamationTriangleIconSolid,
   CheckCircleIcon as CheckCircleIconSolid
 } from '@heroicons/react/24/solid';
+import AiAssistPanel from '@/components/ai/AiAssistPanel';
+import AiReportNarrative from '@/components/ai/AiReportNarrative';
 
 interface ExecutiveMetrics {
   totalHires: number;
@@ -635,6 +637,19 @@ export default function ExecutiveReportsPage() {
         {/* Strategic Insights */}
         {activeView === 'insights' && (
           <div className="space-y-6">
+            <AiAssistPanel title="AI Executive Narrative" feature="AI_REPORT_NARRATIVE">
+              <AiReportNarrative
+                reportType="Executive Summary"
+                reportData={executiveMetrics ? {
+                  totalHires: executiveMetrics.totalHires,
+                  averageTimeToHire: executiveMetrics.averageTimeToHire,
+                  costPerHire: executiveMetrics.costPerHire,
+                  offerAcceptanceRate: executiveMetrics.offerAcceptanceRate,
+                  retentionRate: executiveMetrics.retentionRate,
+                } : undefined}
+              />
+            </AiAssistPanel>
+
             {strategicInsights.map((insight) => (
               <div key={insight.id} className="bg-card rounded-sm shadow">
                 <div className="p-6">

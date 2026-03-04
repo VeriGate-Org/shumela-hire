@@ -20,6 +20,9 @@ import {
   ChevronLeftIcon,
   ChevronRightIcon,
 } from '@heroicons/react/24/outline';
+import AiCandidatePanel from '@/components/ai/AiCandidatePanel';
+import AiAssistPanel from '@/components/ai/AiAssistPanel';
+import AiSmartSearch from '@/components/ai/AiSmartSearch';
 
 interface Application {
   id: number;
@@ -109,6 +112,7 @@ export default function ApplicationsPage() {
   const [sortBy, setSortBy] = useState<'submittedAt' | 'status' | 'rating'>('submittedAt');
   const [sortDir, setSortDir] = useState<'asc' | 'desc'>('desc');
   const [selectedApplication, setSelectedApplication] = useState<Application | null>(null);
+  const [aiSearchMode, setAiSearchMode] = useState(false);
   const [currentPage, setCurrentPage] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
   const [totalElements, setTotalElements] = useState(0);
@@ -237,19 +241,39 @@ export default function ApplicationsPage() {
       actions={actions}
     >
       <div className="space-y-6">
+        {/* AI Smart Search */}
+        {aiSearchMode && (
+          <AiAssistPanel title="AI Smart Search" feature="AI_SEARCH" defaultExpanded>
+            <AiSmartSearch />
+          </AiAssistPanel>
+        )}
+
         {/* Search and Filters */}
         <div className="bg-white rounded-[10px] border border-gray-200 p-5">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
             <div className="md:col-span-2">
-              <div className="relative">
-                <MagnifyingGlassIcon className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
-                <input
-                  type="text"
-                  placeholder="Search by name, job title, department, or email..."
-                  value={searchTerm}
-                  onChange={(e) => handleSearchChange(e.target.value)}
-                  className="pl-10 pr-4 py-2 w-full border border-gray-300 rounded-sm focus:ring-2 focus:ring-gold-500/60 focus:border-violet-400"
-                />
+              <div className="flex gap-2">
+                <div className="relative flex-1">
+                  <MagnifyingGlassIcon className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+                  <input
+                    type="text"
+                    placeholder="Search by name, job title, department, or email..."
+                    value={searchTerm}
+                    onChange={(e) => handleSearchChange(e.target.value)}
+                    className="pl-10 pr-4 py-2 w-full border border-gray-300 rounded-sm focus:ring-2 focus:ring-gold-500/60 focus:border-violet-400"
+                  />
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setAiSearchMode(!aiSearchMode)}
+                  className={`px-3 py-2 text-xs font-medium rounded-sm border transition-colors whitespace-nowrap ${
+                    aiSearchMode
+                      ? 'bg-teal-50 border-teal-300 text-teal-700'
+                      : 'border-gray-300 text-gray-500 hover:bg-gray-50'
+                  }`}
+                >
+                  AI Search
+                </button>
               </div>
             </div>
             <div>
@@ -492,6 +516,15 @@ export default function ApplicationsPage() {
                       <div className="flex items-center gap-1">{renderStars(selectedApplication.rating)}</div>
                     </div>
                   )}
+                </div>
+
+                {/* AI Candidate Assist */}
+                <div className="mt-6 pt-6 border-t border-gray-200">
+                  <AiCandidatePanel
+                    applicationId={String(selectedApplication.id)}
+                    candidateName={selectedApplication.applicantName}
+                    jobTitle={selectedApplication.jobTitle}
+                  />
                 </div>
 
                 <div className="flex justify-end mt-6 pt-6 border-t border-gray-200">
