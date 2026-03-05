@@ -70,6 +70,9 @@ public class Applicant extends TenantAwareEntity {
     @Column(name = "source")
     private String source;
 
+    @Column(name = "user_id")
+    private Long userId;
+
     // Employment Equity demographic fields (optional, POPIA-compliant)
     @Column(name = "gender")
     private String gender;
@@ -158,6 +161,9 @@ public class Applicant extends TenantAwareEntity {
 
     public String getSource() { return source; }
     public void setSource(String source) { this.source = source; }
+
+    public Long getUserId() { return userId; }
+    public void setUserId(Long userId) { this.userId = userId; }
 
     public String getGender() { return gender; }
     public void setGender(String gender) { this.gender = gender; }
