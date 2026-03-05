@@ -1,6 +1,8 @@
 package com.arthmatic.shumelahire.security;
 
+import com.arthmatic.shumelahire.entity.Applicant;
 import com.arthmatic.shumelahire.entity.User;
+import com.arthmatic.shumelahire.repository.ApplicantRepository;
 import com.arthmatic.shumelahire.repository.UserRepository;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -26,9 +28,12 @@ public class CognitoUserProvisioningFilter extends OncePerRequestFilter {
     private static final Logger log = LoggerFactory.getLogger(CognitoUserProvisioningFilter.class);
 
     private final UserRepository userRepository;
+    private final ApplicantRepository applicantRepository;
 
-    public CognitoUserProvisioningFilter(UserRepository userRepository) {
+    public CognitoUserProvisioningFilter(UserRepository userRepository,
+                                          ApplicantRepository applicantRepository) {
         this.userRepository = userRepository;
+        this.applicantRepository = applicantRepository;
     }
 
     @Override
@@ -72,8 +77,26 @@ public class CognitoUserProvisioningFilter extends OncePerRequestFilter {
             User.Role role = extractRole(auth);
             user.setRole(role);
 
-            userRepository.save(user);
+            User savedUser = userRepository.save(user);
             log.info("JIT provisioned user: {} (tenant: {}, role: {})", email, tenantId, role);
+
+            // Auto-create Applicant profile for APPLICANT-role users (e.g. LinkedIn OAuth sign-up)
+            if (role == User.Role.APPLICANT && !applicantRepository.existsByEmail(email)) {
+                Applicant applicant = new Applicant();
+                applicant.setName(user.getFirstName());
+                applicant.setSurname(user.getLastName());
+                applicant.setEmail(email);
+                applicant.setSource("OAUTH");
+                applicant.setUserId(savedUser.getId());
+                applicant.setTenantId(tenantId);
+                // LinkedIn URL from JWT if available
+                String linkedinUrl = jwt.getClaimAsString("profile");
+                if (linkedinUrl != null) {
+                    applicant.setLinkedinUrl(linkedinUrl);
+                }
+                applicantRepository.save(applicant);
+                log.info("JIT provisioned applicant profile for: {}", email);
+            }
         } else {
             userRepository.findByEmailAndTenantId(email, tenantId).ifPresent(user -> {
                 user.setLastLogin(LocalDateTime.now());
@@ -89,6 +112,19 @@ public class CognitoUserProvisioningFilter extends OncePerRequestFilter {
                 }
 
                 userRepository.save(user);
+
+                // Backfill Applicant profile if missing (for users created before this change)
+                if (user.getRole() == User.Role.APPLICANT && !applicantRepository.existsByEmail(email)) {
+                    Applicant applicant = new Applicant();
+                    applicant.setName(user.getFirstName());
+                    applicant.setSurname(user.getLastName());
+                    applicant.setEmail(email);
+                    applicant.setSource("BACKFILL");
+                    applicant.setUserId(user.getId());
+                    applicant.setTenantId(tenantId);
+                    applicantRepository.save(applicant);
+                    log.info("Backfilled applicant profile for existing user: {}", email);
+                }
             });
         }
     }
