@@ -88,35 +88,20 @@ export default function ReportsPage() {
   // Report Builder handlers
   const handleSaveReport = useCallback(async (config: ReportConfig) => {
     try {
-      const res = await apiFetch('/api/reports/custom/csv', {
+      const res = await apiFetch('/api/reports', {
         method: 'POST',
         body: JSON.stringify(config),
       });
       if (res.ok) {
+        const saved = await res.json();
+        setSavedReports(prev => [...prev, saved]);
         toast('Report saved successfully', 'success');
-        // Reload reports list
-        const reportsRes = await apiFetch('/api/reports/types');
-        if (reportsRes.ok) {
-          const data = await reportsRes.json();
-          setSavedReports(Array.isArray(data) ? data : data.data || []);
-        }
+        setActiveTab('library');
       } else {
         throw new Error('Failed to save');
       }
     } catch {
-      // Fallback: save locally
-      const newReport: SavedReport = {
-        ...config,
-        id: `report_${Date.now()}`,
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
-        createdBy: 'current-user@company.com',
-        isShared: false,
-        runCount: 0,
-        tags: [],
-      };
-      setSavedReports(prev => [...prev, newReport]);
-      toast('Report saved locally', 'info');
+      toast('Failed to save report', 'error');
     }
   }, [toast]);
 
@@ -191,9 +176,16 @@ export default function ReportsPage() {
   const handleDeleteReport = useCallback(async (reportId: string) => {
     if (confirm('Are you sure you want to delete this report?')) {
       try {
-        await apiFetch(`/api/reports/${reportId}`, { method: 'DELETE' });
+        const res = await apiFetch(`/api/reports/${reportId}`, { method: 'DELETE' });
+        if (!res.ok && res.status !== 204) {
+          const data = await res.json().catch(() => null);
+          if (data?.message?.includes('system')) {
+            toast('System reports cannot be deleted', 'error');
+            return;
+          }
+        }
       } catch {
-        // Endpoint may not exist — proceed with local removal
+        // Proceed with local removal
       }
       setSavedReports(prev => prev.filter(r => r.id !== reportId));
       toast('Report deleted', 'success');
@@ -201,6 +193,17 @@ export default function ReportsPage() {
   }, [toast]);
 
   const handleDuplicateReport = useCallback(async (report: SavedReport) => {
+    try {
+      const res = await apiFetch(`/api/reports/${report.id}/duplicate`, { method: 'POST' });
+      if (res.ok) {
+        const duplicated = await res.json();
+        setSavedReports(prev => [...prev, duplicated]);
+        toast('Report duplicated', 'success');
+        return;
+      }
+    } catch {
+      // Fallback
+    }
     const duplicated: SavedReport = {
       ...report,
       id: `report_${Date.now()}`,
@@ -210,20 +213,17 @@ export default function ReportsPage() {
       runCount: 0,
       lastRun: undefined,
     };
-    try {
-      await apiFetch('/api/reports/custom/csv', {
-        method: 'POST',
-        body: JSON.stringify(duplicated),
-      });
-    } catch {
-      // Fallback: save locally
-    }
     setSavedReports(prev => [...prev, duplicated]);
-    toast('Report duplicated', 'success');
+    toast('Report duplicated locally', 'info');
   }, [toast]);
 
-  const handleShareReport = useCallback((reportId: string) => {
-    setSavedReports(prev => prev.map(r => 
+  const handleShareReport = useCallback(async (reportId: string) => {
+    try {
+      await apiFetch(`/api/reports/${reportId}/share`, { method: 'POST' });
+    } catch {
+      // Proceed with local update
+    }
+    setSavedReports(prev => prev.map(r =>
       r.id === reportId ? { ...r, isShared: true } : r
     ));
     toast('Report shared successfully', 'success');

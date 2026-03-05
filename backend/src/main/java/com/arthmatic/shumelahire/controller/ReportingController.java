@@ -1,11 +1,15 @@
 package com.arthmatic.shumelahire.controller;
 
+import com.arthmatic.shumelahire.dto.ReportTemplateResponse;
+import com.arthmatic.shumelahire.service.ReportTemplateService;
 import com.arthmatic.shumelahire.service.ReportingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
@@ -20,6 +24,9 @@ public class ReportingController {
 
     @Autowired
     private ReportingService reportingService;
+
+    @Autowired
+    private ReportTemplateService reportTemplateService;
 
     // CSV Export Endpoints
 
@@ -201,12 +208,57 @@ public class ReportingController {
         }
     }
 
-    // Report Configuration Endpoints
+    // Report Template CRUD Endpoints
 
     @GetMapping("/types")
-    public ResponseEntity<Map<String, Object>> getAvailableReportTypes() {
-        Map<String, Object> reportTypes = reportingService.getAvailableReportTypes();
-        return ResponseEntity.ok(reportTypes);
+    public ResponseEntity<List<ReportTemplateResponse>> getReportTemplates(Authentication auth) {
+        String email = extractEmail(auth);
+        List<ReportTemplateResponse> reports = reportTemplateService.getReportsForUser(email);
+        return ResponseEntity.ok(reports);
+    }
+
+    @PostMapping
+    public ResponseEntity<ReportTemplateResponse> createReport(
+            @RequestBody Map<String, Object> config, Authentication auth) {
+        String email = extractEmail(auth);
+        ReportTemplateResponse created = reportTemplateService.createReport(config, email);
+        return ResponseEntity.status(HttpStatus.CREATED).body(created);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<ReportTemplateResponse> updateReport(
+            @PathVariable Long id, @RequestBody Map<String, Object> config) {
+        return ResponseEntity.ok(reportTemplateService.updateReport(id, config));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteReport(@PathVariable Long id) {
+        reportTemplateService.deleteReport(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    @PostMapping("/{id}/run")
+    public ResponseEntity<ReportTemplateResponse> markReportRun(@PathVariable Long id) {
+        return ResponseEntity.ok(reportTemplateService.incrementRunCount(id));
+    }
+
+    @PostMapping("/{id}/duplicate")
+    public ResponseEntity<ReportTemplateResponse> duplicateReport(
+            @PathVariable Long id, Authentication auth) {
+        String email = extractEmail(auth);
+        return ResponseEntity.status(HttpStatus.CREATED).body(reportTemplateService.duplicateReport(id, email));
+    }
+
+    @PostMapping("/{id}/share")
+    public ResponseEntity<ReportTemplateResponse> shareReport(@PathVariable Long id) {
+        return ResponseEntity.ok(reportTemplateService.shareReport(id));
+    }
+
+    private String extractEmail(Authentication auth) {
+        if (auth != null && auth.getPrincipal() instanceof Jwt jwt) {
+            return jwt.getClaimAsString("email");
+        }
+        return auth != null ? auth.getName() : "system";
     }
 
     @GetMapping("/preview/{reportType}")
