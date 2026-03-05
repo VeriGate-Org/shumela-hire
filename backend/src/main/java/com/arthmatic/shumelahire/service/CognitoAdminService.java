@@ -69,6 +69,60 @@ public class CognitoAdminService {
     }
 
     /**
+     * Creates a Cognito user with a permanent password (for self-registration).
+     * Unlike createUser(), this sets the password directly so the user can sign in immediately.
+     *
+     * @return the Cognito user sub (unique ID)
+     */
+    public String createUserWithPassword(String email, String firstName, String lastName,
+                                          String tenantId, String groupName, String password) {
+        // Create user with a suppress invitation (user already knows their password)
+        AdminCreateUserRequest createRequest = AdminCreateUserRequest.builder()
+                .userPoolId(userPoolId)
+                .username(email)
+                .temporaryPassword(password)
+                .userAttributes(
+                        AttributeType.builder().name("email").value(email).build(),
+                        AttributeType.builder().name("email_verified").value("true").build(),
+                        AttributeType.builder().name("given_name").value(firstName).build(),
+                        AttributeType.builder().name("family_name").value(lastName).build(),
+                        AttributeType.builder().name("name").value(firstName + " " + lastName).build(),
+                        AttributeType.builder().name("custom:tenant_id").value(tenantId).build()
+                )
+                .messageAction(MessageActionType.SUPPRESS) // Don't send invite email
+                .build();
+
+        AdminCreateUserResponse response = cognitoClient.adminCreateUser(createRequest);
+        String cognitoSub = response.user().attributes().stream()
+                .filter(a -> "sub".equals(a.name()))
+                .map(AttributeType::value)
+                .findFirst()
+                .orElse(response.user().username());
+
+        // Set permanent password so user doesn't get NEW_PASSWORD_REQUIRED challenge
+        cognitoClient.adminSetUserPassword(AdminSetUserPasswordRequest.builder()
+                .userPoolId(userPoolId)
+                .username(email)
+                .password(password)
+                .permanent(true)
+                .build());
+
+        log.info("Created Cognito user with permanent password: {} (sub: {})", email, cognitoSub);
+
+        // Ensure group exists and add user to it
+        ensureGroupExists(groupName);
+        cognitoClient.adminAddUserToGroup(AdminAddUserToGroupRequest.builder()
+                .userPoolId(userPoolId)
+                .username(email)
+                .groupName(groupName)
+                .build());
+
+        log.info("Added user {} to group {}", email, groupName);
+
+        return cognitoSub;
+    }
+
+    /**
      * Checks whether a user exists in the Cognito user pool.
      */
     public boolean userExists(String email) {
@@ -81,6 +135,28 @@ public class CognitoAdminService {
         } catch (UserNotFoundException e) {
             return false;
         }
+    }
+
+    /**
+     * Disables a Cognito user (prevents sign-in).
+     */
+    public void disableUser(String email) {
+        cognitoClient.adminDisableUser(AdminDisableUserRequest.builder()
+                .userPoolId(userPoolId)
+                .username(email)
+                .build());
+        log.info("Disabled Cognito user: {}", email);
+    }
+
+    /**
+     * Enables a Cognito user (allows sign-in).
+     */
+    public void enableUser(String email) {
+        cognitoClient.adminEnableUser(AdminEnableUserRequest.builder()
+                .userPoolId(userPoolId)
+                .username(email)
+                .build());
+        log.info("Enabled Cognito user: {}", email);
     }
 
     private void ensureGroupExists(String groupName) {

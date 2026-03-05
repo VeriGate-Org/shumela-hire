@@ -26,6 +26,8 @@ function LoginContent() {
     }
   }, [user, router]);
 
+  const registeredSuccess = searchParams.get('registered') === 'true';
+
   useEffect(() => {
     const errorParam = searchParams.get('error');
     if (errorParam) {
@@ -204,6 +206,12 @@ function LoginContent() {
             </p>
           </div>
 
+          {registeredSuccess && (
+            <div className="p-3 bg-green-50 border border-green-200 text-green-700 text-sm rounded-sm">
+              Account created successfully. Sign in to continue.
+            </div>
+          )}
+
           {error && (
             <div className="p-3 bg-red-50 border border-red-200 text-red-700 text-sm rounded-sm">
               {error}
@@ -280,6 +288,13 @@ function LoginContent() {
               </button>
             </>
           )}
+
+          <p className="text-center text-sm text-gray-500">
+            Don&apos;t have an account?{' '}
+            <Link href="/register" className="text-primary font-medium hover:underline">
+              Register
+            </Link>
+          </p>
         </div>
       </div>
     );
