@@ -17,7 +17,7 @@ function parseAuditLog(raw: any): AuditLogEntry {
     action: raw.action || '',
     userId: raw.userId || '',
     userRole: raw.userRole || '',
-    details: typeof raw.details === 'string' ? JSON.parse(raw.details) : (raw.details || {}),
+    details: typeof raw.details === 'string' ? (() => { try { return JSON.parse(raw.details); } catch { return { message: raw.details }; } })() : (raw.details || {}),
     timestamp: new Date(raw.timestamp || raw.createdAt || Date.now()),
   };
 }
