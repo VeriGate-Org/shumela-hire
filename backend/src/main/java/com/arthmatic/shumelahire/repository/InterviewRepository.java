@@ -21,7 +21,8 @@ import java.util.Optional;
 public interface InterviewRepository extends JpaRepository<Interview, Long> {
 
     // Basic queries
-    List<Interview> findByApplicationId(Long applicationId);
+    @Query("SELECT i FROM Interview i WHERE i.application.id = :applicationId")
+    List<Interview> findByApplicationId(@Param("applicationId") Long applicationId);
     
     List<Interview> findByInterviewerId(Long interviewerId);
     
