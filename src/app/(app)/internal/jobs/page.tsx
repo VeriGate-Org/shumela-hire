@@ -126,27 +126,36 @@ export default function InternalJobsBoard() {
 
     try {
       const params = new URLSearchParams({
-        status: 'PUBLISHED',
-        channel: 'internal',
         size: '50',
-        sort: 'createdAt,desc',
       });
-      if (filters.search) params.set('q', filters.search);
-      if (filters.department) params.set('department', filters.department);
-      if (filters.location) params.set('location', filters.location);
-      if (filters.employmentType) params.set('employmentType', filters.employmentType);
-      if (filters.closingDate) params.set('closingDate', filters.closingDate);
 
-      const response = await apiFetch(`/api/ads?${params}`);
+      const response = await apiFetch(`/api/ads/internal?${params}`);
       if (!response.ok) throw new Error(`HTTP ${response.status}`);
 
       const result = await response.json();
       const content = result.data?.content || result.content || [];
 
-      setJobs(content);
-      setTotalJobs(result.data?.totalElements || content.length);
-      // Filter options derived from current results. No dedicated filter endpoint exists for job ads,
-      // so options reflect only the current page of results.
+      // Apply client-side filters since the internal endpoint doesn't support them
+      let filtered = content;
+      if (filters.search) {
+        const q = filters.search.toLowerCase();
+        filtered = filtered.filter((j: InternalJobAd) =>
+          j.title?.toLowerCase().includes(q) || j.department?.toLowerCase().includes(q)
+        );
+      }
+      if (filters.department) {
+        filtered = filtered.filter((j: InternalJobAd) => j.department === filters.department);
+      }
+      if (filters.location) {
+        filtered = filtered.filter((j: InternalJobAd) => j.location === filters.location);
+      }
+      if (filters.employmentType) {
+        filtered = filtered.filter((j: InternalJobAd) => j.employmentType === filters.employmentType);
+      }
+
+      setJobs(filtered);
+      setTotalJobs(filtered.length);
+      // Filter options derived from full results (before filtering).
       setFilterOptions({
         departments: [...new Set(content.map((j: InternalJobAd) => j.department).filter(Boolean))] as string[],
         locations: [...new Set(content.map((j: InternalJobAd) => j.location).filter(Boolean))] as string[],
