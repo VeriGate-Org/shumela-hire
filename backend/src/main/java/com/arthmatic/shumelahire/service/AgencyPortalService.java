@@ -4,6 +4,7 @@ import com.arthmatic.shumelahire.entity.*;
 import com.arthmatic.shumelahire.repository.AgencyProfileRepository;
 import com.arthmatic.shumelahire.repository.AgencySubmissionRepository;
 import com.arthmatic.shumelahire.repository.JobPostingRepository;
+import com.arthmatic.shumelahire.repository.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +15,7 @@ import java.time.LocalDateTime;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @Service
 public class AgencyPortalService {
@@ -28,6 +30,12 @@ public class AgencyPortalService {
 
     @Autowired
     private JobPostingRepository jobPostingRepository;
+
+    @Autowired
+    private UserRepository userRepository;
+
+    @Autowired(required = false)
+    private CognitoAdminService cognitoAdminService;
 
     public AgencyProfile registerAgency(AgencyProfile agency) {
         agency.setStatus(AgencyStatus.PENDING_APPROVAL);
@@ -53,7 +61,29 @@ public class AgencyPortalService {
             throw new IllegalStateException("Cannot approve agency in status: " + agency.getStatus());
         }
         agency.setStatus(AgencyStatus.APPROVED);
-        return agencyProfileRepository.save(agency);
+        AgencyProfile saved = agencyProfileRepository.save(agency);
+
+        // Activate the agency contact's user account
+        activateAgencyUser(agency.getContactEmail());
+
+        return saved;
+    }
+
+    private void activateAgencyUser(String email) {
+        Optional<User> userOpt = userRepository.findByEmail(email);
+        userOpt.ifPresent(user -> {
+            user.setEnabled(true);
+            userRepository.save(user);
+            logger.info("Enabled user account for agency contact: {}", email);
+        });
+
+        if (cognitoAdminService != null) {
+            try {
+                cognitoAdminService.enableUser(email);
+            } catch (Exception e) {
+                logger.warn("Failed to enable Cognito user for {}: {}", email, e.getMessage());
+            }
+        }
     }
 
     @Transactional
@@ -63,7 +93,29 @@ public class AgencyPortalService {
             throw new IllegalStateException("Cannot suspend agency in status: " + agency.getStatus());
         }
         agency.setStatus(AgencyStatus.SUSPENDED);
-        return agencyProfileRepository.save(agency);
+        AgencyProfile saved = agencyProfileRepository.save(agency);
+
+        // Disable the agency contact's user account
+        deactivateAgencyUser(agency.getContactEmail());
+
+        return saved;
+    }
+
+    private void deactivateAgencyUser(String email) {
+        Optional<User> userOpt = userRepository.findByEmail(email);
+        userOpt.ifPresent(user -> {
+            user.setEnabled(false);
+            userRepository.save(user);
+            logger.info("Disabled user account for agency contact: {}", email);
+        });
+
+        if (cognitoAdminService != null) {
+            try {
+                cognitoAdminService.disableUser(email);
+            } catch (Exception e) {
+                logger.warn("Failed to disable Cognito user for {}: {}", email, e.getMessage());
+            }
+        }
     }
 
     @Transactional

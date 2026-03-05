@@ -137,6 +137,28 @@ public class CognitoAdminService {
         }
     }
 
+    /**
+     * Disables a Cognito user (prevents sign-in).
+     */
+    public void disableUser(String email) {
+        cognitoClient.adminDisableUser(AdminDisableUserRequest.builder()
+                .userPoolId(userPoolId)
+                .username(email)
+                .build());
+        log.info("Disabled Cognito user: {}", email);
+    }
+
+    /**
+     * Enables a Cognito user (allows sign-in).
+     */
+    public void enableUser(String email) {
+        cognitoClient.adminEnableUser(AdminEnableUserRequest.builder()
+                .userPoolId(userPoolId)
+                .username(email)
+                .build());
+        log.info("Enabled Cognito user: {}", email);
+    }
+
     private void ensureGroupExists(String groupName) {
         try {
             cognitoClient.getGroup(GetGroupRequest.builder()

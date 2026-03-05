@@ -228,6 +228,13 @@ export default function RegisterPage() {
             Sign in
           </Link>
         </p>
+
+        <p className="text-center text-sm text-gray-500">
+          Registering as a recruitment agency?{' '}
+          <Link href="/agencies/register" className="text-primary font-medium hover:underline">
+            Agency registration
+          </Link>
+        </p>
       </div>
     </div>
   );
