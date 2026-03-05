@@ -32,20 +32,12 @@ interface InterviewSchedulerProps {
 
 interface Application {
   id: number;
-  applicant: {
-    id: number;
-    name?: string;
-    surname?: string;
-    fullName?: string;
-    firstName?: string;
-    lastName?: string;
-    email: string;
-  };
-  jobPosting: {
-    id: number;
-    title: string;
-    department: string;
-  };
+  applicantId: number;
+  applicantName: string;
+  applicantEmail: string;
+  jobAdId: number;
+  jobTitle: string;
+  department: string;
   status: string;
 }
 
@@ -152,17 +144,11 @@ export default function InterviewScheduler({ interviewId, onSuccess, onCancel }:
   }, [interviewers]);
 
   const applicationOptions: DropdownOption[] = useMemo(
-    () => applications.map((app) => {
-      const a = app.applicant;
-      const name = a?.fullName
-        || `${a?.firstName || a?.name || ''} ${a?.lastName || a?.surname || ''}`.trim()
-        || 'Unknown';
-      return {
-        value: String(app.id),
-        label: `${name} - ${app.jobPosting?.title || 'Unknown'}`,
-        description: app.jobPosting?.department ? `Department: ${app.jobPosting.department}` : undefined,
-      };
-    }),
+    () => applications.map((app) => ({
+      value: String(app.id),
+      label: `${app.applicantName || 'Unknown'} - ${app.jobTitle || 'Unknown'}`,
+      description: app.department ? `Department: ${app.department}` : undefined,
+    })),
     [applications],
   );
 
@@ -229,7 +215,7 @@ export default function InterviewScheduler({ interviewId, onSuccess, onCancel }:
         const roundLabel = INTERVIEW_ROUNDS.find((round) => round.value === formData.round)?.label || '';
         setFormData((prev) => ({
           ...prev,
-          title: `${roundLabel} - ${application.jobPosting.title}`,
+          title: `${roundLabel} - ${application.jobTitle || 'Untitled Position'}`,
         }));
       }
     }
