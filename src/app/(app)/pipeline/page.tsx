@@ -35,6 +35,7 @@ import AiOfferPrediction from '@/components/ai/AiOfferPrediction';
 import BackgroundCheckPanel from '@/components/BackgroundCheckPanel';
 import VerificationStatusSummary, { VerificationSummary } from '@/components/VerificationStatusSummary';
 import OfferSummaryPanel from '@/components/OfferSummaryPanel';
+import InterviewSummaryPanel from '@/components/InterviewSummaryPanel';
 import StatusPill from '@/components/StatusPill';
 
 // --- Stage grouping: maps 16 backend PipelineStage enum values into 7 display columns ---
@@ -227,6 +228,8 @@ export default function PipelinePage() {
   const [documentsLoading, setDocumentsLoading] = useState(false);
   const [ratingUpdating, setRatingUpdating] = useState(false);
   const [screeningNotesOpen, setScreeningNotesOpen] = useState(false);
+  const [interviewPreviews, setInterviewPreviews] = useState<Record<string, { nextDate?: string; nextType?: string; status?: string; feedbackCount?: number; totalInterviewers?: number; latestRecommendation?: string }>>({});
+  const [showScheduler, setShowScheduler] = useState(false);
 
   // --- Status mapping covering all 12 ApplicationStatus enum values ---
   const statusMap: Record<string, Application['status']> = {
@@ -348,6 +351,30 @@ export default function PipelinePage() {
               const offer = Array.isArray(data) ? data[0] : data;
               if (offer) setOffers(prev => ({ ...prev, [a.id]: offer }));
             }
+          })
+          .catch(() => {});
+      });
+      // Preload interview previews for interview-stage cards
+      const interviewStages = ['FIRST_INTERVIEW', 'TECHNICAL_ASSESSMENT', 'SECOND_INTERVIEW', 'PANEL_INTERVIEW', 'MANAGER_INTERVIEW', 'FINAL_INTERVIEW'];
+      const interviewApps = mapped.filter(a => interviewStages.includes(a.backendStage));
+      interviewApps.forEach(a => {
+        apiFetch(`/api/interviews/application/${a.id}`)
+          .then(res => res.ok ? res.json() : [])
+          .then(data => {
+            const items = Array.isArray(data) ? data : data.content || [];
+            if (items.length === 0) return;
+            const scheduled = items.find((iv: any) => ['SCHEDULED', 'RESCHEDULED'].includes(iv.status));
+            const completed = items.filter((iv: any) => iv.status === 'COMPLETED');
+            const latestCompleted = completed[0];
+            setInterviewPreviews(prev => ({
+              ...prev,
+              [a.id]: {
+                nextDate: scheduled?.scheduledAt,
+                nextType: scheduled?.type,
+                status: scheduled ? scheduled.status : latestCompleted?.status,
+                latestRecommendation: latestCompleted?.recommendation || undefined,
+              },
+            }));
           })
           .catch(() => {});
       });
@@ -941,6 +968,38 @@ export default function PipelinePage() {
                             <span>{new Date(application.lastActivity).toLocaleDateString()}</span>
                           </div>
 
+                          {/* Interview preview on interview cards */}
+                          {stage.id === 'interviews' && interviewPreviews[application.id] && (() => {
+                            const preview = interviewPreviews[application.id];
+                            return (
+                              <div className="mb-2 space-y-1">
+                                {preview.nextDate && (
+                                  <div className="flex items-center gap-1 text-[10px]">
+                                    <CalendarIcon className="w-3 h-3 text-muted-foreground" />
+                                    <span className="text-foreground font-medium">
+                                      {(() => {
+                                        const d = new Date(preview.nextDate);
+                                        const now = new Date();
+                                        const diffDays = Math.floor((d.getTime() - now.getTime()) / (1000 * 60 * 60 * 24));
+                                        const time = d.toLocaleTimeString('en-ZA', { hour: '2-digit', minute: '2-digit' });
+                                        if (diffDays === 0) return `Today ${time}`;
+                                        if (diffDays === 1) return `Tomorrow ${time}`;
+                                        if (diffDays < 0) return `Overdue ${Math.abs(diffDays)}d`;
+                                        return `${d.toLocaleDateString('en-ZA', { day: 'numeric', month: 'short' })} ${time}`;
+                                      })()}
+                                    </span>
+                                    {preview.nextType && (
+                                      <StatusPill value={preview.nextType} domain="interviewType" size="sm" />
+                                    )}
+                                  </div>
+                                )}
+                                {preview.latestRecommendation && (
+                                  <StatusPill value={preview.latestRecommendation} domain="interviewRecommendation" size="sm" />
+                                )}
+                              </div>
+                            );
+                          })()}
+
                           {/* Offer status badge on offer/accepted cards */}
                           {['offer', 'accepted'].includes(stage.id) && offers[application.id] && (
                             <div className="mb-2">
@@ -1206,6 +1265,7 @@ export default function PipelinePage() {
           const isChecksStage = ['REFERENCE_CHECK', 'BACKGROUND_CHECK'].includes(selectedApplication.backendStage);
           const isHiredStage = selectedApplication.backendStage === 'HIRED';
           const isOfferRelated = ['OFFER_PREPARATION', 'OFFER_EXTENDED', 'OFFER_NEGOTIATION', 'OFFER_ACCEPTED', 'HIRED'].includes(selectedApplication.backendStage);
+          const isInterviewStage = ['FIRST_INTERVIEW', 'TECHNICAL_ASSESSMENT', 'SECOND_INTERVIEW', 'PANEL_INTERVIEW', 'MANAGER_INTERVIEW', 'FINAL_INTERVIEW'].includes(selectedApplication.backendStage);
           const showAiPanels = !isChecksStage && !isHiredStage;
 
           return (
@@ -1380,6 +1440,21 @@ export default function PipelinePage() {
                     </div>
                   </div>
                 </div>
+
+                {/* Interview Summary Panel (Interview stages) */}
+                {isInterviewStage && (
+                  <div className="pt-6 border-t border-gray-200">
+                    <InterviewSummaryPanel
+                      applicationId={selectedApplication.id}
+                      candidateName={`${selectedApplication.candidate.firstName} ${selectedApplication.candidate.lastName}`}
+                      jobTitle={selectedApplication.job.title}
+                      onSchedule={() => {
+                        // Navigate to interviews page with pre-filled application
+                        window.location.href = `/interviews?schedule=true&applicationId=${selectedApplication.id}`;
+                      }}
+                    />
+                  </div>
+                )}
 
                 {/* Offer Summary Panel (Offer/Accepted/Hired) */}
                 {isOfferRelated && (
