@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { apiFetch } from '@/lib/api-fetch';
 
@@ -15,17 +15,6 @@ interface Interview {
   statusDisplayName: string;
   scheduledAt: string;
   durationMinutes: number;
-  feedback?: string;
-  rating?: number;
-  communicationSkills?: number;
-  technicalSkills?: number;
-  culturalFit?: number;
-  overallImpression?: string;
-  recommendation?: string;
-  nextSteps?: string;
-  technicalAssessment?: string;
-  candidateQuestions?: string;
-  interviewerNotes?: string;
   application: {
     id: number;
     applicant: {
@@ -40,6 +29,21 @@ interface Interview {
       department: string;
     };
   };
+}
+
+interface FeedbackEntry {
+  id: number;
+  submittedBy: number;
+  interviewerName?: string;
+  feedback: string;
+  rating?: number;
+  communicationSkills?: number;
+  technicalSkills?: number;
+  culturalFit?: number;
+  overallImpression?: string;
+  recommendation: string;
+  nextSteps?: string;
+  submittedAt: string;
 }
 
 interface InterviewFeedbackFormProps {
@@ -73,22 +77,69 @@ const RECOMMENDATIONS = [
 
 export default function InterviewFeedbackForm({ interview, onSuccess, onCancel }: InterviewFeedbackFormProps) {
   const { user } = useAuth();
+  const [existingFeedbacks, setExistingFeedbacks] = useState<FeedbackEntry[]>([]);
+  const [loadingFeedbacks, setLoadingFeedbacks] = useState(false);
   const [formData, setFormData] = useState<FeedbackFormData>({
-    feedback: interview.feedback || '',
-    rating: interview.rating || 0,
-    communicationSkills: interview.communicationSkills || 0,
-    technicalSkills: interview.technicalSkills || 0,
-    culturalFit: interview.culturalFit || 0,
-    overallImpression: interview.overallImpression || '',
-    recommendation: interview.recommendation || '',
-    nextSteps: interview.nextSteps || '',
-    technicalAssessment: interview.technicalAssessment || '',
-    candidateQuestions: interview.candidateQuestions || '',
-    interviewerNotes: interview.interviewerNotes || '',
+    feedback: '',
+    rating: 0,
+    communicationSkills: 0,
+    technicalSkills: 0,
+    culturalFit: 0,
+    overallImpression: '',
+    recommendation: '',
+    nextSteps: '',
+    technicalAssessment: '',
+    candidateQuestions: '',
+    interviewerNotes: '',
   });
 
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
+
+  const loadExistingFeedbacks = useCallback(async () => {
+    try {
+      setLoadingFeedbacks(true);
+      const response = await apiFetch(`/api/interviews/${interview.id}/feedbacks`);
+      if (response.ok) {
+        const data = await response.json();
+        setExistingFeedbacks(data);
+      }
+    } catch (error) {
+      console.error('Error loading feedbacks:', error);
+    } finally {
+      setLoadingFeedbacks(false);
+    }
+  }, [interview.id]);
+
+  // Load existing feedbacks and check if current user already submitted
+  useEffect(() => {
+    void loadExistingFeedbacks();
+  }, [loadExistingFeedbacks]);
+
+  // Pre-fill form if current user has existing feedback
+  useEffect(() => {
+    const userId = Number(user?.id);
+    const myFeedback = existingFeedbacks.find((f) => f.submittedBy === userId);
+    if (myFeedback) {
+      setFormData({
+        feedback: myFeedback.feedback || '',
+        rating: myFeedback.rating || 0,
+        communicationSkills: myFeedback.communicationSkills || 0,
+        technicalSkills: myFeedback.technicalSkills || 0,
+        culturalFit: myFeedback.culturalFit || 0,
+        overallImpression: myFeedback.overallImpression || '',
+        recommendation: myFeedback.recommendation || '',
+        nextSteps: myFeedback.nextSteps || '',
+        technicalAssessment: '',
+        candidateQuestions: '',
+        interviewerNotes: '',
+      });
+    }
+  }, [existingFeedbacks, user?.id]);
+
+  const currentUserHasFeedback = existingFeedbacks.some(
+    (f) => f.submittedBy === Number(user?.id)
+  );
 
   const validateForm = () => {
     const newErrors: Record<string, string> = {};
@@ -145,6 +196,8 @@ export default function InterviewFeedbackForm({ interview, onSuccess, onCancel }
         submittedBy: String(submittedBy),
       });
 
+      const displayName = user?.name || user?.email || '';
+      if (displayName) params.append('interviewerName', displayName);
       if (formData.overallImpression) params.append('overallImpression', formData.overallImpression);
       if (formData.nextSteps) params.append('nextSteps', formData.nextSteps);
       if (formData.technicalAssessment) params.append('technicalAssessment', formData.technicalAssessment);
@@ -214,7 +267,7 @@ export default function InterviewFeedbackForm({ interview, onSuccess, onCancel }
 
   const getRecommendationInfo = (value: string) => {
     const recommendation = RECOMMENDATIONS.find((item) => item.value === value);
-    return recommendation || { label: '', color: 'text-muted-foreground' };
+    return recommendation || { label: value, color: 'text-muted-foreground' };
   };
 
   const getAverageSkillRating = () => {
@@ -225,221 +278,285 @@ export default function InterviewFeedbackForm({ interview, onSuccess, onCancel }
   };
 
   return (
-    <div className="max-w-4xl mx-auto bg-card rounded-card border border-border shadow-md">
-      <div className="px-6 py-4 border-b border-border">
-        <h2 className="text-2xl font-bold text-foreground">Interview Feedback</h2>
-        <div className="mt-2 text-sm text-muted-foreground">
-          <p><strong className="text-foreground">Interview:</strong> {interview.title}</p>
-          <p><strong className="text-foreground">Candidate:</strong> {((interview.application?.applicant?.name ?? '') + ' ' + (interview.application?.applicant?.surname ?? '')).trim() || 'Unknown Candidate'}</p>
-          <p><strong className="text-foreground">Position:</strong> {interview.application?.jobPosting?.title || 'Unknown Position'}</p>
-          <p><strong className="text-foreground">Date:</strong> {new Date(interview.scheduledAt).toLocaleString()}</p>
-        </div>
-      </div>
-
-      <form onSubmit={handleSubmit} className="p-6">
-        {errors.general && (
-          <div className="mb-6 p-4 bg-red-100 border border-red-300 text-red-700 rounded-control">
-            {errors.general}
+    <div className="max-w-4xl mx-auto space-y-6">
+      {/* Existing Feedbacks */}
+      {existingFeedbacks.length > 0 && (
+        <div className="bg-card rounded-card border border-border shadow-md">
+          <div className="px-6 py-4 border-b border-border">
+            <h2 className="text-lg font-bold text-foreground">
+              Submitted Feedback ({existingFeedbacks.length})
+            </h2>
           </div>
-        )}
-
-        <div className="space-y-8">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div>
-              {renderStarRating('rating', formData.rating, 'Overall Interview Rating')}
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-foreground mb-2">
-                Average Skills Rating
-              </label>
-              <div className="text-2xl font-bold text-gold-700">
-                {getAverageSkillRating() || 'N/A'}
+          <div className="divide-y divide-border">
+            {existingFeedbacks.map((fb) => (
+              <div key={fb.id} className="p-6 space-y-3">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center text-sm font-medium text-primary">
+                      {(fb.interviewerName || 'U')[0].toUpperCase()}
+                    </div>
+                    <div>
+                      <p className="font-medium text-foreground">
+                        {fb.interviewerName || `User #${fb.submittedBy}`}
+                        {fb.submittedBy === Number(user?.id) && (
+                          <span className="ml-2 text-xs bg-gold-100 text-gold-800 px-2 py-0.5 rounded-full">You</span>
+                        )}
+                      </p>
+                      <p className="text-xs text-muted-foreground">
+                        {new Date(fb.submittedAt).toLocaleString()}
+                      </p>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    {fb.rating && (
+                      <span className="text-sm font-medium text-yellow-500">
+                        {'★'.repeat(fb.rating)}{'☆'.repeat(5 - fb.rating)}
+                      </span>
+                    )}
+                    <span className={`text-sm font-medium ${getRecommendationInfo(fb.recommendation).color}`}>
+                      {getRecommendationInfo(fb.recommendation).label}
+                    </span>
+                  </div>
+                </div>
+                <p className="text-sm text-muted-foreground">{fb.feedback}</p>
+                {(fb.communicationSkills || fb.technicalSkills || fb.culturalFit) && (
+                  <div className="flex gap-4 text-xs text-muted-foreground">
+                    {fb.communicationSkills && <span>Communication: {fb.communicationSkills}/5</span>}
+                    {fb.technicalSkills && <span>Technical: {fb.technicalSkills}/5</span>}
+                    {fb.culturalFit && <span>Cultural Fit: {fb.culturalFit}/5</span>}
+                  </div>
+                )}
               </div>
-              <p className="text-sm text-muted-foreground">Based on communication, technical, and cultural fit</p>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {loadingFeedbacks && (
+        <div className="flex items-center justify-center p-4">
+          <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-cta" />
+        </div>
+      )}
+
+      {/* Feedback Form */}
+      <div className="bg-card rounded-card border border-border shadow-md">
+        <div className="px-6 py-4 border-b border-border">
+          <h2 className="text-2xl font-bold text-foreground">
+            {currentUserHasFeedback ? 'Update Your Feedback' : 'Submit Your Feedback'}
+          </h2>
+          <div className="mt-2 text-sm text-muted-foreground">
+            <p><strong className="text-foreground">Interview:</strong> {interview.title}</p>
+            <p><strong className="text-foreground">Candidate:</strong> {((interview.application?.applicant?.name ?? '') + ' ' + (interview.application?.applicant?.surname ?? '')).trim() || 'Unknown Candidate'}</p>
+            <p><strong className="text-foreground">Position:</strong> {interview.application?.jobPosting?.title || 'Unknown Position'}</p>
+            <p><strong className="text-foreground">Date:</strong> {new Date(interview.scheduledAt).toLocaleString()}</p>
+          </div>
+        </div>
+
+        <form onSubmit={handleSubmit} className="p-6">
+          {errors.general && (
+            <div className="mb-6 p-4 bg-red-100 border border-red-300 text-red-700 rounded-control">
+              {errors.general}
             </div>
-          </div>
+          )}
 
-          <div>
-            <label htmlFor="feedback" className="block text-sm font-medium text-foreground mb-1">
-              Overall Feedback *
-            </label>
-            <textarea
-              id="feedback"
-              value={formData.feedback}
-              onChange={(event) => handleInputChange('feedback', event.target.value)}
-              rows={4}
-              aria-required="true"
-              aria-invalid={!!errors.feedback}
-              aria-describedby={errors.feedback ? 'feedback-error' : undefined}
-              className={`w-full p-3 border rounded-control bg-card focus:ring-2 focus:ring-gold-500/60 focus:border-primary ${errors.feedback ? 'border-red-500' : 'border-border'}`}
-              placeholder="Provide your overall assessment of the candidate's interview performance"
-            />
-            {errors.feedback && <p id="feedback-error" role="alert" className="text-red-500 text-sm mt-1">{errors.feedback}</p>}
-          </div>
-
-          <div>
-            <h3 className="text-lg font-medium text-foreground mb-4">Skills Assessment</h3>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              {renderStarRating('communicationSkills', formData.communicationSkills, 'Communication Skills')}
-              {renderStarRating('technicalSkills', formData.technicalSkills, 'Technical Skills')}
-              {renderStarRating('culturalFit', formData.culturalFit, 'Cultural Fit')}
-            </div>
-          </div>
-
-          <fieldset>
-            <legend className="block text-sm font-medium text-foreground mb-1">
-              Recommendation *
-            </legend>
-            <div className="space-y-2" aria-required="true">
-              {RECOMMENDATIONS.map((recommendation) => (
-                <label key={recommendation.value} className="flex items-center">
-                  <input
-                    type="radio"
-                    name="recommendation"
-                    value={recommendation.value}
-                    checked={formData.recommendation === recommendation.value}
-                    onChange={(event) => handleInputChange('recommendation', event.target.value)}
-                    aria-describedby={errors.recommendation ? 'recommendation-error' : undefined}
-                    className="mr-3"
-                  />
-                  <span className={`font-medium ${recommendation.color}`}>{recommendation.label}</span>
+          <div className="space-y-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                {renderStarRating('rating', formData.rating, 'Overall Interview Rating')}
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-foreground mb-2">
+                  Average Skills Rating
                 </label>
-              ))}
+                <div className="text-2xl font-bold text-gold-700">
+                  {getAverageSkillRating() || 'N/A'}
+                </div>
+                <p className="text-sm text-muted-foreground">Based on communication, technical, and cultural fit</p>
+              </div>
             </div>
-            {errors.recommendation && <p id="recommendation-error" role="alert" className="text-red-500 text-sm mt-1">{errors.recommendation}</p>}
-          </fieldset>
 
-          <div>
-            <label className="block text-sm font-medium text-foreground mb-1">
-              Overall Impression
-            </label>
-            <textarea
-              value={formData.overallImpression}
-              onChange={(event) => handleInputChange('overallImpression', event.target.value)}
-              rows={3}
-              className="w-full p-3 border border-border rounded-control bg-card focus:ring-2 focus:ring-gold-500/60 focus:border-primary"
-              placeholder="What stood out about this candidate, positive or negative"
-            />
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-foreground mb-1">
-              Recommended Next Steps
-            </label>
-            <textarea
-              value={formData.nextSteps}
-              onChange={(event) => handleInputChange('nextSteps', event.target.value)}
-              rows={3}
-              className="w-full p-3 border border-border rounded-control bg-card focus:ring-2 focus:ring-gold-500/60 focus:border-primary"
-              placeholder="What should happen next with this candidate"
-            />
-          </div>
-
-          {(interview.type === 'TECHNICAL' || interview.round === 'TECHNICAL') && (
             <div>
-              <label className="block text-sm font-medium text-foreground mb-1">
-                Technical Assessment Details
+              <label htmlFor="feedback" className="block text-sm font-medium text-foreground mb-1">
+                Overall Feedback *
               </label>
               <textarea
-                value={formData.technicalAssessment}
-                onChange={(event) => handleInputChange('technicalAssessment', event.target.value)}
+                id="feedback"
+                value={formData.feedback}
+                onChange={(event) => handleInputChange('feedback', event.target.value)}
                 rows={4}
+                aria-required="true"
+                aria-invalid={!!errors.feedback}
+                aria-describedby={errors.feedback ? 'feedback-error' : undefined}
+                className={`w-full p-3 border rounded-control bg-card focus:ring-2 focus:ring-gold-500/60 focus:border-primary ${errors.feedback ? 'border-red-500' : 'border-border'}`}
+                placeholder="Provide your overall assessment of the candidate's interview performance"
+              />
+              {errors.feedback && <p id="feedback-error" role="alert" className="text-red-500 text-sm mt-1">{errors.feedback}</p>}
+            </div>
+
+            <div>
+              <h3 className="text-lg font-medium text-foreground mb-4">Skills Assessment</h3>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                {renderStarRating('communicationSkills', formData.communicationSkills, 'Communication Skills')}
+                {renderStarRating('technicalSkills', formData.technicalSkills, 'Technical Skills')}
+                {renderStarRating('culturalFit', formData.culturalFit, 'Cultural Fit')}
+              </div>
+            </div>
+
+            <fieldset>
+              <legend className="block text-sm font-medium text-foreground mb-1">
+                Recommendation *
+              </legend>
+              <div className="space-y-2" aria-required="true">
+                {RECOMMENDATIONS.map((recommendation) => (
+                  <label key={recommendation.value} className="flex items-center">
+                    <input
+                      type="radio"
+                      name="recommendation"
+                      value={recommendation.value}
+                      checked={formData.recommendation === recommendation.value}
+                      onChange={(event) => handleInputChange('recommendation', event.target.value)}
+                      aria-describedby={errors.recommendation ? 'recommendation-error' : undefined}
+                      className="mr-3"
+                    />
+                    <span className={`font-medium ${recommendation.color}`}>{recommendation.label}</span>
+                  </label>
+                ))}
+              </div>
+              {errors.recommendation && <p id="recommendation-error" role="alert" className="text-red-500 text-sm mt-1">{errors.recommendation}</p>}
+            </fieldset>
+
+            <div>
+              <label className="block text-sm font-medium text-foreground mb-1">
+                Overall Impression
+              </label>
+              <textarea
+                value={formData.overallImpression}
+                onChange={(event) => handleInputChange('overallImpression', event.target.value)}
+                rows={3}
                 className="w-full p-3 border border-border rounded-control bg-card focus:ring-2 focus:ring-gold-500/60 focus:border-primary"
-                placeholder="Capture technical questioning, evaluation, and demonstrated competency"
+                placeholder="What stood out about this candidate, positive or negative"
               />
             </div>
-          )}
 
-          <div>
-            <label className="block text-sm font-medium text-foreground mb-1">
-              Candidate Questions & Engagement
-            </label>
-            <textarea
-              value={formData.candidateQuestions}
-              onChange={(event) => handleInputChange('candidateQuestions', event.target.value)}
-              rows={3}
-              className="w-full p-3 border border-border rounded-control bg-card focus:ring-2 focus:ring-gold-500/60 focus:border-primary"
-              placeholder="Document candidate questions and engagement level"
-            />
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-foreground mb-1">
-              Private Interviewer Notes
-            </label>
-            <textarea
-              value={formData.interviewerNotes}
-              onChange={(event) => handleInputChange('interviewerNotes', event.target.value)}
-              rows={3}
-              className="w-full p-3 border border-border rounded-control bg-card focus:ring-2 focus:ring-gold-500/60 focus:border-primary"
-              placeholder="Internal notes for recruiter and hiring team discussion"
-            />
-            <p className="text-sm text-muted-foreground mt-1">
-              These notes are internal and not shared with the candidate.
-            </p>
-          </div>
-
-          {formData.recommendation && (
-            <div className="bg-muted rounded-control p-4 border-l-4 border-cta">
-              <h4 className="font-medium text-foreground mb-2">Recommendation Summary</h4>
-              <p className={`font-medium ${getRecommendationInfo(formData.recommendation).color}`}>
-                {getRecommendationInfo(formData.recommendation).label}
-              </p>
-              {formData.recommendation === 'HIRE' && (
-                <p className="text-sm text-muted-foreground mt-1">
-                  Candidate is recommended to proceed to the next hiring stage.
-                </p>
-              )}
-              {formData.recommendation === 'CONSIDER' && (
-                <p className="text-sm text-muted-foreground mt-1">
-                  Candidate has potential with reservations requiring targeted follow-up.
-                </p>
-              )}
-              {formData.recommendation === 'REJECT' && (
-                <p className="text-sm text-muted-foreground mt-1">
-                  Candidate is not recommended to proceed in the hiring process.
-                </p>
-              )}
-              {formData.recommendation === 'ANOTHER_ROUND' && (
-                <p className="text-sm text-muted-foreground mt-1">
-                  Additional round recommended to resolve open evaluation questions.
-                </p>
-              )}
-              {formData.recommendation === 'SECOND_OPINION' && (
-                <p className="text-sm text-muted-foreground mt-1">
-                  Additional interviewer input is recommended before final decision.
-                </p>
-              )}
+            <div>
+              <label className="block text-sm font-medium text-foreground mb-1">
+                Recommended Next Steps
+              </label>
+              <textarea
+                value={formData.nextSteps}
+                onChange={(event) => handleInputChange('nextSteps', event.target.value)}
+                rows={3}
+                className="w-full p-3 border border-border rounded-control bg-card focus:ring-2 focus:ring-gold-500/60 focus:border-primary"
+                placeholder="What should happen next with this candidate"
+              />
             </div>
-          )}
-        </div>
 
-        <div className="flex justify-end space-x-4 pt-6 mt-8 border-t border-border">
-          {onCancel && (
-            <button
-              type="button"
-              onClick={onCancel}
-              className="px-6 py-2 border border-border text-foreground rounded-control hover:bg-accent"
-            >
-              Cancel
-            </button>
-          )}
-          <button
-            type="submit"
-            disabled={loading}
-            className="px-6 py-2 bg-cta text-cta-foreground rounded-full border border-cta-border hover:bg-cta-hover disabled:opacity-50 disabled:cursor-not-allowed font-semibold"
-          >
-            {loading ? (
-              <span className="flex items-center">
-                <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-cta-foreground mr-2" />
-                Submitting...
-              </span>
-            ) : (
-              'Submit Feedback'
+            {(interview.type === 'TECHNICAL' || interview.round === 'TECHNICAL') && (
+              <div>
+                <label className="block text-sm font-medium text-foreground mb-1">
+                  Technical Assessment Details
+                </label>
+                <textarea
+                  value={formData.technicalAssessment}
+                  onChange={(event) => handleInputChange('technicalAssessment', event.target.value)}
+                  rows={4}
+                  className="w-full p-3 border border-border rounded-control bg-card focus:ring-2 focus:ring-gold-500/60 focus:border-primary"
+                  placeholder="Capture technical questioning, evaluation, and demonstrated competency"
+                />
+              </div>
             )}
-          </button>
-        </div>
-      </form>
+
+            <div>
+              <label className="block text-sm font-medium text-foreground mb-1">
+                Candidate Questions & Engagement
+              </label>
+              <textarea
+                value={formData.candidateQuestions}
+                onChange={(event) => handleInputChange('candidateQuestions', event.target.value)}
+                rows={3}
+                className="w-full p-3 border border-border rounded-control bg-card focus:ring-2 focus:ring-gold-500/60 focus:border-primary"
+                placeholder="Document candidate questions and engagement level"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-foreground mb-1">
+                Private Interviewer Notes
+              </label>
+              <textarea
+                value={formData.interviewerNotes}
+                onChange={(event) => handleInputChange('interviewerNotes', event.target.value)}
+                rows={3}
+                className="w-full p-3 border border-border rounded-control bg-card focus:ring-2 focus:ring-gold-500/60 focus:border-primary"
+                placeholder="Internal notes for recruiter and hiring team discussion"
+              />
+              <p className="text-sm text-muted-foreground mt-1">
+                These notes are internal and not shared with the candidate.
+              </p>
+            </div>
+
+            {formData.recommendation && (
+              <div className="bg-muted rounded-control p-4 border-l-4 border-cta">
+                <h4 className="font-medium text-foreground mb-2">Recommendation Summary</h4>
+                <p className={`font-medium ${getRecommendationInfo(formData.recommendation).color}`}>
+                  {getRecommendationInfo(formData.recommendation).label}
+                </p>
+                {formData.recommendation === 'HIRE' && (
+                  <p className="text-sm text-muted-foreground mt-1">
+                    Candidate is recommended to proceed to the next hiring stage.
+                  </p>
+                )}
+                {formData.recommendation === 'CONSIDER' && (
+                  <p className="text-sm text-muted-foreground mt-1">
+                    Candidate has potential with reservations requiring targeted follow-up.
+                  </p>
+                )}
+                {formData.recommendation === 'REJECT' && (
+                  <p className="text-sm text-muted-foreground mt-1">
+                    Candidate is not recommended to proceed in the hiring process.
+                  </p>
+                )}
+                {formData.recommendation === 'ANOTHER_ROUND' && (
+                  <p className="text-sm text-muted-foreground mt-1">
+                    Additional round recommended to resolve open evaluation questions.
+                  </p>
+                )}
+                {formData.recommendation === 'SECOND_OPINION' && (
+                  <p className="text-sm text-muted-foreground mt-1">
+                    Additional interviewer input is recommended before final decision.
+                  </p>
+                )}
+              </div>
+            )}
+          </div>
+
+          <div className="flex justify-end space-x-4 pt-6 mt-8 border-t border-border">
+            {onCancel && (
+              <button
+                type="button"
+                onClick={onCancel}
+                className="px-6 py-2 border border-border text-foreground rounded-control hover:bg-accent"
+              >
+                Cancel
+              </button>
+            )}
+            <button
+              type="submit"
+              disabled={loading}
+              className="px-6 py-2 bg-cta text-cta-foreground rounded-full border border-cta-border hover:bg-cta-hover disabled:opacity-50 disabled:cursor-not-allowed font-semibold"
+            >
+              {loading ? (
+                <span className="flex items-center">
+                  <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-cta-foreground mr-2" />
+                  Submitting...
+                </span>
+              ) : (
+                currentUserHasFeedback ? 'Update Feedback' : 'Submit Feedback'
+              )}
+            </button>
+          </div>
+        </form>
+      </div>
     </div>
   );
 }

@@ -7,13 +7,18 @@ import jakarta.validation.constraints.NotNull;
 
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "interviews")
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 @NamedEntityGraph(
     name = "Interview.withApplicationDetails",
-    attributeNodes = @NamedAttributeNode(value = "application", subgraph = "application-details"),
+    attributeNodes = {
+        @NamedAttributeNode(value = "application", subgraph = "application-details"),
+        @NamedAttributeNode("feedbacks")
+    },
     subgraphs = {
         @NamedSubgraph(name = "application-details", attributeNodes = {
             @NamedAttributeNode("applicant"),
@@ -193,6 +198,10 @@ public class Interview extends TenantAwareEntity {
     @Column(name = "cancellation_reason")
     private String cancellationReason;
 
+    @OneToMany(mappedBy = "interview", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnoreProperties({"interview"})
+    private List<InterviewFeedback> feedbacks = new ArrayList<>();
+
     // Constructors
     public Interview() {
         this.createdAt = LocalDateTime.now();
@@ -238,7 +247,12 @@ public class Interview extends TenantAwareEntity {
 
     @JsonProperty("requiresFeedback")
     public boolean requiresFeedback() {
-        return status == InterviewStatus.COMPLETED && feedback == null;
+        return status == InterviewStatus.COMPLETED && (feedbacks == null || feedbacks.isEmpty());
+    }
+
+    @JsonProperty("feedbackCount")
+    public int getFeedbackCount() {
+        return feedbacks != null ? feedbacks.size() : 0;
     }
 
     @JsonProperty("isOverdue")
@@ -496,6 +510,9 @@ public class Interview extends TenantAwareEntity {
 
     public String getCancellationReason() { return cancellationReason; }
     public void setCancellationReason(String cancellationReason) { this.cancellationReason = cancellationReason; }
+
+    public List<InterviewFeedback> getFeedbacks() { return feedbacks; }
+    public void setFeedbacks(List<InterviewFeedback> feedbacks) { this.feedbacks = feedbacks; }
 
     public static final String TYPE_PHONE = "PHONE";
     public static final String TYPE_VIDEO = "VIDEO";

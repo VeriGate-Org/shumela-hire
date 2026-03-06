@@ -2,6 +2,7 @@ package com.arthmatic.shumelahire.service;
 
 import com.arthmatic.shumelahire.entity.*;
 import com.arthmatic.shumelahire.repository.InterviewRepository;
+import com.arthmatic.shumelahire.repository.InterviewFeedbackRepository;
 import com.arthmatic.shumelahire.repository.ApplicationRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -25,6 +26,9 @@ public class InterviewService {
 
     @Autowired
     private ApplicationRepository applicationRepository;
+
+    @Autowired
+    private InterviewFeedbackRepository interviewFeedbackRepository;
 
     @Autowired
     private AuditLogService auditLogService;
@@ -277,43 +281,86 @@ public class InterviewService {
     }
 
     // Feedback operations
-    public Interview submitFeedback(Long id, String feedback, Integer rating, 
-                                  Integer communicationSkills, Integer technicalSkills, 
-                                  Integer culturalFit, String overallImpression, 
-                                  InterviewRecommendation recommendation, String nextSteps,
-                                  String technicalAssessment, String candidateQuestions,
-                                  String interviewerNotes, Long submittedBy) {
-        Interview interview = getInterviewById(id);
-        
+    public InterviewFeedback submitFeedback(Long interviewId, String feedback, Integer rating,
+                                           Integer communicationSkills, Integer technicalSkills,
+                                           Integer culturalFit, String overallImpression,
+                                           InterviewRecommendation recommendation, String nextSteps,
+                                           String technicalAssessment, String candidateQuestions,
+                                           String interviewerNotes, Long submittedBy,
+                                           String interviewerName) {
+        Interview interview = getInterviewById(interviewId);
+
         if (interview.getStatus() != InterviewStatus.COMPLETED) {
             throw new IllegalStateException("Feedback can only be submitted for completed interviews");
         }
 
+        // Check if this user already submitted feedback — update if so
+        InterviewFeedback feedbackEntity = interviewFeedbackRepository
+            .findByInterviewIdAndSubmittedBy(interviewId, submittedBy)
+            .orElse(new InterviewFeedback());
+
+        boolean isUpdate = feedbackEntity.getId() != null;
+
+        feedbackEntity.setInterview(interview);
+        feedbackEntity.setSubmittedBy(submittedBy);
+        feedbackEntity.setInterviewerName(interviewerName);
+        feedbackEntity.setFeedback(feedback);
+        feedbackEntity.setRating(rating);
+        feedbackEntity.setCommunicationSkills(communicationSkills);
+        feedbackEntity.setTechnicalSkills(technicalSkills);
+        feedbackEntity.setCulturalFit(culturalFit);
+        feedbackEntity.setOverallImpression(overallImpression);
+        feedbackEntity.setRecommendation(recommendation);
+        feedbackEntity.setNextSteps(nextSteps);
+        feedbackEntity.setTechnicalAssessment(technicalAssessment);
+        feedbackEntity.setCandidateQuestions(candidateQuestions);
+        feedbackEntity.setInterviewerNotes(interviewerNotes);
+
+        InterviewFeedback saved = interviewFeedbackRepository.save(feedbackEntity);
+
+        // Also update the legacy feedback field on Interview for backwards compatibility
         interview.setFeedback(feedback);
         interview.setRating(rating);
-        interview.setCommunicationSkills(communicationSkills);
-        interview.setTechnicalSkills(technicalSkills);
-        interview.setCulturalFit(culturalFit);
-        interview.setOverallImpression(overallImpression);
         interview.setRecommendation(recommendation);
-        interview.setNextSteps(nextSteps);
-        interview.setTechnicalAssessment(technicalAssessment);
-        interview.setCandidateQuestions(candidateQuestions);
-        interview.setInterviewerNotes(interviewerNotes);
         interview.setFeedbackSubmittedAt(LocalDateTime.now());
         interview.setUpdatedAt(LocalDateTime.now());
+        interviewRepository.save(interview);
 
-        Interview savedInterview = interviewRepository.save(interview);
-        
         auditLogService.logUserAction(
             submittedBy,
-            "INTERVIEW_FEEDBACK_SUBMITTED",
-            "Interview",
-            String.format("Interview feedback submitted with recommendation: %s", 
-                recommendation.getDisplayName())
+            isUpdate ? "INTERVIEW_FEEDBACK_UPDATED" : "INTERVIEW_FEEDBACK_SUBMITTED",
+            "InterviewFeedback",
+            String.format("Interview feedback %s with recommendation: %s",
+                isUpdate ? "updated" : "submitted", recommendation.getDisplayName())
         );
 
-        return savedInterview;
+        return saved;
+    }
+
+    public List<InterviewFeedback> getFeedbacksForInterview(Long interviewId) {
+        return interviewFeedbackRepository.findByInterviewIdOrderBySubmittedAtDesc(interviewId);
+    }
+
+    public Optional<InterviewFeedback> getFeedbackByInterviewAndUser(Long interviewId, Long userId) {
+        return interviewFeedbackRepository.findByInterviewIdAndSubmittedBy(interviewId, userId);
+    }
+
+    public void deleteFeedback(Long feedbackId, Long deletedBy) {
+        InterviewFeedback feedback = interviewFeedbackRepository.findById(feedbackId)
+            .orElseThrow(() -> new IllegalArgumentException("Feedback not found: " + feedbackId));
+
+        if (!feedback.getSubmittedBy().equals(deletedBy)) {
+            throw new IllegalStateException("Only the feedback author can delete their feedback");
+        }
+
+        interviewFeedbackRepository.delete(feedback);
+
+        auditLogService.logUserAction(
+            deletedBy,
+            "INTERVIEW_FEEDBACK_DELETED",
+            "InterviewFeedback",
+            String.format("Deleted feedback %d for interview %d", feedbackId, feedback.getInterview().getId())
+        );
     }
 
     // Search and retrieval

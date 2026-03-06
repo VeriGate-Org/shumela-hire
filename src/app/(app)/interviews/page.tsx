@@ -21,6 +21,24 @@ import InterviewFeedbackForm from '@/components/InterviewFeedbackForm';
 import AiAssistPanel from '@/components/ai/AiAssistPanel';
 import AiInterviewQuestionGenerator from '@/components/ai/AiInterviewQuestionGenerator';
 
+interface InterviewFeedbackEntry {
+  id: number;
+  submittedBy: number;
+  interviewerName?: string;
+  feedback: string;
+  rating?: number;
+  communicationSkills?: number;
+  technicalSkills?: number;
+  culturalFit?: number;
+  overallImpression?: string;
+  recommendation: string;
+  nextSteps?: string;
+  technicalAssessment?: string;
+  candidateQuestions?: string;
+  interviewerNotes?: string;
+  submittedAt: string;
+}
+
 interface Interview extends CalendarInterview {
   instructions?: string;
   agenda?: string;
@@ -47,6 +65,8 @@ interface Interview extends CalendarInterview {
   completedAt?: string;
   cancelledAt?: string;
   cancellationReason?: string;
+  feedbacks?: InterviewFeedbackEntry[];
+  feedbackCount?: number;
 }
 
 type InterviewView = 'calendar' | 'schedule' | 'feedback' | 'list';
@@ -137,7 +157,7 @@ export default function InterviewsPage() {
   }, [interviews]);
   const pendingFeedback = useMemo(() =>
     interviews.filter((interview) =>
-      interview.requiresFeedback || (interview.status === 'COMPLETED' && !interview.feedback)
+      interview.status === 'COMPLETED' && (!interview.feedbackCount || interview.feedbackCount === 0)
     ), [interviews]);
 
   const getPageTitle = () => {
@@ -446,9 +466,13 @@ export default function InterviewsPage() {
                                 Overdue
                               </span>
                             )}
-                            {interview.requiresFeedback && (
-                              <span className="bg-yellow-100 text-yellow-800 text-xs font-medium px-2 py-1 rounded-control">
-                                Feedback Needed
+                            {interview.status === 'COMPLETED' && (
+                              <span className={`text-xs font-medium px-2 py-1 rounded-control ${
+                                interview.feedbackCount ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'
+                              }`}>
+                                {interview.feedbackCount
+                                  ? `${interview.feedbackCount} Feedback${interview.feedbackCount > 1 ? 's' : ''}`
+                                  : 'Feedback Needed'}
                               </span>
                             )}
                           </div>
@@ -490,7 +514,7 @@ export default function InterviewsPage() {
                               Edit
                             </button>
 
-                            {interview.requiresFeedback && (
+                            {interview.status === 'COMPLETED' && (
                               <button
                                 onClick={() => {
                                   setSelectedInterview(interview);

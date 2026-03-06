@@ -28,6 +28,7 @@ export interface Interview {
   isOverdue: boolean;
   isUpcoming: boolean;
   rescheduleCount?: number;
+  feedbackCount?: number;
   createdBy?: number;
   createdAt?: string;
   application: {

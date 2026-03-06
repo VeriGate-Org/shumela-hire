@@ -237,9 +237,9 @@ public class InterviewController {
         }
     }
 
-    // Submit feedback
+    // Submit feedback (multi-feedback: one per interviewer)
     @PostMapping("/{id}/feedback")
-    public ResponseEntity<Interview> submitFeedback(@PathVariable Long id,
+    public ResponseEntity<InterviewFeedback> submitFeedback(@PathVariable Long id,
                                                    @RequestParam @NotBlank(message = "Feedback text is required") String feedback,
                                                    @RequestParam(required = false) Integer rating,
                                                    @RequestParam(required = false) Integer communicationSkills,
@@ -251,17 +251,49 @@ public class InterviewController {
                                                    @RequestParam(required = false) String technicalAssessment,
                                                    @RequestParam(required = false) String candidateQuestions,
                                                    @RequestParam(required = false) String interviewerNotes,
-                                                   @RequestParam Long submittedBy) {
+                                                   @RequestParam Long submittedBy,
+                                                   @RequestParam(required = false) String interviewerName) {
         try {
-            Interview updatedInterview = interviewService.submitFeedback(
-                    id, feedback, rating, communicationSkills, technicalSkills, 
+            InterviewFeedback savedFeedback = interviewService.submitFeedback(
+                    id, feedback, rating, communicationSkills, technicalSkills,
                     culturalFit, overallImpression, recommendation, nextSteps,
-                    technicalAssessment, candidateQuestions, interviewerNotes, submittedBy);
-            return ResponseEntity.ok(updatedInterview);
+                    technicalAssessment, candidateQuestions, interviewerNotes,
+                    submittedBy, interviewerName);
+            return ResponseEntity.ok(savedFeedback);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.notFound().build();
         } catch (IllegalStateException e) {
             return ResponseEntity.badRequest().build();
+        }
+    }
+
+    // Get all feedbacks for an interview
+    @GetMapping("/{id}/feedbacks")
+    public ResponseEntity<List<InterviewFeedback>> getFeedbacks(@PathVariable Long id) {
+        List<InterviewFeedback> feedbacks = interviewService.getFeedbacksForInterview(id);
+        return ResponseEntity.ok(feedbacks);
+    }
+
+    // Get feedback for a specific user on an interview
+    @GetMapping("/{id}/feedback/user/{userId}")
+    public ResponseEntity<InterviewFeedback> getUserFeedback(@PathVariable Long id,
+                                                             @PathVariable Long userId) {
+        return interviewService.getFeedbackByInterviewAndUser(id, userId)
+            .map(ResponseEntity::ok)
+            .orElse(ResponseEntity.notFound().build());
+    }
+
+    // Delete own feedback
+    @DeleteMapping("/feedback/{feedbackId}")
+    public ResponseEntity<Void> deleteFeedback(@PathVariable Long feedbackId,
+                                               @RequestParam Long deletedBy) {
+        try {
+            interviewService.deleteFeedback(feedbackId, deletedBy);
+            return ResponseEntity.noContent().build();
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.notFound().build();
+        } catch (IllegalStateException e) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
     }
 
