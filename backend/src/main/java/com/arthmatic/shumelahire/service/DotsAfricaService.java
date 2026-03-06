@@ -1,5 +1,6 @@
 package com.arthmatic.shumelahire.service;
 
+import com.arthmatic.shumelahire.dto.VerificationSummaryDTO;
 import com.arthmatic.shumelahire.entity.*;
 import com.arthmatic.shumelahire.repository.ApplicationRepository;
 import com.arthmatic.shumelahire.repository.BackgroundCheckRepository;
@@ -367,6 +368,100 @@ public class DotsAfricaService implements BackgroundCheckService {
     @Override
     public List<Map<String, Object>> getAvailableCheckTypes() {
         return CHECK_TYPES;
+    }
+
+    @Override
+    public Map<Long, VerificationSummaryDTO> getVerificationSummaries(List<Long> applicationIds) {
+        if (applicationIds == null || applicationIds.isEmpty()) {
+            return Collections.emptyMap();
+        }
+
+        List<Application> applications = applicationRepository.findAllById(applicationIds);
+        List<BackgroundCheck> allChecks = backgroundCheckRepository.findByApplicationIdIn(applicationIds);
+
+        // Group checks by application ID
+        Map<Long, List<BackgroundCheck>> checksByApp = new HashMap<>();
+        for (BackgroundCheck bc : allChecks) {
+            checksByApp.computeIfAbsent(bc.getApplication().getId(), k -> new ArrayList<>()).add(bc);
+        }
+
+        Map<Long, VerificationSummaryDTO> result = new HashMap<>();
+        for (Application app : applications) {
+            JobPosting jobPosting = app.getJobPosting();
+            List<String> requiredTypes = List.of();
+            boolean enforce = false;
+
+            if (jobPosting != null) {
+                enforce = Boolean.TRUE.equals(jobPosting.getEnforceCheckCompletion());
+                String requiredJson = jobPosting.getRequiredCheckTypes();
+                if (requiredJson != null && !requiredJson.isBlank()) {
+                    try {
+                        requiredTypes = objectMapper.readValue(requiredJson,
+                                objectMapper.getTypeFactory().constructCollectionType(List.class, String.class));
+                    } catch (JsonProcessingException e) {
+                        // skip malformed
+                    }
+                }
+            }
+
+            List<BackgroundCheck> appChecks = checksByApp.getOrDefault(app.getId(), List.of());
+            result.put(app.getId(), new VerificationSummaryDTO(app.getId(), requiredTypes, enforce, appChecks));
+        }
+
+        return result;
+    }
+
+    @Override
+    public void enforceBackgroundCheckCompletion(Application application) {
+        JobPosting jobPosting = application.getJobPosting();
+        if (jobPosting == null || !Boolean.TRUE.equals(jobPosting.getEnforceCheckCompletion())) {
+            return;
+        }
+
+        String requiredCheckTypesJson = jobPosting.getRequiredCheckTypes();
+        if (requiredCheckTypesJson == null || requiredCheckTypesJson.isBlank()) {
+            return;
+        }
+
+        List<String> requiredTypes;
+        try {
+            requiredTypes = objectMapper.readValue(requiredCheckTypesJson,
+                    objectMapper.getTypeFactory().constructCollectionType(List.class, String.class));
+        } catch (JsonProcessingException e) {
+            return;
+        }
+
+        if (requiredTypes.isEmpty()) {
+            return;
+        }
+
+        List<BackgroundCheck> checks = backgroundCheckRepository
+                .findByApplicationIdOrderByCreatedAtDesc(application.getId());
+
+        Set<String> completedClearTypes = new HashSet<>();
+        for (BackgroundCheck check : checks) {
+            if (check.getStatus() == BackgroundCheckStatus.COMPLETED
+                    && check.getOverallResult() == BackgroundCheckResult.CLEAR) {
+                try {
+                    List<String> checkTypes = objectMapper.readValue(
+                            check.getCheckTypes() != null ? check.getCheckTypes() : "[]",
+                            objectMapper.getTypeFactory().constructCollectionType(List.class, String.class));
+                    completedClearTypes.addAll(checkTypes);
+                } catch (JsonProcessingException e) {
+                    // skip malformed entries
+                }
+            }
+        }
+
+        List<String> missing = requiredTypes.stream()
+                .filter(t -> !completedClearTypes.contains(t))
+                .toList();
+
+        if (!missing.isEmpty()) {
+            throw new IllegalStateException(
+                    "Cannot progress past Background Check stage. The following required verification checks " +
+                    "are not completed with CLEAR result: " + String.join(", ", missing));
+        }
     }
 
     // ── Internal helpers ──────────────────────────────

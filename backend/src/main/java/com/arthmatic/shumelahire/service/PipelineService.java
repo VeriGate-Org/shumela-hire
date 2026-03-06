@@ -29,6 +29,9 @@ public class PipelineService {
     @Autowired
     private BackgroundCheckRepository backgroundCheckRepository;
 
+    @Autowired(required = false)
+    private BackgroundCheckService backgroundCheckService;
+
     @Autowired
     private AuditLogService auditLogService;
 
@@ -62,7 +65,11 @@ public class PipelineService {
 
         // Enforce required background check completion when moving from BACKGROUND_CHECK
         if (currentStage == PipelineStage.BACKGROUND_CHECK && targetStage.getOrder() > currentStage.getOrder()) {
-            enforceBackgroundCheckCompletion(application);
+            if (backgroundCheckService != null) {
+                backgroundCheckService.enforceBackgroundCheckCompletion(application);
+            } else {
+                enforceBackgroundCheckCompletion(application);
+            }
         }
         
         // Calculate duration in previous stage

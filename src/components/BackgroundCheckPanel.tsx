@@ -37,6 +37,7 @@ interface BackgroundCheckPanelProps {
   candidateEmail: string;
   jobPostingId?: number | string;
   onClose: () => void;
+  onChecksUpdated?: () => void;
 }
 
 const STATUS_CONFIG: Record<string, { label: string; color: string; bgColor: string; icon: string }> = {
@@ -62,6 +63,7 @@ export default function BackgroundCheckPanel({
   candidateEmail,
   jobPostingId,
   onClose,
+  onChecksUpdated,
 }: BackgroundCheckPanelProps) {
   const [checks, setChecks] = useState<BackgroundCheck[]>([]);
   const [checkTypes, setCheckTypes] = useState<CheckType[]>([]);
@@ -159,6 +161,7 @@ export default function BackgroundCheckPanel({
       setCandidateIdNumber('');
       setConsentObtained(false);
       await loadChecks();
+      onChecksUpdated?.();
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : 'Failed to initiate background check');
     } finally {
@@ -260,11 +263,14 @@ export default function BackgroundCheckPanel({
     <div className="bg-white rounded-xl shadow-lg border border-gray-200">
       {/* Header */}
       <div className="flex items-center justify-between px-6 py-4 border-b border-gray-200">
-        <div>
-          <h2 className="text-lg font-semibold text-violet-950">Background Verification</h2>
-          <p className="text-sm text-gray-500 mt-0.5">
-            {candidateName} &mdash; Powered by Dots Africa (NCR: NCRCB38)
-          </p>
+        <div className="flex items-center gap-3">
+          <img src="/icons/dots-africa-logo.png" alt="Dots Africa" className="h-8 w-auto" />
+          <div>
+            <h2 className="text-lg font-semibold text-violet-950">Background Verification</h2>
+            <p className="text-sm text-gray-500 mt-0.5">
+              {candidateName} &mdash; Powered by Dots Africa (NCR: NCRCB38)
+            </p>
+          </div>
         </div>
         <div className="flex items-center space-x-3">
           {!showInitForm && (

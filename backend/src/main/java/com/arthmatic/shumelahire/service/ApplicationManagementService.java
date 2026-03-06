@@ -5,6 +5,7 @@ import com.arthmatic.shumelahire.entity.ApplicationStatus;
 import com.arthmatic.shumelahire.entity.PipelineStage;
 import com.arthmatic.shumelahire.repository.ApplicationRepository;
 import com.arthmatic.shumelahire.repository.ApplicantRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -29,6 +30,9 @@ public class ApplicationManagementService {
     private final ApplicationRepository applicationRepository;
     private final ApplicantRepository applicantRepository;
     private final NotificationService notificationService;
+
+    @Autowired(required = false)
+    private BackgroundCheckService backgroundCheckService;
 
     public ApplicationManagementService(ApplicationRepository applicationRepository,
                                        ApplicantRepository applicantRepository,
@@ -183,6 +187,13 @@ public class ApplicationManagementService {
 
         for (Application application : applications) {
             try {
+                // Enforce background check completion when moving past BACKGROUND_CHECK
+                if (backgroundCheckService != null
+                        && application.getPipelineStage() == PipelineStage.BACKGROUND_CHECK
+                        && pipelineStage.getOrder() > PipelineStage.BACKGROUND_CHECK.getOrder()) {
+                    backgroundCheckService.enforceBackgroundCheckCompletion(application);
+                }
+
                 application.setPipelineStage(pipelineStage);
                 application.setPipelineStageEnteredAt(LocalDateTime.now());
                 application.setUpdatedAt(LocalDateTime.now());

@@ -1,5 +1,7 @@
 package com.arthmatic.shumelahire.service;
 
+import com.arthmatic.shumelahire.dto.VerificationSummaryDTO;
+import com.arthmatic.shumelahire.entity.Application;
 import com.arthmatic.shumelahire.entity.BackgroundCheck;
 
 import java.util.List;
@@ -74,4 +76,21 @@ public interface BackgroundCheckService {
      * @return list of check type maps with code, name, description, turnaround, price
      */
     List<Map<String, Object>> getAvailableCheckTypes();
+
+    /**
+     * Get verification summaries for multiple applications in batch.
+     *
+     * @param applicationIds list of application IDs
+     * @return map of application ID to verification summary
+     */
+    Map<Long, VerificationSummaryDTO> getVerificationSummaries(List<Long> applicationIds);
+
+    /**
+     * Enforce that all required background checks are completed with CLEAR result
+     * before allowing progression past the BACKGROUND_CHECK stage.
+     *
+     * @param application the application to check
+     * @throws IllegalStateException if required checks are not completed/clear
+     */
+    void enforceBackgroundCheckCompletion(Application application);
 }

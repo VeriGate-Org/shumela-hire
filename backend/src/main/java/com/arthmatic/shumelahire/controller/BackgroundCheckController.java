@@ -1,5 +1,6 @@
 package com.arthmatic.shumelahire.controller;
 
+import com.arthmatic.shumelahire.dto.VerificationSummaryDTO;
 import com.arthmatic.shumelahire.entity.Application;
 import com.arthmatic.shumelahire.entity.BackgroundCheck;
 import com.arthmatic.shumelahire.entity.JobPosting;
@@ -148,6 +149,17 @@ public class BackgroundCheckController {
         result.put("requiredCheckTypes", jobPosting.getRequiredCheckTypes());
         result.put("enforceCheckCompletion", jobPosting.getEnforceCheckCompletion());
         return ResponseEntity.ok(result);
+    }
+
+    /**
+     * Get verification summaries for multiple applications (batch).
+     */
+    @GetMapping("/summary")
+    @PreAuthorize("hasAnyRole('ADMIN', 'RECRUITER', 'TA_MANAGER')")
+    public ResponseEntity<Map<Long, VerificationSummaryDTO>> getVerificationSummaries(
+            @RequestParam List<Long> applicationIds) {
+        Map<Long, VerificationSummaryDTO> summaries = backgroundCheckService.getVerificationSummaries(applicationIds);
+        return ResponseEntity.ok(summaries);
     }
 
     /**

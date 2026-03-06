@@ -16,6 +16,8 @@ public interface BackgroundCheckRepository extends JpaRepository<BackgroundCheck
 
     List<BackgroundCheck> findByApplicationIdOrderByCreatedAtDesc(Long applicationId);
 
+    List<BackgroundCheck> findByApplicationIdIn(List<Long> applicationIds);
+
     Optional<BackgroundCheck> findByReferenceId(String referenceId);
 
     Optional<BackgroundCheck> findByExternalScreeningId(String externalScreeningId);

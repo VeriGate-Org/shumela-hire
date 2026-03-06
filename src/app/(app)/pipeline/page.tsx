@@ -28,6 +28,7 @@ import AiAssistPanel from '@/components/ai/AiAssistPanel';
 import AiCandidateRanking from '@/components/ai/AiCandidateRanking';
 import AiOfferPrediction from '@/components/ai/AiOfferPrediction';
 import BackgroundCheckPanel from '@/components/BackgroundCheckPanel';
+import VerificationStatusSummary, { VerificationSummary } from '@/components/VerificationStatusSummary';
 
 // --- Stage grouping: maps 16 backend PipelineStage enum values into 7 display columns ---
 
@@ -209,6 +210,7 @@ export default function PipelinePage() {
     performedBy?: string;
   }>>([]);
   const [backendMetrics, setBackendMetrics] = useState<PipelineMetrics | null>(null);
+  const [verificationSummaries, setVerificationSummaries] = useState<Record<string, VerificationSummary>>({});
 
   // --- Status mapping covering all 12 ApplicationStatus enum values ---
   const statusMap: Record<string, Application['status']> = {
@@ -225,6 +227,27 @@ export default function PipelinePage() {
     WITHDRAWN: 'withdrawn',
     HIRED: 'hired',
   };
+
+  // Load verification summaries for checks-column applications
+  const loadVerificationSummaries = useCallback(async (apps: Application[]) => {
+    const checksApps = apps.filter(a =>
+      ['REFERENCE_CHECK', 'BACKGROUND_CHECK'].includes(a.backendStage)
+    );
+    if (checksApps.length === 0) {
+      setVerificationSummaries({});
+      return;
+    }
+    try {
+      const ids = checksApps.map(a => a.id);
+      const response = await apiFetch(`/api/background-checks/summary?applicationIds=${ids.join(',')}`);
+      if (response.ok) {
+        const data = await response.json();
+        setVerificationSummaries(data || {});
+      }
+    } catch {
+      // Gracefully ignore — feature may not be enabled
+    }
+  }, []);
 
   const loadPipelineData = useCallback(async () => {
     setLoading(true);
@@ -293,13 +316,14 @@ export default function PipelinePage() {
         };
       });
       setApplications(mapped);
+      loadVerificationSummaries(mapped);
     } catch (error) {
       console.error('Failed to load pipeline data:', error);
       toast('Failed to load pipeline data', 'error');
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [loadVerificationSummaries]);
 
   // P5: Fetch backend analytics
   // Note: the backend /api/pipeline/analytics returns { funnel, averageStageDurations, conversions, ... }
@@ -809,6 +833,15 @@ export default function PipelinePage() {
                             <span>{new Date(application.lastActivity).toLocaleDateString()}</span>
                           </div>
 
+                          {/* Verification summary for checks-column apps */}
+                          {stage.id === 'checks' && verificationSummaries[application.id] && (
+                            <VerificationStatusSummary
+                              summary={verificationSummaries[application.id]}
+                              onInitiateChecks={() => setSelectedApplication(application)}
+                              compact
+                            />
+                          )}
+
                           <div className="bg-gray-200 rounded-full h-2 mb-3">
                             <div
                               className="bg-gold-500 h-2 rounded-full transition-all"
@@ -828,10 +861,18 @@ export default function PipelinePage() {
                             {application.status === 'active' && stage.order < STAGE_GROUPS.length && (() => {
                               const nextGroupStage = getNextGroupFirstStage(application.backendStage);
                               const nextGroup = nextGroupStage ? STAGE_GROUPS.find(g => (g.backendStages as readonly string[]).includes(nextGroupStage)) : null;
+                              const summary = verificationSummaries[application.id];
+                              const checksBlocked = stage.id === 'checks' && summary?.enforceCheckCompletion && !summary?.allClear;
                               return nextGroupStage && (
                                 <button
-                                  onClick={() => handleStageTransition(application.id, nextGroupStage)}
-                                  className="text-green-600 hover:text-green-800 text-xs font-medium"
+                                  onClick={() => !checksBlocked && handleStageTransition(application.id, nextGroupStage)}
+                                  disabled={checksBlocked}
+                                  className={`text-xs font-medium ${
+                                    checksBlocked
+                                      ? 'text-gray-400 cursor-not-allowed'
+                                      : 'text-green-600 hover:text-green-800'
+                                  }`}
+                                  title={checksBlocked ? 'Complete all verification checks before progressing' : `Move to ${nextGroup?.displayName || 'Next'}`}
                                 >
                                   <ArrowRightIcon className="w-4 h-4 inline mr-1" />
                                   Move to {nextGroup?.displayName || 'Next'}
@@ -1106,6 +1147,15 @@ export default function PipelinePage() {
                   </div>
                 </div>
 
+                {/* Verification Summary (for checks stage) */}
+                {['REFERENCE_CHECK', 'BACKGROUND_CHECK'].includes(selectedApplication.backendStage) && verificationSummaries[selectedApplication.id] && (
+                  <div className="mt-6 pt-6 border-t border-gray-200">
+                    <VerificationStatusSummary
+                      summary={verificationSummaries[selectedApplication.id]}
+                    />
+                  </div>
+                )}
+
                 {/* Background Screening */}
                 {['REFERENCE_CHECK', 'BACKGROUND_CHECK', 'OFFER_PREPARATION', 'OFFER_EXTENDED', 'OFFER_NEGOTIATION', 'OFFER_ACCEPTED', 'HIRED'].includes(selectedApplication.backendStage) && (
                   <div className="mt-6 pt-6 border-t border-gray-200">
@@ -1115,24 +1165,27 @@ export default function PipelinePage() {
                       candidateEmail={selectedApplication.candidate.email}
                       jobPostingId={selectedApplication.job?.id}
                       onClose={() => {}}
+                      onChecksUpdated={() => loadVerificationSummaries(applications)}
                     />
                   </div>
                 )}
 
-                {/* AI Candidate Assist */}
-                <div className="mt-6 pt-6 border-t border-gray-200 space-y-4">
-                  <AiCandidatePanel
-                    applicationId={selectedApplication.id}
-                    candidateName={`${selectedApplication.candidate.firstName} ${selectedApplication.candidate.lastName}`}
-                    jobTitle={selectedApplication.job.title}
-                  />
+                {/* AI Candidate Assist — hidden for REFERENCE_CHECK / BACKGROUND_CHECK stages */}
+                {!['REFERENCE_CHECK', 'BACKGROUND_CHECK'].includes(selectedApplication.backendStage) && (
+                  <div className="mt-6 pt-6 border-t border-gray-200 space-y-4">
+                    <AiCandidatePanel
+                      applicationId={selectedApplication.id}
+                      candidateName={`${selectedApplication.candidate.firstName} ${selectedApplication.candidate.lastName}`}
+                      jobTitle={selectedApplication.job.title}
+                    />
 
-                  {selectedApplication.backendStage.includes('OFFER') && (
-                    <AiAssistPanel title="AI Offer Prediction" feature="AI_OFFER_PREDICTION" description="Predict offer acceptance likelihood based on candidate and market signals">
-                      <AiOfferPrediction applicationId={selectedApplication.id} />
-                    </AiAssistPanel>
-                  )}
-                </div>
+                    {selectedApplication.backendStage.includes('OFFER') && (
+                      <AiAssistPanel title="AI Offer Prediction" feature="AI_OFFER_PREDICTION" description="Predict offer acceptance likelihood based on candidate and market signals">
+                        <AiOfferPrediction applicationId={selectedApplication.id} />
+                      </AiAssistPanel>
+                    )}
+                  </div>
+                )}
 
                 <div className="flex justify-end mt-6 pt-6 border-t">
                   <button
