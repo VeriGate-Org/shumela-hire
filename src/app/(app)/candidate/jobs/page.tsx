@@ -235,7 +235,7 @@ export default function BrowseJobsPage() {
         className="px-3 py-2 border border-gray-300 rounded-sm focus:ring-2 focus:ring-gold-500/60 focus:border-violet-400 w-40"
       />
       
-      <button className="flex items-center px-3 py-2 border border-gray-300 rounded-full hover:bg-gray-50">
+      <button className="flex items-center px-3 py-2 border border-gray-300 rounded-full hover:bg-gray-50 text-foreground">
         <FunnelIcon className="w-4 h-4 mr-2" />
         Filters
       </button>
