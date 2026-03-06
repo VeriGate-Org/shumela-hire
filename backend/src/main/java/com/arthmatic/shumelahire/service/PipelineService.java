@@ -28,6 +28,9 @@ public class PipelineService {
     @Autowired
     private AuditLogService auditLogService;
 
+    @Autowired
+    private NotificationService notificationService;
+
     private final ObjectMapper objectMapper = new ObjectMapper();
 
     // Core transition operations
@@ -90,11 +93,20 @@ public class PipelineService {
             performedBy,
             "PIPELINE_TRANSITION",
             "Application",
-            String.format("Moved application %d from %s to %s", 
-                application.getId(), 
-                currentStage != null ? currentStage.getDisplayName() : "Start", 
+            String.format("Moved application %d from %s to %s",
+                application.getId(),
+                currentStage != null ? currentStage.getDisplayName() : "Start",
                 targetStage.getDisplayName())
         );
+
+        // Send notifications based on transition type
+        if (transitionType == TransitionType.REJECTION) {
+            notificationService.notifyApplicationRejected(application);
+        } else {
+            notificationService.notifyPipelineStageChanged(application,
+                currentStage != null ? currentStage.getDisplayName() : "Start",
+                targetStage.getDisplayName());
+        }
 
         return savedTransition;
     }

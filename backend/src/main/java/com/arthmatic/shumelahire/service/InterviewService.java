@@ -29,6 +29,9 @@ public class InterviewService {
     @Autowired
     private AuditLogService auditLogService;
 
+    @Autowired
+    private NotificationService notificationService;
+
     private final ObjectMapper objectMapper = new ObjectMapper();
 
     // Core CRUD operations
@@ -168,9 +171,11 @@ public class InterviewService {
             rescheduledBy,
             "INTERVIEW_RESCHEDULED",
             "Interview",
-            String.format("Interview rescheduled from %s to %s. Reason: %s", 
+            String.format("Interview rescheduled from %s to %s. Reason: %s",
                 originalSchedule, newScheduledAt, reason)
         );
+
+        notificationService.notifyInterviewRescheduled(savedInterview);
 
         return savedInterview;
     }
@@ -195,6 +200,8 @@ public class InterviewService {
             "Interview",
             String.format("Interview cancelled. Reason: %s", reason)
         );
+
+        notificationService.notifyInterviewCancelled(savedInterview);
 
         return savedInterview;
     }
@@ -263,6 +270,8 @@ public class InterviewService {
             "Interview",
             "Interview completed"
         );
+
+        notificationService.notifyInterviewCompleted(savedInterview);
 
         return savedInterview;
     }
@@ -524,5 +533,6 @@ public class InterviewService {
         Interview interview = getInterviewById(interviewId);
         interview.setFeedbackRequestedAt(LocalDateTime.now());
         interviewRepository.save(interview);
+        notificationService.notifyInterviewFeedbackRequested(interview);
     }
 }

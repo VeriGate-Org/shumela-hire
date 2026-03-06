@@ -1,12 +1,6 @@
 package com.arthmatic.shumelahire.service;
 
-import com.arthmatic.shumelahire.entity.Applicant;
-import com.arthmatic.shumelahire.entity.Application;
-import com.arthmatic.shumelahire.entity.ApplicationStatus;
-import com.arthmatic.shumelahire.entity.Notification;
-import com.arthmatic.shumelahire.entity.NotificationChannel;
-import com.arthmatic.shumelahire.entity.NotificationType;
-import com.arthmatic.shumelahire.entity.NotificationPriority;
+import com.arthmatic.shumelahire.entity.*;
 import com.arthmatic.shumelahire.repository.ApplicantRepository;
 import com.arthmatic.shumelahire.repository.NotificationRepository;
 import com.arthmatic.shumelahire.service.integration.EmailService;
@@ -183,6 +177,254 @@ public class NotificationService {
                         NotificationChannel.EMAIL, "APPLICATION_SHORTLISTED");
     }
 
+    // --- Interview notifications ---
+
+    @Async
+    public void notifyInterviewRescheduled(Interview interview) {
+        Application app = interview.getApplication();
+        String subject = "Interview Rescheduled";
+        String message = String.format(
+            "Dear %s,\n\nYour interview for the position '%s' has been rescheduled.\n\n" +
+            "New Date: %s\nReason: %s\n\nBest regards,\nHR Team",
+            app.getApplicant().getFullName(), app.getJobTitle(),
+            interview.getScheduledAt(), interview.getRescheduleReason());
+        sendNotificationDirect(app.getApplicant().getId(), subject, message,
+            NotificationType.INTERVIEW_RESCHEDULED, NotificationPriority.HIGH);
+    }
+
+    @Async
+    public void notifyInterviewCancelled(Interview interview) {
+        Application app = interview.getApplication();
+        String subject = "Interview Cancelled";
+        String message = String.format(
+            "Dear %s,\n\nWe regret to inform you that your interview for the position '%s' has been cancelled.\n\n" +
+            "Reason: %s\n\nWe will be in touch regarding next steps.\n\nBest regards,\nHR Team",
+            app.getApplicant().getFullName(), app.getJobTitle(),
+            interview.getCancellationReason());
+        sendNotificationDirect(app.getApplicant().getId(), subject, message,
+            NotificationType.INTERVIEW_CANCELLED, NotificationPriority.HIGH);
+    }
+
+    @Async
+    public void notifyInterviewCompleted(Interview interview) {
+        Application app = interview.getApplication();
+        String subject = "Interview Completed";
+        String message = String.format(
+            "Dear %s,\n\nThank you for completing your interview for the position '%s'.\n\n" +
+            "We are reviewing all candidates and will be in touch soon.\n\nBest regards,\nHR Team",
+            app.getApplicant().getFullName(), app.getJobTitle());
+        sendNotificationDirect(app.getApplicant().getId(), subject, message,
+            NotificationType.INTERVIEW_COMPLETED, NotificationPriority.MEDIUM);
+    }
+
+    @Async
+    public void notifyInterviewFeedbackRequested(Interview interview) {
+        Application app = interview.getApplication();
+        sendInternalNotification(interview.getInterviewerId(),
+            "Feedback Requested",
+            String.format("Please submit your feedback for the interview with %s for the position '%s'.",
+                app.getApplicant().getFullName(), app.getJobTitle()),
+            NotificationType.INTERVIEW_FEEDBACK_REQUESTED, NotificationPriority.HIGH);
+    }
+
+    // --- Offer notifications ---
+
+    @Async
+    public void notifyOfferExtended(Offer offer) {
+        Application app = offer.getApplication();
+        String subject = "Job Offer Extended";
+        String message = String.format(
+            "Dear %s,\n\nCongratulations! We are pleased to extend an offer for the position '%s' in the %s department.\n\n" +
+            "Please review the offer details and let us know your decision.\n\nBest regards,\nHR Team",
+            app.getApplicant().getFullName(), offer.getJobTitle(), offer.getDepartment());
+        sendNotificationDirect(app.getApplicant().getId(), subject, message,
+            NotificationType.OFFER_EXTENDED, NotificationPriority.HIGH);
+    }
+
+    @Async
+    public void notifyOfferAccepted(Offer offer) {
+        Application app = offer.getApplication();
+        sendInternalNotification(offer.getCreatedBy(),
+            "Offer Accepted",
+            String.format("Candidate %s has accepted the offer for '%s'.",
+                app.getApplicant().getFullName(), offer.getJobTitle()),
+            NotificationType.OFFER_ACCEPTED, NotificationPriority.HIGH);
+    }
+
+    @Async
+    public void notifyOfferDeclined(Offer offer) {
+        Application app = offer.getApplication();
+        sendInternalNotification(offer.getCreatedBy(),
+            "Offer Declined",
+            String.format("Candidate %s has declined the offer for '%s'. Reason: %s",
+                app.getApplicant().getFullName(), offer.getJobTitle(),
+                offer.getRejectionReason() != null ? offer.getRejectionReason() : "Not specified"),
+            NotificationType.OFFER_DECLINED, NotificationPriority.HIGH);
+    }
+
+    @Async
+    public void notifyOfferNegotiation(Offer offer) {
+        Application app = offer.getApplication();
+        sendInternalNotification(offer.getCreatedBy(),
+            "Offer Under Negotiation",
+            String.format("Candidate %s has initiated negotiation for the offer for '%s'.",
+                app.getApplicant().getFullName(), offer.getJobTitle()),
+            NotificationType.OFFER_NEGOTIATION, NotificationPriority.MEDIUM);
+    }
+
+    @Async
+    public void notifyOfferExpired(Offer offer) {
+        Application app = offer.getApplication();
+        sendInternalNotification(offer.getCreatedBy(),
+            "Offer Expired",
+            String.format("The offer for %s (%s) has expired without a response.",
+                app.getApplicant().getFullName(), offer.getJobTitle()),
+            NotificationType.OFFER_EXPIRED, NotificationPriority.MEDIUM);
+    }
+
+    @Async
+    public void notifyOfferWithdrawn(Offer offer) {
+        Application app = offer.getApplication();
+        String subject = "Offer Update";
+        String message = String.format(
+            "Dear %s,\n\nWe regret to inform you that the offer for the position '%s' has been withdrawn.\n\n" +
+            "We appreciate your interest and wish you the best.\n\nBest regards,\nHR Team",
+            app.getApplicant().getFullName(), offer.getJobTitle());
+        sendNotificationDirect(app.getApplicant().getId(), subject, message,
+            NotificationType.OFFER_WITHDRAWN, NotificationPriority.HIGH);
+    }
+
+    // --- Job posting notifications ---
+
+    @Async
+    public void notifyJobPublished(JobPosting jobPosting) {
+        sendInternalNotification(jobPosting.getCreatedBy(),
+            "Job Published",
+            String.format("The job posting '%s' has been published and is now visible to candidates.",
+                jobPosting.getTitle()),
+            NotificationType.JOB_PUBLISHED, NotificationPriority.MEDIUM);
+    }
+
+    @Async
+    public void notifyJobClosed(JobPosting jobPosting) {
+        sendInternalNotification(jobPosting.getCreatedBy(),
+            "Job Closed",
+            String.format("The job posting '%s' has been closed and is no longer accepting applications.",
+                jobPosting.getTitle()),
+            NotificationType.JOB_CLOSED, NotificationPriority.LOW);
+    }
+
+    // --- Approval notifications ---
+
+    @Async
+    public void notifyApprovalRequired(Long recipientId, String itemType, String itemTitle) {
+        sendInternalNotification(recipientId,
+            "Approval Required",
+            String.format("A %s '%s' requires your approval.", itemType, itemTitle),
+            NotificationType.APPROVAL_REQUIRED, NotificationPriority.HIGH);
+    }
+
+    @Async
+    public void notifyApprovalGranted(Long recipientId, String itemType, String itemTitle) {
+        sendInternalNotification(recipientId,
+            "Approval Granted",
+            String.format("Your %s '%s' has been approved.", itemType, itemTitle),
+            NotificationType.APPROVAL_GRANTED, NotificationPriority.MEDIUM);
+    }
+
+    @Async
+    public void notifyApprovalDenied(Long recipientId, String itemType, String itemTitle, String reason) {
+        sendInternalNotification(recipientId,
+            "Approval Denied",
+            String.format("Your %s '%s' has been denied. Reason: %s", itemType, itemTitle,
+                reason != null ? reason : "Not specified"),
+            NotificationType.APPROVAL_DENIED, NotificationPriority.HIGH);
+    }
+
+    // --- Pipeline notifications ---
+
+    @Async
+    public void notifyApplicationRejected(Application application) {
+        String subject = "Application Status Update";
+        String message = String.format(
+            "Dear %s,\n\nThank you for your interest in the position '%s'.\n\n" +
+            "After careful consideration, we have decided to move forward with other candidates.\n\n" +
+            "We encourage you to apply for other opportunities with us.\n\nBest regards,\nHR Team",
+            application.getApplicant().getFullName(), application.getJobTitle());
+        sendNotificationDirect(application.getApplicant().getId(), subject, message,
+            NotificationType.APPLICATION_REJECTED, NotificationPriority.HIGH);
+    }
+
+    @Async
+    public void notifyPipelineStageChanged(Application application, String fromStage, String toStage) {
+        sendInternalNotification(application.getApplicant().getId(),
+            "Pipeline Stage Changed",
+            String.format("Your application for '%s' has moved from %s to %s.",
+                application.getJobTitle(), fromStage, toStage),
+            NotificationType.PIPELINE_STAGE_CHANGED, NotificationPriority.MEDIUM);
+    }
+
+    // --- Direct notification helpers ---
+
+    private void sendNotificationDirect(Long applicantId, String subject, String message,
+                                        NotificationType type, NotificationPriority priority) {
+        try {
+            Applicant applicant = applicantRepository.findById(applicantId)
+                    .orElseThrow(() -> new IllegalArgumentException("Applicant not found: " + applicantId));
+
+            Notification notification = new Notification();
+            notification.setRecipientId(applicantId);
+            notification.setType(type);
+            notification.setChannel(NotificationChannel.EMAIL);
+            notification.setPriority(priority);
+            notification.setTitle(subject);
+            notification.setMessage(message);
+            notification.setEmailTo(applicant.getEmail());
+            notification.setEmailSubject(subject);
+
+            boolean sent = false;
+            try {
+                if (sqsEnabled && sqsClient != null && !sqsQueueUrl.isEmpty()) {
+                    sent = publishToSqs(applicant, subject, message, NotificationChannel.EMAIL, type.name());
+                } else {
+                    sent = sendEmail(applicant.getEmail(), subject, message);
+                }
+            } catch (Exception e) {
+                logger.error("Error sending notification to applicant {}: {}", applicantId, e.getMessage());
+                notification.setDeliveryError(e.getMessage());
+            }
+
+            notification.setIsDelivered(sent);
+            notification.setDeliveredAt(sent ? LocalDateTime.now() : null);
+            notificationRepository.save(notification);
+
+            logger.info("Notification {} for applicant {} - Status: {}", type, applicantId, sent ? "SENT" : "FAILED");
+        } catch (Exception e) {
+            logger.error("Failed to send {} notification to applicant {}: {}", type, applicantId, e.getMessage(), e);
+        }
+    }
+
+    private void sendInternalNotification(Long recipientId, String title, String message,
+                                          NotificationType type, NotificationPriority priority) {
+        try {
+            Notification notification = new Notification();
+            notification.setRecipientId(recipientId);
+            notification.setType(type);
+            notification.setChannel(NotificationChannel.IN_APP);
+            notification.setPriority(priority);
+            notification.setTitle(title);
+            notification.setMessage(message);
+            notification.setIsDelivered(true);
+            notification.setDeliveredAt(LocalDateTime.now());
+
+            notificationRepository.save(notification);
+
+            logger.info("Internal notification {} for user {} saved", type, recipientId);
+        } catch (Exception e) {
+            logger.error("Failed to save internal notification for user {}: {}", recipientId, e.getMessage(), e);
+        }
+    }
+
     private void sendNotification(Long applicantId, String subject, String message,
                                  NotificationChannel channel, String eventType) {
         try {
@@ -344,8 +586,11 @@ public class NotificationService {
 
     private NotificationPriority getNotificationPriority(NotificationType type) {
         return switch (type) {
-            case OFFER_EXTENDED, INTERVIEW_SCHEDULED, APPLICATION_REJECTED -> NotificationPriority.HIGH;
-            case APPLICATION_APPROVED, APPLICATION_SUBMITTED -> NotificationPriority.MEDIUM;
+            case OFFER_EXTENDED, INTERVIEW_SCHEDULED, INTERVIEW_CANCELLED, INTERVIEW_RESCHEDULED,
+                 APPLICATION_REJECTED, OFFER_WITHDRAWN, APPROVAL_REQUIRED, APPROVAL_DENIED -> NotificationPriority.HIGH;
+            case APPLICATION_APPROVED, APPLICATION_SUBMITTED, INTERVIEW_COMPLETED,
+                 INTERVIEW_FEEDBACK_REQUESTED, OFFER_ACCEPTED, OFFER_DECLINED,
+                 OFFER_NEGOTIATION, APPROVAL_GRANTED, JOB_PUBLISHED -> NotificationPriority.MEDIUM;
             default -> NotificationPriority.LOW;
         };
     }

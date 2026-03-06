@@ -24,13 +24,16 @@ public class JobPostingService {
     private final JobPostingRepository jobPostingRepository;
     private final AuditLogService auditLogService;
     private final JobAdSyncService jobAdSyncService;
+    private final NotificationService notificationService;
 
     public JobPostingService(JobPostingRepository jobPostingRepository,
                              AuditLogService auditLogService,
-                             JobAdSyncService jobAdSyncService) {
+                             JobAdSyncService jobAdSyncService,
+                             NotificationService notificationService) {
         this.jobPostingRepository = jobPostingRepository;
         this.auditLogService = auditLogService;
         this.jobAdSyncService = jobAdSyncService;
+        this.notificationService = notificationService;
     }
     
     /**
@@ -199,8 +202,10 @@ public class JobPostingService {
         auditLogService.logUserAction(submittedBy, "JOB_POSTING_SUBMITTED_FOR_APPROVAL", "JOB_POSTING", 
                                      updatedJobPosting.getTitle() + " (ID: " + updatedJobPosting.getId() + ")");
         
+        notificationService.notifyApprovalRequired(submittedBy, "Job Posting", jobPosting.getTitle());
+
         logger.info("Job posting {} submitted for approval", id);
-        
+
         return JobPostingResponse.fromEntity(updatedJobPosting);
     }
     
@@ -227,8 +232,10 @@ public class JobPostingService {
         auditLogService.logUserAction(approvedBy, "JOB_POSTING_APPROVED", "JOB_POSTING", 
                                      approvedJobPosting.getTitle() + " (ID: " + approvedJobPosting.getId() + ")");
         
+        notificationService.notifyApprovalGranted(jobPosting.getCreatedBy(), "Job Posting", jobPosting.getTitle());
+
         logger.info("Job posting {} approved", id);
-        
+
         return JobPostingResponse.fromEntity(approvedJobPosting);
     }
     
@@ -253,8 +260,10 @@ public class JobPostingService {
         auditLogService.logUserAction(rejectedBy, "JOB_POSTING_REJECTED", "JOB_POSTING", 
                                      rejectedJobPosting.getTitle() + " (ID: " + rejectedJobPosting.getId() + ")");
         
+        notificationService.notifyApprovalDenied(jobPosting.getCreatedBy(), "Job Posting", jobPosting.getTitle(), rejectionReason);
+
         logger.info("Job posting {} rejected", id);
-        
+
         return JobPostingResponse.fromEntity(rejectedJobPosting);
     }
     
@@ -283,11 +292,13 @@ public class JobPostingService {
         auditLogService.logUserAction(publishedBy, "JOB_POSTING_PUBLISHED", "JOB_POSTING",
                                      publishedJobPosting.getTitle() + " (ID: " + publishedJobPosting.getId() + ")");
 
+        notificationService.notifyJobPublished(publishedJobPosting);
+
         logger.info("Job posting {} published", id);
 
         return JobPostingResponse.fromEntity(publishedJobPosting);
     }
-    
+
     /**
      * Unpublish job posting
      */
@@ -341,11 +352,13 @@ public class JobPostingService {
         auditLogService.logUserAction(closedBy, "JOB_POSTING_CLOSED", "JOB_POSTING",
                                      closedJobPosting.getTitle() + " (ID: " + closedJobPosting.getId() + ")");
 
+        notificationService.notifyJobClosed(closedJobPosting);
+
         logger.info("Job posting {} closed", id);
 
         return JobPostingResponse.fromEntity(closedJobPosting);
     }
-    
+
     /**
      * Get jobs requiring approval
      */

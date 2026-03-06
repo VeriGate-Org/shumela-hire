@@ -33,6 +33,9 @@ public class ShortlistingService {
     @Autowired
     private ApplicationRepository applicationRepository;
 
+    @Autowired
+    private NotificationService notificationService;
+
     private final ObjectMapper objectMapper = new ObjectMapper();
 
     @Transactional
@@ -96,6 +99,7 @@ public class ShortlistingService {
             score.setIsShortlisted(shortlisted);
             if (shortlisted && score.getApplication().getStatus() == ApplicationStatus.SUBMITTED) {
                 score.getApplication().setStatus(ApplicationStatus.SCREENING);
+                notificationService.notifyApplicationShortlisted(score.getApplication());
             }
             shortlistScoreRepository.save(score);
         }
