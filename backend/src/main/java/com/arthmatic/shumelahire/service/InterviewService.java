@@ -109,7 +109,7 @@ public class InterviewService {
     }
 
     public Interview getInterviewById(Long id) {
-        return interviewRepository.findById(id)
+        return interviewRepository.findByIdWithDetails(id)
                 .orElseThrow(() -> new IllegalArgumentException("Interview not found with id: " + id));
     }
 

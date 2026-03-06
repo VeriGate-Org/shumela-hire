@@ -20,6 +20,11 @@ import java.util.Optional;
 @Repository
 public interface InterviewRepository extends JpaRepository<Interview, Long> {
 
+    // Eager-loading single interview by ID (for detail/edit pages)
+    @EntityGraph(value = "Interview.withApplicationDetails")
+    @Query("SELECT i FROM Interview i WHERE i.id = :id")
+    Optional<Interview> findByIdWithDetails(@Param("id") Long id);
+
     // Basic queries
     @Query("SELECT i FROM Interview i WHERE i.application.id = :applicationId")
     List<Interview> findByApplicationId(@Param("applicationId") Long applicationId);
