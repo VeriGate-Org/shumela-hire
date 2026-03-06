@@ -110,8 +110,8 @@ export default function InterviewsPage() {
     const normalizedSearch = searchTerm.toLowerCase();
     const matchesSearch = !searchTerm
       || interview.title?.toLowerCase().includes(normalizedSearch)
-      || (interview.application?.applicant?.firstName ?? '').toLowerCase().includes(normalizedSearch)
-      || (interview.application?.applicant?.lastName ?? '').toLowerCase().includes(normalizedSearch)
+      || (interview.application?.applicant?.name ?? '').toLowerCase().includes(normalizedSearch)
+      || (interview.application?.applicant?.surname ?? '').toLowerCase().includes(normalizedSearch)
       || (interview.application?.jobPosting?.title ?? '').toLowerCase().includes(normalizedSearch)
       || (interview.application?.jobPosting?.department ?? '').toLowerCase().includes(normalizedSearch);
 
@@ -455,7 +455,7 @@ export default function InterviewsPage() {
 
                           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-muted-foreground">
                             <div>
-                              <p><span className="font-medium text-foreground">Candidate:</span> {((interview.application?.applicant?.firstName ?? '') + ' ' + (interview.application?.applicant?.lastName ?? '')).trim() || (interview as any).candidateName || 'Unknown Candidate'}</p>
+                              <p><span className="font-medium text-foreground">Candidate:</span> {((interview.application?.applicant?.name ?? '') + ' ' + (interview.application?.applicant?.surname ?? '')).trim() || (interview as any).candidateName || 'Unknown Candidate'}</p>
                               <p><span className="font-medium text-foreground">Position:</span> {interview.application?.jobPosting?.title || 'Unknown Position'}</p>
                               <p><span className="font-medium text-foreground">Type:</span> {interview.typeDisplayName}</p>
                             </div>

@@ -400,7 +400,7 @@ export default function InterviewCalendar({ interviews, onInterviewSelect, onInt
                             {formatTime(interview.scheduledAt)}
                           </div>
                           <div className="truncate">
-                            {((interview.application?.applicant?.firstName ?? '') + ' ' + (interview.application?.applicant?.lastName ?? '')).trim() || 'Unknown Candidate'}
+                            {((interview.application?.applicant?.name ?? '') + ' ' + (interview.application?.applicant?.surname ?? '')).trim() || 'Unknown Candidate'}
                           </div>
                         </button>
                       ))}
@@ -455,7 +455,7 @@ export default function InterviewCalendar({ interviews, onInterviewSelect, onInt
                             className={`w-full text-left text-xs p-1 rounded-control border cursor-pointer hover:shadow-sm mb-1 ${getInterviewStatusColor(interview)}`}
                           >
                             <div className="font-medium">
-                              {((interview.application?.applicant?.firstName ?? '') + ' ' + (interview.application?.applicant?.lastName ?? '')).trim() || 'Unknown Candidate'}
+                              {((interview.application?.applicant?.name ?? '') + ' ' + (interview.application?.applicant?.surname ?? '')).trim() || 'Unknown Candidate'}
                             </div>
                             <div className="truncate">
                               {interview.roundDisplayName}
@@ -494,7 +494,7 @@ export default function InterviewCalendar({ interviews, onInterviewSelect, onInt
                               {formatTime(interview.scheduledAt)} - {interview.title}
                             </div>
                             <div className="text-sm">
-                              {((interview.application?.applicant?.firstName ?? '') + ' ' + (interview.application?.applicant?.lastName ?? '')).trim() || 'Unknown Candidate'}
+                              {((interview.application?.applicant?.name ?? '') + ' ' + (interview.application?.applicant?.surname ?? '')).trim() || 'Unknown Candidate'}
                             </div>
                             <div className="text-xs text-muted-foreground">
                               {interview.application?.jobPosting?.title || 'Unknown Position'}
@@ -528,7 +528,7 @@ export default function InterviewCalendar({ interviews, onInterviewSelect, onInt
                 {selectedInterview.title}
               </h3>
               <p className="text-sm text-muted-foreground">
-                {((selectedInterview.application?.applicant?.firstName ?? '') + ' ' + (selectedInterview.application?.applicant?.lastName ?? '')).trim() || 'Unknown Candidate'}
+                {((selectedInterview.application?.applicant?.name ?? '') + ' ' + (selectedInterview.application?.applicant?.surname ?? '')).trim() || 'Unknown Candidate'}
               </p>
             </div>
 
