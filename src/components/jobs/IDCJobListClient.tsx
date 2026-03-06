@@ -104,13 +104,13 @@ export default function IDCJobListClient({ jobs }: Props) {
         <div className="bg-white rounded-[2px] shadow p-6 mb-8">
           {/* Search */}
           <div className="relative mb-4">
-            <MagnifyingGlassIcon className="w-5 h-5 absolute left-3 top-1/2 -translate-y-1/2 text-[#64748B]" />
+            <MagnifyingGlassIcon className="w-5 h-5 absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
             <input
               type="text"
               placeholder="Search by title, company or department..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-[2px] focus:ring-2 focus:ring-[#05527E]/30 focus:border-[#05527E] text-[#1E293B]"
+              className="w-full pl-10 pr-4 py-3 border border-border rounded-[2px] focus:ring-2 focus:ring-primary/30 focus:border-primary text-foreground bg-card"
             />
           </div>
 
@@ -122,13 +122,13 @@ export default function IDCJobListClient({ jobs }: Props) {
               <FunnelIcon className="w-4 h-4 mr-2" />
               Filters
               {hasFilters && (
-                <span className="ml-2 px-2 py-0.5 bg-[#F1C54B]/20 text-[#05527E] text-xs rounded-full font-medium">
+                <span className="ml-2 px-2 py-0.5 bg-cta/20 text-primary text-xs rounded-full font-medium">
                   Active
                 </span>
               )}
             </button>
 
-            <span className="text-sm text-[#64748B]">
+            <span className="text-sm text-muted-foreground">
               Showing {filteredJobs.length} of {jobs.length}
             </span>
           </div>
@@ -137,13 +137,13 @@ export default function IDCJobListClient({ jobs }: Props) {
             <div className="mt-6 pt-6 border-t border-gray-200">
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div>
-                  <label className="block text-xs font-medium text-[#64748B] uppercase tracking-[0.05em] mb-2">
+                  <label className="block text-xs font-medium text-muted-foreground uppercase tracking-[0.05em] mb-2">
                     Location
                   </label>
                   <select
                     value={locationFilter}
                     onChange={(e) => setLocationFilter(e.target.value)}
-                    className="w-full border border-gray-300 rounded-[2px] px-3 py-2 text-sm text-[#1E293B]"
+                    className="w-full border border-border rounded-[2px] px-3 py-2 text-sm text-foreground bg-card"
                   >
                     <option value="">All Locations</option>
                     {locations.map((l) => (
@@ -155,13 +155,13 @@ export default function IDCJobListClient({ jobs }: Props) {
                 </div>
 
                 <div>
-                  <label className="block text-xs font-medium text-[#64748B] uppercase tracking-[0.05em] mb-2">
+                  <label className="block text-xs font-medium text-muted-foreground uppercase tracking-[0.05em] mb-2">
                     Department
                   </label>
                   <select
                     value={departmentFilter}
                     onChange={(e) => setDepartmentFilter(e.target.value)}
-                    className="w-full border border-gray-300 rounded-[2px] px-3 py-2 text-sm text-[#1E293B]"
+                    className="w-full border border-border rounded-[2px] px-3 py-2 text-sm text-foreground bg-card"
                   >
                     <option value="">All Departments</option>
                     {departments.map((d) => (
@@ -173,13 +173,13 @@ export default function IDCJobListClient({ jobs }: Props) {
                 </div>
 
                 <div>
-                  <label className="block text-xs font-medium text-[#64748B] uppercase tracking-[0.05em] mb-2">
+                  <label className="block text-xs font-medium text-muted-foreground uppercase tracking-[0.05em] mb-2">
                     Employment Type
                   </label>
                   <select
                     value={employmentTypeFilter}
                     onChange={(e) => setEmploymentTypeFilter(e.target.value)}
-                    className="w-full border border-gray-300 rounded-[2px] px-3 py-2 text-sm text-[#1E293B]"
+                    className="w-full border border-border rounded-[2px] px-3 py-2 text-sm text-foreground bg-card"
                   >
                     <option value="">All Types</option>
                     <option value="Full-time">Full-time</option>
@@ -194,7 +194,7 @@ export default function IDCJobListClient({ jobs }: Props) {
                 <div className="mt-4">
                   <button
                     onClick={clearFilters}
-                    className="text-sm text-[#05527E] hover:text-[#05527E]/80"
+                    className="text-sm text-primary hover:text-primary/80"
                   >
                     Clear all filters
                   </button>
@@ -207,7 +207,7 @@ export default function IDCJobListClient({ jobs }: Props) {
         {/* Job cards */}
         {filteredJobs.length === 0 ? (
           <div className="text-center py-16">
-            <p className="text-[#64748B] text-lg mb-4">
+            <p className="text-muted-foreground text-lg mb-4">
               {jobs.length === 0
                 ? 'No positions available at the moment'
                 : 'No positions match your search criteria'}
@@ -215,7 +215,7 @@ export default function IDCJobListClient({ jobs }: Props) {
             {jobs.length > 0 && (
               <button
                 onClick={clearFilters}
-                className="text-[#05527E] hover:text-[#05527E]/80 text-sm"
+                className="text-primary hover:text-primary/80 text-sm"
               >
                 Clear filters to see all positions
               </button>
@@ -235,12 +235,12 @@ export default function IDCJobListClient({ jobs }: Props) {
                     <div className="flex-1 min-w-0">
                       <Link
                         href={`/jobs/${job.slug}`}
-                        className="text-xl font-bold text-[#0F172A] hover:text-[#05527E] tracking-[-0.03em] transition-colors"
+                        className="text-xl font-bold text-foreground hover:text-primary tracking-[-0.03em] transition-colors"
                       >
                         {job.title}
                       </Link>
 
-                      <div className="flex flex-wrap items-center gap-4 mt-2 text-sm text-[#64748B]">
+                      <div className="flex flex-wrap items-center gap-4 mt-2 text-sm text-muted-foreground">
                         {job.department && <span>{job.department}</span>}
                         {job.location && (
                           <span className="inline-flex items-center">
@@ -270,7 +270,7 @@ export default function IDCJobListClient({ jobs }: Props) {
 
                     <Link
                       href={`/jobs/${job.slug}`}
-                      className="ml-6 shrink-0 inline-flex items-center px-6 py-2 bg-[#F1C54B] text-[#0F172A] text-sm font-medium uppercase tracking-[0.05em] rounded-full hover:bg-[#F1C54B]/90 transition-colors"
+                      className="ml-6 shrink-0 inline-flex items-center px-6 py-2 bg-cta text-cta-foreground text-sm font-medium uppercase tracking-[0.05em] rounded-full hover:bg-cta/90 transition-colors"
                     >
                       View Position
                     </Link>
