@@ -1,6 +1,7 @@
 package com.arthmatic.shumelahire.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 
@@ -212,34 +213,41 @@ public class Interview extends TenantAwareEntity {
     }
 
     // Business methods
+    @JsonProperty("canBeRescheduled")
     public boolean canBeRescheduled() {
         return status == InterviewStatus.SCHEDULED &&
                scheduledAt.isAfter(LocalDateTime.now().plusHours(2));
     }
 
+    @JsonProperty("canBeCancelled")
     public boolean canBeCancelled() {
         return status == InterviewStatus.SCHEDULED || status == InterviewStatus.RESCHEDULED;
     }
 
+    @JsonProperty("canBeStarted")
     public boolean canBeStarted() {
         return status == InterviewStatus.SCHEDULED &&
                LocalDateTime.now().isAfter(scheduledAt.minusMinutes(15)) &&
                LocalDateTime.now().isBefore(getEndTime().plusMinutes(30));
     }
 
+    @JsonProperty("canBeCompleted")
     public boolean canBeCompleted() {
         return status == InterviewStatus.IN_PROGRESS;
     }
 
+    @JsonProperty("requiresFeedback")
     public boolean requiresFeedback() {
         return status == InterviewStatus.COMPLETED && feedback == null;
     }
 
+    @JsonProperty("isOverdue")
     public boolean isOverdue() {
         return status == InterviewStatus.SCHEDULED &&
                LocalDateTime.now().isAfter(getEndTime().plusMinutes(15));
     }
 
+    @JsonProperty("isUpcoming")
     public boolean isUpcoming() {
         return status == InterviewStatus.SCHEDULED &&
                scheduledAt.isAfter(LocalDateTime.now()) &&
