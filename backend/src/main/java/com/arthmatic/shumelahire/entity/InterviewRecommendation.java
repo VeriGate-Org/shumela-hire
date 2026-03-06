@@ -2,8 +2,10 @@ package com.arthmatic.shumelahire.entity;
 
 public enum InterviewRecommendation {
     HIRE("Recommend for Hire"),
+    STRONG_HIRE("Strongly Recommend for Hire"),
     CONSIDER("Consider with Reservations"),
     REJECT("Do Not Recommend"),
+    STRONG_REJECT("Strongly Do Not Recommend"),
     ANOTHER_ROUND("Recommend Another Round"),
     ON_HOLD("Put on Hold"),
     SECOND_OPINION("Needs Second Opinion");
@@ -19,11 +21,11 @@ public enum InterviewRecommendation {
     }
 
     public boolean isPositive() {
-        return this == HIRE || this == CONSIDER;
+        return this == HIRE || this == STRONG_HIRE || this == CONSIDER;
     }
 
     public boolean isNegative() {
-        return this == REJECT;
+        return this == REJECT || this == STRONG_REJECT;
     }
 
     public boolean requiresAction() {
@@ -31,16 +33,18 @@ public enum InterviewRecommendation {
     }
 
     public boolean allowsProgressToNextRound() {
-        return this == HIRE || this == ANOTHER_ROUND;
+        return this == HIRE || this == STRONG_HIRE || this == ANOTHER_ROUND;
     }
 
     public String getActionSuggestion() {
         switch (this) {
             case HIRE:
+            case STRONG_HIRE:
                 return "Proceed with job offer";
             case CONSIDER:
                 return "Review with hiring team before proceeding";
             case REJECT:
+            case STRONG_REJECT:
                 return "Send rejection communication";
             case ANOTHER_ROUND:
                 return "Schedule additional interview round";
