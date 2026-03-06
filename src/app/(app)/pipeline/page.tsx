@@ -265,8 +265,8 @@ export default function PipelinePage() {
           firstName = nameParts[0] || '';
           lastName = nameParts.slice(1).join(' ') || '';
         } else if (a.applicant) {
-          firstName = a.applicant.firstName || a.applicant.given_name || '';
-          lastName = a.applicant.lastName || a.applicant.family_name || '';
+          firstName = a.applicant.name || a.applicant.firstName || a.applicant.given_name || '';
+          lastName = a.applicant.surname || a.applicant.lastName || a.applicant.family_name || '';
         }
 
         const backendStage = a.pipelineStage || a.status || 'APPLICATION_RECEIVED';
