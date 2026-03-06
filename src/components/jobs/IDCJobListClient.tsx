@@ -117,7 +117,7 @@ export default function IDCJobListClient({ jobs }: Props) {
           <div className="flex items-center justify-between">
             <button
               onClick={() => setShowFilters(!showFilters)}
-              className="inline-flex items-center px-4 py-2 border border-gray-300 rounded-full hover:bg-gray-50 text-sm text-[#1E293B]"
+              className="inline-flex items-center px-4 py-2 border border-gray-300 rounded-full hover:bg-gray-50 text-sm text-foreground"
             >
               <FunnelIcon className="w-4 h-4 mr-2" />
               Filters
