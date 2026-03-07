@@ -38,6 +38,7 @@ import BackgroundCheckPanel from '@/components/BackgroundCheckPanel';
 import VerificationStatusSummary, { VerificationSummary } from '@/components/VerificationStatusSummary';
 import OfferSummaryPanel from '@/components/OfferSummaryPanel';
 import InterviewSummaryPanel from '@/components/InterviewSummaryPanel';
+import InterviewScheduler from '@/components/InterviewScheduler';
 import StatusPill from '@/components/StatusPill';
 
 // --- Stage grouping: maps 16 backend PipelineStage enum values into 7 display columns ---
@@ -240,7 +241,7 @@ export default function PipelinePage() {
   const [ratingUpdating, setRatingUpdating] = useState(false);
   const [screeningNotesOpen, setScreeningNotesOpen] = useState(false);
   const [interviewPreviews, setInterviewPreviews] = useState<Record<string, { nextDate?: string; nextType?: string; status?: string; feedbackCount?: number; totalInterviewers?: number; latestRecommendation?: string }>>({});
-  const [showScheduler, setShowScheduler] = useState(false);
+  const [schedulerApplicationId, setSchedulerApplicationId] = useState<number | null>(null);
 
   // --- Status mapping covering all 12 ApplicationStatus enum values ---
   const statusMap: Record<string, Application['status']> = {
@@ -1485,8 +1486,7 @@ export default function PipelinePage() {
                       candidateName={`${selectedApplication.candidate.firstName} ${selectedApplication.candidate.lastName}`}
                       jobTitle={selectedApplication.job.title}
                       onSchedule={() => {
-                        // Navigate to interviews page with pre-filled application
-                        window.location.href = `/interviews?schedule=true&applicationId=${selectedApplication.id}`;
+                        setSchedulerApplicationId(Number(selectedApplication.id));
                       }}
                     />
                   </div>
@@ -1602,6 +1602,27 @@ export default function PipelinePage() {
         onConfirm={confirmBulkMove}
         onCancel={() => setBulkMoveConfirm(null)}
       />
+
+      {/* Interview Scheduler Modal */}
+      {schedulerApplicationId !== null && (
+        <div className="fixed inset-0 z-[60] flex items-center justify-center">
+          <div className="absolute inset-0 bg-black/50" onClick={() => setSchedulerApplicationId(null)} />
+          <div className="relative w-full max-w-3xl max-h-[90vh] overflow-y-auto bg-card rounded-[2px] shadow-xl mx-4">
+            <InterviewScheduler
+              applicationId={schedulerApplicationId}
+              onSuccess={() => {
+                setSchedulerApplicationId(null);
+                toast('Interview scheduled', 'success');
+                // Refresh the interview panel if detail modal is open
+                if (selectedApplication) {
+                  setSelectedApplication({ ...selectedApplication });
+                }
+              }}
+              onCancel={() => setSchedulerApplicationId(null)}
+            />
+          </div>
+        </div>
+      )}
     </PageWrapper>
   );
 }

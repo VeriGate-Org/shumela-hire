@@ -28,6 +28,7 @@ const HARDCODED_INTERVIEWERS: DropdownOption[] = [
 
 interface InterviewSchedulerProps {
   interviewId?: number;
+  applicationId?: number;
   onSuccess?: (interview: InterviewSaveResponse) => void;
   onCancel?: () => void;
 }
@@ -117,9 +118,10 @@ const selectClass =
 
 const labelClass = 'block text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-[0.05em] mb-1.5';
 
-export default function InterviewScheduler({ interviewId, onSuccess, onCancel }: InterviewSchedulerProps) {
+export default function InterviewScheduler({ interviewId, applicationId: prefilledApplicationId, onSuccess, onCancel }: InterviewSchedulerProps) {
   const { user } = useAuth();
-  const [currentStep, setCurrentStep] = useState(interviewId ? 1 : 0);
+  const skipCandidateStep = !!(prefilledApplicationId && prefilledApplicationId > 0);
+  const [currentStep, setCurrentStep] = useState(interviewId || skipCandidateStep ? 1 : 0);
   const [interviewers, setInterviewers] = useState<Interviewer[]>([]);
   const [formData, setFormData] = useState<InterviewData>({
     title: '',
@@ -135,7 +137,7 @@ export default function InterviewScheduler({ interviewId, onSuccess, onCancel }:
     agenda: '',
     interviewerId: 1,
     interviewerIds: [],
-    applicationId: 0,
+    applicationId: prefilledApplicationId || 0,
   });
 
   const [applications, setApplications] = useState<Application[]>([]);
