@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { apiFetch } from '@/lib/api-fetch';
 import { RealTimeMetrics } from '../../analytics';
 import { DashboardWidget, PerformanceMetrics } from '../../dashboard';
@@ -23,81 +23,240 @@ interface MetricItem {
   status: 'good' | 'warning' | 'critical';
 }
 
-const defaultMetrics: MetricItem[] = [
-  {
-    id: 'employee-satisfaction',
-    label: 'Employee Satisfaction',
-    value: 0,
-    previousValue: 0,
-    target: 90,
-    unit: 'percentage',
-    trend: 'neutral',
-    trendValue: 0,
-    description: 'Overall employee satisfaction score',
-    status: 'warning',
-  },
-  {
-    id: 'onboarding-completion',
-    label: 'Onboarding Completion Rate',
-    value: 0,
-    previousValue: 0,
-    target: 95,
-    unit: 'percentage',
-    trend: 'neutral',
-    trendValue: 0,
-    description: 'New hire onboarding completion rate',
-    status: 'warning',
-  },
-];
+interface PipelineDept {
+  department: string;
+  open: number;
+  inProgress: number;
+  filled: number;
+}
+
+interface LifecycleItem {
+  stage: string;
+  count: number;
+  color: string;
+}
+
+interface ActivityItem {
+  id: string;
+  type: string;
+  message: string;
+  time: string;
+  color: string;
+}
+
+function mapPerformanceStatus(status: string): 'good' | 'warning' | 'critical' {
+  switch (status?.toUpperCase()) {
+    case 'ON_TARGET':
+    case 'ABOVE_TARGET':
+      return 'good';
+    case 'BELOW_TARGET':
+    case 'AT_RISK':
+      return 'warning';
+    case 'CRITICAL':
+      return 'critical';
+    default:
+      return 'warning';
+  }
+}
+
+function mapTrendDirection(trend: string): 'up' | 'down' | 'neutral' {
+  switch (trend?.toUpperCase()) {
+    case 'UP':
+    case 'IMPROVING':
+      return 'up';
+    case 'DOWN':
+    case 'DECLINING':
+      return 'down';
+    default:
+      return 'neutral';
+  }
+}
+
+function getTimeframeDays(timeframe: string): number {
+  switch (timeframe) {
+    case '7days': return 7;
+    case '30days': return 30;
+    case '90days': return 90;
+    case '12months': return 365;
+    default: return 30;
+  }
+}
+
+const KPI_CONFIG: Record<string, { label: string; unit: 'number' | 'percentage' | 'days'; target: number; description: string }> = {
+  total_applications: { label: 'Total Applications', unit: 'number', target: 50, description: 'Applications received in the period' },
+  interview_conversion_rate: { label: 'Interview Conversion', unit: 'percentage', target: 30, description: 'Applications progressing to interview stage' },
+  avg_response_time_hours: { label: 'Avg Response Time', unit: 'days', target: 3, description: 'Average time to first response' },
+  interviews_conducted: { label: 'Interviews Conducted', unit: 'number', target: 20, description: 'Completed interviews in the period' },
+  offer_acceptance_rate: { label: 'Offer Acceptance Rate', unit: 'percentage', target: 85, description: 'Percentage of offers accepted' },
+  time_to_hire: { label: 'Time to Hire', unit: 'days', target: 30, description: 'Average days from application to hire' },
+};
 
 export default function HRDashboard({ selectedTimeframe, onTimeframeChange: _onTimeframeChange }: HRDashboardProps) {
-  const [metrics, setMetrics] = useState<MetricItem[]>(defaultMetrics);
+  const [metrics, setMetrics] = useState<MetricItem[]>([]);
+  const [pipeline, setPipeline] = useState<PipelineDept[]>([]);
+  const [lifecycle, setLifecycle] = useState<LifecycleItem[]>([]);
+  const [activities, setActivities] = useState<ActivityItem[]>([]);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    let cancelled = false;
+  const fetchDashboardData = useCallback(async () => {
+    setLoading(true);
 
-    async function fetchData() {
-      setLoading(true);
+    try {
+      const days = getTimeframeDays(selectedTimeframe);
+      const endDate = new Date().toISOString().split('T')[0];
+      const startDate = new Date(Date.now() - days * 24 * 60 * 60 * 1000).toISOString().split('T')[0];
 
+      // Fetch dashboard metrics and job posting data in parallel
+      const [dashboardRes, jobPostingsRes, applicationsRes] = await Promise.all([
+        apiFetch(`/api/analytics/dashboard?date=${endDate}`),
+        apiFetch('/api/job-postings?size=200'),
+        apiFetch(`/api/applications?size=1&startDate=${startDate}&endDate=${endDate}`),
+      ]);
+
+      // Map KPIs to MetricItem format
+      if (dashboardRes.ok) {
+        const data = await dashboardRes.json();
+        const kpis = data?.kpis || {};
+
+        const mappedMetrics: MetricItem[] = Object.entries(kpis)
+          .filter(([key]) => KPI_CONFIG[key])
+          .map(([key, kpiRaw]) => {
+            const kpi = kpiRaw as { value?: number; trend?: string; variance?: number; status?: string };
+            const config = KPI_CONFIG[key];
+            let value = Number(kpi.value ?? 0);
+
+            // Convert hours to days for response time
+            if (key === 'avg_response_time_hours') {
+              value = Math.round(value / 24) || 0;
+            }
+
+            const trendDir = mapTrendDirection(kpi.trend ?? '');
+            const variance = Number(kpi.variance ?? 0);
+
+            return {
+              id: key,
+              label: config.label,
+              value,
+              previousValue: trendDir === 'neutral' ? value : Math.round(value / (1 + variance / 100)),
+              target: config.target,
+              unit: config.unit,
+              trend: trendDir,
+              trendValue: variance,
+              description: config.description,
+              status: mapPerformanceStatus(kpi.status ?? ''),
+            };
+          });
+
+        if (mappedMetrics.length > 0) {
+          setMetrics(mappedMetrics);
+        }
+      }
+
+      // Build pipeline data from job postings
+      if (jobPostingsRes.ok) {
+        const jpData = await jobPostingsRes.json();
+        const postings = jpData?.content || jpData || [];
+
+        if (Array.isArray(postings) && postings.length > 0) {
+          const deptMap: Record<string, { open: number; inProgress: number; filled: number }> = {};
+
+          for (const jp of postings) {
+            const dept = jp.department || 'Other';
+            if (!deptMap[dept]) deptMap[dept] = { open: 0, inProgress: 0, filled: 0 };
+
+            const status = (jp.status || '').toUpperCase();
+            if (status === 'PUBLISHED' || status === 'OPEN' || status === 'ACTIVE') {
+              deptMap[dept].open++;
+            } else if (status === 'SCREENING' || status === 'INTERVIEWING' || status === 'IN_PROGRESS') {
+              deptMap[dept].inProgress++;
+            } else if (status === 'FILLED' || status === 'CLOSED') {
+              deptMap[dept].filled++;
+            }
+          }
+
+          const pipelineData = Object.entries(deptMap)
+            .map(([department, counts]) => ({ department, ...counts }))
+            .sort((a, b) => (b.open + b.inProgress) - (a.open + a.inProgress))
+            .slice(0, 6);
+
+          if (pipelineData.length > 0) {
+            setPipeline(pipelineData);
+          }
+        }
+      }
+
+      // Build lifecycle counts from application stats
+      if (applicationsRes.ok) {
+        const appData = await applicationsRes.json();
+        const totalApps = appData?.totalElements ?? appData?.total ?? 0;
+
+        // Fetch onboarding/status breakdowns
+        const [onboardingRes] = await Promise.all([
+          apiFetch('/api/applications?status=ONBOARDING&size=1'),
+        ]);
+
+        let onboardingCount = 0;
+        if (onboardingRes.ok) {
+          const obData = await onboardingRes.json();
+          onboardingCount = obData?.totalElements ?? 0;
+        }
+
+        setLifecycle([
+          { stage: `Applications (${selectedTimeframe})`, count: totalApps, color: 'bg-primary/10 text-primary' },
+          { stage: 'In Onboarding', count: onboardingCount, color: 'bg-amber-100 text-amber-800' },
+        ]);
+      }
+
+      // Fetch recent audit activities
       try {
-        const response = await apiFetch('/api/analytics/dashboard?role=HR_MANAGER');
+        const auditRes = await apiFetch('/api/audit-logs?size=5&sortBy=timestamp&sortDirection=desc');
+        if (auditRes.ok) {
+          const auditData = await auditRes.json();
+          const logs = auditData?.content || auditData || [];
 
-        if (cancelled) return;
+          if (Array.isArray(logs) && logs.length > 0) {
+            const colorMap: Record<string, string> = {
+              CREATE: 'text-green-600',
+              UPDATE: 'text-primary',
+              DELETE: 'text-red-600',
+              LOGIN: 'text-purple-600',
+            };
 
-        if (response.ok) {
-          const data = await response.json();
-
-          if (Array.isArray(data?.metrics) && data.metrics.length > 0) {
-            setMetrics(data.metrics);
+            setActivities(
+              logs.slice(0, 5).map((log: any, idx: number) => ({
+                id: log.id?.toString() || `act-${idx}`,
+                type: log.action || 'unknown',
+                message: log.details || `${log.action} on ${log.entityType}`,
+                time: log.timestamp ? formatRelativeTime(log.timestamp) : 'Recently',
+                color: colorMap[log.action?.toUpperCase()] || 'text-gray-600',
+              })),
+            );
           }
         }
       } catch {
-        // Keep default metrics on error
+        // Audit logs may not be available — keep empty
       }
-
-      if (!cancelled) {
-        setLoading(false);
-      }
+    } catch {
+      // Keep default state on error
     }
 
-    fetchData();
+    setLoading(false);
+  }, [selectedTimeframe]);
 
-    return () => {
-      cancelled = true;
-    };
-  }, []);
+  useEffect(() => {
+    fetchDashboardData();
+  }, [fetchDashboardData]);
 
   if (loading) {
     return (
       <div className="space-y-6 max-w-full overflow-hidden">
-        <div className="bg-white rounded-sm border border-gray-200 p-6">
+        <div className="bg-white dark:bg-charcoal rounded-[2px] border border-gray-200 dark:border-gray-700 p-6">
           <div className="animate-pulse space-y-4">
-            <div className="h-4 bg-gray-200 rounded w-1/4"></div>
-            <div className="h-3 bg-gray-200 rounded w-1/2"></div>
+            <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-1/4" />
+            <div className="h-3 bg-gray-200 dark:bg-gray-700 rounded w-1/2" />
             <div className="grid grid-cols-2 gap-4 mt-4">
-              <div className="h-20 bg-gray-200 rounded"></div>
-              <div className="h-20 bg-gray-200 rounded"></div>
+              <div className="h-20 bg-gray-200 dark:bg-gray-700 rounded" />
+              <div className="h-20 bg-gray-200 dark:bg-gray-700 rounded" />
             </div>
           </div>
         </div>
@@ -117,14 +276,16 @@ export default function HRDashboard({ selectedTimeframe, onTimeframeChange: _onT
         {/* Main HR Content */}
         <div className="lg:col-span-2 space-y-6 min-w-0">
           {/* HR Performance Metrics */}
-          <div className="w-full overflow-hidden">
-            <PerformanceMetrics
-              metrics={metrics}
-              title="HR Key Performance Indicators"
-              subtitle="Track employee satisfaction and HR effectiveness"
-              timeframe={selectedTimeframe}
-            />
-          </div>
+          {metrics.length > 0 && (
+            <div className="w-full overflow-hidden">
+              <PerformanceMetrics
+                metrics={metrics}
+                title="HR Key Performance Indicators"
+                subtitle="Track employee satisfaction and HR effectiveness"
+                timeframe={selectedTimeframe}
+              />
+            </div>
+          )}
 
           {/* Employee Overview */}
           <div className="grid grid-cols-1 xl:grid-cols-2 gap-6 max-w-full">
@@ -134,24 +295,24 @@ export default function HRDashboard({ selectedTimeframe, onTimeframeChange: _onT
                 title="Recruitment Pipeline"
                 subtitle="Current hiring status across departments"
                 refreshable={true}
+                onRefresh={fetchDashboardData}
                 size="medium"
               >
                 <div className="space-y-4">
-                  {[
-                    { department: 'Engineering', open: 12, inProgress: 8, filled: 3 },
-                    { department: 'Sales', open: 6, inProgress: 4, filled: 2 },
-                    { department: 'Marketing', open: 3, inProgress: 2, filled: 1 },
-                    { department: 'Operations', open: 4, inProgress: 1, filled: 0 },
-                  ].map((dept) => (
-                    <div key={dept.department} className="flex items-center justify-between p-3 bg-gray-50 rounded-sm">
-                      <span className="font-medium text-gray-900">{dept.department}</span>
-                      <div className="flex items-center gap-4 text-sm">
-                        <span className="text-orange-600">{dept.open} open</span>
-                        <span className="text-gold-600">{dept.inProgress} active</span>
-                        <span className="text-green-600">{dept.filled} filled</span>
+                  {pipeline.length > 0 ? (
+                    pipeline.map((dept) => (
+                      <div key={dept.department} className="flex items-center justify-between p-3 bg-off-white dark:bg-gray-800/50 rounded-[2px]">
+                        <span className="font-medium text-gray-900 dark:text-gray-100">{dept.department}</span>
+                        <div className="flex items-center gap-4 text-sm">
+                          <span className="text-orange-600">{dept.open} open</span>
+                          <span className="text-primary">{dept.inProgress} active</span>
+                          <span className="text-green-600">{dept.filled} filled</span>
+                        </div>
                       </div>
-                    </div>
-                  ))}
+                    ))
+                  ) : (
+                    <p className="text-sm text-gray-500 dark:text-gray-400 text-center py-4">No job posting data available</p>
+                  )}
                 </div>
               </DashboardWidget>
             </div>
@@ -162,22 +323,22 @@ export default function HRDashboard({ selectedTimeframe, onTimeframeChange: _onT
                 title="Employee Lifecycle"
                 subtitle="Onboarding and development status"
                 refreshable={true}
+                onRefresh={fetchDashboardData}
                 size="medium"
               >
                 <div className="space-y-4">
-                  {[
-                    { stage: 'New Hires (This Month)', count: 8, color: 'bg-gold-100 text-gold-800' },
-                    { stage: 'In Onboarding', count: 5, color: 'bg-yellow-100 text-yellow-800' },
-                    { stage: 'Completed Training', count: 12, color: 'bg-green-100 text-green-800' },
-                    { stage: 'Performance Review Due', count: 23, color: 'bg-purple-100 text-purple-800' },
-                  ].map((item) => (
-                    <div key={item.stage} className="flex items-center justify-between p-3 bg-gray-50 rounded-sm">
-                      <span className="font-medium text-gray-900">{item.stage}</span>
-                      <span className={`px-2 py-1 rounded-full text-sm font-medium ${item.color}`}>
-                        {item.count}
-                      </span>
-                    </div>
-                  ))}
+                  {lifecycle.length > 0 ? (
+                    lifecycle.map((item) => (
+                      <div key={item.stage} className="flex items-center justify-between p-3 bg-off-white dark:bg-gray-800/50 rounded-[2px]">
+                        <span className="font-medium text-gray-900 dark:text-gray-100">{item.stage}</span>
+                        <span className={`px-2 py-1 rounded-[2px] text-sm font-medium ${item.color}`}>
+                          {item.count}
+                        </span>
+                      </div>
+                    ))
+                  ) : (
+                    <p className="text-sm text-gray-500 dark:text-gray-400 text-center py-4">No lifecycle data available</p>
+                  )}
                 </div>
               </DashboardWidget>
             </div>
@@ -193,47 +354,23 @@ export default function HRDashboard({ selectedTimeframe, onTimeframeChange: _onT
               title="Recent HR Activities"
               subtitle="Latest employee and policy updates"
               refreshable={true}
+              onRefresh={fetchDashboardData}
               size="small"
             >
               <div className="space-y-3 max-h-60 overflow-y-auto">
-                {[
-                  {
-                    id: '1',
-                    type: 'onboarding',
-                    message: 'Sarah Johnson completed onboarding program',
-                    time: '1 hour ago',
-                    color: 'text-green-600',
-                  },
-                  {
-                    id: '2',
-                    type: 'policy',
-                    message: 'Updated remote work policy published',
-                    time: '3 hours ago',
-                    color: 'text-gold-600',
-                  },
-                  {
-                    id: '3',
-                    type: 'review',
-                    message: 'Q3 performance reviews initiated',
-                    time: '5 hours ago',
-                    color: 'text-purple-600',
-                  },
-                  {
-                    id: '4',
-                    type: 'compliance',
-                    message: 'Diversity training compliance at 94%',
-                    time: '1 day ago',
-                    color: 'text-orange-600',
-                  },
-                ].map((activity) => (
-                  <div key={activity.id} className="flex items-start gap-3 p-3 hover:bg-gray-50 rounded-sm">
-                    <div className={`w-2 h-2 rounded-full mt-2 flex-shrink-0 ${activity.color.replace('text-', 'bg-')}`}></div>
-                    <div className="flex-1 min-w-0">
-                      <p className="text-sm text-gray-900 truncate">{activity.message}</p>
-                      <p className="text-xs text-gray-500 mt-1">{activity.time}</p>
+                {activities.length > 0 ? (
+                  activities.map((activity) => (
+                    <div key={activity.id} className="flex items-start gap-3 p-3 hover:bg-off-white dark:hover:bg-gray-800/50 rounded-[2px]">
+                      <div className={`w-2 h-2 rounded-full mt-2 flex-shrink-0 ${activity.color.replace('text-', 'bg-')}`} />
+                      <div className="flex-1 min-w-0">
+                        <p className="text-sm text-gray-900 dark:text-gray-100 truncate">{activity.message}</p>
+                        <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">{activity.time}</p>
+                      </div>
                     </div>
-                  </div>
-                ))}
+                  ))
+                ) : (
+                  <p className="text-sm text-gray-500 dark:text-gray-400 text-center py-4">No recent activities</p>
+                )}
               </div>
             </DashboardWidget>
           </div>
@@ -248,18 +385,19 @@ export default function HRDashboard({ selectedTimeframe, onTimeframeChange: _onT
             >
               <div className="grid grid-cols-1 gap-2">
                 {[
-                  { label: 'Employee Records', color: 'bg-gold-500 text-violet-950' },
-                  { label: 'Onboarding Portal', color: 'bg-green-600 text-white' },
-                  { label: 'Policy Management', color: 'bg-gold-500 text-violet-950' },
-                  { label: 'Performance Reviews', color: 'bg-orange-600 text-white' },
-                  { label: 'Compliance Report', color: 'bg-red-600 text-white' },
+                  { label: 'Employee Records', href: '/admin/departments' },
+                  { label: 'Onboarding Portal', href: '/onboarding' },
+                  { label: 'Job Postings', href: '/job-postings' },
+                  { label: 'Performance Reviews', href: '/performance' },
+                  { label: 'Analytics', href: '/analytics' },
                 ].map((action) => (
-                  <button
+                  <a
                     key={action.label}
-                    className={`${action.color} p-3 rounded-full hover:opacity-90 transition-opacity text-sm font-medium text-center w-full`}
+                    href={action.href}
+                    className="bg-cta text-deep-navy p-3 rounded-full hover:bg-cta/90 transition-colors text-sm font-semibold text-center w-full block"
                   >
                     {action.label}
-                  </button>
+                  </a>
                 ))}
               </div>
             </DashboardWidget>
@@ -268,4 +406,22 @@ export default function HRDashboard({ selectedTimeframe, onTimeframeChange: _onT
       </div>
     </div>
   );
+}
+
+function formatRelativeTime(timestamp: string): string {
+  const now = Date.now();
+  const then = new Date(timestamp).getTime();
+  const diff = now - then;
+
+  const minutes = Math.floor(diff / 60000);
+  if (minutes < 1) return 'Just now';
+  if (minutes < 60) return `${minutes}m ago`;
+
+  const hours = Math.floor(minutes / 60);
+  if (hours < 24) return `${hours}h ago`;
+
+  const days = Math.floor(hours / 24);
+  if (days < 7) return `${days}d ago`;
+
+  return new Date(timestamp).toLocaleDateString();
 }
