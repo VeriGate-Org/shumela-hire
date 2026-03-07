@@ -4,6 +4,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { useToast } from '@/components/Toast';
 import { jobBoardService } from '@/services/jobBoardService';
 import StatusPill from '@/components/StatusPill';
+import ConfirmDialog from '@/components/ConfirmDialog';
 import {
   JobBoardPosting,
   JobBoardType,
@@ -22,6 +23,7 @@ export default function JobBoardManager({ jobId }: JobBoardManagerProps) {
   const [loading, setLoading] = useState(true);
   const [actionLoading, setActionLoading] = useState<number | null>(null);
   const [selectedBoard, setSelectedBoard] = useState<string>('');
+  const [removePostingId, setRemovePostingId] = useState<number | null>(null);
 
   const loadData = useCallback(async () => {
     try {
@@ -70,8 +72,14 @@ export default function JobBoardManager({ jobId }: JobBoardManagerProps) {
     }
   };
 
-  const handleRemove = async (id: number) => {
-    if (!confirm('Remove this posting from the board?')) return;
+  const handleRemove = (id: number) => {
+    setRemovePostingId(id);
+  };
+
+  const confirmRemove = async () => {
+    if (removePostingId === null) return;
+    const id = removePostingId;
+    setRemovePostingId(null);
     try {
       setActionLoading(id);
       await jobBoardService.removePosting(id);
@@ -182,6 +190,15 @@ export default function JobBoardManager({ jobId }: JobBoardManagerProps) {
           ))}
         </div>
       )}
+      <ConfirmDialog
+        open={removePostingId !== null}
+        title="Remove Posting"
+        message="Remove this posting from the board?"
+        confirmLabel="Remove"
+        variant="danger"
+        onConfirm={confirmRemove}
+        onCancel={() => setRemovePostingId(null)}
+      />
     </div>
   );
 }

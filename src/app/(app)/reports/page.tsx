@@ -24,6 +24,7 @@ import { useToast } from '@/components/Toast';
 import { apiFetch } from '@/lib/api-fetch';
 import AiAssistPanel from '@/components/ai/AiAssistPanel';
 import AiReportNarrative from '@/components/ai/AiReportNarrative';
+import ConfirmDialog from '@/components/ConfirmDialog';
 
 // Mock data for available fields
 const AVAILABLE_FIELDS: ReportField[] = [
@@ -65,6 +66,8 @@ export default function ReportsPage() {
   const [schedules, setSchedules] = useState<ReportSchedule[]>([]);
   const [currentResult, setCurrentResult] = useState<ReportResult | null>(null);
   const [editingReport, setEditingReport] = useState<SavedReport | null>(null);
+  const [deleteReportId, setDeleteReportId] = useState<string | null>(null);
+  const [deleteScheduleId, setDeleteScheduleId] = useState<string | null>(null);
   const { toast } = useToast();
 
   useEffect(() => {
@@ -173,24 +176,29 @@ export default function ReportsPage() {
     setActiveTab('create');
   }, []);
 
-  const handleDeleteReport = useCallback(async (reportId: string) => {
-    if (confirm('Are you sure you want to delete this report?')) {
-      try {
-        const res = await apiFetch(`/api/reports/${reportId}`, { method: 'DELETE' });
-        if (!res.ok && res.status !== 204) {
-          const data = await res.json().catch(() => null);
-          if (data?.message?.includes('system')) {
-            toast('System reports cannot be deleted', 'error');
-            return;
-          }
+  const handleDeleteReport = useCallback((reportId: string) => {
+    setDeleteReportId(reportId);
+  }, []);
+
+  const confirmDeleteReport = useCallback(async () => {
+    if (!deleteReportId) return;
+    const reportId = deleteReportId;
+    setDeleteReportId(null);
+    try {
+      const res = await apiFetch(`/api/reports/${reportId}`, { method: 'DELETE' });
+      if (!res.ok && res.status !== 204) {
+        const data = await res.json().catch(() => null);
+        if (data?.message?.includes('system')) {
+          toast('System reports cannot be deleted', 'error');
+          return;
         }
-      } catch {
-        // Proceed with local removal
       }
-      setSavedReports(prev => prev.filter(r => r.id !== reportId));
-      toast('Report deleted', 'success');
+    } catch {
+      // Proceed with local removal
     }
-  }, [toast]);
+    setSavedReports(prev => prev.filter(r => r.id !== reportId));
+    toast('Report deleted', 'success');
+  }, [deleteReportId, toast]);
 
   const handleDuplicateReport = useCallback(async (report: SavedReport) => {
     try {
@@ -305,10 +313,14 @@ export default function ReportsPage() {
   }, []);
 
   const handleDeleteSchedule = useCallback((scheduleId: string) => {
-    if (confirm('Are you sure you want to delete this schedule?')) {
-      setSchedules(prev => prev.filter(s => s.id !== scheduleId));
-    }
+    setDeleteScheduleId(scheduleId);
   }, []);
+
+  const confirmDeleteSchedule = useCallback(() => {
+    if (!deleteScheduleId) return;
+    setSchedules(prev => prev.filter(s => s.id !== deleteScheduleId));
+    setDeleteScheduleId(null);
+  }, [deleteScheduleId]);
 
   const handleToggleSchedule = useCallback((scheduleId: string, enabled: boolean) => {
     setSchedules(prev => prev.map(s => 
@@ -454,6 +466,24 @@ export default function ReportsPage() {
           )}
         </div>
       </div>
+      <ConfirmDialog
+        open={deleteReportId !== null}
+        title="Delete Report"
+        message="Are you sure you want to delete this report?"
+        confirmLabel="Delete"
+        variant="danger"
+        onConfirm={confirmDeleteReport}
+        onCancel={() => setDeleteReportId(null)}
+      />
+      <ConfirmDialog
+        open={deleteScheduleId !== null}
+        title="Delete Schedule"
+        message="Are you sure you want to delete this schedule?"
+        confirmLabel="Delete"
+        variant="danger"
+        onConfirm={confirmDeleteSchedule}
+        onCancel={() => setDeleteScheduleId(null)}
+      />
     </PageWrapper>
   );
 }

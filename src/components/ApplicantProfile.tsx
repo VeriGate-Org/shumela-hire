@@ -6,6 +6,7 @@ import { apiFetch } from '@/lib/api-fetch';
 import { useToast } from '@/components/Toast';
 import AiAssistPanel from '@/components/ai/AiAssistPanel';
 import AiDuplicateDetectionPanel from '@/components/ai/AiDuplicateDetectionPanel';
+import ConfirmDialog from '@/components/ConfirmDialog';
 import { getEnumLabel } from '@/utils/enumLabels';
 
 interface Education {
@@ -75,6 +76,7 @@ export default function ApplicantProfile({ applicantId, onSave }: ApplicantProfi
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [showSuccess, setShowSuccess] = useState(false);
+  const [deleteDocId, setDeleteDocId] = useState<number | null>(null);
   
   const loadApplicant = useCallback(async () => {
     try {
@@ -231,15 +233,19 @@ export default function ApplicantProfile({ applicantId, onSave }: ApplicantProfi
   };
   
   const handleDeleteDocument = async (documentId: number) => {
-    if (!confirm('Are you sure you want to delete this document?')) return;
-    
+    setDeleteDocId(documentId);
+  };
+
+  const confirmDeleteDocument = async () => {
+    if (deleteDocId === null) return;
+    setDeleteDocId(null);
     try {
-      const response = await apiFetch(`/api/applicants/${applicantId}/documents/${documentId}`, {
+      const response = await apiFetch(`/api/applicants/${applicantId}/documents/${deleteDocId}`, {
         method: 'DELETE',
       });
-      
+
       if (response.ok) {
-        await loadDocuments(); // Refresh documents list
+        await loadDocuments();
       } else {
         toast('Failed to delete document', 'error');
       }
@@ -650,6 +656,16 @@ export default function ApplicantProfile({ applicantId, onSave }: ApplicantProfi
           )}
         </div>
       )}
+
+      <ConfirmDialog
+        open={deleteDocId !== null}
+        title="Delete Document"
+        message="Are you sure you want to delete this document?"
+        confirmLabel="Delete"
+        variant="danger"
+        onConfirm={confirmDeleteDocument}
+        onCancel={() => setDeleteDocId(null)}
+      />
     </div>
   );
 }

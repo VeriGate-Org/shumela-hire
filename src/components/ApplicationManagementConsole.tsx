@@ -4,6 +4,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { useToast } from '@/components/Toast';
 import { apiFetch } from '@/lib/api-fetch';
+import ConfirmDialog from '@/components/ConfirmDialog';
 import { formatEnumValue } from '@/utils/enumLabels';
 
 interface Application {
@@ -171,6 +172,7 @@ export default function ApplicationManagementConsole() {
   }, [searchApplications]);
 
   const [statsError, setStatsError] = useState(false);
+  const [rejectAppId, setRejectAppId] = useState<number | null>(null);
 
   const fetchStatistics = async () => {
     try {
@@ -235,8 +237,14 @@ export default function ApplicationManagementConsole() {
     }
   };
 
-  const handleRejectApplication = async (applicationId: number) => {
-    if (!confirm('Are you sure you want to reject this application?')) return;
+  const handleRejectApplication = (applicationId: number) => {
+    setRejectAppId(applicationId);
+  };
+
+  const confirmRejectApplication = async () => {
+    if (rejectAppId === null) return;
+    const applicationId = rejectAppId;
+    setRejectAppId(null);
     try {
       const response = await apiFetch(`/api/applications/${applicationId}/status?status=REJECTED`, {
         method: 'PUT',
@@ -854,6 +862,15 @@ export default function ApplicationManagementConsole() {
           </div>
         )}
       </div>
+      <ConfirmDialog
+        open={rejectAppId !== null}
+        title="Reject Application"
+        message="Are you sure you want to reject this application?"
+        confirmLabel="Reject"
+        variant="danger"
+        onConfirm={confirmRejectApplication}
+        onCancel={() => setRejectAppId(null)}
+      />
     </div>
   );
 }

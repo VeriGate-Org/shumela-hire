@@ -15,6 +15,7 @@ import {
   FunnelIcon
 } from '@heroicons/react/24/outline';
 import StatusPill from '@/components/StatusPill';
+import ConfirmDialog from '@/components/ConfirmDialog';
 
 interface TemplateListProps {
   onEdit?: (template: JobAdTemplate) => void;
@@ -37,6 +38,12 @@ const TemplateList: React.FC<TemplateListProps> = ({
   const [filters, setFilters] = useState<TemplateFilters>({});
   const [showFilters, setShowFilters] = useState(false);
   const [selectedTemplates, setSelectedTemplates] = useState<Set<string>>(new Set());
+  const [confirmDialog, setConfirmDialog] = useState<{
+    open: boolean;
+    title: string;
+    message: string;
+    onConfirm: () => void;
+  }>({ open: false, title: '', message: '', onConfirm: () => {} });
 
   const fetchTemplates = useCallback(async () => {
     try {
@@ -76,15 +83,21 @@ const TemplateList: React.FC<TemplateListProps> = ({
     }
   };
 
-  const handleDelete = async (template: JobAdTemplate) => {
-    if (window.confirm(`Are you sure you want to permanently delete "${template.name}"? This action cannot be undone.`)) {
-      try {
-        await jobTemplateService.deleteTemplate(template.id);
-        await fetchTemplates();
-      } catch {
-        setError('Failed to delete template');
-      }
-    }
+  const handleDelete = (template: JobAdTemplate) => {
+    setConfirmDialog({
+      open: true,
+      title: 'Delete Template',
+      message: `Are you sure you want to permanently delete "${template.name}"? This action cannot be undone.`,
+      onConfirm: async () => {
+        setConfirmDialog(prev => ({ ...prev, open: false }));
+        try {
+          await jobTemplateService.deleteTemplate(template.id);
+          await fetchTemplates();
+        } catch {
+          setError('Failed to delete template');
+        }
+      },
+    });
   };
 
   const handleDuplicate = async (template: JobAdTemplate) => {
@@ -109,34 +122,40 @@ const TemplateList: React.FC<TemplateListProps> = ({
     setSelectedTemplates(newSelected);
   };
 
-  const handleBulkAction = async (action: 'archive' | 'unarchive' | 'delete') => {
+  const handleBulkAction = (action: 'archive' | 'unarchive' | 'delete') => {
     if (selectedTemplates.size === 0) return;
 
-    const confirmed = action === 'delete'
-      ? window.confirm(`Are you sure you want to delete ${selectedTemplates.size} template(s)? This action cannot be undone.`)
-      : window.confirm(`Are you sure you want to ${action} ${selectedTemplates.size} template(s)?`);
+    const message = action === 'delete'
+      ? `Are you sure you want to delete ${selectedTemplates.size} template(s)? This action cannot be undone.`
+      : `Are you sure you want to ${action} ${selectedTemplates.size} template(s)?`;
 
-    if (!confirmed) return;
-
-    try {
-      for (const templateId of selectedTemplates) {
-        switch (action) {
-          case 'archive':
-            await jobTemplateService.archiveTemplate(templateId);
-            break;
-          case 'unarchive':
-            await jobTemplateService.unarchiveTemplate(templateId);
-            break;
-          case 'delete':
-            await jobTemplateService.deleteTemplate(templateId);
-            break;
+    setConfirmDialog({
+      open: true,
+      title: `${action.charAt(0).toUpperCase() + action.slice(1)} Templates`,
+      message,
+      onConfirm: async () => {
+        setConfirmDialog(prev => ({ ...prev, open: false }));
+        try {
+          for (const templateId of selectedTemplates) {
+            switch (action) {
+              case 'archive':
+                await jobTemplateService.archiveTemplate(templateId);
+                break;
+              case 'unarchive':
+                await jobTemplateService.unarchiveTemplate(templateId);
+                break;
+              case 'delete':
+                await jobTemplateService.deleteTemplate(templateId);
+                break;
+            }
+          }
+          setSelectedTemplates(new Set());
+          await fetchTemplates();
+        } catch {
+          setError(`Failed to ${action} templates`);
         }
-      }
-      setSelectedTemplates(new Set());
-      await fetchTemplates();
-    } catch {
-      setError(`Failed to ${action} templates`);
-    }
+      },
+    });
   };
 
   const formatDate = (date: Date) => {
@@ -433,6 +452,16 @@ const TemplateList: React.FC<TemplateListProps> = ({
           ))}
         </div>
       )}
+
+      <ConfirmDialog
+        open={confirmDialog.open}
+        title={confirmDialog.title}
+        message={confirmDialog.message}
+        confirmLabel="Confirm"
+        variant="danger"
+        onConfirm={confirmDialog.onConfirm}
+        onCancel={() => setConfirmDialog(prev => ({ ...prev, open: false }))}
+      />
     </div>
   );
 };

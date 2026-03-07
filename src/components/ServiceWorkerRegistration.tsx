@@ -24,10 +24,17 @@ export default function ServiceWorkerRegistration() {
                   // New content is available; please refresh
                   console.log('New content is available; please refresh.');
                   
-                  // Show update notification to user
-                  if (window.confirm('New version available! Click OK to refresh.')) {
-                    window.location.reload();
-                  }
+                  // Show update notification banner
+                  const banner = document.createElement('div');
+                  banner.setAttribute('role', 'alert');
+                  banner.style.cssText = 'position:fixed;top:0;left:0;right:0;z-index:9999;display:flex;align-items:center;justify-content:center;gap:12px;padding:12px 16px;background:#0F172A;color:#F8FAFC;font-size:14px;font-family:Manrope,sans-serif';
+                  banner.textContent = 'A new version is available.';
+                  const btn = document.createElement('button');
+                  btn.textContent = 'Refresh';
+                  btn.style.cssText = 'padding:4px 16px;border-radius:9999px;border:2px solid #F1C54B;color:#F1C54B;background:transparent;font-size:13px;font-weight:600;cursor:pointer;text-transform:uppercase;letter-spacing:0.05em';
+                  btn.onclick = () => window.location.reload();
+                  banner.appendChild(btn);
+                  document.body.appendChild(banner);
                 } else {
                   // Content is cached for offline use
                   console.log('Content is cached for offline use.');

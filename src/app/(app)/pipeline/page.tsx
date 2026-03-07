@@ -4,6 +4,7 @@ import { useState, useEffect, useMemo, useCallback } from 'react';
 import PageWrapper from '@/components/PageWrapper';
 import { apiFetch } from '@/lib/api-fetch';
 import { useToast } from '@/components/Toast';
+import ConfirmDialog from '@/components/ConfirmDialog';
 import {
   FunnelIcon,
   ChartBarIcon,
@@ -231,6 +232,7 @@ export default function PipelinePage() {
   const [offers, setOffers] = useState<Record<string, any>>({});
   const [offerLoading, setOfferLoading] = useState(false);
   const [documents, setDocuments] = useState<any[]>([]);
+  const [showBulkRejectConfirm, setShowBulkRejectConfirm] = useState(false);
   const [documentsLoading, setDocumentsLoading] = useState(false);
   const [ratingUpdating, setRatingUpdating] = useState(false);
   const [screeningNotesOpen, setScreeningNotesOpen] = useState(false);
@@ -649,7 +651,11 @@ export default function PipelinePage() {
 
   // P3: Persist bulk reject via backend
   const handleBulkReject = async () => {
-    if (!confirm(`Reject ${selectedIds.size} selected candidates?`)) return;
+    setShowBulkRejectConfirm(true);
+  };
+
+  const confirmBulkReject = async () => {
+    setShowBulkRejectConfirm(false);
     const ids = Array.from(selectedIds);
     try {
       const response = await apiFetch('/api/applications/manage/bulk/status', {
@@ -1536,6 +1542,15 @@ export default function PipelinePage() {
           );
         })()}
       </div>
+      <ConfirmDialog
+        open={showBulkRejectConfirm}
+        title="Reject Candidates"
+        message={`Reject ${selectedIds.size} selected candidates?`}
+        confirmLabel="Reject"
+        variant="danger"
+        onConfirm={confirmBulkReject}
+        onCancel={() => setShowBulkRejectConfirm(false)}
+      />
     </PageWrapper>
   );
 }

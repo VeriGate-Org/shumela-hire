@@ -5,6 +5,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { apiFetch } from '@/lib/api-fetch';
 import { useToast } from '@/components/Toast';
 import PageWrapper from '@/components/PageWrapper';
+import ConfirmDialog from '@/components/ConfirmDialog';
 import {
   WorkflowBuilder,
   WorkflowManager,
@@ -63,6 +64,7 @@ export default function WorkflowPage() {
   const [selectedWorkflow, setSelectedWorkflow] = useState<WorkflowDefinition | null>(null);
   const [isEditing, setIsEditing] = useState(false);
   const [selectedExecution, setSelectedExecution] = useState<WorkflowExecution | null>(null);
+  const [deleteWorkflowId, setDeleteWorkflowId] = useState<string | null>(null);
   const importInputRef = useRef<HTMLInputElement>(null);
 
   // Load workflows from backend
@@ -143,8 +145,14 @@ export default function WorkflowPage() {
     setIsEditing(false);
   };
 
-  const handleDeleteWorkflow = async (workflowId: string) => {
-    if (!confirm('Are you sure you want to delete this workflow?')) return;
+  const handleDeleteWorkflow = (workflowId: string) => {
+    setDeleteWorkflowId(workflowId);
+  };
+
+  const confirmDeleteWorkflow = async () => {
+    if (!deleteWorkflowId) return;
+    const workflowId = deleteWorkflowId;
+    setDeleteWorkflowId(null);
     try {
       const response = await apiFetch(`/api/workflows/${workflowId}`, { method: 'DELETE' });
       if (!response.ok) throw new Error('Failed to delete workflow');
@@ -525,6 +533,15 @@ export default function WorkflowPage() {
           </div>
         </div>
       )}
+      <ConfirmDialog
+        open={deleteWorkflowId !== null}
+        title="Delete Workflow"
+        message="Are you sure you want to delete this workflow?"
+        confirmLabel="Delete"
+        variant="danger"
+        onConfirm={confirmDeleteWorkflow}
+        onCancel={() => setDeleteWorkflowId(null)}
+      />
     </PageWrapper>
   );
 }
